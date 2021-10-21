@@ -17,11 +17,15 @@ dependencies {
 
     implementation("com.google.guava:guava:30.1.1-jre")
 
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+
     implementation("org.apache.httpcomponents:httpclient:4.2.3")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
 
     api("org.apache.commons:commons-math3:3.6.1")
 }
