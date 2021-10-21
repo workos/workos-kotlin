@@ -17,6 +17,8 @@ dependencies {
 
     implementation("com.google.guava:guava:30.1.1-jre")
 
+    implementation("org.apache.httpcomponents:httpclient:4.2.3")
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
