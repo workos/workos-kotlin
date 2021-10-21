@@ -1,12 +1,12 @@
 package com.workos
 
+import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
-import org.apache.http.client.utils.URIBuilder
 
-const val DEFAULT_HOSTNAME = "api.workos.com";
+const val DEFAULT_HOSTNAME = "api.workos.com"
 
 class WorkOS(
     val apiKey: String,

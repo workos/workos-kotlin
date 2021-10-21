@@ -3,7 +3,7 @@ version = "0.0.1"
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.0"
 
-    id("tech.formatter-kt.formatter") version "0.7.9"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
     `java-library`
 }
