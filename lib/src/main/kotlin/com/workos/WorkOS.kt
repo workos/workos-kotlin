@@ -6,27 +6,31 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 
-const val DEFAULT_HOSTNAME = "api.workos.com"
-
 class WorkOS(
-    val apiKey: String,
-    val https: Boolean = true,
-    val apiHostname: String = DEFAULT_HOSTNAME,
-    val port: Int? = null
+    val apiKey: String
 ) {
-    val protocol: String = if (https) "https" else "http"
+    var apiHostname = "api.workos.com"
 
-    val client = HttpClient.newBuilder().build()
+    var https: Boolean = true
 
-    val version: String = "1.0.0"
+    var port: Int? = null
 
-    val baseURL: String
+    private val version: String = "1.0.0"
+
+    private val httpClient = HttpClient.newBuilder().build()
+
+    private val protocol: String
+        get() {
+            return if (https == true) "https" else "http"
+        }
+
+    private val baseURL: String
         get() {
             val url = "$protocol://$apiHostname"
             return if (port == null) url else "$url:$port"
         }
 
-    val requestBuilder =
+    private val requestBuilder =
         HttpRequest.newBuilder()
             .header("Authorization", "Bearer $apiKey")
             .header("User-Agent", "workos-kotlin/$version")
@@ -36,6 +40,6 @@ class WorkOS(
 
         val request = requestBuilder.copy().GET().uri(uri).build()
 
-        return client.send(request, BodyHandlers.ofString())
+        return httpClient.send(request, BodyHandlers.ofString())
     }
 }
