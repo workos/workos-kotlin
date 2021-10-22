@@ -1,15 +1,61 @@
 package com.workos
 
+import com.workos.common.exceptions.NotFoundException
+import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class WorkOSTest {
+    class ExampleResponseType {
+        val message: String = ""
+    }
+
+    class ExampleRequestEntity {
+        val param: String = ""
+    }
+
     @Test
     fun getShouldReturnSuccessStatusCode() {
-        val workos = WorkOS("does an empty string count")
+        val workos = WorkOS("apiKey")
 
-        val response = workos.get("/health")
+        val response = workos.get<ExampleResponseType>("/", ExampleResponseType::class.java)
 
-        assertEquals(response.statusCode(), 200, "response code should be 200")
+        assertNotNull("message should be defined", response.message)
+    }
+
+    @Test
+    fun getShouldReturnNotFound() {
+        val workos = WorkOS("apiKey")
+
+        assertThrows(NotFoundException::class.java) {
+            workos.get<ExampleResponseType>("/not-real", ExampleResponseType::class.java)
+        }
+    }
+
+    @Test
+    fun postShouldReturnNotFound() {
+        val workos = WorkOS("apiKey")
+
+        assertThrows(NotFoundException::class.java) {
+            workos.post<ExampleResponseType>("/not-real", ExampleRequestEntity(), ExampleResponseType::class.java)
+        }
+    }
+
+    @Test
+    fun putShouldReturnNotFound() {
+        val workos = WorkOS("apiKey")
+
+        assertThrows(NotFoundException::class.java) {
+            workos.put<ExampleResponseType>("/not-real", ExampleRequestEntity(), ExampleResponseType::class.java)
+        }
+    }
+
+    @Test
+    fun deleteShouldReturnNotFound() {
+        val workos = WorkOS("apiKey")
+
+        assertThrows(NotFoundException::class.java) {
+            workos.delete<ExampleResponseType>("/not-real", ExampleResponseType::class.java)
+        }
     }
 }
