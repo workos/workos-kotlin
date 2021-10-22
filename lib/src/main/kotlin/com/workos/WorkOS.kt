@@ -103,7 +103,7 @@ class WorkOS(
     private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
         val response = httpClient.send(request, BodyHandlers.ofString())
 
-        if (response.statusCode() != 200) {
+        if (response.statusCode() >= 400) {
             handleResponseError(response)
         }
 
