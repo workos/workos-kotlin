@@ -10,6 +10,5 @@ blocks:
       jobs:
         - name: Build
           commands:
-            - sem-version java 1.8
             - checkout
-            - ./gradlew build
+            - ./gradlew help
