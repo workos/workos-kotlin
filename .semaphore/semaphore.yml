@@ -11,4 +11,4 @@ blocks:
         - name: Build
           commands:
             - checkout
-            - ./gradlew help
+            - ./gradlew build
