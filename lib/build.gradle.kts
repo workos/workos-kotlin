@@ -1,3 +1,4 @@
+group = "com.workos"
 version = "0.0.1"
 
 plugins {
@@ -6,9 +7,14 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
     `java-library`
+
+    `maven-publish`
 }
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -44,6 +50,16 @@ tasks.jar {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "workos"
+
+            from(components["java"])
+        }
     }
 }
 
