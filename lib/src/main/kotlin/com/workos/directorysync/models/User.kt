@@ -7,7 +7,6 @@ data class User
 @JsonCreator constructor(
     @JsonProperty("object")
     val obj: String = "directory_user",
-    @JsonProperty("id")
     var id: String,
     @JsonProperty("idp_id")
     var idpId: String,
@@ -17,16 +16,13 @@ data class User
     var firstName: String,
     @JsonProperty("last_name")
     var lastName: String,
-    @JsonProperty("emails")
     var emails: MutableList<Email>,
-    @JsonProperty("groups")
     var groups: MutableList<Group>,
-    @JsonProperty("state")
     var state: UserState,
     @JsonProperty("custom_attributes")
-    val custom_attributes: MutableMap<String, String>,
+    val customAttributes: MutableMap<String, String>,
     @JsonProperty("raw_attributes")
-    val raw_attributes: MutableMap<String, String>,
+    val rawAttributes: MutableMap<String, String>,
 )
 
 enum class UserState(val state: String) {
