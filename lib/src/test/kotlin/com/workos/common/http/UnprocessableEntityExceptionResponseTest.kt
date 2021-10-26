@@ -1,8 +1,7 @@
-package com.workos
+package com.workos.common.http
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.workos.common.responses.UnprocessableEntityExceptionResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -22,7 +21,7 @@ class UnprocessableEntityExceptionResponseTest {
 
         val response = mapper.readValue(json, UnprocessableEntityExceptionResponse::class.java)
 
-        assertEquals("foo", response.errors.get(0).field)
-        assertEquals("bar", response.errors.get(1).field)
+        assertEquals("foo", response.errors[0].field)
+        assertEquals("bar", response.errors[1].field)
     }
 }

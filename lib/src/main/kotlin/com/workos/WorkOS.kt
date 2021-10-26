@@ -7,19 +7,19 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.OauthException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
-import com.workos.common.options.RequestOptions
-import com.workos.common.responses.GenericErrorResponse
-import com.workos.common.responses.UnprocessableEntityExceptionResponse
+import com.workos.common.http.GenericErrorResponse
+import com.workos.common.http.RequestConfig
+import com.workos.common.http.UnprocessableEntityExceptionResponse
+import com.workos.directorysync.DirectorySyncApi
 import com.workos.sso.SSOApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
-import kotlin.collections.Map
 
 class WorkOS(
-    val apiKey: String
+    private val apiKey: String
 ) {
     var apiHostname = "api.workos.com"
 
@@ -33,7 +33,7 @@ class WorkOS(
 
     private val protocol: String
         get() {
-            return if (https == true) "https" else "http"
+            return if (https) "https" else "http"
         }
 
     private val baseURL: String
@@ -49,7 +49,11 @@ class WorkOS(
 
     private val mapper = jacksonObjectMapper()
 
-    public val sso by lazy {
+    val directorySync by lazy {
+        DirectorySyncApi(this)
+    }
+
+    val sso by lazy {
         SSOApi(this)
     }
 
@@ -57,52 +61,52 @@ class WorkOS(
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
-    fun <Res : Any> get(path: String, responseType: Class<Res>, params: Map<String, String> = mapOf()): Res {
+    fun <Res : Any> get(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
         val uri = URIBuilder(baseURL).setPath(path)
 
-        for (item in params.entries) {
-            uri.addParameter(item.key, item.value)
+        if (config != null) {
+            for (param in config.params) {
+                uri.addParameter(param.key, param.value)
+            }
         }
 
-        val request = requestBuilder.copy().GET().uri(uri.build()).build()
+        val requestBuilder = requestBuilder.copy().GET().uri(uri.build())
 
-        return sendRequest(request, responseType)
+        return sendRequest(buildRequest(requestBuilder, config), responseType)
     }
 
-    fun <Res : Any> post(path: String, entity: Any, responseType: Class<Res>, options: RequestOptions? = null): Res {
+    fun <Res : Any> post(path: String, entity: Any, responseType: Class<Res>, config: RequestConfig? = null): Res {
+        val uri = URIBuilder(baseURL).setPath(path).build()
+        val body = mapper.writeValueAsString(entity)
+
+        val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
+
+        return sendRequest(buildRequest(requestBuilder, config), responseType)
+    }
+
+    fun <Res : Any> put(path: String, entity: Any, responseType: Class<Res>, config: RequestConfig? = null): Res {
         val uri = URIBuilder(baseURL).setPath(path).build()
 
         val body = mapper.writeValueAsString(entity)
 
-        val builder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
+        val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
 
-        if (options?.idempotencyKey !== null) {
-            builder.header("Idempotency-Key", options.idempotencyKey)
-        }
-
-        return sendRequest(builder.build(), responseType)
+        return sendRequest(buildRequest(requestBuilder, config), responseType)
     }
 
-    fun <Res : Any> put(path: String, entity: Any, responseType: Class<Res>, options: RequestOptions? = null): Res {
+    fun delete(path: String, config: RequestConfig? = null): HttpResponse<String> {
         val uri = URIBuilder(baseURL).setPath(path).build()
-
-        val body = mapper.writeValueAsString(entity)
-
-        val builder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
-
-        if (options?.idempotencyKey !== null) {
-            builder.header("Idempotency-Key", options.idempotencyKey)
-        }
-
-        return sendRequest(builder.build(), responseType)
+        val requestBuilder = requestBuilder.copy().DELETE().uri(uri)
+        return sendRequest(buildRequest(requestBuilder, config))
     }
 
-    fun delete(path: String) {
-        val uri = URIBuilder(baseURL).setPath(path).build()
-
-        val request = requestBuilder.copy().DELETE().uri(uri).build()
-
-        sendRequest(request)
+    private fun buildRequest(requestBuilder: HttpRequest.Builder, config: RequestConfig? = null): HttpRequest {
+        if (config != null) {
+            for (header in config.headers) {
+                requestBuilder.setHeader(header.key, header.value)
+            }
+        }
+        return requestBuilder.build()
     }
 
     private fun sendRequest(request: HttpRequest): HttpResponse<String> {
@@ -123,9 +127,8 @@ class WorkOS(
 
     private fun handleResponseError(response: HttpResponse<String>) {
         val requestId = response.headers().firstValue("X-Request-ID").get()
-        val status = response.statusCode()
 
-        when (status) {
+        when (val status = response.statusCode()) {
             401 -> {
                 throw UnauthorizedException(requestId)
             }
