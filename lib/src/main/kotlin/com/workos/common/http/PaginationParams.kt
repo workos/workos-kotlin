@@ -7,6 +7,10 @@ class PaginationParams private constructor(params: MutableMap<String, String>) :
         }
     }
 
+    companion object {
+        fun emptyParams() = PaginationParams(mutableMapOf<String, String>())
+    }
+
     data class Builder(private val params: MutableMap<String, String> = mutableMapOf()) {
         fun after(after: String) = apply { this.params["after"] = after }
         fun before(before: String) = apply { this.params["before"] = before }

@@ -1,3 +1,6 @@
 package com.workos.common.http
 
-class RequestConfig(val headers: Map<String, String> = mapOf(), val params: Map<String, String> = mapOf())
+class RequestConfig(
+    val headers: MutableMap<String, String>? = mutableMapOf(),
+    val params: MutableMap<String, String>? = mutableMapOf()
+)

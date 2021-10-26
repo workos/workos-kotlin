@@ -2,6 +2,7 @@ package com.workos.directorysync.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 data class Directory
 @JsonCreator constructor(
@@ -11,9 +12,9 @@ data class Directory
     var name: String,
     var domain: String,
     @JsonProperty("environment_id")
-    var environmentId: String,
+    var environmentId: String?,
     @JsonProperty("external_key")
-    var externalKey: String,
+    var externalKey: String?,
     @JsonProperty("organization_id")
     var organizationId: String,
     var state: DirectoryState,
@@ -24,13 +25,13 @@ data class Directory
     var updatedAt: String,
 )
 
-enum class DirectoryState(val state: String) {
+enum class DirectoryState(@JsonValue val state: String) {
     InvalidCredentials("invalid_credentials"),
     Linked("linked"),
     Unlinked("unlinked"),
 }
 
-enum class DirectoryType(val type: String) {
+enum class DirectoryType(@JsonValue val type: String) {
     AzureSCIMV2_0("azure scim v2.0"),
     BambooHr("bamboohr"),
     GenericSCIMV1_1("generic scim v1.1"),

@@ -1,6 +1,7 @@
 package com.workos
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -64,9 +65,9 @@ class WorkOS(
     fun <Res : Any> get(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
         val uri = URIBuilder(baseURL).setPath(path)
 
-        if (config != null) {
-            for (param in config.params) {
-                uri.addParameter(param.key, param.value)
+        if (config?.params != null) {
+            for ((key, value) in config.params.entries) {
+                uri.addParameter(key, value)
             }
         }
 
@@ -101,9 +102,9 @@ class WorkOS(
     }
 
     private fun buildRequest(requestBuilder: HttpRequest.Builder, config: RequestConfig? = null): HttpRequest {
-        if (config != null) {
-            for (header in config.headers) {
-                requestBuilder.setHeader(header.key, header.value)
+        if (config?.headers != null) {
+            for ((key, value) in config.headers) {
+                requestBuilder.setHeader(key, value)
             }
         }
         return requestBuilder.build()
@@ -121,7 +122,7 @@ class WorkOS(
 
     private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
         val response = sendRequest(request)
-
+        println(response.body());
         return mapper.readValue(response.body(), responseType)
     }
 
