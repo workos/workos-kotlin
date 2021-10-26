@@ -1,10 +1,10 @@
 # Ignore Gradle project-specific cache directory
 .gradle
 
-# Ignore intellij project
+# Ignore IntelliJ projects
 .idea
 
-# Ignore eclipse project
+# Ignore Eclipse projects
 .project
 
 # Ignore classpath
