@@ -10,6 +10,7 @@ import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.options.RequestOptions
 import com.workos.common.responses.GenericErrorResponse
 import com.workos.common.responses.UnprocessableEntityExceptionResponse
+import com.workos.directorysync.DirectorySyncApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -18,8 +19,10 @@ import java.net.http.HttpResponse.BodyHandlers
 import kotlin.collections.Map
 
 class WorkOS(
-    val apiKey: String
+    private val apiKey: String
 ) {
+    val directorySync = DirectorySyncApi(this);
+
     var apiHostname = "api.workos.com"
 
     var https: Boolean = true
@@ -32,7 +35,7 @@ class WorkOS(
 
     private val protocol: String
         get() {
-            return if (https == true) "https" else "http"
+            return if (https) "https" else "http"
         }
 
     private val baseURL: String
@@ -112,9 +115,8 @@ class WorkOS(
 
     private fun handleResponseError(response: HttpResponse<String>) {
         val requestId = response.headers().firstValue("X-Request-ID").get()
-        val status = response.statusCode()
 
-        when (status) {
+        when (val status = response.statusCode()) {
             401 -> {
                 throw UnauthorizedException(requestId)
             }
