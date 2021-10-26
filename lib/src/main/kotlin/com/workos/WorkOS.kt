@@ -97,20 +97,26 @@ class WorkOS(
         return sendRequest(builder.build(), responseType)
     }
 
-    fun <Res : Any> delete(path: String, responseType: Class<Res>): Res {
+    fun delete(path: String) {
         val uri = URIBuilder(baseURL).setPath(path).build()
 
         val request = requestBuilder.copy().DELETE().uri(uri).build()
 
-        return sendRequest(request, responseType)
+        sendRequest(request)
     }
 
-    private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
+    private fun sendRequest(request: HttpRequest): HttpResponse<String> {
         val response = httpClient.send(request, BodyHandlers.ofString())
 
         if (response.statusCode() >= 400) {
             handleResponseError(response)
         }
+
+        return response
+    }
+
+    private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
+        val response = sendRequest(request)
 
         return mapper.readValue(response.body(), responseType)
     }

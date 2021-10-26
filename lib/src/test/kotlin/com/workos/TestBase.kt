@@ -27,6 +27,7 @@ open class TestBase {
                     aResponse()
                         .withStatus(responseStatus)
                         .withBody(responseBody)
+                        .withHeader("X-Request-ID", "request_id_value")
                 )
         )
     }
