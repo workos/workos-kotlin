@@ -4,7 +4,9 @@ import com.workos.WorkOS
 import com.workos.sso.models.Connection
 
 class SSOApi(val workos: WorkOS) {
-    fun deleteConnection() {}
+    fun deleteConnection(id: String) {
+        workos.delete("/connections/$id")
+    }
 
     fun getAuthorizationURL() {}
 

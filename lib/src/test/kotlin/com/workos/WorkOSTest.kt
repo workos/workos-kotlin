@@ -55,7 +55,7 @@ class WorkOSTest {
         val workos = WorkOS("apiKey")
 
         assertThrows(NotFoundException::class.java) {
-            workos.delete<ExampleResponseType>("/not-real", ExampleResponseType::class.java)
+            workos.delete("/not-real")
         }
     }
 }

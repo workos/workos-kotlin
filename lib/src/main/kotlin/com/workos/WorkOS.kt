@@ -94,10 +94,10 @@ class WorkOS(
         return sendRequest(buildRequest(requestBuilder, config), responseType)
     }
 
-    fun <Res : Any> delete(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+    fun delete(path: String, config: RequestConfig? = null): HttpResponse<String> {
         val uri = URIBuilder(baseURL).setPath(path).build()
         val requestBuilder = requestBuilder.copy().DELETE().uri(uri)
-        return sendRequest(buildRequest(requestBuilder, config), responseType)
+        return sendRequest(buildRequest(requestBuilder, config))
     }
 
     private fun buildRequest(requestBuilder: HttpRequest.Builder, config: RequestConfig? = null): HttpRequest {
@@ -109,12 +109,18 @@ class WorkOS(
         return requestBuilder.build()
     }
 
-    private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
+    private fun sendRequest(request: HttpRequest): HttpResponse<String> {
         val response = httpClient.send(request, BodyHandlers.ofString())
 
         if (response.statusCode() >= 400) {
             handleResponseError(response)
         }
+
+        return response
+    }
+
+    private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
+        val response = sendRequest(request)
 
         return mapper.readValue(response.body(), responseType)
     }
