@@ -21,7 +21,7 @@ class UnprocessableEntityExceptionResponseTest {
 
         val response = mapper.readValue(json, UnprocessableEntityExceptionResponse::class.java)
 
-        assertEquals("foo", response.errors.get(0).field)
-        assertEquals("bar", response.errors.get(1).field)
+        assertEquals("foo", response.errors[0].field)
+        assertEquals("bar", response.errors[1].field)
     }
 }
