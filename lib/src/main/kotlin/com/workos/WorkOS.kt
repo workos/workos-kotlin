@@ -10,6 +10,7 @@ import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.options.RequestOptions
 import com.workos.common.responses.GenericErrorResponse
 import com.workos.common.responses.UnprocessableEntityExceptionResponse
+import com.workos.sso.SSO
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -35,18 +36,22 @@ class WorkOS(
             return if (https == true) "https" else "http"
         }
 
-    private val baseURL: String
-        get() {
-            val url = "$protocol://$apiHostname"
-            return if (port == null) url else "$url:$port"
-        }
-
     private val requestBuilder =
         HttpRequest.newBuilder()
             .header("Authorization", "Bearer $apiKey")
             .header("User-Agent", "workos-kotlin/$version")
 
+    val baseURL: String
+        get() {
+            val url = "$protocol://$apiHostname"
+            return if (port == null) url else "$url:$port"
+        }
+
     private val mapper = jacksonObjectMapper()
+
+    public val soo by lazy {
+        SSO(this)
+    }
 
     init {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
