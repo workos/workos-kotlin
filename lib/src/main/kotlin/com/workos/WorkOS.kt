@@ -11,6 +11,7 @@ import com.workos.common.options.RequestOptions
 import com.workos.common.responses.GenericErrorResponse
 import com.workos.common.responses.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.sso.SSO
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -21,8 +22,6 @@ import kotlin.collections.Map
 class WorkOS(
     private val apiKey: String
 ) {
-    val directorySync = DirectorySyncApi(this)
-
     var apiHostname = "api.workos.com"
 
     var https: Boolean = true
@@ -50,6 +49,14 @@ class WorkOS(
             .header("User-Agent", "workos-kotlin/$version")
 
     private val mapper = jacksonObjectMapper()
+
+    val directorySync by lazy {
+        DirectorySyncApi(this)
+    }
+
+    val sso by lazy {
+        SSO(this)
+    }
 
     init {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
