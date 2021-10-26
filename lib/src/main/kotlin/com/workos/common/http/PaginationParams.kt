@@ -1,6 +1,6 @@
 package com.workos.common.http
 
-class PaginationParams private constructor(params: MutableMap<String, String>): HashMap<String, String>() {
+class PaginationParams private constructor(params: MutableMap<String, String>) : HashMap<String, String>() {
     init {
         for ((key, value) in params) {
             this[key] = value
