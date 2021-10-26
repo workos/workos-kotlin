@@ -1,7 +1,6 @@
 package com.workos
 
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -122,7 +121,6 @@ class WorkOS(
 
     private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
         val response = sendRequest(request)
-        println(response.body());
         return mapper.readValue(response.body(), responseType)
     }
 
