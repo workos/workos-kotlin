@@ -1,4 +1,4 @@
-package com.workos.common.responses
+package com.workos.common.http
 
 class GenericErrorResponse {
     val error: String? = null

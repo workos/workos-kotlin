@@ -2,6 +2,7 @@ package com.workos.common.responses
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.workos.common.http.UnprocessableEntityExceptionResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
