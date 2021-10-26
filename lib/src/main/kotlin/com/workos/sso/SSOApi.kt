@@ -3,7 +3,7 @@ package com.workos.sso
 import com.workos.WorkOS
 import com.workos.sso.models.Connection
 
-class SSO(val workos: WorkOS) {
+class SSOApi(val workos: WorkOS) {
     fun deleteConnection() {}
 
     fun getAuthorizationURL() {}
