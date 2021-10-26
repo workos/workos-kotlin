@@ -1,3 +1,5 @@
 {
-  "recommendations": ["fwcd.kotlin", "mathiasfrohlich.kotlin"]
+  "recommendations": [
+    "mathiasfrohlich.kotlin"
+  ]
 }

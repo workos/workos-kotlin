@@ -4,30 +4,29 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Directory
-    @JsonCreator constructor(
-        @JsonProperty("object")
-        val obj: String = "directory",
-        @JsonProperty("id")
-        var id: String,
-        @JsonProperty("name")
-        var name: String,
-        @JsonProperty("domain")
-        var domain: String,
-        @JsonProperty("environment_id")
-        var environmentId: String,
-        @JsonProperty("external_key")
-        var externalKey: String,
-        @JsonProperty("organization_id")
-        var organization_id: String,
-        @JsonProperty("state")
-        var state: DirectoryState,
-        @JsonProperty("type")
-        var type: DirectoryType,
-        @JsonProperty("created_at")
-        var createdAt: String,
-        @JsonProperty("updated_at")
-        var updatedAt: String,
-
+@JsonCreator constructor(
+    @JsonProperty("object")
+    val obj: String = "directory",
+    @JsonProperty("id")
+    var id: String,
+    @JsonProperty("name")
+    var name: String,
+    @JsonProperty("domain")
+    var domain: String,
+    @JsonProperty("environment_id")
+    var environmentId: String,
+    @JsonProperty("external_key")
+    var externalKey: String,
+    @JsonProperty("organization_id")
+    var organization_id: String,
+    @JsonProperty("state")
+    var state: DirectoryState,
+    @JsonProperty("type")
+    var type: DirectoryType,
+    @JsonProperty("created_at")
+    var createdAt: String,
+    @JsonProperty("updated_at")
+    var updatedAt: String,
 )
 
 enum class DirectoryState(val state: String) {

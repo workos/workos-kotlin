@@ -21,7 +21,7 @@ import kotlin.collections.Map
 class WorkOS(
     private val apiKey: String
 ) {
-    val directorySync = DirectorySyncApi(this);
+    val directorySync = DirectorySyncApi(this)
 
     var apiHostname = "api.workos.com"
 
