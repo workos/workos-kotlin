@@ -50,6 +50,35 @@ class SSOTest : TestBase() {
     }
 
     @Test
+    fun getAuthorizationURLShouldReturnValidURL() {
+        val workos = createWorkOSClient()
+
+        val url = workos.sso.getAuthorizationURL("client_id", "http://localhost:8080/redirect").build()
+
+        assertEquals(
+            "http://localhost:8081/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
+            url
+        )
+    }
+
+    @Test
+    fun getAuthorizationURLShouldAcceptAdditionalParams() {
+        val workos = createWorkOSClient()
+
+        val url = workos.sso.getAuthorizationURL("client_id", "http://localhost:8080/redirect")
+            .connection("connection_value")
+            .domain("domain_value")
+            .provider("provider_value")
+            .state("state_value")
+            .build()
+
+        assertEquals(
+            "http://localhost:8081/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
+            url
+        )
+    }
+
+    @Test
     fun getConnectionShouldReturnConnection() {
         val workos = createWorkOSClient()
 
