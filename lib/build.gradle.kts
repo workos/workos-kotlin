@@ -33,6 +33,8 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
 
+    testImplementation("com.github.tomakehurst:wiremock:2.27.2")
+
     api("org.apache.commons:commons-math3:3.6.1")
 }
 

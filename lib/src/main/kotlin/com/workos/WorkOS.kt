@@ -10,6 +10,7 @@ import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.options.RequestOptions
 import com.workos.common.responses.GenericErrorResponse
 import com.workos.common.responses.UnprocessableEntityExceptionResponse
+import com.workos.sso.SSO
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -47,6 +48,10 @@ class WorkOS(
             .header("User-Agent", "workos-kotlin/$version")
 
     private val mapper = jacksonObjectMapper()
+
+    public val sso by lazy {
+        SSO(this)
+    }
 
     init {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
