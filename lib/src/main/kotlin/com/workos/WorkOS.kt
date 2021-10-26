@@ -36,7 +36,7 @@ class WorkOS(
             return if (https == true) "https" else "http"
         }
 
-    private val baseURL: String
+    val baseURL: String
         get() {
             val url = "$protocol://$apiHostname"
             return if (port == null) url else "$url:$port"
