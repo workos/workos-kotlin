@@ -7,17 +7,16 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.OauthException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
-import com.workos.common.http.RequestConfig
 import com.workos.common.http.GenericErrorResponse
+import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
-import com.workos.sso.SSO
+import com.workos.sso.SSOApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
-import kotlin.collections.Map
 
 class WorkOS(
     private val apiKey: String
@@ -55,7 +54,7 @@ class WorkOS(
     }
 
     val sso by lazy {
-        SSO(this)
+        SSOApi(this)
     }
 
     init {

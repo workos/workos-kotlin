@@ -14,6 +14,34 @@ TODO
 
 TODO
 
+## Local Development
+
+### Build
+
+```
+./gradlew build
+```
+
+### Test
+
+```
+./gradlew test --info
+```
+
+### Format
+
+```
+./gradlew ktlintFormat
+```
+
+### Publish Local Version
+
+```
+./gradlew publishToMavenLocal
+```
+
+Useful for testing with https://github.com/workos-inc/java-example-applications
+
 ## More Information
 
 - [Single Sign-On Guide](https://workos.com/docs/sso/guide)
