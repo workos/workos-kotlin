@@ -16,7 +16,6 @@ data class Directory
     var externalKey: String,
     @JsonProperty("organization_id")
     var organizationId: String,
-    @JsonProperty("state")
     var state: DirectoryState,
     var type: DirectoryType,
     @JsonProperty("created_at")
