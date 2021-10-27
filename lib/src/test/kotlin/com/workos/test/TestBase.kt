@@ -3,6 +3,7 @@ package com.workos.test
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.workos.WorkOS
 import org.junit.ClassRule
 
@@ -25,8 +26,8 @@ open class TestBase {
         return wireMockRule.port()
     }
 
-    fun stubResponse(url: String, responseBody: String, responseStatus: Int = 200) {
-        stubFor(
+    fun stubResponse(url: String, responseBody: String, responseStatus: Int = 200): StubMapping {
+        return stubFor(
             any(urlPathEqualTo(url))
                 .willReturn(
                     aResponse()
@@ -35,5 +36,9 @@ open class TestBase {
                         .withHeader("X-Request-ID", "request_id_value")
                 )
         )
+    }
+
+    fun deleteStub(stub: StubMapping) {
+        removeStub(stub)
     }
 }

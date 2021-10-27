@@ -1,4 +1,4 @@
-package com.workos.sso
+package com.workos.test.sso
 
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.sso.models.ConnectionType

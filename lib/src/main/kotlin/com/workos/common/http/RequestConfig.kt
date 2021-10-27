@@ -1,11 +1,9 @@
 package com.workos.common.http
 
 class RequestConfig(
-    val params: Map<String, String>,
-
-    val headers: Map<String, String>,
-
-    val data: Any?,
+    val params: Map<String, String>? = null,
+    val headers: Map<String, String>? = null,
+    val data: Any? = null,
 ) {
     companion object {
         fun builder(): Builder {

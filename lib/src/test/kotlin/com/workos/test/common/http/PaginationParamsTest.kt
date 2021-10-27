@@ -1,5 +1,6 @@
-package com.workos.common.http
+package com.workos.test.common.http
 
+import com.workos.common.http.PaginationParams
 import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.Test
 import kotlin.test.assertEquals
