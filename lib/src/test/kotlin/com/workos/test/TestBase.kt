@@ -7,7 +7,6 @@ import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.workos.WorkOS
 import org.junit.ClassRule
-import kotlin.collections.MutableList
 import kotlin.test.AfterTest
 
 open class TestBase {
