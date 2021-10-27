@@ -187,4 +187,79 @@ class SsoApiTest : TestBase() {
 
         assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
     }
+
+    @Test
+    fun listConnectionsWithPaginationParamsShouldReturnPayload() {
+        val workos = createWorkOSClient()
+
+        stubResponse(
+            "/connections",
+            """{
+            "data": [
+                {
+                    "connection_type": "GoogleOAuth",
+                    "created_at": "2021-10-26 13:29:47.133382",
+                    "domains": [],
+                    "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+                    "name": "Google OAuth 2.0",
+                    "object": "connection",
+                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+                    "state": "active",
+                    "updated_at": "2021-10-26 13:29:47.133382"
+                }
+            ],
+            "listMetadata": {
+                "after": null,
+                "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+            }
+        }"""
+        )
+
+        val options = SsoApi.ListConnectionsOptions.builder()
+            .after("someAfterId")
+            .before("someBeforeId")
+            .build()
+
+        val (connections) = workos.sso.listConnections(options)
+
+        assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    }
+
+    @Test
+    fun listConnectionsWithOptionalParamsShouldReturnPayload() {
+        val workos = createWorkOSClient()
+
+        stubResponse(
+            "/connections",
+            """{
+            "data": [
+                {
+                    "connection_type": "GoogleOAuth",
+                    "created_at": "2021-10-26 13:29:47.133382",
+                    "domains": [],
+                    "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+                    "name": "Google OAuth 2.0",
+                    "object": "connection",
+                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+                    "state": "active",
+                    "updated_at": "2021-10-26 13:29:47.133382"
+                }
+            ],
+            "listMetadata": {
+                "after": null,
+                "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+            }
+        }"""
+        )
+
+        val options = SsoApi.ListConnectionsOptions.builder()
+            .connectionType(ConnectionType.GoogleSAML)
+            .domain("domain.com")
+            .organizationId("org_123")
+            .build()
+
+        val (connections) = workos.sso.listConnections(options)
+
+        assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    }
 }
