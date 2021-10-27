@@ -22,25 +22,35 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     fun listDirectoryGroups(
-        directoryId: String? = null,
-        userId: String? = null,
-        paginationParams: PaginationParams? = PaginationParams()
+        listOptions: ListDirectoryGroupOptions = ListDirectoryGroupOptions()
     ): DirectoryGroupList {
-        val params = paginationParams!!.toMutableMap()
-        if (directoryId != null) {
-            params["directory"] = directoryId
-        }
-
-        if (userId != null) {
-            params["user"] = userId
-        }
-
         val requestConfig = RequestConfig.builder()
-            .params(params)
+            .params(listOptions)
             .build()
 
         return workos.get(
             "/directory_groups", DirectoryGroupList::class.java, requestConfig
         )
+    }
+
+    class ListDirectoryGroupOptions @JvmOverloads constructor(
+        directory: String? = null,
+        user: String? = null,
+    ) : PaginationParams() {
+        init {
+            if (directory != null) set("directory", directory)
+            if (user != null) set("user", user)
+        }
+
+        companion object {
+            fun builder(): Builder {
+                return Builder()
+            }
+        }
+
+        class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+            fun directory(value: String) = apply { this.params["directory"] = value }
+            fun user(value: String) = apply { this.params["user"] = value }
+        }
     }
 }

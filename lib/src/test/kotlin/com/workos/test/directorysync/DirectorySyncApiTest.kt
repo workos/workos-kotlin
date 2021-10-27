@@ -2,6 +2,7 @@ package com.workos.test.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.http.PaginationParams
+import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
 import com.workos.test.TestBase
@@ -95,7 +96,7 @@ class DirectorySyncApiTest : TestBase() {
             responseStatus = 200,
         )
 
-        val paginationParams = PaginationParams.Builder()
+        val paginationParams = PaginationParams.builder()
             .after("someAfterId")
             .before("someBeforeId")
             .limit((1))
@@ -182,13 +183,13 @@ class DirectorySyncApiTest : TestBase() {
             responseStatus = 200,
         )
 
-        val paginationParams = PaginationParams.Builder()
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
             .after("someAfterId")
             .before("someBeforeId")
             .limit((1))
             .build()
 
-        val (data) = workos.directorySync.listDirectoryGroups(paginationParams = paginationParams)
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
 
         val directoryGroup = data[0]
 
@@ -222,7 +223,12 @@ class DirectorySyncApiTest : TestBase() {
             responseStatus = 200,
         )
 
-        val (data) = workos.directorySync.listDirectoryGroups(directoryId, userId)
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
+            .directory(directoryId)
+            .user(userId)
+            .build()
+
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
 
         val directoryGroup = data[0]
 
