@@ -1,5 +1,6 @@
 package com.workos.test.directorysync
 
+import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.http.PaginationParams
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
@@ -16,7 +17,7 @@ class DirectorySyncApiTest : TestBase() {
         val gsuiteDirectoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
         val oktaDirectoryId = "directory_01E8CS3GSBEBZ1F1CZAEE3KHDG"
 
-        val stub = stubResponse(
+        stubResponse(
             url = "/directories",
             responseBody = """{
                 "data": [{
@@ -47,8 +48,6 @@ class DirectorySyncApiTest : TestBase() {
 
         val (data) = workos.directorySync.listDirectories()
 
-        deleteStub(stub)
-
         val gsuiteDirectory = data[0]
         val oktaDirectory = data[1]
 
@@ -64,10 +63,9 @@ class DirectorySyncApiTest : TestBase() {
 
         val gsuiteDirectoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
 
-        val stub = stubResponse(
-            // TODO: investigate why this fails in the test
-            // url = "/directories?before=someBeforeId&limit=1&after=someAfterId",
+        stubResponse(
             url = "/directories",
+            params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId"), "limit" to equalTo("1")),
             responseBody = """{
                 "data": [{
                     "id": "$gsuiteDirectoryId",
@@ -91,8 +89,6 @@ class DirectorySyncApiTest : TestBase() {
             .build()
 
         val (data) = workos.directorySync.listDirectories(paginationParams)
-
-        deleteStub(stub)
 
         val gsuiteDirectory = data[0]
 
