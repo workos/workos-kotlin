@@ -102,8 +102,11 @@ class SsoApi(val workos: WorkOS) {
     class ListConnectionsOptions @JvmOverloads constructor(
         connectionType: ConnectionType? = null,
         domain: String? = null,
-        organizationId: String? = null
-    ) : PaginationParams() {
+        organizationId: String? = null,
+        after: String? = null,
+        before: String? = null,
+        limit: Int? = null
+    ) : PaginationParams(after, before, limit) {
         init {
             if (connectionType != null) set("connection_type", connectionType.toString())
             if (domain != null) set("domain", domain)
