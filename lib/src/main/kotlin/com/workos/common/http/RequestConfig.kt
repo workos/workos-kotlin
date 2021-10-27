@@ -14,9 +14,9 @@ class RequestConfig(
     }
 
     class RequestConfigBuilder {
-        var params: Map<String, String> = mapOf()
+        var params: Map<String, String> = emptyMap()
 
-        var headers: Map<String, String> = mapOf()
+        var headers: Map<String, String> = emptyMap()
 
         var data: Any? = null
 
