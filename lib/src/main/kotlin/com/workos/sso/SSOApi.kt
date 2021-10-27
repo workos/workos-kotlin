@@ -79,7 +79,7 @@ class SSOApi(val workos: WorkOS) {
             "grant_type" to "authorization_code",
         )
 
-        val config = RequestConfig.create()
+        val config = RequestConfig.builder()
             .params(params)
             .build()
 
@@ -89,7 +89,7 @@ class SSOApi(val workos: WorkOS) {
     fun getProfile(accessToken: String): Profile {
         val headers = mapOf("Authorization" to "Bearar $accessToken")
 
-        val config = RequestConfig.create()
+        val config = RequestConfig.builder()
             .headers(headers)
             .build()
 

@@ -8,7 +8,7 @@ class RequestConfig(
     val data: Any?,
 ) {
     companion object {
-        fun create(): RequestConfigBuilder {
+        fun builder(): RequestConfigBuilder {
             return RequestConfigBuilder()
         }
     }
