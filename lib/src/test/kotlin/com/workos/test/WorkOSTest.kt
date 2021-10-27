@@ -11,10 +11,6 @@ class WorkOSTest {
         val message: String = ""
     }
 
-    class ExampleRequestEntity {
-        val param: String = ""
-    }
-
     @Test
     fun getShouldReturnSuccessStatusCode() {
         val workos = WorkOS("apiKey")
@@ -38,7 +34,7 @@ class WorkOSTest {
         val workos = WorkOS("apiKey")
 
         assertThrows(NotFoundException::class.java) {
-            workos.post<ExampleResponseType>("/not-real", ExampleRequestEntity(), ExampleResponseType::class.java)
+            workos.post<ExampleResponseType>("/not-real", ExampleResponseType::class.java)
         }
     }
 
@@ -47,7 +43,7 @@ class WorkOSTest {
         val workos = WorkOS("apiKey")
 
         assertThrows(NotFoundException::class.java) {
-            workos.put<ExampleResponseType>("/not-real", ExampleRequestEntity(), ExampleResponseType::class.java)
+            workos.put<ExampleResponseType>("/not-real", ExampleResponseType::class.java)
         }
     }
 

@@ -19,7 +19,7 @@ import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 
 class WorkOS(
-    private val apiKey: String
+    val apiKey: String
 ) {
     var apiHostname = "api.workos.com"
 
@@ -75,19 +75,20 @@ class WorkOS(
         return sendRequest(buildRequest(requestBuilder, config), responseType)
     }
 
-    fun <Res : Any> post(path: String, entity: Any, responseType: Class<Res>, config: RequestConfig? = null): Res {
+    fun <Res : Any> post(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
         val uri = URIBuilder(baseURL).setPath(path).build()
-        val body = mapper.writeValueAsString(entity)
+
+        val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
         val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
 
         return sendRequest(buildRequest(requestBuilder, config), responseType)
     }
 
-    fun <Res : Any> put(path: String, entity: Any, responseType: Class<Res>, config: RequestConfig? = null): Res {
+    fun <Res : Any> put(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
         val uri = URIBuilder(baseURL).setPath(path).build()
 
-        val body = mapper.writeValueAsString(entity)
+        val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
         val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
 

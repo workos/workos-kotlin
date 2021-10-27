@@ -6,7 +6,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.directorysync.models.DirectoryList
 
 class DirectorySyncApi(private val workos: WorkOS) {
-    fun listDirectories(paginationParams: PaginationParams? = PaginationParams.emptyParams()): DirectoryList {
+    fun listDirectories(paginationParams: PaginationParams? = PaginationParams()): DirectoryList {
         val requestConfig = RequestConfig(params = paginationParams)
         return this.workos.get(
             path = "/directories", responseType = DirectoryList::class.java, requestConfig

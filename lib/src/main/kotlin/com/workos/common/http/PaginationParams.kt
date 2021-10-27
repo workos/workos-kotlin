@@ -1,20 +1,35 @@
 package com.workos.common.http
 
-class PaginationParams private constructor(params: MutableMap<String, String>) : HashMap<String, String>() {
+class PaginationParams @JvmOverloads constructor(
+    after: String? = null,
+    before: String? = null,
+    limit: Int? = null
+) : HashMap<String, String>() {
+
     init {
-        for ((key, value) in params) {
-            this[key] = value
+        if (after != null) {
+            set("after", after)
+        }
+
+        if (before != null) {
+            set("before", before)
+        }
+
+        if (limit != null) {
+            set("limit", limit.toString())
         }
     }
 
     companion object {
-        fun emptyParams() = PaginationParams(mutableMapOf<String, String>())
+        fun builder(): Builder {
+            return Builder()
+        }
     }
 
-    data class Builder(private val params: MutableMap<String, String> = mutableMapOf()) {
+    class Builder(private val params: PaginationParams = PaginationParams()) {
         fun after(after: String) = apply { this.params["after"] = after }
         fun before(before: String) = apply { this.params["before"] = before }
         fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
-        fun build() = PaginationParams(params)
+        fun build() = params
     }
 }

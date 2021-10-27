@@ -1,7 +1,10 @@
 package com.workos.sso
 
 import com.workos.WorkOS
+import com.workos.common.http.RequestConfig
 import com.workos.sso.models.Connection
+import com.workos.sso.models.Profile
+import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
 
 class SSOApi(val workos: WorkOS) {
@@ -68,9 +71,30 @@ class SSOApi(val workos: WorkOS) {
         return workos.get("/connections/$id", Connection::class.java)
     }
 
-    fun getProfileAndToken() {}
+    fun getProfileAndToken(code: String, clientId: String): ProfileAndToken {
+        val params = mapOf<String, String>(
+            "client_id" to clientId,
+            "client_secret" to workos.apiKey,
+            "code" to code,
+            "grant_type" to "authorization_code",
+        )
 
-    fun getProfile() {}
+        val config = RequestConfig.builder()
+            .params(params)
+            .build()
+
+        return workos.post("/sso/token", ProfileAndToken::class.java, config)
+    }
+
+    fun getProfile(accessToken: String): Profile {
+        val headers = mapOf("Authorization" to "Bearar $accessToken")
+
+        val config = RequestConfig.builder()
+            .headers(headers)
+            .build()
+
+        return workos.get("/sso/profile", Profile::class.java, config)
+    }
 
     fun listConnections() {}
 }

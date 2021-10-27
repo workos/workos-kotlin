@@ -7,13 +7,9 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SSOTest : TestBase() {
+class SSOApiTest : TestBase() {
     class ExampleResponseType {
         val message: String = ""
-    }
-
-    class ExampleRequestEntity {
-        val param: String = ""
     }
 
     @Test
@@ -56,7 +52,7 @@ class SSOTest : TestBase() {
         val url = workos.sso.getAuthorizationURL("client_id", "http://localhost:8080/redirect").build()
 
         assertEquals(
-            "http://localhost:8081/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
+            "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
             url
         )
     }
@@ -73,7 +69,7 @@ class SSOTest : TestBase() {
             .build()
 
         assertEquals(
-            "http://localhost:8081/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
+            "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
             url
         )
     }
@@ -92,6 +88,7 @@ class SSOTest : TestBase() {
             "domains": [],
             "id": "$id",
             "name": "Google OAuth 2.0",
+            "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
             "state": "active",
             "updated_at": "2021-10-26 13:29:47.133382"
@@ -102,5 +99,59 @@ class SSOTest : TestBase() {
 
         assertEquals(id, connection.id)
         assertEquals(ConnectionType.GoogleOAuth, connection.connectionType)
+    }
+
+    @Test
+    fun getProfileAndTokenShouldReturnPayload() {
+        val workos = createWorkOSClient()
+
+        stubResponse(
+            "/sso/token",
+            """{
+                "token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
+                "profile": {
+                    "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
+                    "connection_type": "OktaSAML",
+                    "email": "todd@foo-corp.com",
+                    "first_name": "Todd",
+                    "id": "prof_01DMC79VCBZ0NY2099737PSVF1",
+                    "idp_id": "00u1a0ufowBJlzPlk357",
+                    "last_name": "Rundgren",
+                    "object": "profile",
+                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+                    "raw_attributes": {"foo": "bar"}
+                }
+            }"""
+        )
+
+        val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
+
+        assertEquals("01DMEK0J53CVMC32CK5SE0KZ8Q", profileAndToken.token)
+    }
+
+    @Test
+    fun getProfileShouldReturnPayload() {
+        val workos = createWorkOSClient()
+
+        stubResponse(
+            "/sso/profile",
+            """{
+                "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
+                "connection_type": "OktaSAML",
+                "email": "todd@foo-corp.com",
+                "first_name": "Todd",
+                "id": "prof_01DMC79VCBZ0NY2099737PSVF2",
+                "idp_id": "00u1a0ufowBJlzPlk357",
+                "last_name": "Rundgren",
+                "object": "profile",
+                "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+                "raw_attributes": {"foo": "foo_value"}
+            }"""
+        )
+
+        val profile = workos.sso.getProfile("accessToken")
+
+        assertEquals("prof_01DMC79VCBZ0NY2099737PSVF2", profile.id)
+        assertEquals("foo_value", profile.rawAttributes.get("foo"))
     }
 }
