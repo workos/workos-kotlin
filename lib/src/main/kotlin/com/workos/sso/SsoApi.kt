@@ -87,7 +87,7 @@ class SsoApi(val workos: WorkOS) {
     }
 
     fun getProfile(accessToken: String): Profile {
-        val headers = mapOf("Authorization" to "Bearar $accessToken")
+        val headers = mapOf("Authorization" to "Bearer $accessToken")
 
         val config = RequestConfig.builder()
             .headers(headers)
