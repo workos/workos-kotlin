@@ -1,5 +1,6 @@
 package com.workos.test.sso
 
+import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.sso.SsoApi
 import com.workos.sso.models.ConnectionType
@@ -193,8 +194,9 @@ class SsoApiTest : TestBase() {
         val workos = createWorkOSClient()
 
         stubResponse(
-            "/connections",
-            """{
+            url = "/connections",
+            params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
+            responseBody = """{
             "data": [
                 {
                     "connection_type": "GoogleOAuth",
@@ -230,8 +232,13 @@ class SsoApiTest : TestBase() {
         val workos = createWorkOSClient()
 
         stubResponse(
-            "/connections",
-            """{
+            url = "/connections",
+            params = mapOf(
+                "connection_type" to equalTo(ConnectionType.GoogleSAML.toString()),
+                "domain" to equalTo("domain.com"),
+                "organization_id" to equalTo("org_123"),
+            ),
+            responseBody = """{
             "data": [
                 {
                     "connection_type": "GoogleOAuth",
