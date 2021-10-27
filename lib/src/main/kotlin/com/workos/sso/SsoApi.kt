@@ -107,7 +107,7 @@ class SsoApi(val workos: WorkOS) {
         init {
             if (connectionType != null) set("connection_type", connectionType.toString())
             if (domain != null) set("domain", domain)
-            if (organizationId != null) set("limit", organizationId)
+            if (organizationId != null) set("organization_id", organizationId)
         }
 
         companion object {
