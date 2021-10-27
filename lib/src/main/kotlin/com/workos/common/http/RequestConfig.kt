@@ -8,12 +8,12 @@ class RequestConfig(
     val data: Any?,
 ) {
     companion object {
-        fun builder(): RequestConfigBuilder {
-            return RequestConfigBuilder()
+        fun builder(): Builder {
+            return Builder()
         }
     }
 
-    class RequestConfigBuilder {
+    class Builder {
         var params: Map<String, String> = emptyMap()
 
         var headers: Map<String, String> = emptyMap()
