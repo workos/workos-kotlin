@@ -1,5 +1,6 @@
-package com.workos
+package com.workos.test
 
+import com.workos.WorkOS
 import com.workos.common.exceptions.NotFoundException
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test

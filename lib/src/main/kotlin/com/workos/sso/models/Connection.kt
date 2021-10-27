@@ -33,7 +33,7 @@ data class Connection
     val updatedAt: String,
 )
 
-enum class ConnectionType(val type: String) {
+enum class ConnectionType(type: String) {
     ADFSSAML("ADFSSAML"),
     Auth0SAML("Auth0SAML"),
     AzureSAML("AzureSAML"),
