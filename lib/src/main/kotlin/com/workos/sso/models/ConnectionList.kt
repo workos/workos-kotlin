@@ -6,6 +6,6 @@ import com.workos.common.models.ListMetadata
 
 data class ConnectionList
 @JsonCreator constructor(
-    val data: List<Connection>,
-    val listMetadata: ListMetadata,
+  val data: List<Connection>,
+  val listMetadata: ListMetadata,
 )

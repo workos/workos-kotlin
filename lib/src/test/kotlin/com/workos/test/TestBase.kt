@@ -10,52 +10,52 @@ import org.junit.ClassRule
 import kotlin.test.AfterTest
 
 open class TestBase {
-    val stubs = mutableListOf<StubMapping>()
+  val stubs = mutableListOf<StubMapping>()
 
-    companion object {
-        @ClassRule
-        @JvmField
-        val wireMockRule = WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort())
+  companion object {
+    @ClassRule
+    @JvmField
+    val wireMockRule = WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort())
+  }
+
+  @AfterTest
+  fun afterEach() {
+    for (stub in stubs) {
+      deleteStub(stub)
     }
 
-    @AfterTest
-    fun afterEach() {
-        for (stub in stubs) {
-            deleteStub(stub)
-        }
+    stubs.clear()
+  }
 
-        stubs.clear()
-    }
+  fun createWorkOSClient(): WorkOS {
+    val workos = WorkOS("apiKey")
+    workos.port = getWireMockPort()
+    workos.apiHostname = "localhost"
+    workos.https = false
+    return workos
+  }
 
-    fun createWorkOSClient(): WorkOS {
-        val workos = WorkOS("apiKey")
-        workos.port = getWireMockPort()
-        workos.apiHostname = "localhost"
-        workos.https = false
-        return workos
-    }
+  fun getWireMockPort(): Int {
+    return wireMockRule.port()
+  }
 
-    fun getWireMockPort(): Int {
-        return wireMockRule.port()
-    }
-
-    fun stubResponse(url: String, responseBody: String, responseStatus: Int = 200, params: Map<String, StringValuePattern> = emptyMap()): StubMapping {
-        val stub = stubFor(
-            any(urlPathEqualTo(url))
-                .withQueryParams(params)
-                .willReturn(
-                    aResponse()
-                        .withStatus(responseStatus)
-                        .withBody(responseBody)
-                        .withHeader("X-Request-ID", "request_id_value")
-                )
+  fun stubResponse(url: String, responseBody: String, responseStatus: Int = 200, params: Map<String, StringValuePattern> = emptyMap()): StubMapping {
+    val stub = stubFor(
+      any(urlPathEqualTo(url))
+        .withQueryParams(params)
+        .willReturn(
+          aResponse()
+            .withStatus(responseStatus)
+            .withBody(responseBody)
+            .withHeader("X-Request-ID", "request_id_value")
         )
-        stubs.add(stub)
+    )
+    stubs.add(stub)
 
-        return stub
-    }
+    return stub
+  }
 
-    private fun deleteStub(stub: StubMapping) {
-        removeStub(stub)
-    }
+  private fun deleteStub(stub: StubMapping) {
+    removeStub(stub)
+  }
 }

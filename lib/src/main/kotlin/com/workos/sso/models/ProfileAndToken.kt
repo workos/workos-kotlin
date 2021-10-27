@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 
 data class ProfileAndToken
 @JsonCreator constructor(
-    val profile: Profile,
+  val profile: Profile,
 
-    val token: String,
+  val token: String,
 )
