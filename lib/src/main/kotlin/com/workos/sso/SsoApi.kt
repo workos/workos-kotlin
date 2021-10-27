@@ -1,8 +1,11 @@
 package com.workos.sso
 
 import com.workos.WorkOS
+import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.sso.models.Connection
+import com.workos.sso.models.ConnectionList
+import com.workos.sso.models.ConnectionType
 import com.workos.sso.models.Profile
 import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
@@ -96,5 +99,35 @@ class SsoApi(val workos: WorkOS) {
         return workos.get("/sso/profile", Profile::class.java, config)
     }
 
-    fun listConnections() {}
+    class ListConnectionsOptions @JvmOverloads constructor(
+        connectionType: ConnectionType? = null,
+        domain: String? = null,
+        organizationId: String? = null
+    ) : PaginationParams() {
+        init {
+            if (connectionType != null) set("connection_type", connectionType.toString())
+            if (domain != null) set("domain", domain)
+            if (organizationId != null) set("organization_id", organizationId)
+        }
+
+        companion object {
+            fun builder(): Builder {
+                return Builder()
+            }
+        }
+
+        class Builder : PaginationParams.Builder<ListConnectionsOptions>(ListConnectionsOptions()) {
+            fun connectionType(value: ConnectionType) = apply { this.params["connection_type"] = value.toString() }
+            fun domain(value: String) = apply { this.params["domain"] = value }
+            fun organizationId(value: String) = apply { this.params["organization_id"] = value }
+        }
+    }
+
+    fun listConnections(options: ListConnectionsOptions): ConnectionList {
+        val config = RequestConfig.builder()
+            .params(options)
+            .build()
+
+        return workos.get("/connections", ConnectionList::class.java, config)
+    }
 }
