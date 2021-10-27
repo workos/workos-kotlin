@@ -6,5 +6,5 @@ import com.workos.common.models.ListMetadata
 data class DirectoryGroupList
 @JsonCreator constructor(
     var data: Array<Group>,
-    var listMetadata: ListMetadata?
+    var listMetadata: ListMetadata
 )

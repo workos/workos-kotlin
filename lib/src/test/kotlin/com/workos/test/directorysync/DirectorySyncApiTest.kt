@@ -42,8 +42,13 @@ class DirectorySyncApiTest : TestBase() {
                     "type": "okta scim v2.0",
                     "created_at": "2021-06-25T19:09:33.155Z",
                     "updated_at": "2021-06-25T19:10:33.155Z"
-                }]
+                }],
+                "listMetadata" : {
+                  "after" : "someAfterId",
+                  "before" : "someBeforeId"
+                }                
             }""",
+
         )
 
         val (data) = workos.directorySync.listDirectories()
@@ -81,7 +86,11 @@ class DirectorySyncApiTest : TestBase() {
                     "type": "gsuite directory",
                     "created_at": "2021-06-25T19:07:33.155Z",
                     "updated_at": "2021-06-25T19:08:33.155Z"
-                }]
+                }],
+                "listMetadata" : {
+                  "after" : "someAfterId",
+                  "before" : "someBeforeId"
+                }
             }""",
             responseStatus = 200,
         )
