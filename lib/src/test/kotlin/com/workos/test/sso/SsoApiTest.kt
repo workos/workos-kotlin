@@ -10,81 +10,81 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SsoApiTest : TestBase() {
-    class ExampleResponseType {
-        val message: String = ""
+  class ExampleResponseType {
+    val message: String = ""
+  }
+
+  @Test
+  fun deleteConnectionShouldNotError() {
+    val workos = createWorkOSClient()
+
+    val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
+
+    stubResponse(
+      "/connections/$id",
+      "{}"
+    )
+
+    val response = workos.sso.deleteConnection(id)
+
+    assertEquals(Unit, response)
+  }
+
+  @Test
+  fun deleteConnectionShouldThrowError() {
+    val workos = createWorkOSClient()
+
+    val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
+
+    stubResponse(
+      "/connections/$id",
+      "{}",
+      401
+    )
+
+    assertThrows(UnauthorizedException::class.java) {
+      workos.sso.deleteConnection(id)
     }
+  }
 
-    @Test
-    fun deleteConnectionShouldNotError() {
-        val workos = createWorkOSClient()
+  @Test
+  fun getAuthorizationUrlShouldReturnValidUrl() {
+    val workos = createWorkOSClient()
 
-        val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
+    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect").build()
 
-        stubResponse(
-            "/connections/$id",
-            "{}"
-        )
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
+      url
+    )
+  }
 
-        val response = workos.sso.deleteConnection(id)
+  @Test
+  fun getAuthorizationUrlShouldAcceptAdditionalParams() {
+    val workos = createWorkOSClient()
 
-        assertEquals(Unit, response)
-    }
+    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+      .connection("connection_value")
+      .domain("domain_value")
+      .provider("provider_value")
+      .state("state_value")
+      .build()
 
-    @Test
-    fun deleteConnectionShouldThrowError() {
-        val workos = createWorkOSClient()
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
+      url
+    )
+  }
 
-        val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
+  @Test
+  fun getConnectionShouldReturnConnection() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            "/connections/$id",
-            "{}",
-            401
-        )
+    val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
 
-        assertThrows(UnauthorizedException::class.java) {
-            workos.sso.deleteConnection(id)
-        }
-    }
-
-    @Test
-    fun getAuthorizationUrlShouldReturnValidUrl() {
-        val workos = createWorkOSClient()
-
-        val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect").build()
-
-        assertEquals(
-            "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
-            url
-        )
-    }
-
-    @Test
-    fun getAuthorizationUrlShouldAcceptAdditionalParams() {
-        val workos = createWorkOSClient()
-
-        val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-            .connection("connection_value")
-            .domain("domain_value")
-            .provider("provider_value")
-            .state("state_value")
-            .build()
-
-        assertEquals(
-            "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
-            url
-        )
-    }
-
-    @Test
-    fun getConnectionShouldReturnConnection() {
-        val workos = createWorkOSClient()
-
-        val id = "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
-
-        stubResponse(
-            "/connections/$id",
-            """{
+    stubResponse(
+      "/connections/$id",
+      """{
             "connection_type": "GoogleOAuth",
             "created_at": "2021-10-26 13:29:47.133382",
             "domains": [],
@@ -95,21 +95,21 @@ class SsoApiTest : TestBase() {
             "state": "active",
             "updated_at": "2021-10-26 13:29:47.133382"
         }"""
-        )
+    )
 
-        val connection = workos.sso.getConnection(id)
+    val connection = workos.sso.getConnection(id)
 
-        assertEquals(id, connection.id)
-        assertEquals(ConnectionType.GoogleOAuth, connection.connectionType)
-    }
+    assertEquals(id, connection.id)
+    assertEquals(ConnectionType.GoogleOAuth, connection.connectionType)
+  }
 
-    @Test
-    fun getProfileAndTokenShouldReturnPayload() {
-        val workos = createWorkOSClient()
+  @Test
+  fun getProfileAndTokenShouldReturnPayload() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            "/sso/token",
-            """{
+    stubResponse(
+      "/sso/token",
+      """{
                 "token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
                 "profile": {
                     "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
@@ -124,20 +124,20 @@ class SsoApiTest : TestBase() {
                     "raw_attributes": {"foo": "bar"}
                 }
             }"""
-        )
+    )
 
-        val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
+    val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
 
-        assertEquals("01DMEK0J53CVMC32CK5SE0KZ8Q", profileAndToken.token)
-    }
+    assertEquals("01DMEK0J53CVMC32CK5SE0KZ8Q", profileAndToken.token)
+  }
 
-    @Test
-    fun getProfileShouldReturnPayload() {
-        val workos = createWorkOSClient()
+  @Test
+  fun getProfileShouldReturnPayload() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            "/sso/profile",
-            """{
+    stubResponse(
+      "/sso/profile",
+      """{
                 "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
                 "connection_type": "OktaSAML",
                 "email": "todd@foo-corp.com",
@@ -149,21 +149,21 @@ class SsoApiTest : TestBase() {
                 "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
                 "raw_attributes": {"foo": "foo_value"}
             }"""
-        )
+    )
 
-        val profile = workos.sso.getProfile("accessToken")
+    val profile = workos.sso.getProfile("accessToken")
 
-        assertEquals("prof_01DMC79VCBZ0NY2099737PSVF2", profile.id)
-        assertEquals("foo_value", profile.rawAttributes.get("foo"))
-    }
+    assertEquals("prof_01DMC79VCBZ0NY2099737PSVF2", profile.id)
+    assertEquals("foo_value", profile.rawAttributes.get("foo"))
+  }
 
-    @Test
-    fun listConnectionsShouldReturnPayload() {
-        val workos = createWorkOSClient()
+  @Test
+  fun listConnectionsShouldReturnPayload() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            "/connections",
-            """{
+    stubResponse(
+      "/connections",
+      """{
             "data": [
                 {
                     "connection_type": "GoogleOAuth",
@@ -182,21 +182,21 @@ class SsoApiTest : TestBase() {
                 "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
             }
         }"""
-        )
+    )
 
-        val (connections) = workos.sso.listConnections(SsoApi.ListConnectionsOptions.builder().build())
+    val (connections) = workos.sso.listConnections(SsoApi.ListConnectionsOptions.builder().build())
 
-        assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
-    }
+    assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+  }
 
-    @Test
-    fun listConnectionsWithPaginationParamsShouldReturnPayload() {
-        val workos = createWorkOSClient()
+  @Test
+  fun listConnectionsWithPaginationParamsShouldReturnPayload() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            url = "/connections",
-            params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
-            responseBody = """{
+    stubResponse(
+      url = "/connections",
+      params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
+      responseBody = """{
             "data": [
                 {
                     "connection_type": "GoogleOAuth",
@@ -215,30 +215,30 @@ class SsoApiTest : TestBase() {
                 "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
             }
         }"""
-        )
+    )
 
-        val options = SsoApi.ListConnectionsOptions.builder()
-            .after("someAfterId")
-            .before("someBeforeId")
-            .build()
+    val options = SsoApi.ListConnectionsOptions.builder()
+      .after("someAfterId")
+      .before("someBeforeId")
+      .build()
 
-        val (connections) = workos.sso.listConnections(options)
+    val (connections) = workos.sso.listConnections(options)
 
-        assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
-    }
+    assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+  }
 
-    @Test
-    fun listConnectionsWithOptionalParamsShouldReturnPayload() {
-        val workos = createWorkOSClient()
+  @Test
+  fun listConnectionsWithOptionalParamsShouldReturnPayload() {
+    val workos = createWorkOSClient()
 
-        stubResponse(
-            url = "/connections",
-            params = mapOf(
-                "connection_type" to equalTo(ConnectionType.GoogleSAML.toString()),
-                "domain" to equalTo("domain.com"),
-                "organization_id" to equalTo("org_123"),
-            ),
-            responseBody = """{
+    stubResponse(
+      url = "/connections",
+      params = mapOf(
+        "connection_type" to equalTo(ConnectionType.GoogleSAML.toString()),
+        "domain" to equalTo("domain.com"),
+        "organization_id" to equalTo("org_123"),
+      ),
+      responseBody = """{
             "data": [
                 {
                     "connection_type": "GoogleOAuth",
@@ -257,16 +257,16 @@ class SsoApiTest : TestBase() {
                 "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
             }
         }"""
-        )
+    )
 
-        val options = SsoApi.ListConnectionsOptions.builder()
-            .connectionType(ConnectionType.GoogleSAML)
-            .domain("domain.com")
-            .organizationId("org_123")
-            .build()
+    val options = SsoApi.ListConnectionsOptions.builder()
+      .connectionType(ConnectionType.GoogleSAML)
+      .domain("domain.com")
+      .organizationId("org_123")
+      .build()
 
-        val (connections) = workos.sso.listConnections(options)
+    val (connections) = workos.sso.listConnections(options)
 
-        assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
-    }
+    assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+  }
 }
