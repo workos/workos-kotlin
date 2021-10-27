@@ -106,7 +106,7 @@ class SsoApi(val workos: WorkOS) {
     ) : PaginationParams() {
         init {
             if (connectionType != null) set("connection_type", connectionType.toString())
-            if (domain != null) set("before", domain)
+            if (domain != null) set("domain", domain)
             if (organizationId != null) set("limit", organizationId)
         }
 
