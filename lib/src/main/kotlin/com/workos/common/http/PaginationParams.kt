@@ -26,7 +26,7 @@ class PaginationParams @JvmOverloads constructor(
         }
     }
 
-    class Builder(private var params: PaginationParams = PaginationParams()) {
+    class Builder(private val params: PaginationParams = PaginationParams()) {
         fun after(after: String) = apply { this.params["after"] = after }
         fun before(before: String) = apply { this.params["before"] = before }
         fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
