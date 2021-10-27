@@ -7,41 +7,41 @@ import com.workos.sso.models.Profile
 import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
 
-class SSOApi(val workos: WorkOS) {
-    class AuthorizationURLBuilder(
-        val baseURL: String,
-        val clientID: String,
-        val redirectURI: String,
+class SsoApi(val workos: WorkOS) {
+    class AuthorizationUrlBuilder(
+        val baseUrl: String,
+        val clientId: String,
+        val redirectUri: String,
         var connection: String? = null,
         var domain: String? = null,
         var provider: String? = null,
         var state: String? = null
     ) {
-        fun connection(value: String): AuthorizationURLBuilder {
+        fun connection(value: String): AuthorizationUrlBuilder {
             connection = value
             return this
         }
 
-        fun domain(value: String): AuthorizationURLBuilder {
+        fun domain(value: String): AuthorizationUrlBuilder {
             domain = value
             return this
         }
 
-        fun provider(value: String): AuthorizationURLBuilder {
+        fun provider(value: String): AuthorizationUrlBuilder {
             provider = value
             return this
         }
 
-        fun state(value: String): AuthorizationURLBuilder {
+        fun state(value: String): AuthorizationUrlBuilder {
             state = value
             return this
         }
 
         fun build(): String {
-            val uriBuilder = URIBuilder("$baseURL")
+            val uriBuilder = URIBuilder("$baseUrl")
                 .setPath("sso/authorize")
-                .addParameter("client_id", clientID)
-                .addParameter("redirect_uri", redirectURI)
+                .addParameter("client_id", clientId)
+                .addParameter("redirect_uri", redirectUri)
                 .addParameter("response_type", "code")
 
             if (connection != null) uriBuilder.addParameter("connection", connection)
@@ -53,8 +53,8 @@ class SSOApi(val workos: WorkOS) {
         }
 
         companion object {
-            fun create(baseURL: String, clientID: String, redirectURI: String): AuthorizationURLBuilder {
-                return AuthorizationURLBuilder(baseURL, clientID, redirectURI)
+            fun create(baseUrl: String, clientId: String, redirectUri: String): AuthorizationUrlBuilder {
+                return AuthorizationUrlBuilder(baseUrl, clientId, redirectUri)
             }
         }
     }
@@ -63,8 +63,8 @@ class SSOApi(val workos: WorkOS) {
         workos.delete("/connections/$id")
     }
 
-    fun getAuthorizationURL(clientID: String, redirectURI: String): AuthorizationURLBuilder {
-        return AuthorizationURLBuilder.create(workos.baseURL, clientID, redirectURI)
+    fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlBuilder {
+        return AuthorizationUrlBuilder.create(workos.baseUrl, clientId, redirectUri)
     }
 
     fun getConnection(id: String): Connection {

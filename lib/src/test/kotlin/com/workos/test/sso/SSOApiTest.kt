@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SSOApiTest : TestBase() {
+class SsoApiTest : TestBase() {
     class ExampleResponseType {
         val message: String = ""
     }
@@ -46,10 +46,10 @@ class SSOApiTest : TestBase() {
     }
 
     @Test
-    fun getAuthorizationURLShouldReturnValidURL() {
+    fun getAuthorizationUrlShouldReturnValidUrl() {
         val workos = createWorkOSClient()
 
-        val url = workos.sso.getAuthorizationURL("client_id", "http://localhost:8080/redirect").build()
+        val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect").build()
 
         assertEquals(
             "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code",
@@ -58,10 +58,10 @@ class SSOApiTest : TestBase() {
     }
 
     @Test
-    fun getAuthorizationURLShouldAcceptAdditionalParams() {
+    fun getAuthorizationUrlShouldAcceptAdditionalParams() {
         val workos = createWorkOSClient()
 
-        val url = workos.sso.getAuthorizationURL("client_id", "http://localhost:8080/redirect")
+        val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
             .connection("connection_value")
             .domain("domain_value")
             .provider("provider_value")

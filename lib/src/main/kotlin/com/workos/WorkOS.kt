@@ -11,7 +11,7 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
-import com.workos.sso.SSOApi
+import com.workos.sso.SsoApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -36,7 +36,7 @@ class WorkOS(
             return if (https) "https" else "http"
         }
 
-    val baseURL: String
+    val baseUrl: String
         get() {
             val url = "$protocol://$apiHostname"
             return if (port == null) url else "$url:$port"
@@ -54,7 +54,7 @@ class WorkOS(
     }
 
     val sso by lazy {
-        SSOApi(this)
+        SsoApi(this)
     }
 
     init {
@@ -62,7 +62,7 @@ class WorkOS(
     }
 
     fun <Res : Any> get(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
-        val uri = URIBuilder(baseURL).setPath(path)
+        val uri = URIBuilder(baseUrl).setPath(path)
 
         if (config?.params != null) {
             for ((key, value) in config.params.entries) {
@@ -76,7 +76,7 @@ class WorkOS(
     }
 
     fun <Res : Any> post(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
-        val uri = URIBuilder(baseURL).setPath(path).build()
+        val uri = URIBuilder(baseUrl).setPath(path).build()
 
         val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
@@ -86,7 +86,7 @@ class WorkOS(
     }
 
     fun <Res : Any> put(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
-        val uri = URIBuilder(baseURL).setPath(path).build()
+        val uri = URIBuilder(baseUrl).setPath(path).build()
 
         val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
@@ -96,7 +96,7 @@ class WorkOS(
     }
 
     fun delete(path: String, config: RequestConfig? = null): HttpResponse<String> {
-        val uri = URIBuilder(baseURL).setPath(path).build()
+        val uri = URIBuilder(baseUrl).setPath(path).build()
         val requestBuilder = requestBuilder.copy().DELETE().uri(uri)
         return sendRequest(buildRequest(requestBuilder, config))
     }
