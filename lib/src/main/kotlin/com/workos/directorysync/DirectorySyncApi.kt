@@ -36,7 +36,10 @@ class DirectorySyncApi(private val workos: WorkOS) {
     class ListDirectoryGroupOptions @JvmOverloads constructor(
         directory: String? = null,
         user: String? = null,
-    ) : PaginationParams() {
+        after: String? = null,
+        before: String? = null,
+        limit: Int? = null
+    ) : PaginationParams(after, before, limit) {
         init {
             if (directory != null) set("directory", directory)
             if (user != null) set("user", user)

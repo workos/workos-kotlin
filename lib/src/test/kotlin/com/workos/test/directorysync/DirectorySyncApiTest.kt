@@ -234,4 +234,49 @@ class DirectorySyncApiTest : TestBase() {
 
         assertEquals(directoryGroup.id, directoryGroupId)
     }
+
+    @Test
+    fun listDirectoryGroupsWithRawParamsShouldReturnDirectoryGroups() {
+        val workos = createWorkOSClient()
+
+        val directoryGroupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val directoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
+
+        stubResponse(
+            url = "/directory_groups",
+            params = mapOf(
+                "directory" to equalTo(directoryId),
+                "user" to equalTo(userId),
+                "after" to equalTo("after"),
+                "before" to equalTo("before"),
+                "limit" to equalTo("10")
+            ),
+            responseBody = """{
+              "data" : [{
+                "id" : "$directoryGroupId",
+                "name" : "Developers"
+              }],
+              "listMetadata" : {
+                "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+                "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+              }
+            }""",
+            responseStatus = 200,
+        )
+
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions(
+            directory = directoryId,
+            user = userId,
+            after = "after",
+            before = "before",
+            limit = 10
+        )
+
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
+
+        val directoryGroup = data[0]
+
+        assertEquals(directoryGroup.id, directoryGroupId)
+    }
 }
