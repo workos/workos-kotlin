@@ -96,4 +96,23 @@ class DirectorySyncApiTest : TestBase() {
         assertEquals(gsuiteDirectory.type, DirectoryType.GSuiteDirectory)
         assertEquals(gsuiteDirectory.state, DirectoryState.Unlinked)
     }
+
+    @Test
+    fun getDirectoryGroupShouldReturnDirectoryGroup() {
+        val workos = createWorkOSClient()
+
+        val directoryId = "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT"
+
+        stubResponse(
+            url = "/directory_groups/$directoryId",
+            responseBody = """
+                {
+                  "id" : "$directoryId",
+                  "name" : "Developers"
+                }"""
+        )
+
+        val response = workos.directorySync.getDirectoryGroup(directoryId)
+        assertEquals(response.id, directoryId)
+    }
 }
