@@ -1,6 +1,6 @@
 package com.workos.common.http
 
-class PaginationParams @JvmOverloads constructor(
+open class PaginationParams @JvmOverloads constructor(
     after: String? = null,
     before: String? = null,
     limit: Int? = null
@@ -21,15 +21,15 @@ class PaginationParams @JvmOverloads constructor(
     }
 
     companion object {
-        fun builder(): Builder {
-            return Builder()
+        fun builder(): Builder<PaginationParams> {
+            return Builder(PaginationParams())
         }
     }
 
-    class Builder(private val params: PaginationParams = PaginationParams()) {
+    open class Builder<T : PaginationParams>(protected val params: T) {
         fun after(after: String) = apply { this.params["after"] = after }
         fun before(before: String) = apply { this.params["before"] = before }
         fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
-        fun build() = params
+        open fun build() = params
     }
 }

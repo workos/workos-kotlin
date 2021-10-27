@@ -2,6 +2,7 @@ package com.workos.test.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.http.PaginationParams
+import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
 import com.workos.test.TestBase
@@ -42,8 +43,13 @@ class DirectorySyncApiTest : TestBase() {
                     "type": "okta scim v2.0",
                     "created_at": "2021-06-25T19:09:33.155Z",
                     "updated_at": "2021-06-25T19:10:33.155Z"
-                }]
+                }],
+                "listMetadata" : {
+                  "after" : "someAfterId",
+                  "before" : "someBeforeId"
+                }                
             }""",
+
         )
 
         val (data) = workos.directorySync.listDirectories()
@@ -65,7 +71,11 @@ class DirectorySyncApiTest : TestBase() {
 
         stubResponse(
             url = "/directories",
-            params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId"), "limit" to equalTo("1")),
+            params = mapOf(
+                "after" to equalTo("someAfterId"),
+                "before" to equalTo("someBeforeId"),
+                "limit" to equalTo("1")
+            ),
             responseBody = """{
                 "data": [{
                     "id": "$gsuiteDirectoryId",
@@ -77,12 +87,16 @@ class DirectorySyncApiTest : TestBase() {
                     "type": "gsuite directory",
                     "created_at": "2021-06-25T19:07:33.155Z",
                     "updated_at": "2021-06-25T19:08:33.155Z"
-                }]
+                }],
+                "listMetadata" : {
+                  "after" : "someAfterId",
+                  "before" : "someBeforeId"
+                }
             }""",
             responseStatus = 200,
         )
 
-        val paginationParams = PaginationParams.Builder()
+        val paginationParams = PaginationParams.builder()
             .after("someAfterId")
             .before("someBeforeId")
             .limit((1))
@@ -114,5 +128,155 @@ class DirectorySyncApiTest : TestBase() {
 
         val response = workos.directorySync.getDirectoryGroup(directoryId)
         assertEquals(response.id, directoryId)
+    }
+
+    @Test
+    fun listDirectoryGroupsWithNoParamsShouldReturnDirectoryGroups() {
+        val workos = createWorkOSClient()
+
+        val directoryGroupId = "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+
+        stubResponse(
+            url = "/directory_groups",
+            responseBody = """{
+              "data" : [{
+                "id" : "$directoryGroupId",
+                "name" : "Developers"
+              }],
+              "listMetadata" : {
+                "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+                "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+              }
+            }""",
+        )
+
+        val (data) = workos.directorySync.listDirectoryGroups()
+
+        val directoryGroup = data[0]
+
+        assertEquals(directoryGroup.id, directoryGroupId)
+    }
+
+    @Test
+    fun listDirectoryGroupsWithPaginationParamsShouldReturnDirectoryGroups() {
+        val workos = createWorkOSClient()
+
+        val directoryGroupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+        stubResponse(
+            url = "/directory_groups",
+            params = mapOf(
+                "after" to equalTo("someAfterId"),
+                "before" to equalTo("someBeforeId"),
+                "limit" to equalTo("1")
+            ),
+            responseBody = """{
+              "data" : [{
+                "id" : "$directoryGroupId",
+                "name" : "Developers"
+              }],
+              "listMetadata" : {
+                "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+                "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+              }
+            }""",
+            responseStatus = 200,
+        )
+
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
+            .after("someAfterId")
+            .before("someBeforeId")
+            .limit((1))
+            .build()
+
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
+
+        val directoryGroup = data[0]
+
+        assertEquals(directoryGroup.id, directoryGroupId)
+    }
+
+    @Test
+    fun listDirectoryGroupsWithOtherParamsShouldReturnDirectoryGroups() {
+        val workos = createWorkOSClient()
+
+        val directoryGroupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val directoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
+
+        stubResponse(
+            url = "/directory_groups",
+            params = mapOf(
+                "directory" to equalTo(directoryId),
+                "user" to equalTo(userId),
+            ),
+            responseBody = """{
+              "data" : [{
+                "id" : "$directoryGroupId",
+                "name" : "Developers"
+              }],
+              "listMetadata" : {
+                "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+                "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+              }
+            }""",
+            responseStatus = 200,
+        )
+
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
+            .directory(directoryId)
+            .user(userId)
+            .build()
+
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
+
+        val directoryGroup = data[0]
+
+        assertEquals(directoryGroup.id, directoryGroupId)
+    }
+
+    @Test
+    fun listDirectoryGroupsWithRawParamsShouldReturnDirectoryGroups() {
+        val workos = createWorkOSClient()
+
+        val directoryGroupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val directoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+        val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
+
+        stubResponse(
+            url = "/directory_groups",
+            params = mapOf(
+                "directory" to equalTo(directoryId),
+                "user" to equalTo(userId),
+                "after" to equalTo("after"),
+                "before" to equalTo("before"),
+                "limit" to equalTo("10")
+            ),
+            responseBody = """{
+              "data" : [{
+                "id" : "$directoryGroupId",
+                "name" : "Developers"
+              }],
+              "listMetadata" : {
+                "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+                "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+              }
+            }""",
+            responseStatus = 200,
+        )
+
+        val listOptions = DirectorySyncApi.ListDirectoryGroupOptions(
+            directory = directoryId,
+            user = userId,
+            after = "after",
+            before = "before",
+            limit = 10
+        )
+
+        val (data) = workos.directorySync.listDirectoryGroups(listOptions)
+
+        val directoryGroup = data[0]
+
+        assertEquals(directoryGroup.id, directoryGroupId)
     }
 }
