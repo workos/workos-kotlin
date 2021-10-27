@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 
 data class ListMetadata
 @JsonCreator constructor(
-    var after: String?,
-    var before: String?
+    val after: String?,
+    val before: String?
 )
