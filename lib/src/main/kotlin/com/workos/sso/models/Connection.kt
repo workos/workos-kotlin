@@ -12,6 +12,9 @@ data class ConnectionDomain
 
 data class Connection
 @JsonCreator constructor(
+    @JsonProperty("object")
+    val obj: String,
+
     @JsonProperty("connection_type")
     val connectionType: ConnectionType,
 
