@@ -99,7 +99,7 @@ class SsoApi(val workos: WorkOS) {
         return workos.get("/sso/profile", Profile::class.java, config)
     }
 
-    class ListConnectionsOptions constructor(
+    class ListConnectionsOptions @JvmOverloads constructor(
         connectionType: ConnectionType? = null,
         domain: String? = null,
         organizationId: String? = null
