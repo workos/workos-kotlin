@@ -277,4 +277,337 @@ class DirectorySyncApiTest : TestBase() {
 
     assertEquals(directoryGroup.id, directoryGroupId)
   }
+
+  @Test
+  fun listDirectoryUsersWithNoParamShouldReturnDirectoryUsers() {
+    val workos = createWorkOSClient()
+
+    val userId1 = "directory_user_01E1JJHG3BFJ3FNRRHSFWEBNCS"
+    val userId2 = "directory_user_01E1JJHG10ANRA2V6PAX3GD7TE"
+    val groupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory_users",
+      responseBody = """{
+          "data": [{
+            "id": "$userId1",
+            "idp_id": "1902",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "jan@foo-corp.com"
+            }],
+            "first_name": "Jan",
+            "last_name": "Brown",
+            "username": "jan@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+           },
+           {
+            "id": "$userId2",
+            "idp_id": "8953",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "rosalinda@foo-corp.com"
+            }],
+            "first_name": "Rosalinda",
+            "last_name": "Swift",
+            "username": "rosalinda@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+          }],
+          "object": "list",
+          "listMetadata": {
+            "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
+            "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
+          }
+        }""",
+      responseStatus = 200,
+    )
+
+    val (data) = workos.directorySync.listDirectoryUsers()
+
+    val directoryUser1 = data[0]
+    val directoryUser2 = data[1]
+
+    assertEquals(directoryUser1.id, userId1)
+    assertEquals(directoryUser2.id, userId2)
+    assertEquals(directoryUser1.groups[0].id, groupId)
+    assertEquals(directoryUser2.groups[0].id, groupId)
+  }
+
+  @Test
+  fun listDirectoryUsersWithPaginationParamShouldReturnDirectoryUsers() {
+    val workos = createWorkOSClient()
+
+    val userId1 = "directory_user_01E1JJHG3BFJ3FNRRHSFWEBNCS"
+    val userId2 = "directory_user_01E1JJHG10ANRA2V6PAX3GD7TE"
+    val groupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory_users",
+      params = mapOf(
+        "after" to equalTo("after"),
+        "before" to equalTo("before"),
+        "limit" to equalTo("2")
+      ),
+      responseBody = """{
+          "data": [{
+            "id": "$userId1",
+            "idp_id": "1902",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "jan@foo-corp.com"
+            }],
+            "first_name": "Jan",
+            "last_name": "Brown",
+            "username": "jan@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+           },
+           {
+            "id": "$userId2",
+            "idp_id": "8953",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "rosalinda@foo-corp.com"
+            }],
+            "first_name": "Rosalinda",
+            "last_name": "Swift",
+            "username": "rosalinda@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+          }],
+          "object": "list",
+          "listMetadata": {
+            "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
+            "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
+          }
+        }""",
+      responseStatus = 200,
+    )
+
+    val listOptions = DirectorySyncApi.ListDirectoryUserOptions
+      .builder()
+      .after("after")
+      .before("before")
+      .limit(2)
+      .build()
+
+    val (data) = workos.directorySync.listDirectoryUsers(listOptions)
+
+    val directoryUser1 = data[0]
+    val directoryUser2 = data[1]
+
+    assertEquals(directoryUser1.id, userId1)
+    assertEquals(directoryUser2.id, userId2)
+    assertEquals(directoryUser1.groups[0].id, groupId)
+    assertEquals(directoryUser2.groups[0].id, groupId)
+  }
+
+  @Test
+  fun listDirectoryUsersWithGroupParamShouldReturnDirectoryUsers() {
+    val workos = createWorkOSClient()
+
+    val userId1 = "directory_user_01E1JJHG3BFJ3FNRRHSFWEBNCS"
+    val userId2 = "directory_user_01E1JJHG10ANRA2V6PAX3GD7TE"
+    val groupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory_users",
+      params = mapOf(
+        "group" to equalTo(groupId),
+      ),
+      responseBody = """{
+          "data": [{
+            "id": "$userId1",
+            "idp_id": "1902",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "jan@foo-corp.com"
+            }],
+            "first_name": "Jan",
+            "last_name": "Brown",
+            "username": "jan@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+           },
+           {
+            "id": "$userId2",
+            "idp_id": "8953",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "rosalinda@foo-corp.com"
+            }],
+            "first_name": "Rosalinda",
+            "last_name": "Swift",
+            "username": "rosalinda@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+          }],
+          "object": "list",
+          "listMetadata": {
+            "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
+            "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
+          }
+        }""",
+      responseStatus = 200,
+    )
+
+    val listOptions = DirectorySyncApi.ListDirectoryUserOptions
+      .builder()
+      .group(groupId)
+      .build()
+
+    val (data) = workos.directorySync.listDirectoryUsers(listOptions)
+
+    val directoryUser1 = data[0]
+    val directoryUser2 = data[1]
+
+    assertEquals(directoryUser1.id, userId1)
+    assertEquals(directoryUser2.id, userId2)
+    assertEquals(directoryUser1.groups[0].id, groupId)
+    assertEquals(directoryUser2.groups[0].id, groupId)
+  }
+
+  @Test
+  fun listDirectoryUsersWithRawParamsShouldReturnDirectoryUsers() {
+    val workos = createWorkOSClient()
+
+    val userId1 = "directory_user_01E1JJHG3BFJ3FNRRHSFWEBNCS"
+    val userId2 = "directory_user_01E1JJHG10ANRA2V6PAX3GD7TE"
+    val groupId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory_users",
+      params = mapOf(
+        "group" to equalTo(groupId),
+        "after" to equalTo("after"),
+        "before" to equalTo("before"),
+        "limit" to equalTo("10")
+      ),
+      responseBody = """{
+          "data": [{
+            "id": "$userId1",
+            "idp_id": "1902",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "jan@foo-corp.com"
+            }],
+            "first_name": "Jan",
+            "last_name": "Brown",
+            "username": "jan@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+           },
+           {
+            "id": "$userId2",
+            "idp_id": "8953",
+            "emails": [{
+              "primary": true,
+              "type": "work",
+              "value": "rosalinda@foo-corp.com"
+            }],
+            "first_name": "Rosalinda",
+            "last_name": "Swift",
+            "username": "rosalinda@foo-corp.com",
+            "groups": [{
+              "id": "$groupId",
+              "name": "Engineering",
+              "raw_attributes": {}
+            }],
+            "state": "active",
+            "custom_attributes": {
+              "department": "Engineering"
+            },
+            "raw_attributes": {}
+          }],
+          "object": "list",
+          "listMetadata": {
+            "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
+            "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
+          }
+        }""",
+      responseStatus = 200,
+    )
+
+    val listOptions = DirectorySyncApi.ListDirectoryUserOptions(
+      group = "$groupId",
+      after = "after",
+      before = "before",
+      limit = 10
+    )
+
+    val (data) = workos.directorySync.listDirectoryUsers(listOptions)
+
+    val directoryUser1 = data[0]
+    val directoryUser2 = data[1]
+
+    assertEquals(directoryUser1.id, userId1)
+    assertEquals(directoryUser2.id, userId2)
+    assertEquals(directoryUser1.groups[0].id, groupId)
+    assertEquals(directoryUser2.groups[0].id, groupId)
+  }
 }

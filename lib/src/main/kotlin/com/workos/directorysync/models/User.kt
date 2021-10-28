@@ -2,6 +2,7 @@ package com.workos.directorysync.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 data class User
 @JsonCreator constructor(
@@ -25,7 +26,7 @@ data class User
   val rawAttributes: MutableMap<String, String>,
 )
 
-enum class UserState(val state: String) {
+enum class UserState(@JsonValue val state: String) {
   Active("active"),
   Suspended("suspended")
 }
