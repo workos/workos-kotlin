@@ -196,26 +196,25 @@ class SsoApiTest : TestBase() {
     stubResponse(
       url = "/connections",
       params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
-      responseBody =
-        """{
-          "data": [
-            {
-              "connection_type": "GoogleOAuth",
-              "created_at": "2021-10-26 13:29:47.133382",
-              "domains": [],
-              "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-              "name": "Google OAuth 2.0",
-              "object": "connection",
-              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-              "state": "active",
-              "updated_at": "2021-10-26 13:29:47.133382"
-            }
-          ],
-          "listMetadata": {
-            "after": null,
-            "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+      responseBody = """{
+        "data": [
+          {
+            "connection_type": "GoogleOAuth",
+            "created_at": "2021-10-26 13:29:47.133382",
+            "domains": [],
+            "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+            "name": "Google OAuth 2.0",
+            "object": "connection",
+            "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+            "state": "active",
+            "updated_at": "2021-10-26 13:29:47.133382"
           }
-        }"""
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
     )
 
     val options = SsoApi.ListConnectionsOptions.builder()
@@ -239,26 +238,25 @@ class SsoApiTest : TestBase() {
         "domain" to equalTo("domain.com"),
         "organization_id" to equalTo("org_123"),
       ),
-      responseBody =
-        """{
-          "data": [
-            {
-              "connection_type": "GoogleOAuth",
-              "created_at": "2021-10-26 13:29:47.133382",
-              "domains": [],
-              "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-              "name": "Google OAuth 2.0",
-              "object": "connection",
-              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-              "state": "active",
-              "updated_at": "2021-10-26 13:29:47.133382"
-            }
-          ],
-          "listMetadata": {
-            "after": null,
-            "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+      responseBody = """{
+        "data": [
+          {
+            "connection_type": "GoogleOAuth",
+            "created_at": "2021-10-26 13:29:47.133382",
+            "domains": [],
+            "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+            "name": "Google OAuth 2.0",
+            "object": "connection",
+            "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+            "state": "active",
+            "updated_at": "2021-10-26 13:29:47.133382"
           }
-        }"""
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
     )
 
     val options = SsoApi.ListConnectionsOptions.builder()

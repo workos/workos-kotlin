@@ -20,36 +20,35 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directories",
-      responseBody =
-      """{
-          "data": [{
-            "id": "$gsuiteDirectoryId",
-            "domain": "foo-corp.com",
-            "name": "Foo Corp",
-            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
-            "object": "directory",
-            "state": "unlinked",
-            "type": "gsuite directory",
-            "created_at": "2021-06-25T19:07:33.155Z",
-            "updated_at": "2021-06-25T19:08:33.155Z"
-          },
-          {
-            "id": "$oktaDirectoryId",
-            "domain": "foo-corp.com",
-            "external_key": "r3NDlInUnAe6i4wG",
-            "name": "Foo Corp",
-            "organization_id": "org_01EHZNVPK3SFK441A1RGBFPANT",
-            "object": "directory",
-            "state": "linked",
-            "type": "okta scim v2.0",
-            "created_at": "2021-06-25T19:09:33.155Z",
-            "updated_at": "2021-06-25T19:10:33.155Z"
-          }],
-          "listMetadata" : {
-            "after" : "someAfterId",
-            "before" : "someBeforeId"
-          }
-        }""",
+      responseBody = """{
+        "data": [{
+          "id": "$gsuiteDirectoryId",
+          "domain": "foo-corp.com",
+          "name": "Foo Corp",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+          "object": "directory",
+          "state": "unlinked",
+          "type": "gsuite directory",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
+        },
+        {
+          "id": "$oktaDirectoryId",
+          "domain": "foo-corp.com",
+          "external_key": "r3NDlInUnAe6i4wG",
+          "name": "Foo Corp",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFPANT",
+          "object": "directory",
+          "state": "linked",
+          "type": "okta scim v2.0",
+          "created_at": "2021-06-25T19:09:33.155Z",
+          "updated_at": "2021-06-25T19:10:33.155Z"
+        }],
+        "listMetadata" : {
+          "after" : "someAfterId",
+          "before" : "someBeforeId"
+        }
+      }""",
     )
 
     val (data) = workos.directorySync.listDirectories()
@@ -76,24 +75,23 @@ class DirectorySyncApiTest : TestBase() {
         "before" to equalTo("someBeforeId"),
         "limit" to equalTo("1")
       ),
-      responseBody =
-      """{
-          "data": [{
-            "id": "$gsuiteDirectoryId",
-            "domain": "foo-corp.com",
-            "name": "Foo Corp",
-            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
-            "object": "directory",
-            "state": "unlinked",
-            "type": "gsuite directory",
-            "created_at": "2021-06-25T19:07:33.155Z",
-            "updated_at": "2021-06-25T19:08:33.155Z"
-          }],
-          "listMetadata" : {
-            "after" : "someAfterId",
-            "before" : "someBeforeId"
-          }
-        }""",
+      responseBody = """{
+        "data": [{
+          "id": "$gsuiteDirectoryId",
+          "domain": "foo-corp.com",
+          "name": "Foo Corp",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+          "object": "directory",
+          "state": "unlinked",
+          "type": "gsuite directory",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
+        }],
+        "listMetadata" : {
+          "after" : "someAfterId",
+          "before" : "someBeforeId"
+        }
+      }""",
       responseStatus = 200,
     )
 
@@ -120,11 +118,10 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_groups/$directoryId",
-      responseBody =
-      """{
-          "id" : "$directoryId",
-          "name" : "Developers"
-        }"""
+      responseBody = """{
+        "id" : "$directoryId",
+        "name" : "Developers"
+      }"""
     )
 
     val response = workos.directorySync.getDirectoryGroup(directoryId)
@@ -139,17 +136,16 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_groups",
-      responseBody =
-      """{
-          "data" : [{
-            "id" : "$directoryGroupId",
-            "name" : "Developers"
-          }],
-          "listMetadata" : {
-            "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
-            "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
-          }
-        }""",
+      responseBody = """{
+        "data" : [{
+          "id" : "$directoryGroupId",
+          "name" : "Developers"
+        }],
+        "listMetadata" : {
+          "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+          "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+        }
+      }""",
     )
 
     val (data) = workos.directorySync.listDirectoryGroups()
@@ -172,17 +168,16 @@ class DirectorySyncApiTest : TestBase() {
         "before" to equalTo("someBeforeId"),
         "limit" to equalTo("1")
       ),
-      responseBody =
-      """{
-          "data" : [{
-            "id" : "$directoryGroupId",
-            "name" : "Developers"
-          }],
-          "listMetadata" : {
-            "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
-            "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
-          }
-        }""",
+      responseBody = """{
+        "data" : [{
+          "id" : "$directoryGroupId",
+          "name" : "Developers"
+        }],
+        "listMetadata" : {
+          "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+          "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+        }
+      }""",
       responseStatus = 200,
     )
 
@@ -213,17 +208,16 @@ class DirectorySyncApiTest : TestBase() {
         "directory" to equalTo(directoryId),
         "user" to equalTo(userId),
       ),
-      responseBody =
-      """{
-          "data" : [{
-            "id" : "$directoryGroupId",
-            "name" : "Developers"
-          }],
-          "listMetadata" : {
-            "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
-            "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
-          }
-        }""",
+      responseBody = """{
+        "data" : [{
+          "id" : "$directoryGroupId",
+          "name" : "Developers"
+        }],
+        "listMetadata" : {
+          "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+          "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+        }
+      }""",
       responseStatus = 200,
     )
 
@@ -256,17 +250,16 @@ class DirectorySyncApiTest : TestBase() {
         "before" to equalTo("before"),
         "limit" to equalTo("10")
       ),
-      responseBody =
-      """{
-          "data" : [{
-            "id" : "$directoryGroupId",
-            "name" : "Developers"
-          }],
-          "listMetadata" : {
-            "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
-            "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
-          }
-        }""",
+      responseBody = """{
+        "data" : [{
+          "id" : "$directoryGroupId",
+          "name" : "Developers"
+        }],
+        "listMetadata" : {
+          "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
+          "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
+        }
+      }""",
       responseStatus = 200,
     )
 
