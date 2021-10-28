@@ -48,11 +48,7 @@ class OrganizationsApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     val data = prepareCreateOrganizationTest(
-      """{
-        "name": null,
-        "allow_profiles_outside_organization": null,
-        "domains": null
-      }"""
+      """{}"""
     )
 
     val organization = workos.organizations.createOrganization()
