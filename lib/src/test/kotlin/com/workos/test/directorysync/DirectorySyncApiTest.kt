@@ -5,6 +5,7 @@ import com.workos.common.http.PaginationParams
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
+import com.workos.directorysync.models.UserState
 import com.workos.test.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -144,6 +145,7 @@ class DirectorySyncApiTest : TestBase() {
 
     val response = workos.directorySync.getDirectoryUser(userId)
     assertEquals(response.id, userId)
+    assertEquals(response.state, UserState.Active)
     assertEquals(response.customAttributes["department"], "Engineering")
   }
 
