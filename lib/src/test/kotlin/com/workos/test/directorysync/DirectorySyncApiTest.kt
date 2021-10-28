@@ -5,6 +5,7 @@ import com.workos.common.http.PaginationParams
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
+import com.workos.directorysync.models.UserState
 import com.workos.test.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -111,21 +112,63 @@ class DirectorySyncApiTest : TestBase() {
   }
 
   @Test
-  fun getDirectoryGroupShouldReturnDirectoryGroup() {
+  fun getDirectoryUserShouldReturnDirectoryUser() {
     val workos = createWorkOSClient()
 
-    val directoryId = "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT"
+    val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
 
     stubResponse(
-      url = "/directory_groups/$directoryId",
+      url = "/directory_user/$userId",
       responseBody = """{
-        "id" : "$directoryId",
-        "name" : "Developers"
+        "id": "$userId",
+        "idp_id": "2836",
+        "emails": [{
+          "primary": true,
+          "type": "work",
+          "value": "marcelina@foo-corp.com"
+        }],
+        "first_name": "Marcelina",
+        "last_name": "Davis",
+        "username": "marcelina@foo-corp.com",
+        "groups": [{
+          "id": "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT",
+          "name": "Engineering",
+          "raw_attributes": {}
+        }],
+        "state": "active",
+        "custom_attributes": {
+          "department": "Engineering"
+        },
+        "raw_attributes": {}
       }"""
     )
 
-    val response = workos.directorySync.getDirectoryGroup(directoryId)
-    assertEquals(response.id, directoryId)
+    val response = workos.directorySync.getDirectoryUser(userId)
+    assertEquals(response.id, userId)
+    assertEquals(response.state, UserState.Active)
+    assertEquals(response.customAttributes["department"], "Engineering")
+  }
+
+  @Test
+  fun getDirectoryGroupShouldReturnDirectoryGroup() {
+    val workos = createWorkOSClient()
+
+    val groupId = "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT"
+    val directoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory_groups/$groupId",
+      responseBody = """{
+        "object": "directory_group",
+        "directory_id": "$directoryId",
+        "id" : "$groupId",
+        "name" : "Developers",
+        "raw_attributes": {}
+      }"""
+    )
+
+    val response = workos.directorySync.getDirectoryGroup(groupId)
+    assertEquals(response.id, groupId)
   }
 
   @Test
