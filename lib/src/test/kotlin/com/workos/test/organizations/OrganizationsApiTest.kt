@@ -104,7 +104,7 @@ class OrganizationsApiTest : TestBase() {
             ]
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
@@ -147,7 +147,7 @@ class OrganizationsApiTest : TestBase() {
             ]
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
@@ -193,7 +193,7 @@ class OrganizationsApiTest : TestBase() {
             ]
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
