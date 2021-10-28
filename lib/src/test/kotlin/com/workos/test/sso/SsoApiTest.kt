@@ -85,16 +85,16 @@ class SsoApiTest : TestBase() {
     stubResponse(
       "/connections/$id",
       """{
-            "connection_type": "GoogleOAuth",
-            "created_at": "2021-10-26 13:29:47.133382",
-            "domains": [],
-            "id": "$id",
-            "name": "Google OAuth 2.0",
-            "object": "connection",
-            "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-            "state": "active",
-            "updated_at": "2021-10-26 13:29:47.133382"
-        }"""
+        "connection_type": "GoogleOAuth",
+        "created_at": "2021-10-26 13:29:47.133382",
+        "domains": [],
+        "id": "$id",
+        "name": "Google OAuth 2.0",
+        "object": "connection",
+        "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+        "state": "active",
+        "updated_at": "2021-10-26 13:29:47.133382"
+      }"""
     )
 
     val connection = workos.sso.getConnection(id)
@@ -110,20 +110,20 @@ class SsoApiTest : TestBase() {
     stubResponse(
       "/sso/token",
       """{
-                "token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
-                "profile": {
-                    "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
-                    "connection_type": "OktaSAML",
-                    "email": "todd@foo-corp.com",
-                    "first_name": "Todd",
-                    "id": "prof_01DMC79VCBZ0NY2099737PSVF1",
-                    "idp_id": "00u1a0ufowBJlzPlk357",
-                    "last_name": "Rundgren",
-                    "object": "profile",
-                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-                    "raw_attributes": {"foo": "bar"}
-                }
-            }"""
+        "token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
+        "profile": {
+          "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
+          "connection_type": "OktaSAML",
+          "email": "todd@foo-corp.com",
+          "first_name": "Todd",
+          "id": "prof_01DMC79VCBZ0NY2099737PSVF1",
+          "idp_id": "00u1a0ufowBJlzPlk357",
+          "last_name": "Rundgren",
+          "object": "profile",
+          "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+          "raw_attributes": {"foo": "bar"}
+        }
+      }"""
     )
 
     val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
@@ -138,17 +138,17 @@ class SsoApiTest : TestBase() {
     stubResponse(
       "/sso/profile",
       """{
-                "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
-                "connection_type": "OktaSAML",
-                "email": "todd@foo-corp.com",
-                "first_name": "Todd",
-                "id": "prof_01DMC79VCBZ0NY2099737PSVF2",
-                "idp_id": "00u1a0ufowBJlzPlk357",
-                "last_name": "Rundgren",
-                "object": "profile",
-                "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-                "raw_attributes": {"foo": "foo_value"}
-            }"""
+        "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
+        "connection_type": "OktaSAML",
+        "email": "todd@foo-corp.com",
+        "first_name": "Todd",
+        "id": "prof_01DMC79VCBZ0NY2099737PSVF2",
+        "idp_id": "00u1a0ufowBJlzPlk357",
+        "last_name": "Rundgren",
+        "object": "profile",
+        "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+        "raw_attributes": {"foo": "foo_value"}
+      }"""
     )
 
     val profile = workos.sso.getProfile("accessToken")
@@ -164,24 +164,24 @@ class SsoApiTest : TestBase() {
     stubResponse(
       "/connections",
       """{
-            "data": [
-                {
-                    "connection_type": "GoogleOAuth",
-                    "created_at": "2021-10-26 13:29:47.133382",
-                    "domains": [],
-                    "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-                    "name": "Google OAuth 2.0",
-                    "object": "connection",
-                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-                    "state": "active",
-                    "updated_at": "2021-10-26 13:29:47.133382"
-                }
-            ],
-            "listMetadata": {
-                "after": null,
-                "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
-            }
-        }"""
+        "data": [
+          {
+            "connection_type": "GoogleOAuth",
+            "created_at": "2021-10-26 13:29:47.133382",
+            "domains": [],
+            "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+            "name": "Google OAuth 2.0",
+            "object": "connection",
+            "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+            "state": "active",
+            "updated_at": "2021-10-26 13:29:47.133382"
+          }
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
     )
 
     val (connections) = workos.sso.listConnections(SsoApi.ListConnectionsOptions.builder().build())
@@ -196,24 +196,25 @@ class SsoApiTest : TestBase() {
     stubResponse(
       url = "/connections",
       params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
-      responseBody = """{
-            "data": [
-                {
-                    "connection_type": "GoogleOAuth",
-                    "created_at": "2021-10-26 13:29:47.133382",
-                    "domains": [],
-                    "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-                    "name": "Google OAuth 2.0",
-                    "object": "connection",
-                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-                    "state": "active",
-                    "updated_at": "2021-10-26 13:29:47.133382"
-                }
-            ],
-            "listMetadata": {
-                "after": null,
-                "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+      responseBody =
+        """{
+          "data": [
+            {
+              "connection_type": "GoogleOAuth",
+              "created_at": "2021-10-26 13:29:47.133382",
+              "domains": [],
+              "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+              "name": "Google OAuth 2.0",
+              "object": "connection",
+              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+              "state": "active",
+              "updated_at": "2021-10-26 13:29:47.133382"
             }
+          ],
+          "listMetadata": {
+            "after": null,
+            "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+          }
         }"""
     )
 
@@ -238,24 +239,25 @@ class SsoApiTest : TestBase() {
         "domain" to equalTo("domain.com"),
         "organization_id" to equalTo("org_123"),
       ),
-      responseBody = """{
-            "data": [
-                {
-                    "connection_type": "GoogleOAuth",
-                    "created_at": "2021-10-26 13:29:47.133382",
-                    "domains": [],
-                    "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-                    "name": "Google OAuth 2.0",
-                    "object": "connection",
-                    "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-                    "state": "active",
-                    "updated_at": "2021-10-26 13:29:47.133382"
-                }
-            ],
-            "listMetadata": {
-                "after": null,
-                "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+      responseBody =
+        """{
+          "data": [
+            {
+              "connection_type": "GoogleOAuth",
+              "created_at": "2021-10-26 13:29:47.133382",
+              "domains": [],
+              "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
+              "name": "Google OAuth 2.0",
+              "object": "connection",
+              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+              "state": "active",
+              "updated_at": "2021-10-26 13:29:47.133382"
             }
+          ],
+          "listMetadata": {
+            "after": null,
+            "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+          }
         }"""
     )
 
