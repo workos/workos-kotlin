@@ -153,18 +153,22 @@ class DirectorySyncApiTest : TestBase() {
   fun getDirectoryGroupShouldReturnDirectoryGroup() {
     val workos = createWorkOSClient()
 
-    val directoryId = "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT"
+    val groupId = "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT"
+    val directoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
 
     stubResponse(
-      url = "/directory_groups/$directoryId",
+      url = "/directory_groups/$groupId",
       responseBody = """{
-        "id" : "$directoryId",
-        "name" : "Developers"
+        "object": "directory_group",
+        "directory_id": "$directoryId",
+        "id" : "$groupId",
+        "name" : "Developers",
+        "raw_attributes": {}
       }"""
     )
 
-    val response = workos.directorySync.getDirectoryGroup(directoryId)
-    assertEquals(response.id, directoryId)
+    val response = workos.directorySync.getDirectoryGroup(groupId)
+    assertEquals(response.id, groupId)
   }
 
   @Test
