@@ -48,10 +48,10 @@ class OrganizationsApiTest : TestBase() {
 
     val data = prepareCreateOrganizationTest(
       """{
-      "name": null,
-      "allow_profiles_outside_organization": null,
-      "domains": null
-    }"""
+        "name": null,
+        "allow_profiles_outside_organization": null,
+        "domains": null
+      }"""
     )
 
     val organization = workos.organizations.createOrganization()
@@ -67,10 +67,10 @@ class OrganizationsApiTest : TestBase() {
 
     val data = prepareCreateOrganizationTest(
       """{
-      "name": "Organization Name",
-      "allow_profiles_outside_organization": true,
-      "domains": ["domain1.com", "domain2.com"]
-    }"""
+        "name": "Organization Name",
+        "allow_profiles_outside_organization": true,
+        "domains": ["domain1.com", "domain2.com"]
+      }"""
     )
 
     val config = CreateOrganizationOptions.builder()
@@ -92,10 +92,10 @@ class OrganizationsApiTest : TestBase() {
 
     val data = prepareCreateOrganizationTest(
       """{
-      "name": "Organization Name",
-      "allow_profiles_outside_organization": false,
-      "domains": ["foo.com", "bar.com"]
-    }"""
+        "name": "Organization Name",
+        "allow_profiles_outside_organization": false,
+        "domains": ["foo.com", "bar.com"]
+      }"""
     )
 
     val organization = workos.organizations.createOrganization(
