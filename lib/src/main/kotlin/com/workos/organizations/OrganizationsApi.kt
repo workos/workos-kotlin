@@ -10,6 +10,7 @@ import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 
 class OrganizationsApi(val workos: WorkOS) {
+  @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
     val name: String? = null,
 
