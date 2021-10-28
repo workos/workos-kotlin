@@ -8,7 +8,7 @@ import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 
 class OrganizationsApi(val workos: WorkOS) {
-  class CreateOrganizationOptions(
+  class CreateOrganizationOptions @JvmOverloads constructor(
     val name: String? = null,
 
     @JsonProperty("allow_profiles_outside_organization")
