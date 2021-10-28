@@ -2,7 +2,6 @@ package com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.LinkedHashMap
 
 data class Profile
 @JsonCreator constructor(
@@ -32,5 +31,5 @@ data class Profile
   val lastName: String,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: LinkedHashMap<String, Any>,
+  val rawAttributes: Map<String, String>,
 )

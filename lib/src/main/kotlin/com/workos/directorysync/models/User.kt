@@ -23,17 +23,17 @@ data class User
   @JsonProperty("last_name")
   val lastName: String,
 
-  val emails: MutableList<Email>,
+  val emails: List<Email>,
 
-  val groups: MutableList<Group>,
+  val groups: List<Group>,
 
   val state: UserState,
 
   @JsonProperty("custom_attributes")
-  val customAttributes: MutableMap<String, String>,
+  val customAttributes: Map<String, String>,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: MutableMap<String, String>,
+  val rawAttributes: Map<String, String>,
 )
 
 enum class UserState(@JsonValue val state: String) {
