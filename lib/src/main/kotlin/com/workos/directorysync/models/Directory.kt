@@ -8,21 +8,31 @@ data class Directory
 @JsonCreator constructor(
   @JsonProperty("object")
   val obj: String = "directory",
-  var id: String,
-  var name: String,
-  var domain: String,
+
+  val id: String,
+
+  val name: String,
+
+  val domain: String,
+
   @JsonProperty("environment_id")
-  var environmentId: String?,
+  val environmentId: String?,
+
   @JsonProperty("external_key")
-  var externalKey: String?,
+  val externalKey: String?,
+
   @JsonProperty("organization_id")
-  var organizationId: String,
-  var state: DirectoryState,
-  var type: DirectoryType,
+  val organizationId: String,
+
+  val state: DirectoryState,
+
+  val type: DirectoryType,
+
   @JsonProperty("created_at")
-  var createdAt: String,
+  val createdAt: String,
+
   @JsonProperty("updated_at")
-  var updatedAt: String,
+  val updatedAt: String,
 )
 
 enum class DirectoryState(@JsonValue val state: String) {

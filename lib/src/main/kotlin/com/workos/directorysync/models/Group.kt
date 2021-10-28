@@ -7,6 +7,8 @@ data class Group
 @JsonCreator constructor(
   @JsonProperty("object")
   val obj: String = "directory_group",
-  var id: String,
-  var name: String,
+
+  val id: String,
+
+  val name: String,
 )

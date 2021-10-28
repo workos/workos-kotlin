@@ -6,12 +6,19 @@ import com.workos.common.http.RequestConfig
 import com.workos.directorysync.models.DirectoryGroupList
 import com.workos.directorysync.models.DirectoryList
 import com.workos.directorysync.models.Group
+import com.workos.directorysync.models.User
 
 class DirectorySyncApi(private val workos: WorkOS) {
   fun listDirectories(paginationParams: PaginationParams? = PaginationParams()): DirectoryList {
     val requestConfig = RequestConfig(params = paginationParams)
     return workos.get(
       "/directories", DirectoryList::class.java, requestConfig
+    )
+  }
+
+  fun getDirectoryUser(id: String): User {
+    return workos.get(
+      "/directory_user/$id", User::class.java
     )
   }
 

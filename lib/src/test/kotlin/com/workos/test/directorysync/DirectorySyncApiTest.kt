@@ -111,6 +111,43 @@ class DirectorySyncApiTest : TestBase() {
   }
 
   @Test
+  fun getDirectoryUserShouldReturnDirectoryUser() {
+    val workos = createWorkOSClient()
+
+    val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
+
+    stubResponse(
+      url = "/directory_user/$userId",
+      responseBody = """{
+        "id": "$userId",
+        "idp_id": "2836",
+        "emails": [{
+          "primary": true,
+          "type": "work",
+          "value": "marcelina@foo-corp.com"
+        }],
+        "first_name": "Marcelina",
+        "last_name": "Davis",
+        "username": "marcelina@foo-corp.com",
+        "groups": [{
+          "id": "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT",
+          "name": "Engineering",
+          "raw_attributes": {}
+        }],
+        "state": "active",
+        "custom_attributes": {
+          "department": "Engineering"
+        },
+        "raw_attributes": {}
+      }"""
+    )
+
+    val response = workos.directorySync.getDirectoryUser(userId)
+    assertEquals(response.id, userId)
+    assertEquals(response.customAttributes["department"], "Engineering")
+  }
+
+  @Test
   fun getDirectoryGroupShouldReturnDirectoryGroup() {
     val workos = createWorkOSClient()
 
