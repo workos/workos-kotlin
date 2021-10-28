@@ -19,11 +19,11 @@ class OrganizationsApi(val workos: WorkOS) {
     val domains: List<String>? = null
   ) {
     class Builder {
-      var name: String? = null
+      private var name: String? = null
 
-      var allowProfilesOutsideOrganization: Boolean? = null
+      private var allowProfilesOutsideOrganization: Boolean? = null
 
-      var domains: List<String>? = null
+      private var domains: List<String>? = null
 
       fun name(value: String) = apply { name = value }
 
@@ -98,11 +98,11 @@ class OrganizationsApi(val workos: WorkOS) {
     val domains: List<String>? = null
   ) {
     class Builder {
-      var name: String? = null
+      private var name: String? = null
 
-      var allowProfilesOutsideOrganization: Boolean? = null
+      private var allowProfilesOutsideOrganization: Boolean? = null
 
-      var domains: List<String>? = null
+      private var domains: List<String>? = null
 
       fun name(value: String) = apply { name = value }
 
