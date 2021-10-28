@@ -80,7 +80,7 @@ class DirectorySyncApiTest : TestBase() {
           "created_at": "2021-06-25T19:09:33.155Z",
           "updated_at": "2021-06-25T19:10:33.155Z"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "someAfterId",
           "before" : "someBeforeId"
         }
@@ -123,7 +123,7 @@ class DirectorySyncApiTest : TestBase() {
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "someAfterId",
           "before" : "someBeforeId"
         }
@@ -219,7 +219,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "name" : "Developers"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
           "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
         }
@@ -251,7 +251,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "name" : "Developers"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
           "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
         }
@@ -291,7 +291,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "name" : "Developers"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
           "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
         }
@@ -333,7 +333,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "name" : "Developers"
         }],
-        "listMetadata" : {
+        "list_metadata" : {
           "after" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z",
           "before" : "directory_group_01E1JJS84MFPPQ3G655FHTKX6Z"
         }
@@ -412,7 +412,7 @@ class DirectorySyncApiTest : TestBase() {
             "raw_attributes": {}
           }],
           "object": "list",
-          "listMetadata": {
+          "list_metadata": {
             "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
             "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
           }
@@ -492,7 +492,7 @@ class DirectorySyncApiTest : TestBase() {
             "raw_attributes": {}
           }],
           "object": "list",
-          "listMetadata": {
+          "list_metadata": {
             "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
             "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
           }
@@ -577,7 +577,7 @@ class DirectorySyncApiTest : TestBase() {
             "raw_attributes": {}
           }],
           "object": "list",
-          "listMetadata": {
+          "list_metadata": {
             "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
             "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
           }
@@ -663,7 +663,7 @@ class DirectorySyncApiTest : TestBase() {
             "raw_attributes": {}
           }],
           "object": "list",
-          "listMetadata": {
+          "list_metadata": {
             "after": "directory_user_01E4RH82CC8QAP8JTRCTNDSS4C",
             "before": "directory_user_01E4RH828021B9ZZB8KH8E2Z1W"
           }
