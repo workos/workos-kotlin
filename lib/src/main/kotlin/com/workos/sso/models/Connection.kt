@@ -28,7 +28,7 @@ data class Connection
   val name: String,
 
   @JsonProperty("organization_id")
-  val organizationId: String,
+  val organizationId: String?,
 
   val state: String,
 
