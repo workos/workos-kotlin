@@ -10,6 +10,11 @@ import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 
 class DirectorySyncApi(private val workos: WorkOS) {
+
+  fun deleteDirectory(id: String) {
+    workos.delete("/directory/$id")
+  }
+
   fun listDirectories(paginationParams: PaginationParams? = PaginationParams()): DirectoryList {
     val requestConfig = RequestConfig(params = paginationParams)
     return workos.get(

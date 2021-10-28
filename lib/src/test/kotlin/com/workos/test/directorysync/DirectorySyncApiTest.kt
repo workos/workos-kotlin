@@ -1,16 +1,51 @@
 package com.workos.test.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.http.PaginationParams
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
 import com.workos.directorysync.models.UserState
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DirectorySyncApiTest : TestBase() {
+
+  @Test
+  fun deleteDirectoryShouldNotError() {
+    val workos = createWorkOSClient()
+
+    val id = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory/$id",
+      responseBody = "{}"
+    )
+
+    val response = workos.directorySync.deleteDirectory(id)
+
+    assertEquals(Unit, response)
+  }
+
+  @Test
+  fun deleteDirectoryShouldThrowError() {
+    val workos = createWorkOSClient()
+
+    val id = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+
+    stubResponse(
+      url = "/directory/$id",
+      responseBody = "{}",
+      responseStatus = 401
+    )
+
+    Assertions.assertThrows(UnauthorizedException::class.java) {
+      workos.directorySync.deleteDirectory(id)
+    }
+  }
 
   @Test
   fun listDirectoriesWithNoParamsShouldReturnDirectories() {
