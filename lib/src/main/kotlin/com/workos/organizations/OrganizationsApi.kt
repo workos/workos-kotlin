@@ -1,5 +1,7 @@
 package com.workos.organizations
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
@@ -84,5 +86,50 @@ class OrganizationsApi(val workos: WorkOS) {
       .build()
 
     return workos.get("/organizations", OrganizationList::class.java, config)
+  }
+
+  @JsonInclude(Include.NON_NULL)
+  class UpdateOrganizationOptions @JvmOverloads constructor(
+    val name: String? = null,
+
+    @JsonProperty("allow_profiles_outside_organization")
+    val allowProfilesOutsideOrganization: Boolean? = null,
+
+    val domains: List<String>? = null
+  ) {
+    class Builder {
+      var name: String? = null
+
+      var allowProfilesOutsideOrganization: Boolean? = null
+
+      var domains: List<String>? = null
+
+      fun name(value: String) = apply { name = value }
+
+      fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
+
+      fun domains(value: List<String>) = apply { domains = value }
+
+      fun build(): UpdateOrganizationOptions {
+        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
+      }
+    }
+
+    companion object {
+      fun builder(): Builder {
+        return Builder()
+      }
+    }
+  }
+
+  fun updateOrganization(
+    id: String,
+    options: UpdateOrganizationOptions = UpdateOrganizationOptions()
+  ): Organization {
+    val config = RequestConfig.builder()
+      .data(options)
+      .build()
+
+    return workos.put("/organizations/$id", Organization::class.java, config)
   }
 }
