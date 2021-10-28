@@ -39,17 +39,28 @@ open class TestBase {
     return wireMockRule.port()
   }
 
-  fun stubResponse(url: String, responseBody: String, responseStatus: Int = 200, params: Map<String, StringValuePattern> = emptyMap()): StubMapping {
-    val stub = stubFor(
-      any(urlPathEqualTo(url))
-        .withQueryParams(params)
-        .willReturn(
-          aResponse()
-            .withStatus(responseStatus)
-            .withBody(responseBody)
-            .withHeader("X-Request-ID", "request_id_value")
-        )
-    )
+  fun stubResponse(
+    url: String,
+    responseBody: String,
+    responseStatus: Int = 200,
+    params: Map<String, StringValuePattern> = emptyMap(),
+    requestBody: String? = null,
+  ): StubMapping {
+    val mapping = any(urlPathEqualTo(url))
+      .withQueryParams(params)
+      .willReturn(
+        aResponse()
+          .withStatus(responseStatus)
+          .withBody(responseBody)
+          .withHeader("X-Request-ID", "request_id_value")
+      )
+
+    if (requestBody != null) {
+      mapping.withRequestBody(equalToJson(requestBody))
+    }
+
+    val stub = stubFor(mapping)
+
     stubs.add(stub)
 
     return stub
