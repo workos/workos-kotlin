@@ -5,6 +5,6 @@ import com.workos.common.models.ListMetadata
 
 data class DirectoryUserList
 @JsonCreator constructor(
-  var data: Array<User>,
+  var data: List<User>,
   var listMetadata: ListMetadata
 )
