@@ -2,6 +2,7 @@ package com.workos.test.organizations
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.exceptions.UnauthorizedException
+import com.workos.organizations.OrganizationsApi
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
@@ -73,5 +74,138 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(organizationId, organization.id)
     assertEquals(organizationDomainName, organization.name)
     assertEquals(organizationDomainId, organization.domains[0].id)
+  }
+
+  @Test
+  fun listOrganizationsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
+    val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+    val organizationDomainName = "Test Organization"
+
+    stubResponse(
+      "/organizations",
+      """{
+        "data": [
+          {
+            "name": "$organizationDomainName",
+            "object": "organization",
+            "id": "$organizationId",
+            "allow_profiles_outside_organization": false,
+            "created_at": "2021-10-28T15:13:51.874Z",
+            "updated_at": "2021-10-28T15:14:03.032Z",
+            "domains": [
+              {
+                "domain": "example.com",
+                "object": "organization_domain",
+                "id": "$organizationDomainId"
+              }
+            ]
+          }
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
+    )
+
+    val (organizations) = workos.organizations.listOrganizations(OrganizationsApi.ListOrganizationsOptions.builder().build())
+
+    assertEquals(organizationId, organizations.get(0).id)
+    assertEquals(organizationDomainName, organizations.get(0).name)
+    assertEquals(organizationDomainId, organizations.get(0).domains[0].id)
+  }
+
+  @Test
+  fun listOrganizationsWithPaginationParamsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
+    val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+    val organizationDomainName = "Test Organization"
+
+    stubResponse(
+      url = "/organizations",
+      params = mapOf("after" to equalTo("someAfterId"), "before" to equalTo("someBeforeId")),
+      responseBody = """{
+        "data": [
+          {
+            "name": "$organizationDomainName",
+            "object": "organization",
+            "id": "$organizationId",
+            "allow_profiles_outside_organization": false,
+            "created_at": "2021-10-28T15:13:51.874Z",
+            "updated_at": "2021-10-28T15:14:03.032Z",
+            "domains": [
+              {
+                "domain": "example.com",
+                "object": "organization_domain",
+                "id": "$organizationDomainId"
+              }
+            ]
+          }
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
+    )
+
+    val options = OrganizationsApi.ListOrganizationsOptions.builder()
+      .after("someAfterId")
+      .before("someBeforeId")
+      .build()
+
+    val (organizations) = workos.organizations.listOrganizations(options)
+
+    assertEquals(organizationId, organizations.get(0).id)
+  }
+
+  @Test
+  fun listOrganizationsWithOptionalParamsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
+    val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+    val organizationDomainName = "Test Organization"
+
+    stubResponse(
+      url = "/organizations",
+      params = mapOf("domains" to equalTo("domain1.com,domain2.com")),
+      responseBody = """{
+        "data": [
+          {
+            "name": "$organizationDomainName",
+            "object": "organization",
+            "id": "$organizationId",
+            "allow_profiles_outside_organization": false,
+            "created_at": "2021-10-28T15:13:51.874Z",
+            "updated_at": "2021-10-28T15:14:03.032Z",
+            "domains": [
+              {
+                "domain": "example.com",
+                "object": "organization_domain",
+                "id": "$organizationDomainId"
+              }
+            ]
+          }
+        ],
+        "listMetadata": {
+          "after": null,
+          "before": "org_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
+        }
+      }"""
+    )
+
+    val options = OrganizationsApi.ListOrganizationsOptions.builder()
+      .domains(listOf("domain1.com", "domain2.com"))
+      .build()
+
+    val (organizations) = workos.organizations.listOrganizations(options)
+
+    assertEquals(organizationId, organizations.get(0).id)
   }
 }
