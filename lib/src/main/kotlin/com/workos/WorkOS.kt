@@ -11,6 +11,7 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.organizations.OrganizationsApi
 import com.workos.sso.SsoApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
@@ -51,6 +52,10 @@ class WorkOS(
 
   val directorySync by lazy {
     DirectorySyncApi(this)
+  }
+
+  val organizations by lazy {
+    OrganizationsApi(this)
   }
 
   val sso by lazy {
