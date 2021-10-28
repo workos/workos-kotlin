@@ -126,7 +126,7 @@ class SsoApi(val workos: WorkOS) {
     }
   }
 
-  fun listConnections(options: ListConnectionsOptions): ConnectionList {
+  fun listConnections(options: ListConnectionsOptions = ListConnectionsOptions()): ConnectionList {
     val config = RequestConfig.builder()
       .params(options)
       .build()
