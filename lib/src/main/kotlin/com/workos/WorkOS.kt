@@ -12,6 +12,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.organizations.OrganizationsApi
+import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
@@ -60,6 +61,10 @@ class WorkOS(
 
   val sso by lazy {
     SsoApi(this)
+  }
+
+  val portal by lazy {
+    PortalApi(this)
   }
 
   init {
