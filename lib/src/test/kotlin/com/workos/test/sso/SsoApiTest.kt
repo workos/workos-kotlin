@@ -177,7 +177,7 @@ class SsoApiTest : TestBase() {
             "updated_at": "2021-10-26 13:29:47.133382"
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
@@ -210,7 +210,7 @@ class SsoApiTest : TestBase() {
             "updated_at": "2021-10-26 13:29:47.133382"
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
@@ -252,7 +252,7 @@ class SsoApiTest : TestBase() {
             "updated_at": "2021-10-26 13:29:47.133382"
           }
         ],
-        "listMetadata": {
+        "list_metadata": {
           "after": null,
           "before": "connection_99FJYCNTBC2ZTKT4CS1BX0WJ2B"
         }
