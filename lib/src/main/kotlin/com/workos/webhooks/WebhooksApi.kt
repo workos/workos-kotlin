@@ -2,7 +2,6 @@ package com.workos.webhooks
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.workos.webhooks.models.Webhook
 import org.apache.commons.codec.binary.Hex
-// import java.lang.Exception
 import java.security.MessageDigest
 import java.security.SignatureException
 import java.time.Instant
