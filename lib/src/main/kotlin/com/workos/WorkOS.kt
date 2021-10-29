@@ -14,6 +14,7 @@ import com.workos.directorysync.DirectorySyncApi
 import com.workos.organizations.OrganizationsApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
+import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -59,11 +60,13 @@ class WorkOS(
   val organizations = OrganizationsApi(this)
 
   @JvmField
+  val portal = PortalApi(this)
+
+  @JvmField
   val sso = SsoApi(this)
 
-  val portal by lazy {
-    PortalApi(this)
-  }
+  @JvmField
+  val webhooks = WebhooksApi()
 
   init {
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
