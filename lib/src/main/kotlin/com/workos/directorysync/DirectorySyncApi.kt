@@ -8,6 +8,7 @@ import com.workos.directorysync.models.DirectoryList
 import com.workos.directorysync.models.DirectoryUserList
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
+import java.security.InvalidParameterException
 
 class DirectorySyncApi(private val workos: WorkOS) {
 
@@ -15,8 +16,13 @@ class DirectorySyncApi(private val workos: WorkOS) {
     workos.delete("/directory/$id")
   }
 
-  fun listDirectories(paginationParams: PaginationParams? = PaginationParams()): DirectoryList {
-    val requestConfig = RequestConfig(params = paginationParams)
+  @JvmOverloads
+  fun listDirectories(paginationParams: PaginationParams? = null): DirectoryList {
+    val params = paginationParams ?: emptyMap()
+    val requestConfig = RequestConfig.builder()
+      .params(params)
+      .build()
+
     return workos.get(
       "/directories", DirectoryList::class.java, requestConfig
     )
@@ -29,7 +35,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   fun listDirectoryUsers(
-    listOptions: ListDirectoryUserOptions = ListDirectoryUserOptions()
+    listOptions: ListDirectoryUserOptions
   ): DirectoryUserList {
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
@@ -47,7 +53,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   fun listDirectoryGroups(
-    listOptions: ListDirectoryGroupOptions = ListDirectoryGroupOptions()
+    listOptions: ListDirectoryGroupOptions
   ): DirectoryGroupList {
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
@@ -68,6 +74,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     init {
       if (directory != null) set("directory", directory)
       if (user != null) set("user", user)
+      validateParams(this)
     }
 
     companion object {
@@ -75,22 +82,39 @@ class DirectorySyncApi(private val workos: WorkOS) {
       fun builder(): Builder {
         return Builder()
       }
+
+      fun validateParams(params: Map<String, String>): Boolean {
+        if (params["directory"] == null && params["user"] == null) {
+          throw InvalidParameterException("Either directory or user must be provided.")
+        }
+        return true
+      }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+    class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(
+      ListDirectoryGroupOptions(directory = "")
+    ) {
+      init { this.params.remove("directory") }
       fun directory(value: String) = apply { this.params["directory"] = value }
       fun user(value: String) = apply { this.params["user"] = value }
+
+      override fun validateBuilderParams(): Boolean {
+        return validateParams(this.params)
+      }
     }
   }
 
   class ListDirectoryUserOptions @JvmOverloads constructor(
+    directory: String? = null,
     group: String? = null,
     after: String? = null,
     before: String? = null,
     limit: Int? = null
   ) : PaginationParams(after, before, limit) {
     init {
+      if (directory != null) set("directory", directory)
       if (group != null) set("group", group)
+      validateParams(this)
     }
 
     companion object {
@@ -98,10 +122,25 @@ class DirectorySyncApi(private val workos: WorkOS) {
       fun builder(): Builder {
         return Builder()
       }
+
+      fun validateParams(params: Map<String, String>): Boolean {
+        if (params["directory"] == null && params["group"] == null) {
+          throw InvalidParameterException("A directory or group must be provided.")
+        }
+        return true
+      }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+    class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(
+      ListDirectoryUserOptions(directory = "")
+    ) {
+      init { this.params.remove("directory") }
+      fun directory(value: String) = apply { this.params["directory"] = value }
       fun group(value: String) = apply { this.params["group"] = value }
+
+      override fun validateBuilderParams(): Boolean {
+        return validateParams(this.params)
+      }
     }
   }
 }
