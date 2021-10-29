@@ -8,7 +8,7 @@ import com.workos.directorysync.models.DirectoryList
 import com.workos.directorysync.models.DirectoryUserList
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
-import java.security.InvalidParameterException
+import java.lang.IllegalArgumentException
 
 class DirectorySyncApi(private val workos: WorkOS) {
 
@@ -85,7 +85,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
 
       fun validateParams(params: Map<String, String>): Boolean {
         if (params["directory"] == null && params["user"] == null) {
-          throw InvalidParameterException("Either directory or user must be provided.")
+          throw IllegalArgumentException("Either directory or user must be provided.")
         }
         return true
       }
@@ -125,7 +125,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
 
       fun validateParams(params: Map<String, String>): Boolean {
         if (params["directory"] == null && params["group"] == null) {
-          throw InvalidParameterException("A directory or group must be provided.")
+          throw IllegalArgumentException("A directory or group must be provided.")
         }
         return true
       }

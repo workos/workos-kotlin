@@ -8,9 +8,8 @@ import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
 import com.workos.directorysync.models.UserState
 import com.workos.test.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
-import java.security.InvalidParameterException
+import java.lang.IllegalArgumentException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -44,7 +43,7 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 401
     )
 
-    Assertions.assertThrows(UnauthorizedException::class.java) {
+    assertThrows(UnauthorizedException::class.java) {
       workos.directorySync.deleteDirectory(id)
     }
   }
@@ -581,14 +580,14 @@ class DirectorySyncApiTest : TestBase() {
 
   @Test
   fun listDirectoryUserOptionsRawThrowsWithNoParams() {
-    assertThrows(InvalidParameterException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       DirectorySyncApi.ListDirectoryUserOptions()
     }
   }
 
   @Test
   fun listDirectoryUserOptionsBuilderThrowsWithNoParams() {
-    assertThrows(InvalidParameterException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       DirectorySyncApi
         .ListDirectoryUserOptions
         .builder()
@@ -598,7 +597,7 @@ class DirectorySyncApiTest : TestBase() {
 
   @Test
   fun listDirectoryGroupOptionsRawThrowsWithNoParams() {
-    assertThrows(InvalidParameterException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       DirectorySyncApi
         .ListDirectoryUserOptions()
     }
@@ -606,7 +605,7 @@ class DirectorySyncApiTest : TestBase() {
 
   @Test
   fun listDirectoryGroupOptionsBuilderThrowsWithNoParams() {
-    assertThrows(InvalidParameterException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       DirectorySyncApi
         .ListDirectoryUserOptions
         .builder()
