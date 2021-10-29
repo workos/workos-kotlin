@@ -21,6 +21,7 @@ open class PaginationParams @JvmOverloads constructor(
   }
 
   companion object {
+    @JvmStatic
     fun builder(): Builder<PaginationParams> {
       return Builder(PaginationParams())
     }

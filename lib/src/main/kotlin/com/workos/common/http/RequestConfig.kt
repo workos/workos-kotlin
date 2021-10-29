@@ -6,6 +6,7 @@ class RequestConfig(
   val data: Any? = null,
 ) {
   companion object {
+    @JvmStatic
     fun builder(): Builder {
       return Builder()
     }
