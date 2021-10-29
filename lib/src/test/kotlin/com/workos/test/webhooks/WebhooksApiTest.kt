@@ -1,6 +1,6 @@
 package com.workos.test.webhooks
 
-import com.workos.webhooks.WebhooksApi
+import com.workos.test.TestBase
 import org.apache.commons.codec.binary.Hex
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -10,12 +10,12 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.test.assertEquals
 
-class WebhooksApiTest {
+class WebhooksApiTest : TestBase() {
   private val testWebhookId = "wh_123"
   private val eventType = "dsync.user.created"
   private val rawAttributesTitle = "Developer Success Engineer"
 
-  val testWebhook = """
+  private val testWebhook = """
     {
       "id": "$testWebhookId",
       "data": {
@@ -90,9 +90,10 @@ class WebhooksApiTest {
 
   @Test
   fun constructEventHappyPath() {
+    val workos = createWorkOSClient()
     val testData = prepareTest()
 
-    val webhook = WebhooksApi.constructEvent(
+    val webhook = workos.webhooks.constructEvent(
       testWebhook,
       testData["signature"] as String,
       testData["secret"] as String
@@ -105,9 +106,12 @@ class WebhooksApiTest {
   @Test
   fun constructEventThrowsIfGivenIncorrectPayload() {
     assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+
       val testData = prepareTest()
 
-      WebhooksApi.constructEvent(
+      val webhook = workos.webhooks.constructEvent(
+
         "wrong payload",
         testData["signature"] as String,
         "secret",
@@ -118,9 +122,11 @@ class WebhooksApiTest {
   @Test
   fun constructEventThrowsIfGivenIncorrectSignature() {
     assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+
       val testData = prepareTest()
 
-      WebhooksApi.constructEvent(
+      val webhook = workos.webhooks.constructEvent(
         testWebhook,
         "wrong signature",
         "secret",
@@ -131,9 +137,11 @@ class WebhooksApiTest {
   @Test
   fun constructEventThrowsIfGivenIncorrectSecret() {
     assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+
       val testData = prepareTest()
 
-      WebhooksApi.constructEvent(
+      val webhook = workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
         "not so secret",
@@ -144,9 +152,11 @@ class WebhooksApiTest {
   @Test
   fun constructEventThrowsIfToleranceNotMet() {
     assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+
       val testData = prepareTest()
 
-      WebhooksApi.constructEvent(
+      val webhook = workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
         testData["secret"] as String,
