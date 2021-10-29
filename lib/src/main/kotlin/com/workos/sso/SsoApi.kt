@@ -12,7 +12,7 @@ import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
 
 class SsoApi(val workos: WorkOS) {
-  class AuthorizationUrlOptions(
+  class AuthorizationUrlOptions @JvmOverloads constructor(
     val baseUrl: String,
     val clientId: String,
     val redirectUri: String,
