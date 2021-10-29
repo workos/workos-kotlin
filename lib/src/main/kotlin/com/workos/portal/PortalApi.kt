@@ -50,6 +50,7 @@ class PortalApi(val workos: WorkOS) {
     }
 
     companion object {
+      @JvmStatic
       fun builder(): Builder {
         return Builder()
       }
