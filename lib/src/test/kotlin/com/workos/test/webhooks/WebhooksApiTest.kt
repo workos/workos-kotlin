@@ -3,13 +3,17 @@ package com.workos.test.webhooks
 import com.workos.webhooks.WebhooksApi
 import org.apache.commons.codec.binary.Hex
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertThrows
+import java.security.SignatureException
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.test.assertEquals
 
 class WebhooksApiTest {
-  val testWebhookId = "wh_123"
+  private val testWebhookId = "wh_123"
+  private val eventType = "dsync.user.created"
+  private val rawAttributesTitle = "Developer Success Engineer"
 
   val testWebhook = """
     {
@@ -35,7 +39,7 @@ class WebhooksApiTest {
             "middleName": "Elizabeth",
             "honorificPrefix": "Ms."
           },
-          "title": "Developer Success Engineer",
+          "title": "$rawAttributesTitle",
           "active": true,
           "emails": [{
             "type": "work",
@@ -64,7 +68,7 @@ class WebhooksApiTest {
           }
         }
       },
-      "event": "dsync.user.created"
+      "event": "$eventType"
     }"""
 
   private fun prepareTest(): Map<String, Any> {
@@ -95,5 +99,59 @@ class WebhooksApiTest {
     )
 
     assertEquals(webhook.id, testWebhookId)
+    assertEquals(webhook.id, testWebhookId)
+  }
+
+  @Test
+  fun constructEventThrowsIfGivenIncorrectPayload() {
+    assertThrows(SignatureException::class.java) {
+      val testData = prepareTest()
+
+      WebhooksApi.constructEvent(
+        "wrong payload",
+        testData["signature"] as String,
+        "secret",
+      )
+    }
+  }
+
+  @Test
+  fun constructEventThrowsIfGivenIncorrectSignature() {
+    assertThrows(SignatureException::class.java) {
+      val testData = prepareTest()
+
+      WebhooksApi.constructEvent(
+        testWebhook,
+        "wrong signature",
+        "secret",
+      )
+    }
+  }
+
+  @Test
+  fun constructEventThrowsIfGivenIncorrectSecret() {
+    assertThrows(SignatureException::class.java) {
+      val testData = prepareTest()
+
+      WebhooksApi.constructEvent(
+        testWebhook,
+        testData["signature"] as String,
+        "not so secret",
+      )
+    }
+  }
+
+  @Test
+  fun constructEventThrowsIfToleranceNotMet() {
+    assertThrows(SignatureException::class.java) {
+      val testData = prepareTest()
+
+      WebhooksApi.constructEvent(
+        testWebhook,
+        testData["signature"] as String,
+        testData["secret"] as String,
+        -1
+      )
+    }
   }
 }
