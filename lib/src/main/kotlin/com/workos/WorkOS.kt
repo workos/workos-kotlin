@@ -51,17 +51,14 @@ class WorkOS(
 
   private val mapper = jacksonObjectMapper()
 
-  val directorySync by lazy {
-    DirectorySyncApi(this)
-  }
+  @JvmField
+  val directorySync = DirectorySyncApi(this)
 
-  val organizations by lazy {
-    OrganizationsApi(this)
-  }
+  @JvmField
+  val organizations = OrganizationsApi(this)
 
-  val sso by lazy {
-    SsoApi(this)
-  }
+  @JvmField
+  val sso = SsoApi(this)
 
   init {
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
