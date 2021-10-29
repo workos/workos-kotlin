@@ -12,6 +12,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.organizations.OrganizationsApi
+import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
 import org.apache.http.client.utils.URIBuilder
 import java.net.http.HttpClient
@@ -47,19 +48,21 @@ class WorkOS(
     HttpRequest.newBuilder()
       .header("Authorization", "Bearer $apiKey")
       .header("User-Agent", "workos-kotlin/$version")
+      .header("Content-Type", "application/json")
 
   private val mapper = jacksonObjectMapper()
 
-  val directorySync by lazy {
-    DirectorySyncApi(this)
-  }
+  @JvmField
+  val directorySync = DirectorySyncApi(this)
 
-  val organizations by lazy {
-    OrganizationsApi(this)
-  }
+  @JvmField
+  val organizations = OrganizationsApi(this)
 
-  val sso by lazy {
-    SsoApi(this)
+  @JvmField
+  val sso = SsoApi(this)
+
+  val portal by lazy {
+    PortalApi(this)
   }
 
   init {

@@ -38,6 +38,7 @@ class OrganizationsApi(val workos: WorkOS) {
     }
 
     companion object {
+      @JvmStatic
       fun builder(): Builder {
         return Builder()
       }
@@ -71,6 +72,7 @@ class OrganizationsApi(val workos: WorkOS) {
     }
 
     companion object {
+      @JvmStatic
       fun builder(): Builder {
         return Builder()
       }
@@ -117,6 +119,7 @@ class OrganizationsApi(val workos: WorkOS) {
     }
 
     companion object {
+      @JvmStatic
       fun builder(): Builder {
         return Builder()
       }

@@ -108,9 +108,15 @@ class SsoApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/sso/token",
-      """{
-        "token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
+      url = "/sso/token",
+      requestBody = """{
+        "client_id": "clientId",
+        "client_secret": "apiKey",
+        "code": "code",
+        "grant_type": "authorization_code"
+      }""",
+      responseBody = """{
+        "access_token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
         "profile": {
           "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
           "connection_type": "OktaSAML",
