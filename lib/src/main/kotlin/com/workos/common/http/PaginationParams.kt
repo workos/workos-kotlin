@@ -9,7 +9,7 @@ interface BuilderParamValidation {
 open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
-  limit: Int? = null
+  limit: Int? = null,
 ) : HashMap<String, String>() {
 
   init {

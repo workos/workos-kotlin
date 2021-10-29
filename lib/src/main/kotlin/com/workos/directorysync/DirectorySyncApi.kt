@@ -69,12 +69,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
     user: String? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
+    limit: Int? = null,
+    private val _skipValidation: Boolean = false
   ) : PaginationParams(after, before, limit) {
     init {
       if (directory != null) set("directory", directory)
       if (user != null) set("user", user)
-      validateParams(this)
+      if (!_skipValidation) {
+        validateParams(this)
+      }
     }
 
     companion object {
@@ -92,9 +95,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(
-      ListDirectoryGroupOptions(directory = "")
+      ListDirectoryGroupOptions(_skipValidation = true)
     ) {
-      init { this.params.remove("directory") }
       fun directory(value: String) = apply { this.params["directory"] = value }
       fun user(value: String) = apply { this.params["user"] = value }
 
@@ -109,12 +111,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
     group: String? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
+    limit: Int? = null,
+    private val _skipValidation: Boolean = false
   ) : PaginationParams(after, before, limit) {
     init {
       if (directory != null) set("directory", directory)
       if (group != null) set("group", group)
-      validateParams(this)
+      if (!_skipValidation) {
+        validateParams(this)
+      }
     }
 
     companion object {
@@ -132,7 +137,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(
-      ListDirectoryUserOptions(directory = "")
+      ListDirectoryUserOptions(_skipValidation = true)
     ) {
       init { this.params.remove("directory") }
       fun directory(value: String) = apply { this.params["directory"] = value }
