@@ -47,6 +47,7 @@ class WorkOS(
     HttpRequest.newBuilder()
       .header("Authorization", "Bearer $apiKey")
       .header("User-Agent", "workos-kotlin/$version")
+      .header("Content-Type", "application/json")
 
   private val mapper = jacksonObjectMapper()
 

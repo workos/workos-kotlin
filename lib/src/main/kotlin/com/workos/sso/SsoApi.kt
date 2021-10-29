@@ -1,5 +1,6 @@
 package com.workos.sso
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
@@ -11,7 +12,7 @@ import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
 
 class SsoApi(val workos: WorkOS) {
-  class AuthorizationUrlBuilder(
+  class AuthorizationUrlOptions(
     val baseUrl: String,
     val clientId: String,
     val redirectUri: String,
@@ -20,29 +21,14 @@ class SsoApi(val workos: WorkOS) {
     var provider: String? = null,
     var state: String? = null
   ) {
-    fun connection(value: String): AuthorizationUrlBuilder {
-      connection = value
-      return this
-    }
-
-    fun domain(value: String): AuthorizationUrlBuilder {
-      domain = value
-      return this
-    }
-
-    fun provider(value: String): AuthorizationUrlBuilder {
-      provider = value
-      return this
-    }
-
-    fun state(value: String): AuthorizationUrlBuilder {
-      state = value
-      return this
-    }
+    fun connection(value: String) = apply { connection = value }
+    fun domain(value: String) = apply { domain = value }
+    fun provider(value: String) = apply { provider = value }
+    fun state(value: String) = apply { state = value }
 
     fun build(): String {
       val uriBuilder = URIBuilder("$baseUrl")
-        .setPath("sso/authorize")
+        .setPath("/sso/authorize")
         .addParameter("client_id", clientId)
         .addParameter("redirect_uri", redirectUri)
         .addParameter("response_type", "code")
@@ -56,8 +42,9 @@ class SsoApi(val workos: WorkOS) {
     }
 
     companion object {
-      fun create(baseUrl: String, clientId: String, redirectUri: String): AuthorizationUrlBuilder {
-        return AuthorizationUrlBuilder(baseUrl, clientId, redirectUri)
+      @JvmStatic
+      fun builder(baseUrl: String, clientId: String, redirectUri: String): AuthorizationUrlOptions {
+        return AuthorizationUrlOptions(baseUrl, clientId, redirectUri)
       }
     }
   }
@@ -66,24 +53,30 @@ class SsoApi(val workos: WorkOS) {
     workos.delete("/connections/$id")
   }
 
-  fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlBuilder {
-    return AuthorizationUrlBuilder.create(workos.baseUrl, clientId, redirectUri)
+  fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlOptions {
+    return AuthorizationUrlOptions.builder(workos.baseUrl, clientId, redirectUri)
   }
 
   fun getConnection(id: String): Connection {
     return workos.get("/connections/$id", Connection::class.java)
   }
 
-  fun getProfileAndToken(code: String, clientId: String): ProfileAndToken {
-    val params = mapOf<String, String>(
-      "client_id" to clientId,
-      "client_secret" to workos.apiKey,
-      "code" to code,
-      "grant_type" to "authorization_code",
-    )
+  private class ProfileAndTokenOptions(
+    val code: String,
 
+    @JsonProperty("client_id")
+    val clientId: String,
+
+    @JsonProperty("client_secret")
+    val clientSecret: String
+  ) {
+    @JsonProperty("grant_type")
+    val grantType = "authorization_code"
+  }
+
+  fun getProfileAndToken(code: String, clientId: String): ProfileAndToken {
     val config = RequestConfig.builder()
-      .params(params)
+      .data(ProfileAndTokenOptions(code, clientId, workos.apiKey))
       .build()
 
     return workos.post("/sso/token", ProfileAndToken::class.java, config)
