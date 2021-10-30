@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
-import com.workos.passwordless.models.Session
+import com.workos.passwordless.models.PasswordlessSession
+import com.workos.passwordless.models.SendSessionResponse
 import com.workos.passwordless.models.SessionType
 import java.lang.IllegalArgumentException
 
 class PasswordlessApi(private val workos: WorkOS) {
-  fun createSession(createSessionOptions: CreateSessionOptions): Session {
+  fun createSession(createSessionOptions: CreateSessionOptions): PasswordlessSession {
     val config = RequestConfig
       .builder()
       .data(createSessionOptions)
@@ -17,8 +18,15 @@ class PasswordlessApi(private val workos: WorkOS) {
 
     return workos.post(
       "/passwordless/sessions",
-      Session::class.java,
+      PasswordlessSession::class.java,
       config
+    )
+  }
+
+  fun sendSession(id: String): SendSessionResponse {
+    return workos.post(
+      "/passwordless/sessions/$id/send",
+      SendSessionResponse::class.java
     )
   }
 
