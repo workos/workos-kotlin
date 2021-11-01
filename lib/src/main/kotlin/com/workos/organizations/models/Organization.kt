@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Organization
 @JsonCreator constructor(
   @JsonProperty("object")
-  val obj: String,
+  val obj: String = "organization",
 
   val id: String,
 

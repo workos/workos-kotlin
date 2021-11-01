@@ -31,5 +31,5 @@ data class Profile
   val lastName: String,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, String>,
+  val rawAttributes: Map<String, Any>,
 )
