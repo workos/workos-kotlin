@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.portal.models.Intent
 import com.workos.portal.models.Link
+import java.lang.IllegalArgumentException
 
 class PortalApi(val workos: WorkOS) {
 
@@ -34,11 +35,11 @@ class PortalApi(val workos: WorkOS) {
 
       fun build(): GeneratePortalLinkOptions {
         if (organization == null) {
-          throw IllegalStateException("An organization id must be provided")
+          throw IllegalArgumentException("An organization id must be provided")
         }
 
         if (intent == null) {
-          throw IllegalStateException("An intent must be provided")
+          throw IllegalArgumentException("An intent must be provided")
         }
 
         return GeneratePortalLinkOptions(

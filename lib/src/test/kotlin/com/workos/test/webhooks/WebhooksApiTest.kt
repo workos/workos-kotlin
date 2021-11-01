@@ -110,7 +110,7 @@ class WebhooksApiTest : TestBase() {
 
       val testData = prepareTest()
 
-      val webhook = workos.webhooks.constructEvent(
+      workos.webhooks.constructEvent(
 
         "wrong payload",
         testData["signature"] as String,
@@ -123,10 +123,7 @@ class WebhooksApiTest : TestBase() {
   fun constructEventThrowsIfGivenIncorrectSignature() {
     assertThrows(SignatureException::class.java) {
       val workos = createWorkOSClient()
-
-      val testData = prepareTest()
-
-      val webhook = workos.webhooks.constructEvent(
+      workos.webhooks.constructEvent(
         testWebhook,
         "wrong signature",
         "secret",
@@ -141,7 +138,7 @@ class WebhooksApiTest : TestBase() {
 
       val testData = prepareTest()
 
-      val webhook = workos.webhooks.constructEvent(
+      workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
         "not so secret",
@@ -156,7 +153,7 @@ class WebhooksApiTest : TestBase() {
 
       val testData = prepareTest()
 
-      val webhook = workos.webhooks.constructEvent(
+      workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
         testData["secret"] as String,
