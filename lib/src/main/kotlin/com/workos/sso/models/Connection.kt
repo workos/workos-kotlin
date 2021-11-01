@@ -23,6 +23,9 @@ data class Connection
 
   val domains: List<ConnectionDomain>,
 
+  @JsonProperty("environment_id")
+  val environmentId: String?,
+
   val id: String,
 
   val name: String,

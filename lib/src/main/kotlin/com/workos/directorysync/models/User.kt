@@ -2,7 +2,6 @@ package com.workos.directorysync.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonValue
 
 data class User
 @JsonCreator constructor(
@@ -11,17 +10,20 @@ data class User
 
   val id: String,
 
+  @JsonProperty("directory_id")
+  val directoryId: String,
+
   @JsonProperty("idp_id")
   val idpId: String,
 
   @JsonProperty("username")
-  val userName: String,
+  val userName: String?,
 
   @JsonProperty("first_name")
-  val firstName: String,
+  val firstName: String?,
 
   @JsonProperty("last_name")
-  val lastName: String,
+  val lastName: String?,
 
   val emails: List<Email>,
 
@@ -35,8 +37,3 @@ data class User
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>,
 )
-
-enum class UserState(@JsonValue val state: String) {
-  Active("active"),
-  Suspended("suspended")
-}

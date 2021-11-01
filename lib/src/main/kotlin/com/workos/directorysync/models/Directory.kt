@@ -18,7 +18,7 @@ data class Directory
   val environmentId: String?,
 
   @JsonProperty("external_key")
-  val externalKey: String?,
+  val externalKey: String,
 
   @JsonProperty("organization_id")
   val organizationId: String?,
