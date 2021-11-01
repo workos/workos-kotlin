@@ -33,7 +33,7 @@ data class User
   val customAttributes: Map<String, String>,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, String>,
+  val rawAttributes: Map<String, Any>,
 )
 
 enum class UserState(@JsonValue val state: String) {

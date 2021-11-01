@@ -6,7 +6,7 @@ data class Email
 @JsonCreator constructor(
   val primary: Boolean,
 
-  val type: String,
+  val type: String?,
 
   val value: String,
 )

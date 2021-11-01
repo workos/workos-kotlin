@@ -16,5 +16,5 @@ data class Group
   val name: String,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, String>?,
+  val rawAttributes: Map<String, Any>,
 )
