@@ -579,37 +579,18 @@ class DirectorySyncApiTest : TestBase() {
   }
 
   @Test
-  fun listDirectoryUserOptionsRawThrowsWithNoParams() {
+  fun listDirectoryUserThrowsWithNoParams() {
     assertThrows(IllegalArgumentException::class.java) {
-      DirectorySyncApi.ListDirectoryUserOptions()
+      val workos = createWorkOSClient()
+      workos.directorySync.listDirectoryUsers(DirectorySyncApi.ListDirectoryUserOptions())
     }
   }
 
   @Test
-  fun listDirectoryUserOptionsBuilderThrowsWithNoParams() {
+  fun listDirectoryGroupThrowsWithNoParams() {
     assertThrows(IllegalArgumentException::class.java) {
-      DirectorySyncApi
-        .ListDirectoryUserOptions
-        .builder()
-        .build()
-    }
-  }
-
-  @Test
-  fun listDirectoryGroupOptionsRawThrowsWithNoParams() {
-    assertThrows(IllegalArgumentException::class.java) {
-      DirectorySyncApi
-        .ListDirectoryUserOptions()
-    }
-  }
-
-  @Test
-  fun listDirectoryGroupOptionsBuilderThrowsWithNoParams() {
-    assertThrows(IllegalArgumentException::class.java) {
-      DirectorySyncApi
-        .ListDirectoryUserOptions
-        .builder()
-        .build()
+      val workos = createWorkOSClient()
+      workos.directorySync.listDirectoryGroups(DirectorySyncApi.ListDirectoryGroupOptions())
     }
   }
 }
