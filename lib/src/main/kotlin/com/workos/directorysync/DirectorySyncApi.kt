@@ -18,9 +18,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
 
   @JvmOverloads
   fun listDirectories(paginationParams: PaginationParams? = null): DirectoryList {
-    val params = paginationParams ?: emptyMap()
     val requestConfig = RequestConfig.builder()
-      .params(params)
+      .params(paginationParams ?: emptyMap())
       .build()
 
     return workos.get(
@@ -37,6 +36,10 @@ class DirectorySyncApi(private val workos: WorkOS) {
   fun listDirectoryUsers(
     listOptions: ListDirectoryUserOptions
   ): DirectoryUserList {
+    if (listOptions["directory"] == null && listOptions["group"] == null) {
+      throw IllegalArgumentException("A directory or group must be provided.")
+    }
+
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
       .build()
@@ -55,6 +58,10 @@ class DirectorySyncApi(private val workos: WorkOS) {
   fun listDirectoryGroups(
     listOptions: ListDirectoryGroupOptions
   ): DirectoryGroupList {
+    if (listOptions["directory"] == null && listOptions["user"] == null) {
+      throw IllegalArgumentException("Either directory or user must be provided.")
+    }
+
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
       .build()
@@ -70,14 +77,10 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    private val _skipValidation: Boolean = false
   ) : PaginationParams(after, before, limit) {
     init {
       if (directory != null) set("directory", directory)
       if (user != null) set("user", user)
-      if (!_skipValidation) {
-        validateParams(this)
-      }
     }
 
     companion object {
@@ -85,24 +88,11 @@ class DirectorySyncApi(private val workos: WorkOS) {
       fun builder(): Builder {
         return Builder()
       }
-
-      fun validateParams(params: Map<String, String>): Boolean {
-        if (params["directory"] == null && params["user"] == null) {
-          throw IllegalArgumentException("Either directory or user must be provided.")
-        }
-        return true
-      }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(
-      ListDirectoryGroupOptions(_skipValidation = true)
-    ) {
+    class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
       fun directory(value: String) = apply { this.params["directory"] = value }
       fun user(value: String) = apply { this.params["user"] = value }
-
-      override fun validateBuilderParams(): Boolean {
-        return validateParams(this.params)
-      }
     }
   }
 
@@ -112,14 +102,10 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    private val _skipValidation: Boolean = false
   ) : PaginationParams(after, before, limit) {
     init {
       if (directory != null) set("directory", directory)
       if (group != null) set("group", group)
-      if (!_skipValidation) {
-        validateParams(this)
-      }
     }
 
     companion object {
@@ -127,25 +113,11 @@ class DirectorySyncApi(private val workos: WorkOS) {
       fun builder(): Builder {
         return Builder()
       }
-
-      fun validateParams(params: Map<String, String>): Boolean {
-        if (params["directory"] == null && params["group"] == null) {
-          throw IllegalArgumentException("A directory or group must be provided.")
-        }
-        return true
-      }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(
-      ListDirectoryUserOptions(_skipValidation = true)
-    ) {
-      init { this.params.remove("directory") }
+    class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
       fun directory(value: String) = apply { this.params["directory"] = value }
       fun group(value: String) = apply { this.params["group"] = value }
-
-      override fun validateBuilderParams(): Boolean {
-        return validateParams(this.params)
-      }
     }
   }
 }

@@ -1,11 +1,5 @@
 package com.workos.common.http
 
-import java.lang.IllegalArgumentException
-
-interface BuilderParamValidation {
-  fun validateBuilderParams(): Boolean
-}
-
 open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
@@ -33,19 +27,12 @@ open class PaginationParams @JvmOverloads constructor(
     }
   }
 
-  open class Builder<T : PaginationParams>(protected val params: T) : BuilderParamValidation {
+  open class Builder<T : PaginationParams>(protected val params: T) {
     fun after(after: String) = apply { this.params["after"] = after }
     fun before(before: String) = apply { this.params["before"] = before }
     fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
     open fun build(): T {
-      if (!validateBuilderParams()) {
-        throw IllegalArgumentException("Invalid builder parameters")
-      }
       return params
-    }
-
-    override fun validateBuilderParams(): Boolean {
-      return true
     }
   }
 }
