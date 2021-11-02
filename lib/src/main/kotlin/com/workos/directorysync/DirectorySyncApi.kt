@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
 class DirectorySyncApi(private val workos: WorkOS) {
 
   fun deleteDirectory(id: String) {
-    workos.delete("/directory/$id")
+    workos.delete("/directories/$id")
   }
 
   @JvmOverloads
