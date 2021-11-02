@@ -22,7 +22,7 @@ class DirectorySyncApiTest : TestBase() {
     val id = "directory_01ECAZ4NV9QMV47GW873HDCX74"
 
     stubResponse(
-      url = "/directory/$id",
+      url = "/directories/$id",
       responseBody = "{}"
     )
 
@@ -38,7 +38,7 @@ class DirectorySyncApiTest : TestBase() {
     val id = "directory_01ECAZ4NV9QMV47GW873HDCX74"
 
     stubResponse(
-      url = "/directory/$id",
+      url = "/directories/$id",
       responseBody = "{}",
       responseStatus = 401
     )
