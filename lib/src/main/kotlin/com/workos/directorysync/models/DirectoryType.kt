@@ -10,6 +10,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   GenericSCIMV2_0("generic scim v2.0"),
   GSuiteDirectory("gsuite directory"),
   Gusto("gusto"),
+  Hibob("hibob"),
   JumpCloudSCIM2_0("jump cloud scim v2.0"),
   OktaSCIMV1_1("okta scim v1.1"),
   OktaSCIMV2_0("okta scim v2.0"),
