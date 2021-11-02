@@ -29,7 +29,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
 
   fun getDirectoryUser(id: String): User {
     return workos.get(
-      "/directory_user/$id", User::class.java
+      "/directory_users/$id", User::class.java
     )
   }
 
