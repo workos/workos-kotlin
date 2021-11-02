@@ -6,8 +6,10 @@ import com.workos.common.models.ListMetadata
 
 data class DirectoryList
 @JsonCreator constructor(
+  @JvmField
   val data: List<Directory>,
 
+  @JvmField
   @JsonProperty("list_metadata")
   val listMetadata: ListMetadata
 )

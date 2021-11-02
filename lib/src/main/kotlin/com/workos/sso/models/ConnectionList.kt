@@ -7,8 +7,10 @@ import com.workos.common.models.ListMetadata
 
 data class ConnectionList
 @JsonCreator constructor(
+  @JvmField
   val data: List<Connection>,
 
+  @JvmField
   @JsonProperty("list_metadata")
   val listMetadata: ListMetadata,
 )
