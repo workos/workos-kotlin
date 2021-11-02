@@ -9,12 +9,12 @@ data class Group
   val obj: String = "directory_group",
 
   @JsonProperty("directory_id")
-  val directoryId: String?,
+  val directoryId: String,
 
   val id: String,
 
   val name: String,
 
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, String>?,
+  val rawAttributes: Map<String, Any>,
 )

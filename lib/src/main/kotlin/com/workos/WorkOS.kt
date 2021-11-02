@@ -12,6 +12,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.organizations.OrganizationsApi
+import com.workos.passwordless.PasswordlessApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
 import com.workos.webhooks.WebhooksApi
@@ -58,6 +59,9 @@ class WorkOS(
 
   @JvmField
   val organizations = OrganizationsApi(this)
+
+  @JvmField
+  val passwordless = PasswordlessApi(this)
 
   @JvmField
   val portal = PortalApi(this)

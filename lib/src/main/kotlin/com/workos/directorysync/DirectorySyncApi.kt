@@ -8,6 +8,7 @@ import com.workos.directorysync.models.DirectoryList
 import com.workos.directorysync.models.DirectoryUserList
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
+import java.lang.IllegalArgumentException
 
 class DirectorySyncApi(private val workos: WorkOS) {
 
@@ -15,8 +16,12 @@ class DirectorySyncApi(private val workos: WorkOS) {
     workos.delete("/directory/$id")
   }
 
-  fun listDirectories(paginationParams: PaginationParams? = PaginationParams()): DirectoryList {
-    val requestConfig = RequestConfig(params = paginationParams)
+  @JvmOverloads
+  fun listDirectories(paginationParams: PaginationParams? = null): DirectoryList {
+    val requestConfig = RequestConfig.builder()
+      .params(paginationParams ?: emptyMap())
+      .build()
+
     return workos.get(
       "/directories", DirectoryList::class.java, requestConfig
     )
@@ -29,8 +34,12 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   fun listDirectoryUsers(
-    listOptions: ListDirectoryUserOptions = ListDirectoryUserOptions()
+    listOptions: ListDirectoryUserOptions
   ): DirectoryUserList {
+    if (listOptions["directory"] == null && listOptions["group"] == null) {
+      throw IllegalArgumentException("A directory or group must be provided.")
+    }
+
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
       .build()
@@ -47,8 +56,12 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   fun listDirectoryGroups(
-    listOptions: ListDirectoryGroupOptions = ListDirectoryGroupOptions()
+    listOptions: ListDirectoryGroupOptions
   ): DirectoryGroupList {
+    if (listOptions["directory"] == null && listOptions["user"] == null) {
+      throw IllegalArgumentException("Either directory or user must be provided.")
+    }
+
     val requestConfig = RequestConfig.builder()
       .params(listOptions)
       .build()
@@ -63,7 +76,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     user: String? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
+    limit: Int? = null,
   ) : PaginationParams(after, before, limit) {
     init {
       if (directory != null) set("directory", directory)
@@ -84,22 +97,26 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   class ListDirectoryUserOptions @JvmOverloads constructor(
+    directory: String? = null,
     group: String? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
+    limit: Int? = null,
   ) : PaginationParams(after, before, limit) {
     init {
+      if (directory != null) set("directory", directory)
       if (group != null) set("group", group)
     }
 
     companion object {
+      @JvmStatic
       fun builder(): Builder {
         return Builder()
       }
     }
 
     class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+      fun directory(value: String) = apply { this.params["directory"] = value }
       fun group(value: String) = apply { this.params["group"] = value }
     }
   }

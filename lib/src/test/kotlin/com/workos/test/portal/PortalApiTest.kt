@@ -4,6 +4,7 @@ import com.workos.portal.PortalApi
 import com.workos.portal.models.Intent
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
+import java.lang.IllegalArgumentException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -94,7 +95,7 @@ class PortalApiTest : TestBase() {
   @Test
   fun buildGeneratePortalLinkOptionsWithNoOrganizationShouldThrow() {
 
-    assertThrows(IllegalStateException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
 
       PortalApi.GeneratePortalLinkOptions
         .builder()
@@ -105,7 +106,7 @@ class PortalApiTest : TestBase() {
 
   @Test
   fun buildGeneratePortalLinkOptionsWithNoIntentShouldThrow() {
-    assertThrows(IllegalStateException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       PortalApi.GeneratePortalLinkOptions
         .builder()
         .organization("organizationId")
