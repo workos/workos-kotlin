@@ -157,7 +157,7 @@ class DirectorySyncApiTest : TestBase() {
     val gsuiteDirectoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
 
     stubResponse(
-      url = "/directory_user/$userId",
+      url = "/directory_users/$userId",
       responseBody = """{
         "id": "$userId",
         "idp_id": "2836",
