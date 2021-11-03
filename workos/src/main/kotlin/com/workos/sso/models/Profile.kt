@@ -18,7 +18,7 @@ data class Profile
 
   @JvmField
   @JsonProperty("organization_id")
-  val organizationId: String,
+  val organizationId: String?,
 
   @JvmField
   @JsonProperty("connection_id")
@@ -33,11 +33,11 @@ data class Profile
 
   @JvmField
   @JsonProperty("first_name")
-  val firstName: String,
+  val firstName: String?,
 
   @JvmField
   @JsonProperty("last_name")
-  val lastName: String,
+  val lastName: String?,
 
   @JvmField
   @JsonProperty("raw_attributes")
