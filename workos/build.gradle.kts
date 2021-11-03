@@ -8,6 +8,8 @@ plugins {
 
   id("org.jetbrains.dokka") version "1.5.30"
 
+  signing
+
   `java-library`
 
   `maven-publish`
@@ -71,9 +73,58 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       artifactId = "workos"
+      version = "0.0.1-SNAPSHOT"
 
       from(components["java"])
+
+      pom {
+        name.set("WorkOS SDK")
+        description.set("The WorkOS Kotlin library provides convenient access to the WorkOS API from applications written in JVM compatible languages.")
+        url.set("https://github.com/workos-inc/workos-kotlin")
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/workos-inc/workos-kotlin/blob/main/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("rframpton")
+            name.set("Robert Frampton")
+            email.set("rob@workos.com")
+          }
+        }
+        scm {
+          connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
+          developerConnection.set("scm:git:git@github.com:workos-inc/workos-kotlin.git")
+          url.set("https://github.com/workos-inc/workos-kotlin")
+        }
+      }
     }
+  }
+
+  repositories {
+    maven {
+      val ossrhUsername: String? by project
+      val ossrhPassword: String? by project
+
+      url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
+
+      credentials {
+        username = ossrhUsername
+        password = ossrhPassword
+      }
+    }
+  }
+}
+
+signing {
+  val signingKey: String? by project
+  val signingPassword: String? by project
+
+  if (signingKey != null) {
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications)
   }
 }
 

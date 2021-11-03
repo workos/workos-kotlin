@@ -13,3 +13,6 @@
 # Ignore Gradle build output directory
 build
 bin
+
+# Credentials
+gradle.properties
