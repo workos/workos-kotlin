@@ -13,6 +13,7 @@ class WebhooksApi() {
   private val objectMapper = jacksonObjectMapper()
 
   @Throws(SignatureException::class)
+  @JvmOverloads
   fun constructEvent(
     payload: String,
     signatureHeader: String,
