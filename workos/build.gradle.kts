@@ -6,6 +6,8 @@ plugins {
 
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
+  id("org.jetbrains.dokka") version "1.5.30"
+
   `java-library`
 
   `maven-publish`
@@ -35,7 +37,17 @@ dependencies {
 
   testImplementation("com.github.tomakehurst:wiremock:2.27.2")
 
+  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+
   api("org.apache.commons:commons-math3:3.6.1")
+}
+
+tasks.named("build") {
+  finalizedBy("dokkaJavadoc")
+}
+
+tasks.dokkaJavadoc.configure {
+  outputDirectory.set(buildDir.resolve("docs/javadoc"))
 }
 
 tasks.jar {
@@ -65,4 +77,7 @@ publishing {
   }
 }
 
-java { withSourcesJar() }
+java {
+  withSourcesJar()
+  withJavadocJar()
+}
