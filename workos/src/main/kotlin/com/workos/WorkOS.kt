@@ -28,7 +28,7 @@ class WorkOS(
 ) {
   init {
     if (apiKey.isNullOrBlank()) {
-      throw IllegalArgumentException("Missing API key. Pass it to the constructor or define it in the WORKOS_API_KEY environment variable")
+      throw IllegalArgumentException("Missing API key")
     }
   }
 
