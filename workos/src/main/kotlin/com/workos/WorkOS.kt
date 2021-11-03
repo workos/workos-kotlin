@@ -152,20 +152,21 @@ class WorkOS(
 
     when (val status = response.statusCode()) {
       401 -> {
-        throw UnauthorizedException(requestId)
+        val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
+        throw UnauthorizedException(responseData.message, requestId)
       }
       404 -> {
         throw NotFoundException(response.request().uri().path, requestId)
       }
       422 -> {
-        val errors = mapper.readValue(response.body(), UnprocessableEntityExceptionResponse::class.java).errors
-        throw UnprocessableEntityException(errors, requestId)
+        val unprocessableEntityException = mapper.readValue(response.body(), UnprocessableEntityExceptionResponse::class.java)
+        throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.errors, requestId)
       }
       else -> {
         val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
 
         if (responseData.error != null || responseData.error_description != null) {
-          throw OauthException(status, requestId, responseData.error, responseData.error_description)
+          throw OauthException(responseData.message, status, requestId, responseData.error, responseData.error_description)
         }
 
         throw GenericServerException(status, responseData.message, requestId)

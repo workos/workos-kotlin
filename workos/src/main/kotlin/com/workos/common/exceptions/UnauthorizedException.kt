@@ -1,5 +1,8 @@
 package com.workos.common.exceptions
 
-class UnauthorizedException(val requestId: String) : Exception("UnauthorizedException") {
+class UnauthorizedException(
+  override val message: String?,
+  val requestId: String
+) : Exception(message) {
   val status = 401
 }
