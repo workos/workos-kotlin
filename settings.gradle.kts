@@ -1,2 +1,2 @@
 rootProject.name = "workos-kotlin"
-include("lib")
+include("workos")
