@@ -17,6 +17,7 @@ import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
+import java.lang.IllegalArgumentException
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -25,6 +26,12 @@ import java.net.http.HttpResponse.BodyHandlers
 class WorkOS(
   val apiKey: String
 ) {
+  init {
+    if (apiKey.isNullOrBlank()) {
+      throw IllegalArgumentException("Missing API key")
+    }
+  }
+
   var apiHostname = "api.workos.com"
 
   var https: Boolean = true
