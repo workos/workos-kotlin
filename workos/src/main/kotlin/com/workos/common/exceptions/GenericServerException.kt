@@ -1,3 +1,3 @@
 package com.workos.common.exceptions
 
-class GenericServerException(val status: Int, val messsage: String?, val requestId: String) : Exception("GenericServerException")
+class GenericServerException(val status: Int, override val message: String?, val requestId: String) : Exception(message)
