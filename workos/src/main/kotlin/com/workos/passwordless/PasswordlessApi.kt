@@ -3,7 +3,6 @@ package com.workos.passwordless
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
-import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.http.RequestConfig
 import com.workos.passwordless.models.PasswordlessSession
 import com.workos.passwordless.models.SendSessionResponse
@@ -11,7 +10,6 @@ import com.workos.passwordless.models.SessionType
 import java.lang.IllegalArgumentException
 
 class PasswordlessApi(private val workos: WorkOS) {
-
   fun createSession(createSessionOptions: CreateSessionOptions): PasswordlessSession {
     val config = RequestConfig
       .builder()
