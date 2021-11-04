@@ -11,7 +11,15 @@ import com.workos.sso.models.Profile
 import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
 
-class SsoApi(val workos: WorkOS) {
+/**
+ * The SsoApi class provides convenience methods for working with the WorkOS
+ * SSO platform. You'll need a valid API key, a client ID, and to have
+ * created an SSO connection on your WorkOS dashboard.
+ */
+class SsoApi(private val workos: WorkOS) {
+  /**
+   * Builder for authorization URLs. Can be created via `getAuthorizationUrl` method.
+   */
   class AuthorizationUrlOptions @JvmOverloads constructor(
     val baseUrl: String,
     val clientId: String,
@@ -49,14 +57,24 @@ class SsoApi(val workos: WorkOS) {
     }
   }
 
+  /**
+   * Deletes a single connection by id.
+   */
   fun deleteConnection(id: String) {
     workos.delete("/connections/$id")
   }
 
+  /**
+   * Generate an Oauth2 authorization URL where your users will
+   * authenticate using the configured SSO Identity Provider.
+   */
   fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlOptions {
     return AuthorizationUrlOptions.builder(workos.baseUrl, clientId, redirectUri)
   }
 
+  /**
+   * Fetches a single connection by id.
+   */
   fun getConnection(id: String): Connection {
     return workos.get("/connections/$id", Connection::class.java)
   }
@@ -74,6 +92,9 @@ class SsoApi(val workos: WorkOS) {
     val grantType = "authorization_code"
   }
 
+  /**
+   * Fetch the profile details and access token for the authenticated SSO user.
+   */
   fun getProfileAndToken(code: String, clientId: String): ProfileAndToken {
     val config = RequestConfig.builder()
       .data(ProfileAndTokenOptions(code, clientId, workos.apiKey))
@@ -82,6 +103,9 @@ class SsoApi(val workos: WorkOS) {
     return workos.post("/sso/token", ProfileAndToken::class.java, config)
   }
 
+  /**
+   * Fetch the profile details via provided access token.
+   */
   fun getProfile(accessToken: String): Profile {
     val headers = mapOf("Authorization" to "Bearer $accessToken")
 
@@ -92,6 +116,9 @@ class SsoApi(val workos: WorkOS) {
     return workos.get("/sso/profile", Profile::class.java, config)
   }
 
+  /**
+   * Options builder for `listConnections` method.
+   */
   class ListConnectionsOptions @JvmOverloads constructor(
     connectionType: ConnectionType? = null,
     domain: String? = null,
@@ -119,6 +146,10 @@ class SsoApi(val workos: WorkOS) {
     }
   }
 
+  /**
+   * Fetches list of connections.
+   */
+  @JvmOverloads
   fun listConnections(options: ListConnectionsOptions = ListConnectionsOptions()): ConnectionList {
     val config = RequestConfig.builder()
       .params(options)
