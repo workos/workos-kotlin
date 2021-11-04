@@ -15,7 +15,7 @@ import java.lang.IllegalArgumentException
  * Directory Sync platform. You'll need a valid API key and to have created a Directory
  * Sync connection on your WorkOS dashboard.
  */
-public class DirectorySyncApi(private val workos: WorkOS) {
+class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Deletes a single directory by the given [com.workos.directorysync.models.Directory] id.
    */
