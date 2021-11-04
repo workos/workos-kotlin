@@ -165,11 +165,11 @@ class WorkOS(
       else -> {
         val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
 
-        if (responseData.error != null || responseData.error_description != null) {
-          throw OauthException(responseData.message, status, requestId, responseData.error, responseData.error_description)
+        if (responseData.error != null || responseData.errorDescription != null) {
+          throw OauthException(responseData.message, status, requestId, responseData.error, responseData.errorDescription)
         }
 
-        throw GenericServerException(status, responseData.message, requestId)
+        throw GenericServerException(responseData.message, status, requestId)
       }
     }
   }
