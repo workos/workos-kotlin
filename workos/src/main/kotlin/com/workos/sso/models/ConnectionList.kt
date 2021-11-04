@@ -1,4 +1,3 @@
-
 package com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
