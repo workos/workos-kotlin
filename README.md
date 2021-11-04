@@ -1,46 +1,56 @@
-# WorkOS Kotlin
+# WorkOS Kotlin [![Maven Central](https://img.shields.io/maven-central/v/com.workos/workos.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.workos%22%20AND%20a:%22workos%22)
 
 The WorkOS Kotlin library provides convenient access to the WorkOS API from applications written in JVM compatible languages.
 
 ## Documentation
 
-See the [API Reference](https://workos.com/docs/reference/client-libraries) for Kotlin usage examples.
+See the [API Reference](https://workos.com/docs/reference/client-libraries) for Kotlin/Java usage examples.
 
 ## Installation
 
-TODO
+### Apache Maven
 
-## Configuration
-
-TODO
-
-## Local Development
-
-### Build
-
-```
-./gradlew build
+```xml
+<dependency>
+  <groupId>com.workos</groupId>
+  <artifactId>workos</artifactId>
+  <version>VERSION</version>
+</dependency>
 ```
 
-### Test
+### Gradle (Groovy DSL)
 
-```
-./gradlew test --info
-```
-
-### Format
-
-```
-./gradlew ktlintFormat
+```groovy
+dependencies {
+  implementation 'com.workos:workos:VERSION'
+}
 ```
 
-### Publish Local Version
+### Gradle (Kotlin DSL)
 
-```
-./gradlew publishToMavenLocal
+```kotlin
+dependencies {
+  implementation("com.workos:workos:VERSION")
+}
 ```
 
-Useful for testing with https://github.com/workos-inc/java-example-applications
+## Use
+
+```java
+import com.workos.WorkOS;
+
+WorkOS workos = new WorkOS("WORKOS_API_KEY");
+
+// Access different domains of the WorkOS API through the following properties
+// workos.directorySync
+// workos.organizations
+// workos.passwordless
+// workos.portal
+// workos.sso
+// workos.webhooks
+```
+
+See full examples at https://github.com/workos-inc/java-example-applications.
 
 ## More Information
 
