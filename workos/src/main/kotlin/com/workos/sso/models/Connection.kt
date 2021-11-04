@@ -3,15 +3,6 @@ package com.workos.sso.models
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ConnectionDomain
-@JsonCreator constructor(
-  @JvmField
-  val domain: String,
-
-  @JvmField
-  val id: String,
-)
-
 data class Connection
 @JsonCreator constructor(
   @JvmField
