@@ -9,7 +9,14 @@ import com.workos.common.http.RequestConfig
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 
-class OrganizationsApi(val workos: WorkOS) {
+/**
+ * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
+ */
+class OrganizationsApi(private val workos: WorkOS) {
+  /**
+   * Options builder for `createOrganization` method.
+   * Call `CreateOrganizationOptions.builder()` to create a new builder instance.
+   */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
     val name: String? = null,
@@ -45,6 +52,9 @@ class OrganizationsApi(val workos: WorkOS) {
     }
   }
 
+  /**
+   * Creates a new organization.
+   */
   fun createOrganization(options: CreateOrganizationOptions = CreateOrganizationOptions()): Organization {
     val config = RequestConfig.builder()
       .data(options)
@@ -53,14 +63,24 @@ class OrganizationsApi(val workos: WorkOS) {
     return workos.post("/organizations", Organization::class.java, config)
   }
 
+  /**
+   * Deletes a single organization by id.
+   */
   fun deleteOrganization(id: String) {
     workos.delete("/organizations/$id")
   }
 
+  /**
+   * Fetches a single organization by id.
+   */
   fun getOrganization(id: String): Organization {
     return workos.get("/organizations/$id", Organization::class.java)
   }
 
+  /**
+   * Options builder for `listOrganizations` method.
+   * Call `ListOrganizationsOptions.builder()` to create a new builder instance.
+   */
   class ListOrganizationsOptions @JvmOverloads constructor(
     domains: List<String>? = null,
     after: String? = null,
@@ -83,6 +103,10 @@ class OrganizationsApi(val workos: WorkOS) {
     }
   }
 
+  /**
+   * Retrieve a list of organizations that have connections configured
+   * within your WorkOS dashboard.
+   */
   fun listOrganizations(options: ListOrganizationsOptions = ListOrganizationsOptions()): OrganizationList {
     val config = RequestConfig.builder()
       .params(options)
@@ -91,6 +115,10 @@ class OrganizationsApi(val workos: WorkOS) {
     return workos.get("/organizations", OrganizationList::class.java, config)
   }
 
+  /**
+   * Options builder for `updateOrganization` method.
+   * Call `UpdateOrganizationOptions.builder()` to create a new builder instance.
+   */
   @JsonInclude(Include.NON_NULL)
   class UpdateOrganizationOptions @JvmOverloads constructor(
     val name: String? = null,
@@ -126,6 +154,9 @@ class OrganizationsApi(val workos: WorkOS) {
     }
   }
 
+  /**
+   * Updates a single organization.
+   */
   fun updateOrganization(
     id: String,
     options: UpdateOrganizationOptions = UpdateOrganizationOptions()
