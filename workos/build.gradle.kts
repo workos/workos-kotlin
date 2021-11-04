@@ -56,6 +56,11 @@ tasks.named("build") {
 
 tasks.dokkaJavadoc.configure {
   outputDirectory.set(buildDir.resolve("docs/javadoc"))
+  dokkaSourceSets {
+    configureEach {
+      reportUndocumented.set(true)
+    }
+  }
 }
 
 tasks.jar {
