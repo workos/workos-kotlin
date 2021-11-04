@@ -1,12 +1,18 @@
 group = "com.workos"
 version = "1.0.0-beta-0"
 
+if (!project.hasProperty("release")) {
+  version = "$version-SNAPSHOT"
+}
+
 plugins {
   id("org.jetbrains.kotlin.jvm") version "1.5.0"
 
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
   id("org.jetbrains.dokka") version "1.5.30"
+
+  id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 
   signing
 
@@ -73,9 +79,6 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       artifactId = "workos"
-      if (!project.hasProperty("release")) {
-        version = "$version-SNAPSHOT"
-      }
 
       from(components["java"])
 
@@ -104,30 +107,23 @@ publishing {
       }
     }
   }
+}
 
+nexusPublishing {
   repositories {
-    maven {
-      val ossrhUsername: String? by project
-      val ossrhPassword: String? by project
-
-      val releasesRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/releases")
-      val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
-
-      url = uri(if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl)
-
-      credentials {
-        username = ossrhUsername
-        password = ossrhPassword
-      }
+    create("myNexus") {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
     }
   }
 }
 
 signing {
-  val signingKey: String? by project
   val signingPassword: String? by project
 
-  if (signingKey != null) {
+  if (signingPassword != null) {
+    val signingKey = File("signing.key").readText()
+
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
   }
