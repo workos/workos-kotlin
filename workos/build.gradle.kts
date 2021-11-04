@@ -1,5 +1,5 @@
 group = "com.workos"
-version = "0.0.1"
+version = "1.0.0-beta-0"
 
 plugins {
   id("org.jetbrains.kotlin.jvm") version "1.5.0"
@@ -73,7 +73,9 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       artifactId = "workos"
-      version = "0.0.1-SNAPSHOT"
+      if (!project.hasProperty("release")) {
+        version = "$version-SNAPSHOT"
+      }
 
       from(components["java"])
 
@@ -108,7 +110,10 @@ publishing {
       val ossrhUsername: String? by project
       val ossrhPassword: String? by project
 
-      url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
+      val releasesRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/releases")
+      val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
+
+      url = uri(if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl)
 
       credentials {
         username = ossrhUsername
