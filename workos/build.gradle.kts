@@ -119,10 +119,11 @@ nexusPublishing {
 }
 
 signing {
-  val signingKey: String? by project
   val signingPassword: String? by project
 
-  if (signingKey != null) {
+  if (signingPassword != null) {
+    val signingKey = File("signing.key").readText()
+
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
   }

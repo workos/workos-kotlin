@@ -16,3 +16,4 @@ bin
 
 # Credentials
 gradle.properties
+signing.key
