@@ -56,7 +56,7 @@ open class PaginationParams @JvmOverloads constructor(
     fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
 
     /**
-     * Create an instance of T with the given builder parameters.
+     * Creates an instance of T with the given builder parameters.
      */
     open fun build(): T {
       return params
