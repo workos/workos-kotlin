@@ -96,9 +96,11 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Parameters for [listDirectoryGroups]
    *
-   * @param directory the identifier of the directory to list groups for
-   * @param user the identifier of the user to list groups for
-   * @param after @see [com.workos.common.http.PaginationParams]
+   * @param directory The identifier of the directory to list groups for.
+   * @param user The identifier of the user to list groups for.
+   * @param after @see [com.workos.common.http.PaginationParams].
+   * @param before @see [com.workos.common.http.PaginationParams]
+   * @param limit @see [com.workos.common.http.PaginationParams]
    */
   class ListDirectoryGroupOptions @JvmOverloads constructor(
     directory: String? = null,
@@ -123,7 +125,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for creating [ListDirectoryGroupOptions]
+     * Builder class for creating [ListDirectoryGroupOptions].
      */
     class ListDirectoryGroupOptionsBuilder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
       /**
@@ -138,7 +140,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for [listDirectoryUsers]
+   * Parameters for [listDirectoryUsers].
    *
    * @param directory The ID of the directory to list the user for.
    * @param group The ID of the group to list users for.
@@ -169,7 +171,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for creating [ListDirectoryUserOptions]
+     * Builder class for creating [ListDirectoryUserOptions].
      */
     class ListDirectoryUserOptionsBuilder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
       /**
