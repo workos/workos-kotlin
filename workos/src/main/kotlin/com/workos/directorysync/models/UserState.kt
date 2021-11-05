@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 enum class UserState(@JsonValue val state: String) {
   Active("active"),
-  Suspended("suspended")
+  Suspended("suspended"),
   Inactive("inactive")
 }
