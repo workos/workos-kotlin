@@ -140,7 +140,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Parameters for [listDirectoryUsers]
    *
-   * @param directory the id of the directory to list user for
+   * @param directory The ID of the directory to list the user for.
    * @param group the id of the gruop to list users for
    * @param after @see [com.workos.common.http.PaginationParams]
    * @param before @see [com.workos.common.http.PaginationParams]
