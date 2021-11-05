@@ -38,7 +38,7 @@ class WorkOS(
   var apiHostname = "api.workos.com"
 
   /**
-   * Whether or not to use the HTTPs for requests.
+   * Whether or not to use HTTPS for requests.
    */
   @JvmField
   var https: Boolean = true
