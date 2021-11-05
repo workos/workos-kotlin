@@ -260,7 +260,7 @@ class OrganizationsApiTest : TestBase() {
 
     val (organizations) = workos.organizations.listOrganizations(options)
 
-    assertEquals(organizationId, organizations.get(0).id)
+    assertEquals(organizationId, organizations[0].id)
   }
 
   @Test
@@ -308,7 +308,7 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(organizationId, organizations.get(0).id)
   }
 
-  fun prepareUpdateOrganizationTest(body: String): Map<String, String> {
+  private fun prepareUpdateOrganizationTest(body: String): Map<String, String> {
     val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
     val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
     val organizationDomainName = "Test Organization"

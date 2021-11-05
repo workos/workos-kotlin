@@ -23,12 +23,12 @@ class OrganizationsApi(private val workos: WorkOS) {
    */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
-    private val name: String? = null,
+    val name: String? = null,
 
     @JsonProperty("allow_profiles_outside_organization")
-    private val allowProfilesOutsideOrganization: Boolean? = null,
+    val allowProfilesOutsideOrganization: Boolean? = null,
 
-    private val domains: List<String>? = null
+    val domains: List<String>? = null
   ) {
     /**
      * Builder class for creating [CreateOrganizationOptions].
@@ -161,12 +161,12 @@ class OrganizationsApi(private val workos: WorkOS) {
    */
   @JsonInclude(Include.NON_NULL)
   class UpdateOrganizationOptions @JvmOverloads constructor(
-    private val name: String? = null,
+    val name: String? = null,
 
     @JsonProperty("allow_profiles_outside_organization")
-    private val allowProfilesOutsideOrganization: Boolean? = null,
+    val allowProfilesOutsideOrganization: Boolean? = null,
 
-    private val domains: List<String>? = null
+    val domains: List<String>? = null
   ) {
     /**
      * Builder class for [UpdateOrganizationOptions].
