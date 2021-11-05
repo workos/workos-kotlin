@@ -96,8 +96,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Parameters for [listDirectoryGroups]
    *
-   * @param directory the id of the directory to list groups for
-   * @param user the id of the user to list groups for
+   * @param directory the identifier of the directory to list groups for
+   * @param user the identifier of the user to list groups for
    * @param after @see [com.workos.common.http.PaginationParams]
    */
   class ListDirectoryGroupOptions @JvmOverloads constructor(
@@ -127,11 +127,11 @@ class DirectorySyncApi(private val workos: WorkOS) {
      */
     class ListDirectoryGroupOptionsBuilder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
       /**
-       * The directory id to filter on.
+       * The directory identifier to filter on.
        */
       fun directory(value: String) = apply { this.params["directory"] = value }
       /**
-       * The user id to filter on.
+       * The user identifier to filter on.
        */
       fun user(value: String) = apply { this.params["user"] = value }
     }
@@ -141,7 +141,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * Parameters for [listDirectoryUsers]
    *
    * @param directory The ID of the directory to list the user for.
-   * @param group the id of the group to list users for
+   * @param group The ID of the group to list users for.
    * @param after @see [com.workos.common.http.PaginationParams]
    * @param before @see [com.workos.common.http.PaginationParams]
    * @param limit @see [com.workos.common.http.PaginationParams]
@@ -173,11 +173,11 @@ class DirectorySyncApi(private val workos: WorkOS) {
      */
     class ListDirectoryUserOptionsBuilder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
       /**
-       * The directory id to filter on.
+       * The directory identifier to filter on.
        */
       fun directory(value: String) = apply { this.params["directory"] = value }
       /**
-       * The group id to filter on.
+       * The group identifier to filter on.
        */
       fun group(value: String) = apply { this.params["group"] = value }
     }
