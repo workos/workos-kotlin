@@ -132,7 +132,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     /**
      * Builder class for creating [ListDirectoryGroupOptions].
      */
-    class ListDirectoryGroupOptionsBuilder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+    class ListDirectoryGroupOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
       /**
        * The directory identifier to filter on.
        */
@@ -170,15 +170,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): ListDirectoryUserOptionsBuilder {
-        return ListDirectoryUserOptionsBuilder()
+      fun builder(): ListDirectoryUserOptionsPaginationParamsBuilder {
+        return ListDirectoryUserOptionsPaginationParamsBuilder()
       }
     }
 
     /**
      * Builder class for creating [ListDirectoryUserOptions].
      */
-    class ListDirectoryUserOptionsBuilder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+    class ListDirectoryUserOptionsPaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
       /**
        * The directory identifier to filter on.
        */

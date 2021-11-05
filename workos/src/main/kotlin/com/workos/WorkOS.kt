@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
-import com.workos.common.exceptions.OauthException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.http.GenericErrorResponse
@@ -23,20 +22,77 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 
+/**
+ * Global configuration class for interacting with the WorkOS API.
+ *
+ * @param apiKey The API Key used for authenticating requests.
+ */
 class WorkOS(
   val apiKey: String
 ) {
-  init {
-    if (apiKey.isNullOrBlank()) {
-      throw IllegalArgumentException("Missing API key")
-    }
-  }
 
+  /**
+   * Host to send requests to.
+   */
+  @JvmField
   var apiHostname = "api.workos.com"
 
+  /**
+   * Whether or not to use HTTPS for requests.
+   */
+  @JvmField
   var https: Boolean = true
 
+  /**
+   * The port to send requests to.
+   */
+  @JvmField
   var port: Int? = null
+
+  /**
+   * Module for interacting with the Directory Sync API.
+   */
+  @JvmField
+  val directorySync = DirectorySyncApi(this)
+
+  /**
+   * Module for interacting with the Organizations API.
+   */
+  @JvmField
+  val organizations = OrganizationsApi(this)
+
+  /**
+   * Module for interacting with Passwordless Sessions API.
+   */
+  @JvmField
+  val passwordless = PasswordlessApi(this)
+
+  /**
+   * Module for interacting with the Admin Portal API.
+   */
+  @JvmField
+  val portal = PortalApi(this)
+
+  /**
+   * Module for interacting with the Single Sign On API.
+   */
+  @JvmField
+  val sso = SsoApi(this)
+
+  /**
+   * Module for interacting with the Webhooks API.
+   */
+  @JvmField
+  val webhooks = WebhooksApi()
+
+  /**
+   * The base URL for making API requests to.
+   */
+  val baseUrl: String
+    get() {
+      val url = "$protocol://$apiHostname"
+      return if (port == null) url else "$url:$port"
+    }
 
   private val version: String = "1.0.0"
 
@@ -47,12 +103,6 @@ class WorkOS(
       return if (https) "https" else "http"
     }
 
-  val baseUrl: String
-    get() {
-      val url = "$protocol://$apiHostname"
-      return if (port == null) url else "$url:$port"
-    }
-
   private val requestBuilder =
     HttpRequest.newBuilder()
       .header("Authorization", "Bearer $apiKey")
@@ -61,28 +111,16 @@ class WorkOS(
 
   private val mapper = jacksonObjectMapper()
 
-  @JvmField
-  val directorySync = DirectorySyncApi(this)
-
-  @JvmField
-  val organizations = OrganizationsApi(this)
-
-  @JvmField
-  val passwordless = PasswordlessApi(this)
-
-  @JvmField
-  val portal = PortalApi(this)
-
-  @JvmField
-  val sso = SsoApi(this)
-
-  @JvmField
-  val webhooks = WebhooksApi()
-
   init {
+    if (apiKey.isNullOrBlank()) {
+      throw IllegalArgumentException("Missing API key")
+    }
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
   }
 
+  /**
+   * Performs a GET request with the baseURL prepended to the given path.
+   */
   fun <Res : Any> get(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
     val uri = URIBuilder(baseUrl).setPath(path)
 
@@ -97,6 +135,9 @@ class WorkOS(
     return sendRequest(buildRequest(requestBuilder, config), responseType)
   }
 
+  /**
+   * Performs a POST request with WorkOS configuration parameters.
+   */
   fun <Res : Any> post(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
@@ -107,6 +148,9 @@ class WorkOS(
     return sendRequest(buildRequest(requestBuilder, config), responseType)
   }
 
+  /**
+   * Performs a PUT request with WorkOS configuration parameters.
+   */
   fun <Res : Any> put(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
@@ -117,6 +161,9 @@ class WorkOS(
     return sendRequest(buildRequest(requestBuilder, config), responseType)
   }
 
+  /**
+   * Performs a DELETE request with WorkOS configuration parameters.
+   */
   fun delete(path: String, config: RequestConfig? = null): HttpResponse<String> {
     val uri = URIBuilder(baseUrl).setPath(path).build()
     val requestBuilder = requestBuilder.copy().DELETE().uri(uri)
@@ -164,12 +211,7 @@ class WorkOS(
       }
       else -> {
         val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
-
-        if (responseData.error != null || responseData.error_description != null) {
-          throw OauthException(responseData.message, status, requestId, responseData.error, responseData.error_description)
-        }
-
-        throw GenericServerException(status, responseData.message, requestId)
+        throw GenericServerException(responseData.message, status, requestId)
       }
     }
   }

@@ -93,12 +93,12 @@ class OrganizationsApi(private val workos: WorkOS) {
 
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): PaginationParamsBuilder {
+        return PaginationParamsBuilder()
       }
     }
 
-    class Builder : PaginationParams.Builder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
+    class PaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
       fun domains(value: List<String>) = apply { this.params["domains"] = value.joinToString(",") }
     }
   }
