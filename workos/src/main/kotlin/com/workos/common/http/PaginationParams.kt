@@ -42,7 +42,7 @@ open class PaginationParams @JvmOverloads constructor(
    */
   open class PaginationParamsBuilder<T : PaginationParams>(protected val params: T) {
     /**
-     * Set the `after` query parameter.
+     * Sets the `after` query parameter.
      */
     fun after(after: String) = apply { this.params["after"] = after }
     /**
