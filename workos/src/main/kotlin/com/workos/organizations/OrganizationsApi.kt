@@ -14,40 +14,62 @@ import com.workos.organizations.models.OrganizationList
  */
 class OrganizationsApi(private val workos: WorkOS) {
   /**
-   * Options builder for `createOrganization` method.
-   * Call `CreateOrganizationOptions.builder()` to create a new builder instance.
+   * Parameters for [createOrganization].
+   * Use `CreateOrganizationOptions.builder()` to create a new builder instance.
+   *
+   * @param name The name of the organization.
+   * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
+   * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
-    val name: String? = null,
+    private val name: String? = null,
 
     @JsonProperty("allow_profiles_outside_organization")
-    val allowProfilesOutsideOrganization: Boolean? = null,
+    private val allowProfilesOutsideOrganization: Boolean? = null,
 
-    val domains: List<String>? = null
+    private val domains: List<String>? = null
   ) {
-    class Builder {
+    /**
+     * Builder class for creating [CreateOrganizationOptions].
+     */
+    class CreateOrganizationOptionsBuilder {
       private var name: String? = null
 
       private var allowProfilesOutsideOrganization: Boolean? = null
 
       private var domains: List<String>? = null
 
+      /**
+       * Sets the name of the organization.
+       */
       fun name(value: String) = apply { name = value }
 
+      /**
+       * Sets whether profiles with unmatched domains can exist within the organization.
+       */
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
+      /**
+       * Sets the list of domains for the organization.
+       */
       fun domains(value: List<String>) = apply { domains = value }
 
+      /**
+       * Creates an
+       */
       fun build(): CreateOrganizationOptions {
         return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
       }
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): CreateOrganizationOptionsBuilder {
+        return CreateOrganizationOptionsBuilder()
       }
     }
   }
