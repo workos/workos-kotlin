@@ -18,9 +18,17 @@ import org.apache.http.client.utils.URIBuilder
  */
 class SsoApi(private val workos: WorkOS) {
   /**
-   * Builder for authorization URLs. Can be created via `getAuthorizationUrl` method.
+   * Builder for authorization URLs. Can be created via [getAuthorizationUrl] method.
+   *
+   * @param baseUrl The base URL to retrieve the OAuth 2.0 authorization from.
+   * @param clientId This value can be obtained from the Configuration page in the WorkOS dashboard.
+   * @param redirectUri A redirect URI to return an authorized user to.
+   * @param connection Connection ID to determine which identity provider to authenticate with.
+   * @param domain Use the domain to determine which connection and identity provider to authenticate with.
+   * @param provider Name of the identity provider e.g. GoogleOAuth or MicrosoftOAuth.
+   * @param state User defined information to persist application data between redirects.
    */
-  class AuthorizationUrlOptions @JvmOverloads constructor(
+  class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
     val baseUrl: String,
     val clientId: String,
     val redirectUri: String,
@@ -29,11 +37,47 @@ class SsoApi(private val workos: WorkOS) {
     var provider: String? = null,
     var state: String? = null
   ) {
+    /**
+     * Connection id.
+     */
     fun connection(value: String) = apply { connection = value }
+
+    /**
+     * Value used to identify the correct connection and authentication strategy
+     * for an authenticating user.
+     *
+     * Provide the domain parameter when authenticating a user by their domain.
+     * For example, when a user enters their email address into a login form,
+     * the Developer would parse this email address for the domain and pass the domain
+     * as a domain parameter into their authorization URL. Then, WorkOS will use this
+     * domain value as a key to determine the connection and IdP to direct the user
+     * to for authentication.
+     */
     fun domain(value: String) = apply { domain = value }
+
+    /**
+     * Value used to authenticate all users with the same connection and Identity Provider.
+     *
+     * Currently, the only supported values for provider are GoogleOAuth and
+     * MicrosoftOAuth. Provide the provider parameter when authenticating Google OAuth
+     * users, because Google OAuth does not take a user’s domain into account when logging
+     * in with a “Sign in with Google” button.
+     */
     fun provider(value: String) = apply { provider = value }
+
+    /**
+     * Optional parameter that a Developer can choose to include in their authorization URL.
+     * If included, then the redirect URI received from WorkOS will contain the exact state
+     * that was passed in the authorization URL.
+     *
+     * The state parameter can be used to encode arbitrary information to help restore
+     * application state between redirects.
+     */
     fun state(value: String) = apply { state = value }
 
+    /**
+     * Generates the URL based on the given options.
+     */
     fun build(): String {
       val uriBuilder = URIBuilder("$baseUrl")
         .setPath("/sso/authorize")
@@ -49,10 +93,13 @@ class SsoApi(private val workos: WorkOS) {
       return uriBuilder.toString()
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(baseUrl: String, clientId: String, redirectUri: String): AuthorizationUrlOptions {
-        return AuthorizationUrlOptions(baseUrl, clientId, redirectUri)
+      fun create(baseUrl: String, clientId: String, redirectUri: String): AuthorizationUrlOptionsBuilder {
+        return AuthorizationUrlOptionsBuilder(baseUrl, clientId, redirectUri)
       }
     }
   }
@@ -68,8 +115,8 @@ class SsoApi(private val workos: WorkOS) {
    * Generate an Oauth2 authorization URL where your users will
    * authenticate using the configured SSO Identity Provider.
    */
-  fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlOptions {
-    return AuthorizationUrlOptions.builder(workos.baseUrl, clientId, redirectUri)
+  fun getAuthorizationUrl(clientId: String, redirectUri: String): AuthorizationUrlOptionsBuilder {
+    return AuthorizationUrlOptionsBuilder.create(workos.baseUrl, clientId, redirectUri)
   }
 
   /**
@@ -117,7 +164,7 @@ class SsoApi(private val workos: WorkOS) {
   }
 
   /**
-   * Options builder for `listConnections` method.
+   * Parameters for the [listConnections] method.
    */
   class ListConnectionsOptions @JvmOverloads constructor(
     connectionType: ConnectionType? = null,
@@ -133,15 +180,30 @@ class SsoApi(private val workos: WorkOS) {
       if (organizationId != null) set("organization_id", organizationId)
     }
 
+    /**
+     * @suppress
+     */
     companion object {
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): ListConnectionsOptionsBuilder {
+        return ListConnectionsOptionsBuilder()
       }
     }
 
-    class Builder : PaginationParams.Builder<ListConnectionsOptions>(ListConnectionsOptions()) {
+    /**
+     * Parameters builder for [listConnections] method.
+     */
+    class ListConnectionsOptionsBuilder : PaginationParams.Builder<ListConnectionsOptions>(ListConnectionsOptions()) {
+      /**
+       * The [ConnectionType] to filter on.
+       */
       fun connectionType(value: ConnectionType) = apply { this.params["connection_type"] = value.toString() }
+      /**
+       * The domain to filter on.
+       */
       fun domain(value: String) = apply { this.params["domain"] = value }
+      /**
+       * The id of an [com.workos.organizations.models.Organization] to filter on.
+       */
       fun organizationId(value: String) = apply { this.params["organization_id"] = value }
     }
   }
