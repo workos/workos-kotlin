@@ -23,7 +23,7 @@ class RequestConfig(
   }
 
   /**
-   * Builder class for creating [RequestConfig]
+   * Builder class for creating [RequestConfig].
    */
   class RequestConfigBuilder {
     private var params: Map<String, String> = emptyMap()
