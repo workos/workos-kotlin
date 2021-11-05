@@ -9,9 +9,21 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.jvm.Throws
 
+/**
+ * The WebhooksApi class provides convenience methods for working with WorkOS
+ * Webhooks.
+ */
 class WebhooksApi() {
   private val objectMapper = jacksonObjectMapper()
 
+  /**
+   * Validates a WorkOS Webhook payload and constructs the corresponding event.
+   *
+   * @param payload The request body from the webhook
+   * @param signatureHeader Value from the request header "WorkOS-Signature"
+   * @param secret The secret for generating webhooks for the webhook endpoint. You can find this in the WorkOS Dashboard https://dashboard.workos.com/webhooks.
+   * @param tolerance Time allowance specified in milliseconds since the Webhook's `issued_timestamp`. If the current time exceeds the allowance, the request will fail validation. This is to prevent replay attacks.
+   */
   @Throws(SignatureException::class)
   @JvmOverloads
   fun constructEvent(
