@@ -177,7 +177,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
        */
       fun directory(value: String) = apply { this.params["directory"] = value }
       /**
-       * The groupd id to filter on.
+       * The group id to filter on.
        */
       fun group(value: String) = apply { this.params["group"] = value }
     }
