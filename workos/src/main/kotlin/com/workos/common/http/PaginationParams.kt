@@ -38,7 +38,7 @@ open class PaginationParams @JvmOverloads constructor(
   }
 
   /**
-   * Builder class for creating [PaginationParams]
+   * Builder class for creating [PaginationParams].
    */
   open class PaginationParamsBuilder<T : PaginationParams>(protected val params: T) {
     /**
