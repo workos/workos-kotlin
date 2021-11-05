@@ -38,7 +38,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
-   * Fetches a directory user by id.
+   * Fetches a directory user by ID.
    */
   fun getDirectoryUser(id: String): User {
     return workos.get(
