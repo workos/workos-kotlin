@@ -1,7 +1,7 @@
 package com.workos.common.http
 
 /**
- * Parameters for performing paginated requested on lists of resources.
+ * Parameters for performing paginated requests on lists of resources.
  *
  * @param after A cursor to use for pagination. `after` is a resource object ID that defines your place in the paginated list of resource objects. `after` will return all resources after the cursor's value.
  * @param before A cursor to use for pagination. `before` is a resource object ID that defines your place in the paginated list of resource objects. `before` will return all resources before the cursor's value.
