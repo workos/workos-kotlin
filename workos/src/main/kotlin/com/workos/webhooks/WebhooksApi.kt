@@ -10,8 +10,8 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.jvm.Throws
 
 /**
- * The WebhooksApi class provides convenience methods for working with WorkOS
- * Webhooks.
+ * The WebhooksApi class provides convenience methods for working
+ * with WorkOS Webhooks.
  */
 class WebhooksApi() {
   private val objectMapper = jacksonObjectMapper()
