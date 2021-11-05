@@ -10,12 +10,22 @@ import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import java.lang.IllegalArgumentException
 
+/**
+ * The DirectorySyncApi class provides convenience methods for working with the WorkOS
+ * Directory Sync platform. You'll need a valid API key and to have created a Directory
+ * Sync connection on your WorkOS dashboard.
+ */
 class DirectorySyncApi(private val workos: WorkOS) {
-
+  /**
+   * Deletes a single directory by the given [com.workos.directorysync.models.Directory] ID.
+   */
   fun deleteDirectory(id: String) {
     workos.delete("/directories/$id")
   }
 
+  /**
+   * Fetches the list of directories.
+   */
   @JvmOverloads
   fun listDirectories(paginationParams: PaginationParams? = null): DirectoryList {
     val requestConfig = RequestConfig.builder()
@@ -27,12 +37,18 @@ class DirectorySyncApi(private val workos: WorkOS) {
     )
   }
 
+  /**
+   * Fetches a directory user by ID.
+   */
   fun getDirectoryUser(id: String): User {
     return workos.get(
       "/directory_users/$id", User::class.java
     )
   }
 
+  /**
+   * Fetches the list of users based on the given options.
+   */
   fun listDirectoryUsers(
     listOptions: ListDirectoryUserOptions
   ): DirectoryUserList {
@@ -49,12 +65,18 @@ class DirectorySyncApi(private val workos: WorkOS) {
     )
   }
 
+  /**
+   * Fetches a directory group by ID.
+   */
   fun getDirectoryGroup(id: String): Group {
     return workos.get(
       "/directory_groups/$id", Group::class.java
     )
   }
 
+  /**
+   * Fetches the list of directory groups.
+   */
   fun listDirectoryGroups(
     listOptions: ListDirectoryGroupOptions
   ): DirectoryGroupList {
@@ -71,6 +93,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
     )
   }
 
+  /**
+   * Parameters for [listDirectoryGroups]
+   *
+   * @param directory The identifier of the directory to list groups for.
+   * @param user The identifier of the user to list groups for.
+   * @param after @see [com.workos.common.http.PaginationParams].
+   * @param before @see [com.workos.common.http.PaginationParams]
+   * @param limit @see [com.workos.common.http.PaginationParams]
+   */
   class ListDirectoryGroupOptions @JvmOverloads constructor(
     directory: String? = null,
     user: String? = null,
@@ -83,19 +114,40 @@ class DirectorySyncApi(private val workos: WorkOS) {
       if (user != null) set("user", user)
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): ListDirectoryGroupOptionsBuilder {
+        return ListDirectoryGroupOptionsBuilder()
       }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+    /**
+     * Builder class for creating [ListDirectoryGroupOptions].
+     */
+    class ListDirectoryGroupOptionsBuilder : PaginationParams.Builder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+      /**
+       * The directory identifier to filter on.
+       */
       fun directory(value: String) = apply { this.params["directory"] = value }
+      /**
+       * The user identifier to filter on.
+       */
       fun user(value: String) = apply { this.params["user"] = value }
     }
   }
 
+  /**
+   * Parameters for [listDirectoryUsers].
+   *
+   * @param directory The ID of the directory to list the user for.
+   * @param group The ID of the group to list users for.
+   * @param after @see [com.workos.common.http.PaginationParams]
+   * @param before @see [com.workos.common.http.PaginationParams]
+   * @param limit @see [com.workos.common.http.PaginationParams]
+   */
   class ListDirectoryUserOptions @JvmOverloads constructor(
     directory: String? = null,
     group: String? = null,
@@ -108,15 +160,27 @@ class DirectorySyncApi(private val workos: WorkOS) {
       if (group != null) set("group", group)
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): ListDirectoryUserOptionsBuilder {
+        return ListDirectoryUserOptionsBuilder()
       }
     }
 
-    class Builder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+    /**
+     * Builder class for creating [ListDirectoryUserOptions].
+     */
+    class ListDirectoryUserOptionsBuilder : PaginationParams.Builder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+      /**
+       * The directory identifier to filter on.
+       */
       fun directory(value: String) = apply { this.params["directory"] = value }
+      /**
+       * The group identifier to filter on.
+       */
       fun group(value: String) = apply { this.params["group"] = value }
     }
   }

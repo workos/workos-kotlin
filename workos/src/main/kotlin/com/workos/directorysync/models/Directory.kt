@@ -3,6 +3,22 @@ package com.workos.directorysync.models
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
+/**
+ * Represents a WorkOS Directory resource. This class is not meant to be
+ * instantiated directly.
+ *
+ * @param obj The unique object identifier type of the record.
+ * @param id The unique identifier for the Directory.
+ * @param name The name of the Directory.
+ * @param domain The URL associated with an Enterprise Client.
+ * @param environmentId The environment id that the Directory is associated with.
+ * @param externalKey Externally used identifier for the Directory.
+ * @param organizationId Identifier for the Directory's Organization.
+ * @param state The state of the Directory.
+ * @param type The type of the Directory.
+ * @param createdAt The timestamp of when the Directory was created.
+ * @param updatedAt The timestamp of when the Directory was updated.
+ */
 data class Directory
 @JsonCreator constructor(
   @JvmField
