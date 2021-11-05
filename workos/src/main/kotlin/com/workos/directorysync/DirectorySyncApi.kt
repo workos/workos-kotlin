@@ -17,7 +17,7 @@ import java.lang.IllegalArgumentException
  */
 class DirectorySyncApi(private val workos: WorkOS) {
   /**
-   * Deletes a single directory by the given [com.workos.directorysync.models.Directory] id.
+   * Deletes a single directory by the given [com.workos.directorysync.models.Directory] ID.
    */
   fun deleteDirectory(id: String) {
     workos.delete("/directories/$id")
