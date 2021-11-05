@@ -7,7 +7,7 @@ import com.workos.common.http.EntityError
  *
  * @param message The error message.
  * @param errors A list of errors for the given request body.
- * @param requestId The ID of the correlating request specified in the 'X-Request-ID' header
+ * @param requestId The ID of the correlating request specified in the 'X-Request-ID' header.
  */
 class UnprocessableEntityException(
   override val message: String?,
