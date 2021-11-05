@@ -3,7 +3,7 @@ package com.workos.directorysync
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
-import com.workos.directorysync.models.*
+import com.workos.directorysync.models.* // ktlint-disable no-wildcard-imports
 import java.lang.IllegalArgumentException
 
 /**
