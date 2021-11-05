@@ -38,7 +38,7 @@ class SsoApi(private val workos: WorkOS) {
     var state: String? = null
   ) {
     /**
-     * Connection id.
+     * Connection ID.
      */
     fun connection(value: String) = apply { connection = value }
 
