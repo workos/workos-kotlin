@@ -66,7 +66,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
-   * Fetches a directory group by id.
+   * Fetches a directory group by ID.
    */
   fun getDirectoryGroup(id: String): Group {
     return workos.get(
