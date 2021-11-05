@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrganizationsApiTest : TestBase() {
-  fun prepareCreateOrganizationTest(body: String): Map<String, String> {
+  private fun prepareCreateOrganizationTest(body: String): Map<String, String> {
     val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
     val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
     val organizationDomainName = "Test Organization"

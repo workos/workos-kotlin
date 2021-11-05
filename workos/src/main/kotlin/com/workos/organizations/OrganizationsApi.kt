@@ -131,9 +131,9 @@ class OrganizationsApi(private val workos: WorkOS) {
     /**
      * Builder class for creating [ListOrganizationsOptions]
      */
-    class ListOrganizationsOptionsBuilder : PaginationParams.Builder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
+    class ListOrganizationsOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
       /**
-       * Sets the list of domains to filter by.
+       * Sets the list of domains to filter on.
        */
       fun domains(value: List<String>) = apply { this.params["domains"] = value.joinToString(",") }
     }

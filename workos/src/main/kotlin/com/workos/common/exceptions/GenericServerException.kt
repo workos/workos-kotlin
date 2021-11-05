@@ -1,3 +1,14 @@
 package com.workos.common.exceptions
 
-class GenericServerException(val status: Int, override val message: String?, val requestId: String) : Exception(message)
+/**
+ * Thrown when the API encounters an unexpected error.
+ *
+ * @param message The error message.
+ * @param status The HTTP status code.
+ * @param requestId The ID of the correlating request specified in the 'X-Request-ID' header.
+ */
+class GenericServerException(
+  override val message: String?,
+  private val status: Int,
+  private val requestId: String
+) : Exception(message)

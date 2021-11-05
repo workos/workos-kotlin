@@ -1,12 +1,10 @@
 package com.workos.common.http
 
-class UnprocessableEntityExceptionResponse {
-  class EntityError {
-    val field: String? = null
+import com.fasterxml.jackson.annotation.JsonCreator
 
-    val code: String? = null
-  }
-  val message: String? = null
+internal data class UnprocessableEntityExceptionResponse
+@JsonCreator constructor(
+  val message: String?,
 
   val errors: List<EntityError> = emptyList()
-}
+)

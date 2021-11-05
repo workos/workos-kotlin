@@ -184,15 +184,15 @@ class SsoApi(private val workos: WorkOS) {
      * @suppress
      */
     companion object {
-      fun builder(): ListConnectionsOptionsBuilder {
-        return ListConnectionsOptionsBuilder()
+      fun builder(): ListConnectionsOptionsPaginationParamsBuilder {
+        return ListConnectionsOptionsPaginationParamsBuilder()
       }
     }
 
     /**
      * Parameters builder for [listConnections] method.
      */
-    class ListConnectionsOptionsBuilder : PaginationParams.Builder<ListConnectionsOptions>(ListConnectionsOptions()) {
+    class ListConnectionsOptionsPaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListConnectionsOptions>(ListConnectionsOptions()) {
       /**
        * The [ConnectionType] to filter on.
        */
