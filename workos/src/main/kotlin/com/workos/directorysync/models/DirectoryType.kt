@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 /**
  * An enumeration of types for a [Directory].
  *
- * @param state The Directory Type string value.
+ * @param type The Directory Type string value.
  */
 enum class DirectoryType(@JsonValue val type: String) {
   /**

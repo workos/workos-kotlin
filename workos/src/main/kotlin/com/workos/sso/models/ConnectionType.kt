@@ -3,7 +3,7 @@ package com.workos.sso.models
 /**
  * An enumeration of types for a [Connection].
  *
- * @param state The Connection Type string value.
+ * @param type The Connection Type string value.
  */
 enum class ConnectionType(val type: String) {
   /**
