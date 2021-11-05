@@ -3,11 +3,7 @@ package com.workos.directorysync
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
-import com.workos.directorysync.models.DirectoryGroupList
-import com.workos.directorysync.models.DirectoryList
-import com.workos.directorysync.models.DirectoryUserList
-import com.workos.directorysync.models.Group
-import com.workos.directorysync.models.User
+import com.workos.directorysync.models.* // ktlint-disable no-wildcard-imports
 import java.lang.IllegalArgumentException
 
 /**
@@ -21,6 +17,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   fun deleteDirectory(id: String) {
     workos.delete("/directories/$id")
+  }
+
+  /**
+   * Fetches a single directory by the given [com.workos.directorysync.models.Directory] ID.
+   */
+  fun getDirectory(id: String): Directory {
+    return workos.get(
+      "/directories/$id", Directory::class.java
+    )
   }
 
   /**
@@ -38,7 +43,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
-   * Fetches a directory user by ID.
+   * Fetches a directory user by the given [com.workos.directorysync.models.User] ID.
    */
   fun getDirectoryUser(id: String): User {
     return workos.get(
@@ -66,7 +71,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
-   * Fetches a directory group by ID.
+   * Fetches a directory group by the given [com.workos.directorysync.models.Group] ID.
    */
   fun getDirectoryGroup(id: String): Group {
     return workos.get(
