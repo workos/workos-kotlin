@@ -18,7 +18,7 @@ class PortalApi(private val workos: WorkOS) {
   /**
    * Parameters for [generateLink].
    *
-   * @param organization Unique identifier for an [com.workos.organizations.models.Organization]
+   * @param organization Unique identifier for an [com.workos.organizations.models.Organization].
    * @param intent The type of setup to generate an Admin Portal link.
    * @param returnUrl The URL to which WorkOS should send users when they click on the link to return to your website.
    */
