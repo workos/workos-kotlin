@@ -88,7 +88,7 @@ class PortalApi(private val workos: WorkOS) {
   }
 
   /**
-   * Generate an Admin Portal Link.   *
+   * Generate an Admin Portal Link.
    */
   fun generateLink(generateLinkOptions: GeneratePortalLinkOptions): Link {
     val config = RequestConfig
