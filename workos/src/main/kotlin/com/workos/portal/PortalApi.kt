@@ -16,7 +16,7 @@ import java.lang.IllegalArgumentException
 class PortalApi(private val workos: WorkOS) {
 
   /**
-   * Parameters for [generateLink]
+   * Parameters for [generateLink].
    *
    * @param organization Unique identifier for an [com.workos.organizations.models.Organization]
    * @param intent The type of setup to generate an Admin Portal link.
