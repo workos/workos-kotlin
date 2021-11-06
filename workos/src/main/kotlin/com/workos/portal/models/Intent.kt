@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 /**
  * Intent of the Admin Portal.
  *
- * @param value The string value of the intent.
+ * @param value The string value of the Intent.
  */
 enum class Intent(@JsonValue val value: String) {
   /**
