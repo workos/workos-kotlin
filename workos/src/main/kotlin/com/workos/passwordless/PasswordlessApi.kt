@@ -51,7 +51,7 @@ class PasswordlessApi(private val workos: WorkOS) {
    * @param connection The unique identifier of the passwordless session [com.workos.sso.models.Connection].
    * @param redirectUri The location that your user will be redirected to once the session has been completed successfully.
    * @param expiresIn The number of seconds the Passwordless Session should live before expiring. This value must be between 300 (5 minutes) and 1800 (30 minutes), inclusive.
-   * @param state Optional parameter that a Developer can choose to include in their authorization URL. If included, then the redirect URI received from WorkOS will contain the exact state that was passed in the authorization URL. The state parameter can be used to encode arbitrary information to help restore application state between redirects.
+   * @param state Optional parameter that a Developer can choose to include in their authorization URL.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class CreateSessionOptions @JvmOverloads constructor(
