@@ -44,7 +44,7 @@ class PasswordlessApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for [createSession]
+   * Parameters for [createSession].
    *
    * @param email The email to send the passwordless session to.
    * @param type The type of passwordless session.
