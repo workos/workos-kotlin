@@ -57,18 +57,20 @@ class PasswordlessApiTest : TestBase() {
   fun createSessionWithEmailAndTypeShouldReturnSession() {
     val workos = createWorkOSClient()
 
-    val email = "marcelina@foo-corp.com"
+    val email = "marcelina1@foo-corp.com"
     prepareTest(
       email,
       """{
         "email": "$email",
-        "type": "MagicLink"
+        "type": "MagicLink",
+        "redirect_uri": "http://www.google.com"
       }"""
     )
 
     val createSessionOptions = PasswordlessApi.CreateSessionOptions
       .builder()
       .email(email)
+      .redirectUri("http://www.google.com")
       .type(SessionType.MagicLink)
       .build()
 
@@ -87,7 +89,9 @@ class PasswordlessApiTest : TestBase() {
         "email": "$email",
         "type": "MagicLink",
         "connection": "connectionId",
-        "redirect_uri": "/redirect/to"
+        "redirect_uri": "/redirect/to",
+        "expires_in": 500,
+        "state": "app state"
       }"""
     )
 
@@ -95,7 +99,9 @@ class PasswordlessApiTest : TestBase() {
       email = email,
       type = SessionType.MagicLink,
       connection = "connectionId",
-      redirectUri = "/redirect/to"
+      redirectUri = "/redirect/to",
+      expiresIn = 500,
+      state = "app state"
     )
 
     val session = workos.passwordless.createSession(createSessionOptions)
@@ -107,7 +113,51 @@ class PasswordlessApiTest : TestBase() {
     assertThrows(IllegalArgumentException::class.java) {
       PasswordlessApi.CreateSessionOptions
         .builder()
+        .expiresIn(400)
         .build()
+    }
+  }
+
+  @Test
+  fun createSessionOptionsDirectWithNoEmailShouldThrow() {
+    assertThrows(IllegalArgumentException::class.java) {
+      PasswordlessApi.CreateSessionOptions(expiresIn = 400)
+    }
+  }
+
+  @Test
+  fun createSessionOptionsBuilderWithBelowThresholdExpiresInShouldThrow() {
+    assertThrows(IllegalArgumentException::class.java) {
+      PasswordlessApi.CreateSessionOptions
+        .builder()
+        .email("foo@bar.com")
+        .expiresIn(299)
+        .build()
+    }
+  }
+
+  @Test
+  fun createSessionOptionsDirectWithBelowThresholdShouldThrow() {
+    assertThrows(IllegalArgumentException::class.java) {
+      PasswordlessApi.CreateSessionOptions(email = "foo@bar.com", expiresIn = 299)
+    }
+  }
+
+  @Test
+  fun createSessionOptionsBuilderWithAboveThresholdExpiresInShouldThrow() {
+    assertThrows(IllegalArgumentException::class.java) {
+      PasswordlessApi.CreateSessionOptions
+        .builder()
+        .email("foo@bar.com")
+        .expiresIn(1801)
+        .build()
+    }
+  }
+
+  @Test
+  fun createSessionOptionsDirectWithAboveThresholdShouldThrow() {
+    assertThrows(IllegalArgumentException::class.java) {
+      PasswordlessApi.CreateSessionOptions(email = "foo@bar.com", expiresIn = 1801)
     }
   }
 
