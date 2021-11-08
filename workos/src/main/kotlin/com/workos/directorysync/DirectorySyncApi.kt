@@ -170,15 +170,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): ListDirectoryUserOptionsPaginationParamsBuilder {
-        return ListDirectoryUserOptionsPaginationParamsBuilder()
+      fun builder(): ListDirectoryUserOptionsBuilder {
+        return ListDirectoryUserOptionsBuilder()
       }
     }
 
     /**
      * Builder class for creating [ListDirectoryUserOptions].
      */
-    class ListDirectoryUserOptionsPaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+    class ListDirectoryUserOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
       /**
        * The directory identifier to filter on.
        */
