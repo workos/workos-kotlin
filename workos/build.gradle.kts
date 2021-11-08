@@ -103,6 +103,11 @@ publishing {
             name.set("Robert Frampton")
             email.set("rob@workos.com")
           }
+          developer {
+            id.set("dliu-workos")
+            name.set("David Liu")
+            email.set("david.liu@workos.com")
+          }
         }
         scm {
           connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
