@@ -14,8 +14,12 @@ import com.workos.organizations.models.OrganizationList
  */
 class OrganizationsApi(private val workos: WorkOS) {
   /**
-   * Options builder for `createOrganization` method.
-   * Call `CreateOrganizationOptions.builder()` to create a new builder instance.
+   * Parameters for [createOrganization].
+   * Use `CreateOrganizationOptions.builder()` to create a new builder instance.
+   *
+   * @param name The name of the organization.
+   * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
+   * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
@@ -26,28 +30,46 @@ class OrganizationsApi(private val workos: WorkOS) {
 
     val domains: List<String>? = null
   ) {
-    class Builder {
+    /**
+     * Builder class for creating [CreateOrganizationOptions].
+     */
+    class CreateOrganizationOptionsBuilder {
       private var name: String? = null
 
       private var allowProfilesOutsideOrganization: Boolean? = null
 
       private var domains: List<String>? = null
 
+      /**
+       * Sets the name of the organization.
+       */
       fun name(value: String) = apply { name = value }
 
+      /**
+       * Sets whether profiles with unmatched domains can exist within the organization.
+       */
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
+      /**
+       * Sets the list of domains for the organization.
+       */
       fun domains(value: List<String>) = apply { domains = value }
 
+      /**
+       * Creates an instance of [CreateOrganizationOptions] with the given params.
+       */
       fun build(): CreateOrganizationOptions {
         return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
       }
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): CreateOrganizationOptionsBuilder {
+        return CreateOrganizationOptionsBuilder()
       }
     }
   }
@@ -78,8 +100,13 @@ class OrganizationsApi(private val workos: WorkOS) {
   }
 
   /**
-   * Options builder for `listOrganizations` method.
-   * Call `ListOrganizationsOptions.builder()` to create a new builder instance.
+   * Parameters for [listOrganizations] method.
+   * Use `ListOrganizationsOptions.builder()` to create a new builder instance.
+   *
+   * @param domains list of domains to filter by.
+   * @param after @see [com.workos.common.http.PaginationParams]
+   * @param before @see [com.workos.common.http.PaginationParams]
+   * @param limit @see [com.workos.common.http.PaginationParams]
    */
   class ListOrganizationsOptions @JvmOverloads constructor(
     domains: List<String>? = null,
@@ -91,14 +118,23 @@ class OrganizationsApi(private val workos: WorkOS) {
       if (domains != null) set("domains", domains.joinToString(","))
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): PaginationParamsBuilder {
-        return PaginationParamsBuilder()
+      fun builder(): ListOrganizationsOptionsBuilder {
+        return ListOrganizationsOptionsBuilder()
       }
     }
 
-    class PaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
+    /**
+     * Builder class for creating [ListOrganizationsOptions]
+     */
+    class ListOrganizationsOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
+      /**
+       * Sets the list of domains to filter on.
+       */
       fun domains(value: List<String>) = apply { this.params["domains"] = value.joinToString(",") }
     }
   }
@@ -116,8 +152,12 @@ class OrganizationsApi(private val workos: WorkOS) {
   }
 
   /**
-   * Options builder for `updateOrganization` method.
-   * Call `UpdateOrganizationOptions.builder()` to create a new builder instance.
+   * Parameters [updateOrganization] method.
+   * Use `UpdateOrganizationOptions.builder()` to create a new builder instance.
+   *
+   * @param name The name of the organization.
+   * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
+   * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class UpdateOrganizationOptions @JvmOverloads constructor(
@@ -128,28 +168,46 @@ class OrganizationsApi(private val workos: WorkOS) {
 
     val domains: List<String>? = null
   ) {
-    class Builder {
+    /**
+     * Builder class for [UpdateOrganizationOptions].
+     */
+    class UpdateOrganizationOptionsBuilder {
       private var name: String? = null
 
       private var allowProfilesOutsideOrganization: Boolean? = null
 
       private var domains: List<String>? = null
 
+      /**
+       * Sets the name of the organization.
+       */
       fun name(value: String) = apply { name = value }
 
+      /**
+       * Sets whether profiles with unmatched domains can exist within the organization.
+       */
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
+      /**
+       * Sets the list of domains for the organization.
+       */
       fun domains(value: List<String>) = apply { domains = value }
 
+      /**
+       * Creates an instance of [UpdateOrganizationOptions].
+       */
       fun build(): UpdateOrganizationOptions {
         return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
       }
     }
 
+    /**
+     * @suppress
+     */
     companion object {
       @JvmStatic
-      fun builder(): Builder {
-        return Builder()
+      fun builder(): UpdateOrganizationOptionsBuilder {
+        return UpdateOrganizationOptionsBuilder()
       }
     }
   }
