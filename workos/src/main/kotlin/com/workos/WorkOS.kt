@@ -94,7 +94,7 @@ class WorkOS(
       return if (port == null) url else "$url:$port"
     }
 
-  private val version: String = "1.0.0"
+  private var version: String = "1.0.0-beta-2"
 
   private val httpClient = HttpClient.newBuilder().build()
 
