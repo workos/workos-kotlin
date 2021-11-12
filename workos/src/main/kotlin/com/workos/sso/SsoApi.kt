@@ -184,6 +184,7 @@ class SsoApi(private val workos: WorkOS) {
      * @suppress
      */
     companion object {
+      @JvmStatic
       fun builder(): ListConnectionsOptionsPaginationParamsBuilder {
         return ListConnectionsOptionsPaginationParamsBuilder()
       }
@@ -212,9 +213,9 @@ class SsoApi(private val workos: WorkOS) {
    * Fetches list of connections.
    */
   @JvmOverloads
-  fun listConnections(options: ListConnectionsOptions = ListConnectionsOptions()): ConnectionList {
+  fun listConnections(options: ListConnectionsOptions? = null): ConnectionList {
     val config = RequestConfig.builder()
-      .params(options)
+      .params(options ?: ListConnectionsOptions())
       .build()
 
     return workos.get("/connections", ConnectionList::class.java, config)
