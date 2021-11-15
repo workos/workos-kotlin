@@ -29,6 +29,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
   }
 
   /**
+   * Fetches a single directory by the given [com.workos.directorysync.models.Directory] ID.
+   */
+  fun getZeDirectory(id: String): Directory {
+    return workos.get(
+      "/directories/$id", Directory::class.java
+    )
+  }
+
+  /**
    * Fetches the list of directories.
    */
   @JvmOverloads
