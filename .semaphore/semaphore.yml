@@ -26,3 +26,7 @@ blocks:
       epilogue:
         commands:
           - artifact push job lib/build/reports/tests/test
+
+promotions:
+  - name: Publish to Maven Central
+    pipeline_file: maven.yml
