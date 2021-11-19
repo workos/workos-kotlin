@@ -53,7 +53,7 @@ data class User
   val emails: List<Email>,
 
   @JvmField
-  val groups: List<Group>,
+  val groups: List<Group>?,
 
   @JvmField
   val state: UserState,

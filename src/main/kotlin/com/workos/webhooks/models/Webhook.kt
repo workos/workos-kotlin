@@ -1,6 +1,7 @@
 package com.workos.webhooks.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 
 /**
  * Represents a Webhook resource. This class is not meant to be
@@ -10,14 +11,15 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param event String identifier for the Webhook type.
  * @param data Data sent with the Webhook request.
  */
+@JsonDeserialize(using = WebhookJsonDeserializer::class)
 data class Webhook
 @JsonCreator constructor(
   @JvmField
   val id: String,
 
   @JvmField
-  val event: String,
+  val event: EventType,
 
   @JvmField
-  val data: Map<String, Any>
+  val data: Any
 )

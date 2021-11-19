@@ -446,8 +446,8 @@ class DirectorySyncApiTest : TestBase() {
 
     assertEquals(directoryUser1.id, userId1)
     assertEquals(directoryUser2.id, userId2)
-    assertEquals(directoryUser1.groups[0].id, groupId)
-    assertEquals(directoryUser2.groups[0].id, groupId)
+    assertEquals(directoryUser1.groups!![0].id, groupId)
+    assertEquals(directoryUser2.groups!![0].id, groupId)
   }
 
   @Test
@@ -533,8 +533,8 @@ class DirectorySyncApiTest : TestBase() {
 
     assertEquals(directoryUser1.id, userId1)
     assertEquals(directoryUser2.id, userId2)
-    assertEquals(directoryUser1.groups[0].id, groupId)
-    assertEquals(directoryUser2.groups[0].id, groupId)
+    assertEquals(directoryUser1.groups!![0].id, groupId)
+    assertEquals(directoryUser2.groups!![0].id, groupId)
   }
 
   @Test
@@ -625,8 +625,8 @@ class DirectorySyncApiTest : TestBase() {
 
     assertEquals(directoryUser1.id, userId1)
     assertEquals(directoryUser2.id, userId2)
-    assertEquals(directoryUser1.groups[0].id, groupId)
-    assertEquals(directoryUser2.groups[0].id, groupId)
+    assertEquals(directoryUser1.groups!![0].id, groupId)
+    assertEquals(directoryUser2.groups!![0].id, groupId)
   }
 
   @Test

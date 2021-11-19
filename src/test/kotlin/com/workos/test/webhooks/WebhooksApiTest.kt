@@ -1,9 +1,11 @@
 package com.workos.test.webhooks
 
+import com.workos.directorysync.models.User
 import com.workos.test.TestBase
 import org.apache.commons.codec.binary.Hex
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.security.SignatureException
 import java.time.Instant
 import javax.crypto.Mac
@@ -14,12 +16,13 @@ class WebhooksApiTest : TestBase() {
   private val testWebhookId = "wh_123"
   private val eventType = "dsync.user.created"
   private val rawAttributesTitle = "Developer Success Engineer"
+  private val directoryUserId = "directory_user_01FAEAJCR3ZBZ30D8BD1924TVG"
 
   private val testWebhook = """
     {
       "id": "$testWebhookId",
       "data": {
-        "id": "directory_user_01FAEAJCR3ZBZ30D8BD1924TVG",
+        "id": "$directoryUserId",
         "state": "active",
         "emails": [{
           "type": "work",
@@ -32,6 +35,7 @@ class WebhooksApiTest : TestBase() {
         "last_name": "Lunceford",
         "first_name": "Blair",
         "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
+        "custom_attributes": {},
         "raw_attributes": {
           "name": {
             "givenName": "Blair",
@@ -99,8 +103,10 @@ class WebhooksApiTest : TestBase() {
       testData["secret"] as String
     )
 
+    assertEquals(webhook.id, testWebhookId, "Webhook Id ${webhook.id} should be $testWebhookId")
     assertEquals(webhook.id, testWebhookId)
-    assertEquals(webhook.id, testWebhookId)
+    assertTrue(webhook.data is User)
+    assertEquals((webhook.data as User).id, directoryUserId)
   }
 
   @Test
