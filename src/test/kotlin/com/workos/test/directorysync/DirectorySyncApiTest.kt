@@ -58,6 +58,7 @@ class DirectorySyncApiTest : TestBase() {
       url = "/directories/$gsuiteDirectoryId",
       responseBody = """{
           "id": "$gsuiteDirectoryId",
+          "idp_id": "02grqrue4294w24",
           "domain": "foo-corp.com",
           "external_key": "abcdefghi",
           "name": "Foo Corp",
@@ -88,6 +89,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "data": [{
           "id": "$gsuiteDirectoryId",
+          "idp_id": "02grqrue4294w24",
           "domain": "foo-corp.com",
           "external_key": "abcdefghi",
           "name": "Foo Corp",
@@ -144,6 +146,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "data": [{
           "id": "$gsuiteDirectoryId",
+          "idp_id": "02grqrue4294w24",
           "domain": "foo-corp.com",
           "external_key": "abcdefgh",
           "name": "Foo Corp",
@@ -200,6 +203,7 @@ class DirectorySyncApiTest : TestBase() {
         "username": "marcelina@foo-corp.com",
         "groups": [{
           "id": "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT",
+          "idp_id": "02grqrue4294w24",
           "directory_id": "$gsuiteDirectoryId",
           "name": "Engineering",
           "raw_attributes": {}
@@ -231,6 +235,7 @@ class DirectorySyncApiTest : TestBase() {
         "object": "directory_group",
         "directory_id": "$directoryId",
         "id" : "$groupId",
+        "idp_id": "02grqrue4294w24",
         "name" : "Developers",
         "raw_attributes": {}
       }"""
@@ -255,6 +260,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
+          "idp_id": "02grqrue4294w24",
           "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
           "name" : "Developers",
           "raw_attributes": {}
@@ -293,6 +299,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
+          "idp_id": "02grqrue4294w24",
           "directory_id": "$directoryId",
           "name" : "Developers",
           "raw_attributes": {}
@@ -336,6 +343,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
+          "idp_id": "02grqrue4294w24",
           "directory_id": "$directoryId",
           "name" : "Developers",
           "raw_attributes": {}
@@ -391,6 +399,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
@@ -415,6 +424,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
@@ -478,6 +488,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
@@ -502,6 +513,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
@@ -568,6 +580,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
@@ -592,6 +605,7 @@ class DirectorySyncApiTest : TestBase() {
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",
+              "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "raw_attributes": {}
