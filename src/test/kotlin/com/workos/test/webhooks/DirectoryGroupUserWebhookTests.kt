@@ -1,9 +1,8 @@
 package com.workos.test.webhooks
 
 import com.workos.test.TestBase
-import com.workos.webhooks.models.DirectoryGroupUser
+import com.workos.webhooks.models.DirectoryGroupUserAddedEvent
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class DirectoryGroupUserWebhookTests : TestBase() {
@@ -97,7 +96,7 @@ class DirectoryGroupUserWebhookTests : TestBase() {
   """
 
   @Test
-  fun constructEventHappyPath() {
+  fun constructUserAddedToGroup() {
     val workos = createWorkOSClient()
     val testData = WebhooksApiTest.prepareTest(groupUserRemovedWebhook)
 
@@ -105,14 +104,11 @@ class DirectoryGroupUserWebhookTests : TestBase() {
       groupUserRemovedWebhook,
       testData["signature"] as String,
       testData["secret"] as String
-    )
+    ) as DirectoryGroupUserAddedEvent
 
     assertEquals(webhook.id, userRemovedWebhookId)
-    assertTrue(webhook.data is DirectoryGroupUser)
-
-    val webhookData = webhook.data as DirectoryGroupUser
-    assertEquals(webhookData.directoryId, directoryId)
-    assertEquals(webhookData.user.id, userId)
-    assertEquals(webhookData.group.id, groupId)
+    assertEquals(webhook.data.directoryId, directoryId)
+    assertEquals(webhook.data.user.id, userId)
+    assertEquals(webhook.data.group.id, groupId)
   }
 }

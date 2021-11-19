@@ -13,7 +13,7 @@ import com.workos.directorysync.models.User
  * @param group The modified [com.workos.directorysync.models.Group].
  * @param user The modified [com.workos.directorysync.models.User].
  */
-data class DirectoryGroupUser
+data class DirectoryGroupUserEvent
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("directory_id")

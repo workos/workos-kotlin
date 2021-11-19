@@ -1,6 +1,6 @@
 package com.workos.webhooks
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.workos.webhooks.models.Webhook
+import com.workos.webhooks.models.WebhookEvent
 import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest
 import java.security.SignatureException
@@ -31,10 +31,10 @@ class WebhooksApi() {
     signatureHeader: String,
     secret: String,
     tolerance: Int = 360
-  ): Webhook {
+  ): WebhookEvent {
     try {
       verifyHeader(payload, signatureHeader, secret, tolerance)
-      return objectMapper.readValue(payload, Webhook::class.java)
+      return objectMapper.readValue(payload, WebhookEvent::class.java)
     } catch (e: Exception) {
       throw SignatureException("Invalid signature: ${e.message}")
     }

@@ -3,7 +3,7 @@ package com.workos.webhooks.models
 import com.fasterxml.jackson.annotation.JsonValue
 
 /**
- * An enumeration of event types for a [Webhook]
+ * An enumeration of event types for a [WebhookEvent]
  *
  * @param event The Event Type string value.
  */

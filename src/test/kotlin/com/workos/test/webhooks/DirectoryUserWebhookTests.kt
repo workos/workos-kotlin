@@ -1,9 +1,8 @@
 package com.workos.test.webhooks
 
-import com.workos.directorysync.models.User
 import com.workos.test.TestBase
+import com.workos.webhooks.models.DirectoryUserCreatedEvent
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class DirectoryUserWebhookTests : TestBase() {
@@ -73,7 +72,7 @@ class DirectoryUserWebhookTests : TestBase() {
   """
 
   @Test
-  fun constructEventHappyPath() {
+  fun constructUserCreatedEvent() {
     val workos = createWorkOSClient()
     val testData = WebhooksApiTest.prepareTest(userCreatedWebhook)
 
@@ -81,13 +80,10 @@ class DirectoryUserWebhookTests : TestBase() {
       userCreatedWebhook,
       testData["signature"] as String,
       testData["secret"] as String
-    )
+    ) as DirectoryUserCreatedEvent
 
     assertEquals(webhook.id, userCreatedWebhookId)
-    assertTrue(webhook.data is User)
-
-    val webhookData = webhook.data as User
-    assertEquals(webhookData.id, userId)
-    assertEquals(webhookData.directoryId, directoryId)
+    assertEquals(webhook.data.id, userId)
+    assertEquals(webhook.data.directoryId, directoryId)
   }
 }

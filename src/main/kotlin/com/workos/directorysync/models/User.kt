@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param customAttributes An object containing the custom attribute mapping for the Directory Provider.
  * @param rawAttributes An object containing the data returned from the Directory Provider.
  */
-data class User
+open class User
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")

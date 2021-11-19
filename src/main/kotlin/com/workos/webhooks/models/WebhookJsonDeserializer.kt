@@ -12,31 +12,41 @@ import com.workos.directorysync.models.User
 import com.workos.sso.models.Connection
 
 /**
- * Custom JSON deserializer for [com.workos.webhooks.models.Webhook] events.
+ * Custom JSON deserializer for [com.workos.webhooks.models.WebhookEvent] events.
  */
-class WebhookJsonDeserializer : JsonDeserializer<Webhook>() {
+class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
   private val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 
   /**
    * @suppress
    */
-  override fun deserialize(jp: JsonParser?, ctxt: DeserializationContext?): Webhook {
+  override fun deserialize(jp: JsonParser?, ctxt: DeserializationContext?): WebhookEvent {
     val rootNode = jp?.codec?.readTree<TreeNode>(jp)
     val id = mapper.readValue(rootNode?.get("id")?.traverse(), String::class.java)
     val eventType = mapper.readValue(rootNode?.get("event")?.traverse(), EventType::class.java)!!
     val data = rootNode?.get("data")
 
     return when (eventType) {
-      EventType.ConnectionActivated, EventType.ConnectionDeactivated, EventType.ConnectionDeleted
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), Connection::class.java))
-      EventType.DirectoryActivated, EventType.DirectoryDeactivated, EventType.DirectoryDeleted,
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), Directory::class.java))
-      EventType.DirectoryUserCreated, EventType.DirectoryUserUpdated, EventType.DirectoryUserDeleted,
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), User::class.java))
-      EventType.DirectoryGroupCreated, EventType.DirectoryGroupUpdated, EventType.DirectoryGroupDeleted,
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), Group::class.java))
-      EventType.DirectoryGroupUserAdded, EventType.DirectoryGroupUserRemoved,
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), DirectoryGroupUser::class.java))
+      EventType.ConnectionActivated -> ConnectionActivatedEvent(id, eventType, deserializeData(data, Connection::class.java))
+      EventType.ConnectionDeactivated -> ConnectionDeactivatedEvent(id, eventType, deserializeData(data, Connection::class.java))
+      EventType.ConnectionDeleted -> ConnectionDeletedEvent(id, eventType, deserializeData(data, Connection::class.java))
+      EventType.DirectoryActivated -> DirectoryActivatedEvent(id, eventType, deserializeData(data, Directory::class.java))
+      EventType.DirectoryDeactivated -> DirectoryDeactivatedEvent(id, eventType, deserializeData(data, Directory::class.java))
+      EventType.DirectoryDeleted -> DirectoryDeletedEvent(id, eventType, deserializeData(data, Directory::class.java))
+      EventType.DirectoryUserCreated -> DirectoryUserCreatedEvent(id, eventType, deserializeData(data, User::class.java))
+      // DirectoryUserUpdated change to use UserWithPreviousAttributes
+      EventType.DirectoryUserUpdated -> DirectoryUserUpdatedEvent(id, eventType, deserializeData(data, User::class.java))
+      EventType.DirectoryUserDeleted -> DirectoryUserDeletedEvent(id, eventType, deserializeData(data, User::class.java))
+      EventType.DirectoryGroupCreated -> DirectoryGroupCreatedEvent(id, eventType, deserializeData(data, Group::class.java))
+      // DirectoryGroupUpdated change to use GroupWithPreviousAttributes
+      EventType.DirectoryGroupUpdated -> DirectoryGroupUpdatedEvent(id, eventType, deserializeData(data, Group::class.java))
+      EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java))
+      EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java))
+      EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java))
     }
+  }
+
+  private fun <T> deserializeData(data: TreeNode?, clazz: Class<T>): T {
+    return mapper.treeToValue(data, clazz)
   }
 }
