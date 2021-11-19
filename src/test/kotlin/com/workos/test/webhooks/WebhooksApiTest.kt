@@ -71,27 +71,29 @@ class WebhooksApiTest : TestBase() {
       "event": "$eventType"
     }"""
 
-  private fun prepareTest(): Map<String, Any> {
-    val timestamp = Instant.now().toEpochMilli()
-    val secret = "secret"
-    val sha256Hmac = Mac.getInstance("HmacSHA256")
-    val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
-    sha256Hmac.init(secretKey)
-    val signature = Hex.encodeHexString(
-      sha256Hmac.doFinal("$timestamp.$testWebhook".toByteArray())
-    )
+  companion object {
+    fun prepareTest(webhookData: String): Map<String, Any> {
+      val timestamp = Instant.now().toEpochMilli()
+      val secret = "secret"
+      val sha256Hmac = Mac.getInstance("HmacSHA256")
+      val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
+      sha256Hmac.init(secretKey)
+      val signature = Hex.encodeHexString(
+        sha256Hmac.doFinal("$timestamp.$webhookData".toByteArray())
+      )
 
-    return mapOf(
-      "secret" to secret,
-      "signature" to "t=$timestamp, v1=$signature",
-      "timestamp" to timestamp,
-    )
+      return mapOf(
+        "secret" to secret,
+        "signature" to "t=$timestamp, v1=$signature",
+        "timestamp" to timestamp,
+      )
+    }
   }
 
   @Test
   fun constructEventHappyPath() {
     val workos = createWorkOSClient()
-    val testData = prepareTest()
+    val testData = prepareTest(testWebhook)
 
     val webhook = workos.webhooks.constructEvent(
       testWebhook,
@@ -108,7 +110,7 @@ class WebhooksApiTest : TestBase() {
     assertThrows(SignatureException::class.java) {
       val workos = createWorkOSClient()
 
-      val testData = prepareTest()
+      val testData = prepareTest(testWebhook)
 
       workos.webhooks.constructEvent(
 
@@ -136,7 +138,7 @@ class WebhooksApiTest : TestBase() {
     assertThrows(SignatureException::class.java) {
       val workos = createWorkOSClient()
 
-      val testData = prepareTest()
+      val testData = prepareTest(testWebhook)
 
       workos.webhooks.constructEvent(
         testWebhook,
@@ -151,7 +153,7 @@ class WebhooksApiTest : TestBase() {
     assertThrows(SignatureException::class.java) {
       val workos = createWorkOSClient()
 
-      val testData = prepareTest()
+      val testData = prepareTest(testWebhook)
 
       workos.webhooks.constructEvent(
         testWebhook,
