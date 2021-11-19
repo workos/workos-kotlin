@@ -12,10 +12,14 @@ import com.workos.directorysync.models.User
 import com.workos.sso.models.Connection
 
 /**
- * Custom JSON deserializer for webhook events.
+ * Custom JSON deserializer for [com.workos.webhooks.models.Webhook] events.
  */
 class WebhookJsonDeserializer : JsonDeserializer<Webhook>() {
   private val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+
+  /**
+   * @suppress
+   */
   override fun deserialize(jp: JsonParser?, ctxt: DeserializationContext?): Webhook {
     val rootNode = jp?.codec?.readTree<TreeNode>(jp)
     val id = mapper.readValue(rootNode?.get("id")?.traverse(), String::class.java)
@@ -32,7 +36,7 @@ class WebhookJsonDeserializer : JsonDeserializer<Webhook>() {
       EventType.DirectoryGroupCreated, EventType.DirectoryGroupUpdated, EventType.DirectoryGroupDeleted,
       -> Webhook(id, eventType, mapper.readValue(data?.traverse(), Group::class.java))
       EventType.DirectoryGroupUserAdded, EventType.DirectoryGroupUserRemoved,
-      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), DirectoryGroupUserChange::class.java))
+      -> Webhook(id, eventType, mapper.readValue(data?.traverse(), DirectoryGroupUser::class.java))
     }
   }
 }
