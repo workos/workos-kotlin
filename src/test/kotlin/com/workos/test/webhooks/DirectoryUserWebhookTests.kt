@@ -2,7 +2,11 @@ package com.workos.test.webhooks
 
 import com.workos.test.TestBase
 import com.workos.webhooks.models.DirectoryUserCreatedEvent
+import com.workos.webhooks.models.DirectoryUserDeletedEvent
+import com.workos.webhooks.models.DirectoryUserUpdatedEvent
+import com.workos.webhooks.models.EventType
 import org.junit.Test
+import org.junit.jupiter.api.Assertions
 import kotlin.test.assertEquals
 
 class DirectoryUserWebhookTests : TestBase() {
@@ -10,10 +14,11 @@ class DirectoryUserWebhookTests : TestBase() {
   private val directoryId = "directory_01FM6VV23GH5NKE5TTD2HGTDZ4"
   private val userId = "directory_user_01FMV8XE3E2CJH7TRBKMSBH8QF"
 
-  private val userCreatedWebhookId = "wh_01FMV8XH0MB0YDJPDT2Q4QHG14"
-  private val userCreatedWebhook = """
+  private val webhookId = "wh_01FMV8XH0MB0YDJPDT2Q4QHG14"
+  private fun generateGroupWebhookEvent(eventType: EventType): String {
+    return """
     {
-      "id": "$userCreatedWebhookId",
+      "id": "$webhookId",
       "data": {
         "id": "$userId",
         "state": "active",
@@ -67,23 +72,58 @@ class DirectoryUserWebhookTests : TestBase() {
         },
         "custom_attributes": {}
       },
-      "event": "dsync.user.created"
-    }
-  """
+      "event": "${eventType.value}"
+    }"""
+  }
 
   @Test
-  fun constructUserCreatedEvent() {
+  fun constructDirectoryUserCreatedEvent() {
     val workos = createWorkOSClient()
-    val testData = WebhooksApiTest.prepareTest(userCreatedWebhook)
+    val webhookData = generateGroupWebhookEvent(EventType.DirectoryUserCreated)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
-      userCreatedWebhook,
+      webhookData,
       testData["signature"] as String,
       testData["secret"] as String
-    ) as DirectoryUserCreatedEvent
+    )
 
-    assertEquals(webhook.id, userCreatedWebhookId)
-    assertEquals(webhook.data.id, userId)
-    assertEquals(webhook.data.directoryId, directoryId)
+    Assertions.assertTrue(webhook is DirectoryUserCreatedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as DirectoryUserCreatedEvent).data.id, userId)
+  }
+
+  @Test
+  fun constructDirectoryUserDeletedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateGroupWebhookEvent(EventType.DirectoryUserDeleted)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    Assertions.assertTrue(webhook is DirectoryUserDeletedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as DirectoryUserDeletedEvent).data.id, userId)
+  }
+
+  @Test
+  fun constructDirectoryUserDeletedUpdated() {
+    val workos = createWorkOSClient()
+    val webhookData = generateGroupWebhookEvent(EventType.DirectoryUserUpdated)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    Assertions.assertTrue(webhook is DirectoryUserUpdatedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as DirectoryUserUpdatedEvent).data.id, userId)
   }
 }

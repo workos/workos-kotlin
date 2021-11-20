@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.workos.directorysync.models.Directory
 
 /**
- * Webhook Event for `dsync.group.created`.
+ * Webhook Event for `dsync.deleted`.
  */
 class DirectoryDeletedEvent @JsonCreator constructor(
   @JvmField

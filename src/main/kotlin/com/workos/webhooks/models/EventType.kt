@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue
 /**
  * An enumeration of event types for a [WebhookEvent]
  *
- * @param event The Event Type string value.
+ * @param value The Event Type string value.
  */
-enum class EventType(@JsonValue val event: String) {
+enum class EventType(@JsonValue @JvmField val value: String) {
   /**
    * Triggers when a Connection's state changes to active.
    */
