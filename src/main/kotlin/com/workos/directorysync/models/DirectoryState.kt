@@ -9,6 +9,10 @@ import com.fasterxml.jackson.annotation.JsonValue
  */
 enum class DirectoryState(@JsonValue val state: String) {
   /**
+   * The directory is currently being deleted.
+   */
+  Deleting("deleting"),
+  /**
    * The directory is unable to sync due to invalid credentials.
    */
   InvalidCredentials("invalid_credentials"),
