@@ -3,6 +3,7 @@ package com.workos.test.sso
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.sso.SsoApi
+import com.workos.sso.models.ConnectionState
 import com.workos.sso.models.ConnectionType
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -101,6 +102,7 @@ class SsoApiTest : TestBase() {
 
     assertEquals(id, connection.id)
     assertEquals(ConnectionType.GoogleOAuth, connection.connectionType)
+    assertEquals(ConnectionState.Active, connection.state)
   }
 
   @Test
@@ -212,7 +214,7 @@ class SsoApiTest : TestBase() {
             "name": "Google OAuth 2.0",
             "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-            "state": "active",
+            "state": "inactive",
             "updated_at": "2021-10-26 13:29:47.133382"
           }
         ],
@@ -231,6 +233,7 @@ class SsoApiTest : TestBase() {
     val (connections) = workos.sso.listConnections(options)
 
     assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    assertEquals(ConnectionState.Inactive, connections.get(0).state)
   }
 
   @Test
@@ -254,7 +257,7 @@ class SsoApiTest : TestBase() {
             "name": "Google OAuth 2.0",
             "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-            "state": "active",
+            "state": "draft",
             "updated_at": "2021-10-26 13:29:47.133382"
           }
         ],
@@ -274,5 +277,6 @@ class SsoApiTest : TestBase() {
     val (connections) = workos.sso.listConnections(options)
 
     assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    assertEquals(ConnectionState.Draft, connections.get(0).state)
   }
 }
