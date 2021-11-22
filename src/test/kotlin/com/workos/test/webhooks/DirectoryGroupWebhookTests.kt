@@ -127,6 +127,42 @@ class DirectoryGroupWebhookTests : TestBase() {
     """
   }
 
+  private fun generateGroupUpdatedWebhookEvent(eventType: EventType): String {
+    return """
+    {
+      "id": "$webhookId",
+      "data": {
+        "id": "$groupId",
+        "name": "Account Management",
+        "idp_id": "02grqrue4294w24",
+        "object": "directory_group",
+        "directory_id": "$directoryId",
+        "raw_attributes": {
+          "id": "02grqrue4294w24",
+          "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/MtDmuYwi32TG-jS3s9jzPA4RCWI\"",
+          "kind": "admin#directory#group",
+          "name": "Account Management",
+          "email": "account-managers@foo-corp.com",
+          "description": "",
+          "adminCreated": true,
+          "directMembersCount": "4",
+          "nonEditableAliases": [
+            "account-managers@foo-corp.com.test-google-a.com"
+          ]
+        },
+        "previous_attributes": {
+          "name": "Account Mgmt",
+          "raw_attributes": {
+            "name": "Account Mgmt",
+            "adminCreated": null
+          }
+        }
+      },
+      "event": "${eventType.value}"
+    }
+    """
+  }
+
   @Test
   fun constructDirectoryGroupCreatedEvent() {
     val workos = createWorkOSClient()
@@ -162,9 +198,10 @@ class DirectoryGroupWebhookTests : TestBase() {
   }
 
   @Test
+  @Suppress("UNCHECKED_CAST")
   fun constructDirectoryGroupUpdatedEvent() {
     val workos = createWorkOSClient()
-    val webhookData = generateGroupWebhookEvent(EventType.DirectoryGroupUpdated)
+    val webhookData = generateGroupUpdatedWebhookEvent(EventType.DirectoryGroupUpdated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
@@ -176,6 +213,9 @@ class DirectoryGroupWebhookTests : TestBase() {
     assertTrue(webhook is DirectoryGroupUpdatedEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as DirectoryGroupUpdatedEvent).data.id, groupId)
+    val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any>
+    assertEquals(previousRawAttributes["adminCreated"], null)
+    assertEquals(previousRawAttributes["name"], "Account Mgmt")
   }
 
   @Test

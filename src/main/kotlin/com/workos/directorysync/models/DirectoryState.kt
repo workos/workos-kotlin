@@ -9,6 +9,18 @@ import com.fasterxml.jackson.annotation.JsonValue
  */
 enum class DirectoryState(@JsonValue val state: String) {
   /**
+   * The directory is connected to an external provider
+   */
+  Active("active"),
+  /**
+   * The
+   */
+  Validating("validating"),
+  /**
+   * The
+   */
+  Inactive("inactive"),
+  /**
    * The final state before a directory is deleted.
    */
   Deleting("deleting"),

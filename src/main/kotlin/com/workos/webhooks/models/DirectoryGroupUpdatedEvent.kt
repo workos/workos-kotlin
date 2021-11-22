@@ -1,7 +1,6 @@
 package com.workos.webhooks.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.workos.directorysync.models.Group
 
 /**
  * Webhook Event for `dsync.group.updated`.
@@ -15,5 +14,5 @@ class DirectoryGroupUpdatedEvent
   override val event: EventType,
 
   @JvmField
-  override val data: Group
+  override val data: GroupUpdated
 ) : WebhookEvent(id, event, data)

@@ -24,45 +24,45 @@ open class User
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  val obj: String = "directory_user",
+  open val obj: String = "directory_user",
 
   @JvmField
-  val id: String,
+  open val id: String,
 
   @JvmField
   @JsonProperty("directory_id")
-  val directoryId: String,
+  open val directoryId: String,
 
   @JvmField
   @JsonProperty("idp_id")
-  val idpId: String,
+  open val idpId: String,
 
   @JvmField
   @JsonProperty("username")
-  val userName: String?,
+  open val userName: String?,
 
   @JvmField
   @JsonProperty("first_name")
-  val firstName: String?,
+  open val firstName: String?,
 
   @JvmField
   @JsonProperty("last_name")
-  val lastName: String?,
+  open val lastName: String?,
 
   @JvmField
-  val emails: List<Email>,
+  open val emails: List<Email>,
 
   @JvmField
-  val groups: List<Group>?,
+  open val groups: List<Group>?,
 
   @JvmField
-  val state: UserState,
+  open val state: UserState,
 
   @JvmField
   @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, String>,
+  open val customAttributes: Map<String, String>,
 
   @JvmField
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, Any>,
+  open val rawAttributes: Map<String, Any>,
 )
