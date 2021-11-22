@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  */
 enum class DirectoryState(@JsonValue val state: String) {
   /**
-   * The directory is currently being deleted.
+   * The final state before a directory is deleted.
    */
   Deleting("deleting"),
   /**
