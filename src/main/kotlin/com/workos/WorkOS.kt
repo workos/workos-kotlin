@@ -2,6 +2,9 @@ package com.workos
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.Request
+import com.github.kittinunf.fuel.core.Response
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.UnauthorizedException
@@ -17,10 +20,6 @@ import com.workos.sso.SsoApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.net.http.HttpResponse.BodyHandlers
 
 /**
  * Global configuration class for interacting with the WorkOS API.
@@ -96,18 +95,12 @@ class WorkOS(
 
   private var version: String = "1.0.0-beta-3"
 
-  private val httpClient = HttpClient.newBuilder().build()
-
   private val protocol: String
     get() {
       return if (https) "https" else "http"
     }
 
-  private val requestBuilder =
-    HttpRequest.newBuilder()
-      .header("Authorization", "Bearer $apiKey")
-      .header("User-Agent", "workos-kotlin/$version")
-      .header("Content-Type", "application/json")
+  private val manager = FuelManager()
 
   private val mapper = jacksonObjectMapper()
 
@@ -116,6 +109,14 @@ class WorkOS(
       throw IllegalArgumentException("Missing API key")
     }
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+
+    manager.removeAllResponseInterceptors()
+    manager.basePath = baseUrl
+    manager.baseHeaders = mapOf(
+      "Authorization" to "Bearer $apiKey",
+      "User-Agent" to "workos-kotlin/$version",
+      "Content-Type" to "application/json"
+    )
   }
 
   /**
@@ -130,9 +131,9 @@ class WorkOS(
       }
     }
 
-    val requestBuilder = requestBuilder.copy().GET().uri(uri.build())
+    val request = manager.get(uri.toString())
 
-    return sendRequest(buildRequest(requestBuilder, config), responseType)
+    return sendRequest(buildRequest(request, config), responseType)
   }
 
   /**
@@ -143,9 +144,9 @@ class WorkOS(
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
-    val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
+    val request = manager.post(uri.toString()).body(body)
 
-    return sendRequest(buildRequest(requestBuilder, config), responseType)
+    return sendRequest(buildRequest(request, config), responseType)
   }
 
   /**
@@ -156,61 +157,69 @@ class WorkOS(
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
 
-    val requestBuilder = requestBuilder.copy().POST(HttpRequest.BodyPublishers.ofString(body)).uri(uri)
+    val request = manager.put(uri.toString()).body(body)
 
-    return sendRequest(buildRequest(requestBuilder, config), responseType)
+    return sendRequest(buildRequest(request, config), responseType)
   }
 
   /**
    * Performs a DELETE request with WorkOS configuration parameters.
    */
-  fun delete(path: String, config: RequestConfig? = null): HttpResponse<String> {
+  fun delete(path: String, config: RequestConfig? = null): String {
     val uri = URIBuilder(baseUrl).setPath(path).build()
-    val requestBuilder = requestBuilder.copy().DELETE().uri(uri)
-    return sendRequest(buildRequest(requestBuilder, config))
+
+    val request = manager.delete(uri.toString())
+
+    return sendRequest(buildRequest(request, config))
   }
 
-  private fun buildRequest(requestBuilder: HttpRequest.Builder, config: RequestConfig? = null): HttpRequest {
+  private fun buildRequest(request: Request, config: RequestConfig? = null): Request {
     if (config?.headers != null) {
       for ((key, value) in config.headers) {
-        requestBuilder.setHeader(key, value)
+        request.set(key, value)
       }
     }
-    return requestBuilder.build()
+    return request
   }
 
-  private fun sendRequest(request: HttpRequest): HttpResponse<String> {
-    val response = httpClient.send(request, BodyHandlers.ofString())
+  private fun sendRequest(request: Request): String {
+    val (_, response, result) = request.responseString()
 
-    if (response.statusCode() >= 400) {
-      handleResponseError(response)
+    val (payload) = result
+
+    if (response.statusCode >= 400) {
+      handleResponseError(response, payload ?: "{}")
     }
 
-    return response
+    if (payload == null) {
+      throw Exception("Path ${response.url.path} returned an empty response.")
+    }
+
+    return payload
   }
 
-  private fun <Res : Any> sendRequest(request: HttpRequest, responseType: Class<Res>): Res {
+  private fun <Res : Any> sendRequest(request: Request, responseType: Class<Res>): Res {
     val response = sendRequest(request)
-    return mapper.readValue(response.body(), responseType)
+    return mapper.readValue(response, responseType)
   }
 
-  private fun handleResponseError(response: HttpResponse<String>) {
-    val requestId = response.headers().firstValue("X-Request-ID").get()
+  private fun handleResponseError(response: Response, payload: String) {
+    val requestId = response.header("X-Request-ID").first()
 
-    when (val status = response.statusCode()) {
+    when (val status = response.statusCode) {
       401 -> {
-        val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
+        val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)
         throw UnauthorizedException(responseData.message, requestId)
       }
       404 -> {
-        throw NotFoundException(response.request().uri().path, requestId)
+        throw NotFoundException(response.url.path, requestId)
       }
       422 -> {
-        val unprocessableEntityException = mapper.readValue(response.body(), UnprocessableEntityExceptionResponse::class.java)
+        val unprocessableEntityException = mapper.readValue(payload, UnprocessableEntityExceptionResponse::class.java)
         throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.errors, requestId)
       }
       else -> {
-        val responseData = mapper.readValue(response.body(), GenericErrorResponse::class.java)
+        val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)
         throw GenericServerException(responseData.message, status, requestId)
       }
     }
