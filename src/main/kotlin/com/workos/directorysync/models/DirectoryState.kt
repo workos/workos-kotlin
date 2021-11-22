@@ -9,15 +9,19 @@ import com.fasterxml.jackson.annotation.JsonValue
  */
 enum class DirectoryState(@JsonValue val state: String) {
   /**
-   * The directory is connected to an external provider
+   * The directory is connected to an external provider.
+   * This state exists only from the webhook payload
+   * and correlates to 'Unlinked' which we plan to deprecate later.
    */
   Active("active"),
   /**
-   * The
+   * The directory is currently being validated.
    */
   Validating("validating"),
   /**
-   * The
+   * The directory is no longer connected to an external provider.
+   * This state exists only from the webhook payload
+   * and correlates to 'Unlinked' which we plan to deprecate later.
    */
   Inactive("inactive"),
   /**
