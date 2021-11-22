@@ -35,6 +35,8 @@ dependencies {
 
   implementation("org.apache.httpcomponents:httpclient:4.2.3")
 
+  implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
@@ -69,6 +71,12 @@ tasks.jar {
         "Implementation-Version" to project.version
       )
     )
+  }
+}
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(8))
   }
 }
 

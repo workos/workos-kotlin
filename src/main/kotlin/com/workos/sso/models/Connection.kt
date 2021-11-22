@@ -46,7 +46,7 @@ data class Connection
   val name: String,
 
   @JvmField
-  val state: String,
+  val state: ConnectionState,
 
   @JvmField
   @JsonProperty("created_at")
