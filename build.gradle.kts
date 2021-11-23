@@ -1,3 +1,6 @@
+import java.io.FileOutputStream
+import java.util.Properties
+
 group = "com.workos"
 version = "1.0.0-beta-5"
 
@@ -48,6 +51,31 @@ dependencies {
   dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
 
   api("org.apache.commons:commons-math3:3.6.1")
+}
+
+val generatedVersionDir = "$buildDir/generated-version"
+
+sourceSets {
+  main {
+    kotlin {
+      output.dir(generatedVersionDir)
+    }
+  }
+}
+
+tasks.register("generateVersionProperties") {
+  doLast {
+    val propertiesFile = file("$generatedVersionDir/version.properties")
+    propertiesFile.parentFile.mkdirs()
+    val properties = Properties()
+    properties.setProperty("version", "$version")
+    val out = FileOutputStream(propertiesFile)
+    properties.store(out, null)
+  }
+}
+
+tasks.named("processResources") {
+  dependsOn("generateVersionProperties")
 }
 
 tasks.named("build") {

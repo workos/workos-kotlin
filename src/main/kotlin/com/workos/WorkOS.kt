@@ -20,6 +20,7 @@ import com.workos.sso.SsoApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
+import java.util.Properties
 
 /**
  * Global configuration class for interacting with the WorkOS API.
@@ -93,7 +94,15 @@ class WorkOS(
       return if (port == null) url else "$url:$port"
     }
 
-  private var version: String = "1.0.0-beta-5"
+  private val versionProperties = Properties()
+
+  /**
+   * WorkOS SDK Version
+   */
+  val version: String
+    get() {
+      return versionProperties.getProperty("version") ?: "unknown"
+    }
 
   private val protocol: String
     get() {
@@ -108,6 +117,10 @@ class WorkOS(
     if (apiKey.isNullOrBlank()) {
       throw IllegalArgumentException("Missing API key")
     }
+
+    val versionPropertiesFile = this.javaClass.getResourceAsStream("/version.properties")
+    versionProperties.load(versionPropertiesFile)
+
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
     manager.removeAllResponseInterceptors()
