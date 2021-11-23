@@ -93,7 +93,7 @@ class WorkOS(
       return if (port == null) url else "$url:$port"
     }
 
-  private var version: String = "1.0.0-beta-3"
+  private var version: String = "1.0.0-beta-4"
 
   private val protocol: String
     get() {

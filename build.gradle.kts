@@ -1,5 +1,5 @@
 group = "com.workos"
-version = "1.0.0-beta-3"
+version = "1.0.0-beta-4"
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
