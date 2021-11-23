@@ -75,6 +75,27 @@ class WebhooksApiTest : TestBase() {
       "event": "$eventType"
     }"""
 
+  private val testWebhookWithUnknownProperties = """
+    {
+      "id": "$testWebhookId",
+      "data": {
+        "id": "$directoryUserId",
+        "state": "active",
+        "emails": [],
+        "idp_id": "00u1e8mutl6wlH3lL4x7",
+        "object": "directory_user",
+        "username": "blair@foo-corp.com",
+        "last_name": "Lunceford",
+        "first_name": "Blair",
+        "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
+        "custom_attributes": {},
+        "raw_attributes": {},
+        "new_unknown_property": {},
+        "another_unknown_property": "foo bar"
+      },
+      "event": "$eventType"
+    }"""
+
   companion object {
     fun prepareTest(webhookData: String): Map<String, Any> {
       val timestamp = Instant.now().toEpochMilli()
@@ -101,6 +122,22 @@ class WebhooksApiTest : TestBase() {
 
     val webhook = workos.webhooks.constructEvent(
       testWebhook,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertEquals(webhook.id, testWebhookId)
+    assertTrue(webhook.data is User)
+    assertEquals((webhook.data as User).id, directoryUserId)
+  }
+
+  @Test
+  fun constructEventHappyPathWithUnknownProperty() {
+    val workos = createWorkOSClient()
+    val testData = prepareTest(testWebhookWithUnknownProperties)
+
+    val webhook = workos.webhooks.constructEvent(
+      testWebhookWithUnknownProperties,
       testData["signature"] as String,
       testData["secret"] as String
     )

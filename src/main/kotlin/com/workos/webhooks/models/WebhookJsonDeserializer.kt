@@ -3,6 +3,7 @@ package com.workos.webhooks.models
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -16,6 +17,10 @@ import com.workos.sso.models.Connection
  */
 class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
   private val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+
+  init {
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+  }
 
   /**
    * @suppress
