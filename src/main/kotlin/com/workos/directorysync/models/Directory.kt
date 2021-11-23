@@ -40,7 +40,7 @@ data class Directory
 
   @JvmField
   @JsonProperty("external_key")
-  val externalKey: String,
+  val externalKey: String?,
 
   @JvmField
   @JsonProperty("organization_id")

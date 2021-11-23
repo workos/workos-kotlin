@@ -36,7 +36,7 @@ data class Connection
   val connectionType: ConnectionType,
 
   @JvmField
-  val domains: List<ConnectionDomain>,
+  val domains: List<ConnectionDomain>?,
 
   @JvmField
   @JsonProperty("environment_id")

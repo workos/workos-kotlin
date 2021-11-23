@@ -14,27 +14,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param name The name of the Directory Group.
  * @param rawAttributes An object containing the data returned from the Directory Provider.
  */
-data class Group
+open class Group
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  val obj: String = "directory_group",
+  open val obj: String = "directory_group",
 
   @JvmField
   @JsonProperty("directory_id")
-  val directoryId: String,
+  open val directoryId: String,
 
   @JvmField
-  val id: String,
+  open val id: String,
 
   @JvmField
   @JsonProperty("idp_id")
-  val idpId: String,
+  open val idpId: String,
 
   @JvmField
-  val name: String,
+  open val name: String,
 
   @JvmField
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, Any>,
+  open val rawAttributes: Map<String, Any>,
 )
