@@ -7,6 +7,9 @@ import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import com.workos.directorysync.models.UserState
 
+/**
+ * @suppress
+ */
 open class UserUpdated
 @JsonCreator constructor(
   @JvmField

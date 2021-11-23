@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.Group
 
+/**
+ * @suppress
+ */
 class GroupUpdated
 @JsonCreator constructor(
   @JvmField
