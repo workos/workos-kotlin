@@ -78,6 +78,21 @@ class SsoApiTest : TestBase() {
   }
 
   @Test
+  fun getAuthorizationUrlShouldAcceptOrganizationParam() {
+    val workos = createWorkOSClient()
+
+    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+      .organization("organization_id")
+      .state("state_value")
+      .build()
+
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&organization=organization_id&state=state_value",
+      url
+    )
+  }
+
+  @Test
   fun getConnectionShouldReturnConnection() {
     val workos = createWorkOSClient()
 
