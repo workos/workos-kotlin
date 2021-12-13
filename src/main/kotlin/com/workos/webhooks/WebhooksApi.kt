@@ -30,7 +30,7 @@ class WebhooksApi() {
     payload: String,
     signatureHeader: String,
     secret: String,
-    tolerance: Int = 360
+    tolerance: Int = 180000
   ): WebhookEvent {
     try {
       verifyHeader(payload, signatureHeader, secret, tolerance)
