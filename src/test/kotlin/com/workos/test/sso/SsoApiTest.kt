@@ -93,6 +93,36 @@ class SsoApiTest : TestBase() {
   }
 
   @Test
+  fun getAuthorizationUrlShouldAcceptDomainHintParam() {
+    val workos = createWorkOSClient()
+
+    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+      .organization("organization_id")
+      .domainHint("workos.com")
+      .build()
+
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&domain_hint=workos.com&organization=organization_id",
+      url
+    )
+  }
+
+  @Test
+  fun getAuthorizationUrlShouldAcceptLoginHintParam() {
+    val workos = createWorkOSClient()
+
+    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+      .organization("organization_id")
+      .loginHint("foo@workos.com")
+      .build()
+
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&login_hint=foo%40workos.com&organization=organization_id",
+      url
+    )
+  }
+
+  @Test
   fun getConnectionShouldReturnConnection() {
     val workos = createWorkOSClient()
 

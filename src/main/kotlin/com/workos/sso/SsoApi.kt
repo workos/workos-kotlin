@@ -34,6 +34,8 @@ class SsoApi(private val workos: WorkOS) {
     val redirectUri: String,
     var connection: String? = null,
     var domain: String? = null,
+    var domainHint: String? = null,
+    var loginHint: String? = null,
     var organization: String? = null,
     var provider: String? = null,
     var state: String? = null
@@ -56,6 +58,16 @@ class SsoApi(private val workos: WorkOS) {
      */
     @Deprecated("Please use connection, organization, or provider.")
     fun domain(value: String) = apply { domain = value }
+
+    /**
+     * Domain Hint
+     */
+    fun domainHint(value: String) = apply { domainHint = value }
+
+    /**
+     * Login Hint
+     */
+    fun loginHint(value: String) = apply { loginHint = value }
 
     /**
      * Organization ID
@@ -94,6 +106,8 @@ class SsoApi(private val workos: WorkOS) {
 
       if (connection != null) uriBuilder.addParameter("connection", connection)
       if (domain != null) uriBuilder.addParameter("domain", domain)
+      if (domainHint != null) uriBuilder.addParameter("domain_hint", domainHint)
+      if (loginHint != null) uriBuilder.addParameter("login_hint", loginHint)
       if (organization != null) uriBuilder.addParameter("organization", organization)
       if (provider != null) uriBuilder.addParameter("provider", provider)
       if (state != null) uriBuilder.addParameter("state", state)
