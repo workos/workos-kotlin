@@ -53,6 +53,10 @@ enum class DirectoryType(@JsonValue val type: String) {
    */
   OktaSCIMV2_0("okta scim v2.0"),
   /**
+   * OneLogin SCIM 2.0 https://developers.onelogin.com/scim
+   */
+  OneLoginSCIMV2_0("onelogin scim v2.0"),
+  /**
    * Rippling https://www.rippling.com/
    */
   Rippling("rippling"),
