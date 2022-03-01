@@ -33,7 +33,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   @JvmOverloads
   fun listDirectories(paginationParams: PaginationParams? = null, organization: String? = null): DirectoryList {
-    var orgMap = emptyMap<String,String>()
+    var orgMap = emptyMap<String, String>()
     orgMap = if (organization === null) {
       emptyMap()
     } else {
