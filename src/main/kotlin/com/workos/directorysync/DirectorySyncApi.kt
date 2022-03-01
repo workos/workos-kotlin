@@ -50,7 +50,6 @@ class DirectorySyncApi(private val workos: WorkOS) {
     val finalParams = (paginationParamMap.asSequence() + orgMap.asSequence()).distinct()
       .groupBy({ it.key }, { it.value })
       .mapValues { it.value.joinToString(",") }
-    print(finalParams)
 
     val requestConfig = RequestConfig.builder()
       .params(finalParams ?: emptyMap())
