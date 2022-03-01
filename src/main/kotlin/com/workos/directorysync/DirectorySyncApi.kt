@@ -32,9 +32,28 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * Fetches the list of directories.
    */
   @JvmOverloads
-  fun listDirectories(paginationParams: PaginationParams? = null): DirectoryList {
+  fun listDirectories(paginationParams: PaginationParams? = null, organization: String? = null): DirectoryList {
+    var orgMap = emptyMap<String,String>()
+    orgMap = if (organization === null) {
+      emptyMap()
+    } else {
+      mapOf<String, String>("organization_id" to organization)
+    }
+
+    var paginationParamMap = emptyMap<String, String>()
+    paginationParamMap = if (paginationParams === null) {
+      emptyMap()
+    } else {
+      paginationParams
+    }
+
+    val finalParams = (paginationParamMap.asSequence() + orgMap.asSequence()).distinct()
+      .groupBy({ it.key }, { it.value })
+      .mapValues { it.value.joinToString(",") }
+    print(finalParams)
+
     val requestConfig = RequestConfig.builder()
-      .params(paginationParams ?: emptyMap())
+      .params(finalParams ?: emptyMap())
       .build()
 
     return workos.get(

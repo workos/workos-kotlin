@@ -181,6 +181,46 @@ class DirectorySyncApiTest : TestBase() {
   }
 
   @Test
+  fun listDirectoriesWithOrganizationParamShouldReturnDirectories() {
+    val workos = createWorkOSClient()
+
+    val gsuiteOrganizationId = "org_01EHZNVPK3SFK441A1RGBFSHRT"
+
+    stubResponse(
+      url = "/directories",
+
+      responseBody = """{
+        "data": [{
+          "id": "directory_01EHZNVPK3SFK441AXXXXXSHRT",
+          "idp_id": "02grqrue4294w24",
+          "domain": "foo-corp.com",
+          "external_key": "abcdefgh",
+          "name": "Foo Corp",
+          "organization_id": "$gsuiteOrganizationId",
+          "object": "directory",
+          "state": "unlinked",
+          "type": "gsuite directory",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
+        }],
+        "list_metadata" : {
+          "after" : "someAfterId",
+          "before" : "someBeforeId"
+        }
+      }""",
+      responseStatus = 200,
+    )
+
+    val (data) = workos.directorySync.listDirectories(organization = gsuiteOrganizationId)
+
+    val gsuiteDirectory = data[0]
+
+    assertEquals(gsuiteDirectory.organizationId, gsuiteOrganizationId)
+    assertEquals(gsuiteDirectory.type, DirectoryType.GSuiteDirectory)
+    assertEquals(gsuiteDirectory.state, DirectoryState.Unlinked)
+  }
+
+  @Test
   fun getDirectoryUserShouldReturnDirectoryUser() {
     val workos = createWorkOSClient()
 

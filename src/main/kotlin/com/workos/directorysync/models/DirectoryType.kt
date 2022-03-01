@@ -17,6 +17,14 @@ enum class DirectoryType(@JsonValue val type: String) {
    */
   BambooHr("bamboohr"),
   /**
+   * Breathe HR
+   */
+  BreatheHr("breathehr"),
+  /**
+   * Cyberark SCIM 2.0
+   */
+  CyberarkSCIMV2_0("cyberark scim v2.0\""),
+  /**
    * FourthHR
    */
   FourthHr("fourth hr"),
@@ -56,6 +64,14 @@ enum class DirectoryType(@JsonValue val type: String) {
    * OneLogin SCIM 2.0 https://developers.onelogin.com/scim
    */
   OneLoginSCIMV2_0("onelogin scim v2.0"),
+  /**
+   * PeopleHR  https://peoplehr.com/
+   */
+  PeopleHR("people hr"),
+  /**
+   * PingFederate SCIM 2.0  https://pingfederate.com/
+   */
+  PingFederateSCIMV2_0("pingfederate scim v2.0"),
   /**
    * Rippling https://www.rippling.com/
    */
