@@ -2,7 +2,6 @@ package com.workos.test.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.exceptions.UnauthorizedException
-import com.workos.common.http.PaginationParams
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
@@ -165,7 +164,7 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200,
     )
 
-    val paginationParams = PaginationParams.builder()
+    val paginationParams = DirectorySyncApi.ListDirectoriesOptions.builder()
       .after("someAfterId")
       .before("someBeforeId")
       .limit((1))
@@ -211,7 +210,14 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200,
     )
 
-    val (data) = workos.directorySync.listDirectories(organization = gsuiteOrganizationId)
+    val listDirectoriesOptions = DirectorySyncApi.ListDirectoriesOptions.builder()
+      .organization("$gsuiteOrganizationId")
+      .after("someAfterId")
+      .before("someBeforeId")
+      .limit((1))
+      .build()
+
+    val (data) = workos.directorySync.listDirectories(listDirectoriesOptions)
 
     val gsuiteDirectory = data[0]
 
