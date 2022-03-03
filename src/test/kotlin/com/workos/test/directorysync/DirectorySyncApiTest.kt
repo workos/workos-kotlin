@@ -2,7 +2,6 @@ package com.workos.test.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.exceptions.UnauthorizedException
-import com.workos.common.http.PaginationParams
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
 import com.workos.directorysync.models.DirectoryType
@@ -165,7 +164,7 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200,
     )
 
-    val paginationParams = PaginationParams.builder()
+    val paginationParams = DirectorySyncApi.ListDirectoriesOptions.builder()
       .after("someAfterId")
       .before("someBeforeId")
       .limit((1))
@@ -176,6 +175,53 @@ class DirectorySyncApiTest : TestBase() {
     val gsuiteDirectory = data[0]
 
     assertEquals(gsuiteDirectory.id, gsuiteDirectoryId)
+    assertEquals(gsuiteDirectory.type, DirectoryType.GSuiteDirectory)
+    assertEquals(gsuiteDirectory.state, DirectoryState.Unlinked)
+  }
+
+  @Test
+  fun listDirectoriesWithOrganizationParamShouldReturnDirectories() {
+    val workos = createWorkOSClient()
+
+    val gsuiteOrganizationId = "org_01EHZNVPK3SFK441A1RGBFSHRT"
+
+    stubResponse(
+      url = "/directories",
+
+      responseBody = """{
+        "data": [{
+          "id": "directory_01EHZNVPK3SFK441AXXXXXSHRT",
+          "idp_id": "02grqrue4294w24",
+          "domain": "foo-corp.com",
+          "external_key": "abcdefgh",
+          "name": "Foo Corp",
+          "organization_id": "$gsuiteOrganizationId",
+          "object": "directory",
+          "state": "unlinked",
+          "type": "gsuite directory",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
+        }],
+        "list_metadata" : {
+          "after" : "someAfterId",
+          "before" : "someBeforeId"
+        }
+      }""",
+      responseStatus = 200,
+    )
+
+    val listDirectoriesOptions = DirectorySyncApi.ListDirectoriesOptions.builder()
+      .organization(gsuiteOrganizationId)
+      .after("someAfterId")
+      .before("someBeforeId")
+      .limit((1))
+      .build()
+
+    val (data) = workos.directorySync.listDirectories(listDirectoriesOptions)
+
+    val gsuiteDirectory = data[0]
+
+    assertEquals(gsuiteDirectory.organizationId, gsuiteOrganizationId)
     assertEquals(gsuiteDirectory.type, DirectoryType.GSuiteDirectory)
     assertEquals(gsuiteDirectory.state, DirectoryState.Unlinked)
   }
@@ -626,7 +672,7 @@ class DirectorySyncApiTest : TestBase() {
     )
 
     val listOptions = DirectorySyncApi.ListDirectoryUserOptions(
-      group = "$groupId",
+      group = groupId,
       after = "after",
       before = "before",
       limit = 10
