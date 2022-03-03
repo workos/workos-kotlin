@@ -17,6 +17,12 @@ See the [API Reference](https://workos.com/docs/reference/client-libraries) for 
   <version>VERSION</version>
 </dependency>
 ```
+Customers using Maven who receive a "NoSuchMethodError" error referencing Fuel may need to specify a version of Kotlin greater than 1.4.0. 
+```xml
+<properties>
+    <kotlin.version>1.4.0</kotlin.version>
+</properties>
+```
 
 ### Gradle (Groovy DSL)
 

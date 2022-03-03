@@ -211,7 +211,7 @@ class DirectorySyncApiTest : TestBase() {
     )
 
     val listDirectoriesOptions = DirectorySyncApi.ListDirectoriesOptions.builder()
-      .organization("$gsuiteOrganizationId")
+      .organization(gsuiteOrganizationId)
       .after("someAfterId")
       .before("someBeforeId")
       .limit((1))
@@ -672,7 +672,7 @@ class DirectorySyncApiTest : TestBase() {
     )
 
     val listOptions = DirectorySyncApi.ListDirectoryUserOptions(
-      group = "$groupId",
+      group = groupId,
       after = "after",
       before = "before",
       limit = 10

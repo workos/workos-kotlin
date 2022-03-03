@@ -72,7 +72,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for creating [ListDirectoryGroupOptions].
+     * Builder class for creating [ListDirectoriesOptions].
      */
     class ListDirectoriesOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoriesOptions>(ListDirectoriesOptions()) {
       /**
