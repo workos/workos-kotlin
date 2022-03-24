@@ -1,4 +1,4 @@
-package com.workos.sso
+package com.workos.mfa
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
