@@ -22,21 +22,21 @@ data class Factor
 
   @JvmField
   @JsonProperty("updated_at")
-  val id: String,
+  val updatedAt: String,
 
   @JvmField
   @JsonProperty("type")
-  val id: String,
+  val type: String,
 
   @JvmField
   @JsonProperty("environment_id")
-  val id: String,
+  val environmentId: String,
 
   @JvmField
   @JsonProperty("sms")
-  val id: Sms,
+  val sms: Sms,
 
   @JvmField
   @JsonProperty("totp")
-  val id: Totp,
+  val totp: Totp,
 )

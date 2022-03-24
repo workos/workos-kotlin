@@ -10,7 +10,7 @@ data class Challenge
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  val object: String = "authentication_challenge",
+  val obj: String = "authentication_challenge",
 
   @JvmField
   @JsonProperty("id")
@@ -18,21 +18,21 @@ data class Challenge
 
   @JvmField
   @JsonProperty("created_at")
-  val created_at: String,
+  val createdAt: String,
 
   @JvmField
   @JsonProperty("updated_at")
-  val created_at: String,
+  val updatedAt: String,
 
   @JvmField
   @JsonProperty("expires_at")
-  val created_at: String,
+  val expiresAt: String,
 
   @JvmField
   @JsonProperty("code")
-  val id: String,
+  val code: String,
 
   @JvmField
   @JsonProperty("authentication_factor_id")
-  val id: String,
+  val authenticationFactorId: String,
 )
