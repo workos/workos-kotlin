@@ -2,7 +2,6 @@ package com.workos.mfa
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
-import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
 import com.workos.mfa.models.Factor

@@ -1,4 +1,4 @@
-package com.workos.sso.models
+package com.workos.mfa.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty

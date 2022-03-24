@@ -1,4 +1,4 @@
-package com.workos.sso.models
+package com.workos.mfa.models
 
 /**
  * An enumeration of types for a [Factor].
