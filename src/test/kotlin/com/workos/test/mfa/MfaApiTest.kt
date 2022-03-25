@@ -23,7 +23,7 @@ class MfaApiTest : TestBase() {
       "{}"
     )
 
-    val response = workos.sso.deleteFactor(id)
+    val response = workos.mfa.deleteFactor(id)
 
     assertEquals(Unit, response)
   }
@@ -41,7 +41,7 @@ class MfaApiTest : TestBase() {
     )
 
     assertThrows(UnauthorizedException::class.java) {
-      workos.sso.deleteFactor(id)
+      workos.sso.mfaFactor(id)
     }
   }
 
@@ -63,7 +63,7 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val factor = workos.sso.getFactor(id)
+    val factor = workos.mfa.getFactor(id)
 
     assertEquals(id, factor.id)
     assertEquals("generic_otp", factor.type)
@@ -91,7 +91,7 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val factor = workos.sso.enrollFactor("generic_otp")
+    val factor = workos.mfa.enrollFactor("generic_otp")
 
     assertEquals("generic_otp", factor.type)
     assertEquals("auth_factor_1234", factor.id)
