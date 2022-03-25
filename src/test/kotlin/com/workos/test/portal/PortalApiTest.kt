@@ -71,7 +71,7 @@ class PortalApiTest : TestBase() {
 
   @Test
   fun createPortalLinkWithRawOptionsShouldReturnPayload() {
-    val workos = createWorkOSClient()
+    val workos = ()
 
     val portalLink = prepareGeneratePortalLinkTest(
       """{
