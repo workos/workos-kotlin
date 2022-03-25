@@ -91,9 +91,7 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.EnrollFactorOptions.builder()
-      .type("generic_otp")
-      .build()
+    val options = MfaApi.EnrollFactorOptions.type("generic_otp").build()
 
     val factor = workos.mfa.enrollFactor(options)
 
