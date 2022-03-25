@@ -11,44 +11,80 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Parameters for the [enrollFactor] method.
    */
+  @JsonInclude(Include.NON_NULL)
   class EnrollFactorOptions @JvmOverloads constructor(
-    type: String,
-    issuer: String? = null,
-    user: String? = null,
-    phoneNumber: String? = null
-  )
+    @JsonProperty("type")
+    val type: String,
+
+    @JsonProperty("issuer")
+    val issuer: String? = null,
+
+    @JsonProperty("user")
+    val user: String? = null,
+
+    @JsonProperty("phone_number")
+    val phoneNumber: String? = null,
+  ) {
     /**
-    * @suppress
-    */
-    companion object {
-      @JvmStatic
-      fun builder(): EnrollFactorOptionsParamsBuilder {
-        return EnrollFactorOptionsParamsBuilder()
+     * Builder class for [enrollFactorOptions].
+     */
+    class EnrollFactorOptionsBuilder {
+      private var type: String? = null
+
+      private var issuer: String? = null
+
+      private var user: String? = null
+
+      private var phoneNumber: String? = null
+
+      /**
+       * Sets the type.
+       */
+      fun type(value: String) = apply { type = value }
+
+      /**
+       * Sets the totp issuer.
+       */
+      fun issuer(value: String) = apply { issuer = value }
+
+      /**
+       * Sets the totp user.
+       */
+      fun user(value: String) = apply { user = value }
+
+      /**
+       * Sets the totp user.
+       */
+      fun phoneNumber(value: String) = apply { phoneNumber = value }
+
+      /**
+       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       */
+      fun build(): EnrollFactorOptions {
+        if (type == null || (type != "generic_otp" && type != "totp" && type != "sms")) {
+          throw IllegalArgumentException("The mfa type must be either generic_otp, totp, or sms")
+        }
+
+        if (type == "totp") {
+          if (issuer == null || user == null){
+            throw IllegalArgumentException("Type totp must have an issuer and user")
+          }
+        }
+
+        if (type == "sms") {
+          if (phoneNumber == null){
+            throw IllegalArgumentException("Type sms type must have a phone number")
+          }
+        }
+
+        return EnrollFactorOptions(
+          type = type!!,
+          issuer = issuer,
+          user = user,
+          phoneNumber = phoneNumber
+        )
       }
     }
-
-    /**
-     * Parameters builder for [enrollFactor] method.
-     */
-    class EnrollFactorOptionsParamsBuilder : PaginationParams.PaginationParamsBuilder<ListConnectionsOptions>(ListConnectionsOptions()) {
-      /**
-       * The type of mfa.
-       */
-      fun type(value: ConnectionType) = apply { this.params["type"] = value.toString() }
-      /**
-       * Totp issuer value.
-       */
-      fun issuer(value: String) = apply { this.params["issuer"] = value }
-      /**
-       * Totp user value.
-       */
-      fun user(value: String) = apply { this.params["user"] = value }
-      /**
-       * Sms phone number.
-       */
-      fun phoneNumber(value: String) = apply { this.params["phoneNumber"] = value }
-    }
-  }
 
   /**
    * Enrolls a Factor.
