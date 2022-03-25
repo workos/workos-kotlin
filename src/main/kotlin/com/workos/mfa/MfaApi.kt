@@ -21,20 +21,7 @@ class MfaApi(private val workos: WorkOS) {
     issuer: String? = null,
     user: String? = null,
     phoneNumber: String? = null
-  ) {
-    init {
-      if (type == "generic_otp") set("type", type)
-      if (type == "totp"){
-        set("type", type)
-        set("issuer", issuer)
-        set("user", user)
-        }
-      if (type == "sms"){
-        set("type", type)
-        set("phoneNumber", phoneNumber)
-        }
-    }
-  }
+  )
 
   /**
    * Enrolls a Factor.
@@ -54,11 +41,7 @@ class MfaApi(private val workos: WorkOS) {
   class ChallengeFactorOptions @JvmOverloads constructor(
     authenticationFactorId: String,
     smsTemplate: String? = null
-  ) {
-    init {
-      if (smsTemplate != null) set("smsTemplate", smsTemplate)
-    }
-  }
+  )
 
   /**
    * Challenges a Factor.
