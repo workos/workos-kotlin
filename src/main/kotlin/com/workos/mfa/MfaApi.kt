@@ -126,7 +126,7 @@ class MfaApi(private val workos: WorkOS) {
     /**
     * Builder class for [ChalllengeFactorOptions].
     */
-    class EnrollFactorOptionsBuilder {
+    class ChallengeFactorOptionsBuilder {
       private var authenticationFactorId: String? = null
 
       private var smsTemplate: String? = null
@@ -193,7 +193,7 @@ class MfaApi(private val workos: WorkOS) {
     /**
     * Builder class for [ChalllengeFactorOptions].
     */
-    class EnrollFactorOptionsBuilder {
+    class VerifyFactorOptionsBuilder {
       private var authenticationChallengeId: String? = null
 
       private var code: String? = null
@@ -211,7 +211,7 @@ class MfaApi(private val workos: WorkOS) {
       /**
         * Creates a [ChallengeFactorOptions] with the given builder parameters.
         */
-      fun build(): ChallengeFactorOptions {
+      fun build(): VerifyFactorOptions {
         if (authenticationChallengeId == null) {
           throw IllegalArgumentException("Must provide a challenge factor ID")
         }
@@ -220,7 +220,7 @@ class MfaApi(private val workos: WorkOS) {
           throw IllegalArgumentException("Must provide an mfa code")
         }
 
-        return ChallengeFactorOptions(
+        return VerifyFactorOptions(
           authenticationChallengeId = authenticationChallengeId!!,
           code = code!!
         )
