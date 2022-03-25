@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class WorkOSTest {
+class MfaApiTest : TestBase() {
   @Test
   fun deleteFactorShouldNotError() {
     val workos = createWorkOSClient()
