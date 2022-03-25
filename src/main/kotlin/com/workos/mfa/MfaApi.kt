@@ -1,5 +1,8 @@
 package com.workos.mfa
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
@@ -11,12 +14,91 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Parameters for the [enrollFactor] method.
    */
+  @JsonInclude(Include.NON_NULL)
   class EnrollFactorOptions @JvmOverloads constructor(
-    type: String,
-    issuer: String? = null,
-    user: String? = null,
-    phoneNumber: String? = null
-  )
+    @JsonProperty("type")
+    val type: String,
+
+    @JsonProperty("issuer")
+    val issuer: String? = null,
+
+    @JsonProperty("user")
+    val user: String? = null,
+
+    @JsonProperty("phone_number")
+    val phoneNumber: String? = null,
+  ) {
+    /**
+    * Builder class for [enrollFactorOptions].
+    */
+    class EnrollFactorOptionsBuilder {
+      private var type: String? = null
+
+      private var issuer: String? = null
+
+      private var user: String? = null
+
+      private var phoneNumber: String? = null
+
+      /**
+        * Sets the type.
+        */
+      fun type(value: String) = apply { type = value }
+
+      /**
+        * Sets the totp issuer.
+        */
+      fun issuer(value: String) = apply { issuer = value }
+
+      /**
+        * Sets the totp user.
+        */
+      fun user(value: String) = apply { user = value }
+
+      /**
+        * Sets the totp user.
+        */
+      fun phoneNumber(value: String) = apply { phoneNumber = value }
+
+      /**
+        * Creates a [EnrollFactorOptions] with the given builder parameters.
+        */
+      fun build(): EnrollFactorOptions {
+        if (type == null || (type != "generic_otp" && type != "totp" && type != "sms")) {
+          throw IllegalArgumentException("The mfa type must be either generic_otp, totp, or sms")
+        }
+
+        if (type == "totp") {
+          if (issuer == null || user == null){
+            throw IllegalArgumentException("Type totp must have an issuer and user")
+          }
+        }
+
+        if (type == "sms") {
+          if (phoneNumber == null){
+            throw IllegalArgumentException("Type sms type must have a phone number")
+          }
+        }
+
+        return EnrollFactorOptions(
+          type = type!!,
+          issuer = issuer,
+          user = user,
+          phoneNumber = phoneNumber
+        )
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): EnrollFactorOptionsBuilder {
+        return EnrollFactorOptionsBuilder()
+      }
+    }
+  }
 
   /**
    * Enrolls a Factor.
@@ -33,10 +115,57 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Parameters for the [challengeFactor] method.
    */
+  @JsonInclude(Include.NON_NULL)
   class ChallengeFactorOptions @JvmOverloads constructor(
-    authenticationFactorId: String,
-    smsTemplate: String? = null
-  )
+    @JsonProperty("authentication_factor_id")
+    val authenticationFactorId: String,
+
+    @JsonProperty("sms_template")
+    val smsTemplate: String? = null,
+  ) {
+    /**
+    * Builder class for [ChalllengeFactorOptions].
+    */
+    class ChallengeFactorOptionsBuilder {
+      private var authenticationFactorId: String? = null
+
+      private var smsTemplate: String? = null
+
+      /**
+        * Sets the auth factor ID.
+        */
+      fun authenticationFactorId(value: String) = apply { authenticationFactorId = value }
+
+      /**
+        * Sets sms template.
+        */
+      fun smsTemplate(value: String) = apply { smsTemplate = value }
+
+      /**
+        * Creates a [ChallengeFactorOptions] with the given builder parameters.
+        */
+      fun build(): ChallengeFactorOptions {
+        if (authenticationFactorId == null) {
+          throw IllegalArgumentException("Must provide an authentication factor ID")
+        }
+
+        return ChallengeFactorOptions(
+          authenticationFactorId = authenticationFactorId!!,
+          smsTemplate = smsTemplate,
+        )
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): ChallengeFactorOptionsBuilder {
+        return ChallengeFactorOptionsBuilder()
+      }
+    }
+  }
 
   /**
    * Challenges a Factor.
@@ -53,10 +182,61 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Parameters for the [verifyFactor] method.
    */
+  @JsonInclude(Include.NON_NULL)
   class VerifyFactorOptions @JvmOverloads constructor(
-    challengeId: String,
-    code: String
-  )
+    @JsonProperty("authentication_challenge_id")
+    val authenticationChallengeId: String,
+
+    @JsonProperty("code")
+    val code: String,
+  ) {
+    /**
+    * Builder class for [ChalllengeFactorOptions].
+    */
+    class VerifyFactorOptionsBuilder {
+      private var authenticationChallengeId: String? = null
+
+      private var code: String? = null
+
+      /**
+        * Sets the auth factor ID.
+        */
+      fun authenticationChallengeId(value: String) = apply { authenticationChallengeId = value }
+
+      /**
+        * Sets sms template.
+        */
+      fun code(value: String) = apply { code = value }
+
+      /**
+        * Creates a [ChallengeFactorOptions] with the given builder parameters.
+        */
+      fun build(): VerifyFactorOptions {
+        if (authenticationChallengeId == null) {
+          throw IllegalArgumentException("Must provide a challenge factor ID")
+        }
+
+        if (code == null) {
+          throw IllegalArgumentException("Must provide an mfa code")
+        }
+
+        return VerifyFactorOptions(
+          authenticationChallengeId = authenticationChallengeId!!,
+          code = code!!
+        )
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): VerifyFactorOptionsBuilder {
+        return VerifyFactorOptionsBuilder()
+      }
+    }
+  }
 
   /**
    * Verifies a Factor.
