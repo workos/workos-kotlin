@@ -41,7 +41,7 @@ class MfaApiTest : TestBase() {
     )
 
     assertThrows(UnauthorizedException::class.java) {
-      workos.sso.mfaFactor(id)
+      workos.mfa.deleteFactor(id)
     }
   }
 
