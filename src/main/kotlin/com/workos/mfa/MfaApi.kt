@@ -17,6 +17,38 @@ class MfaApi(private val workos: WorkOS) {
     user: String? = null,
     phoneNumber: String? = null
   )
+    /**
+    * @suppress
+    */
+    companion object {
+      @JvmStatic
+      fun builder(): EnrollFactorOptionsParamsBuilder {
+        return EnrollFactorOptionsParamsBuilder()
+      }
+    }
+
+    /**
+     * Parameters builder for [enrollFactor] method.
+     */
+    class EnrollFactorOptionsParamsBuilder : PaginationParams.PaginationParamsBuilder<ListConnectionsOptions>(ListConnectionsOptions()) {
+      /**
+       * The type of mfa.
+       */
+      fun type(value: ConnectionType) = apply { this.params["type"] = value.toString() }
+      /**
+       * Totp issuer value.
+       */
+      fun issuer(value: String) = apply { this.params["issuer"] = value }
+      /**
+       * Totp user value.
+       */
+      fun user(value: String) = apply { this.params["user"] = value }
+      /**
+       * Sms phone number.
+       */
+      fun phoneNumber(value: String) = apply { this.params["phoneNumber"] = value }
+    }
+  }
 
   /**
    * Enrolls a Factor.
