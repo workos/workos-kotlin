@@ -1,5 +1,7 @@
 package com.workos.mfa
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
@@ -26,8 +28,8 @@ class MfaApi(private val workos: WorkOS) {
     val phoneNumber: String? = null,
   ) {
     /**
-     * Builder class for [enrollFactorOptions].
-     */
+    * Builder class for [enrollFactorOptions].
+    */
     class EnrollFactorOptionsBuilder {
       private var type: String? = null
 
@@ -38,28 +40,28 @@ class MfaApi(private val workos: WorkOS) {
       private var phoneNumber: String? = null
 
       /**
-       * Sets the type.
-       */
+        * Sets the type.
+        */
       fun type(value: String) = apply { type = value }
 
       /**
-       * Sets the totp issuer.
-       */
+        * Sets the totp issuer.
+        */
       fun issuer(value: String) = apply { issuer = value }
 
       /**
-       * Sets the totp user.
-       */
+        * Sets the totp user.
+        */
       fun user(value: String) = apply { user = value }
 
       /**
-       * Sets the totp user.
-       */
+        * Sets the totp user.
+        */
       fun phoneNumber(value: String) = apply { phoneNumber = value }
 
       /**
-       * Creates a [EnrollFactorOptions] with the given builder parameters.
-       */
+        * Creates a [EnrollFactorOptions] with the given builder parameters.
+        */
       fun build(): EnrollFactorOptions {
         if (type == null || (type != "generic_otp" && type != "totp" && type != "sms")) {
           throw IllegalArgumentException("The mfa type must be either generic_otp, totp, or sms")
@@ -85,6 +87,17 @@ class MfaApi(private val workos: WorkOS) {
         )
       }
     }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): EnrollFactorOptionsBuilder {
+        return EnrollFactorOptionsBuilder()
+      }
+    }
+  }
 
   /**
    * Enrolls a Factor.
