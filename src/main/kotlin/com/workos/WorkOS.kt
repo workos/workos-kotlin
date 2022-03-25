@@ -79,12 +79,19 @@ class WorkOS(
    */
   @JvmField
   val sso = SsoApi(this)
+  
+  /**
+   * Module for interacting with the Single Sign On API.
+   */
+  @JvmField
+  val mfa = MfaApi(this)
 
   /**
    * Module for interacting with the Webhooks API.
    */
   @JvmField
   val webhooks = WebhooksApi()
+
 
   /**
    * The base URL for making API requests to.
