@@ -13,11 +13,11 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.mfa.MfaApi
 import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
-import com.workos.mfa.MfaApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
@@ -79,7 +79,7 @@ class WorkOS(
    */
   @JvmField
   val sso = SsoApi(this)
-  
+
   /**
    * Module for interacting with the Single Sign On API.
    */
@@ -91,7 +91,6 @@ class WorkOS(
    */
   @JvmField
   val webhooks = WebhooksApi()
-
 
   /**
    * The base URL for making API requests to.
@@ -237,7 +236,7 @@ class WorkOS(
       }
       422 -> {
         val unprocessableEntityException = mapper.readValue(payload, UnprocessableEntityExceptionResponse::class.java)
-        throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.errors, requestId)
+        throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.code, unprocessableEntityException.errors, requestId)
       }
       else -> {
         val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)

@@ -29,8 +29,8 @@ class MfaApi(private val workos: WorkOS) {
     val phoneNumber: String? = null,
   ) {
     /**
-    * Builder class for [enrollFactorOptions].
-    */
+     * Builder class for [enrollFactorOptions].
+     */
     class EnrollFactorOptionsBuilder {
       private var type: String? = null
 
@@ -41,41 +41,41 @@ class MfaApi(private val workos: WorkOS) {
       private var phoneNumber: String? = null
 
       /**
-        * Sets the type.
-        */
+       * Sets the type.
+       */
       fun type(value: String) = apply { type = value }
 
       /**
-        * Sets the totp issuer.
-        */
+       * Sets the totp issuer.
+       */
       fun issuer(value: String) = apply { issuer = value }
 
       /**
-        * Sets the totp user.
-        */
+       * Sets the totp user.
+       */
       fun user(value: String) = apply { user = value }
 
       /**
-        * Sets the totp user.
-        */
+       * Sets the totp user.
+       */
       fun phoneNumber(value: String) = apply { phoneNumber = value }
 
       /**
-        * Creates a [EnrollFactorOptions] with the given builder parameters.
-        */
+       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       */
       fun build(): EnrollFactorOptions {
         if (type == null || (type != "generic_otp" && type != "totp" && type != "sms")) {
           throw IllegalArgumentException("The mfa type must be either generic_otp, totp, or sms")
         }
 
         if (type == "totp") {
-          if (issuer == null || user == null){
+          if (issuer == null || user == null) {
             throw IllegalArgumentException("Type totp must have an issuer and user")
           }
         }
 
         if (type == "sms") {
-          if (phoneNumber == null){
+          if (phoneNumber == null) {
             throw IllegalArgumentException("Type sms type must have a phone number")
           }
         }
@@ -123,26 +123,26 @@ class MfaApi(private val workos: WorkOS) {
     val smsTemplate: String? = null,
   ) {
     /**
-    * Builder class for [ChalllengeFactorOptions].
-    */
+     * Builder class for [ChalllengeFactorOptions].
+     */
     class ChallengeFactorOptionsBuilder {
       private var authenticationFactorId: String? = null
 
       private var smsTemplate: String? = null
 
       /**
-        * Sets the auth factor ID.
-        */
+       * Sets the auth factor ID.
+       */
       fun authenticationFactorId(value: String) = apply { authenticationFactorId = value }
 
       /**
-        * Sets sms template.
-        */
+       * Sets sms template.
+       */
       fun smsTemplate(value: String) = apply { smsTemplate = value }
 
       /**
-        * Creates a [ChallengeFactorOptions] with the given builder parameters.
-        */
+       * Creates a [ChallengeFactorOptions] with the given builder parameters.
+       */
       fun build(): ChallengeFactorOptions {
         if (authenticationFactorId == null) {
           throw IllegalArgumentException("Must provide an authentication factor ID")
@@ -189,26 +189,26 @@ class MfaApi(private val workos: WorkOS) {
     val code: String,
   ) {
     /**
-    * Builder class for [ChalllengeFactorOptions].
-    */
+     * Builder class for [ChalllengeFactorOptions].
+     */
     class VerifyFactorOptionsBuilder {
       private var authenticationChallengeId: String? = null
 
       private var code: String? = null
 
       /**
-        * Sets the auth factor ID.
-        */
+       * Sets the auth factor ID.
+       */
       fun authenticationChallengeId(value: String) = apply { authenticationChallengeId = value }
 
       /**
-        * Sets sms template.
-        */
+       * Sets sms template.
+       */
       fun code(value: String) = apply { code = value }
 
       /**
-        * Creates a [ChallengeFactorOptions] with the given builder parameters.
-        */
+       * Creates a [ChallengeFactorOptions] with the given builder parameters.
+       */
       fun build(): VerifyFactorOptions {
         if (authenticationChallengeId == null) {
           throw IllegalArgumentException("Must provide a challenge factor ID")
@@ -239,7 +239,7 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Verifies a Factor.
    */
-  fun challengeFactor(verifyFactorOptions: VerifyFactorOptions): VerifyFactorResponse {
+  fun verifyFactor(verifyFactorOptions: VerifyFactorOptions): VerifyFactorResponse {
     val config = RequestConfig.builder()
       .data(verifyFactorOptions)
       .build()
