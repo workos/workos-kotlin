@@ -1,10 +1,15 @@
-package com.workos.test
+package com.workos.test.mfa
 
-import com.workos.WorkOS
-import com.workos.common.exceptions.NotFoundException
+import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.workos.common.exceptions.UnauthorizedException
+import com.workos.mfa.MfaApi
+import com.workos.mfa.models.Factor
+import com.workos.mfa.models.Challenge
+import com.workos.mfa.models.VerifyFactorResponse
+import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
-import kotlin.test.assertNotNull
+import kotlin.test.assertEquals
 
 class MfaApiTest : TestBase() {
   @Test
