@@ -17,6 +17,7 @@ import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
+import com.workos.mfa.MfaApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
