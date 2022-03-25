@@ -91,7 +91,10 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val factor = workos.mfa.enrollFactor("generic_otp")
+    val options = MfaApi.enrollFactorOptions.builder()
+      .type("generic_otp")
+
+    val factor = workos.mfa.enrollFactor(options)
 
     assertEquals("generic_otp", factor.type)
     assertEquals("auth_factor_1234", factor.id)
