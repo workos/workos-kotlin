@@ -1,15 +1,10 @@
 package com.workos.mfa
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
 import com.workos.mfa.models.Factor
-import com.workos.mfa.models.MfaType
-import com.workos.mfa.models.Sms
-import com.workos.mfa.models.Totp
 import com.workos.mfa.models.VerifyFactorResponse
-import org.apache.http.client.utils.URIBuilder
 
 class MfaApi(private val workos: WorkOS) {
 
@@ -88,5 +83,4 @@ class MfaApi(private val workos: WorkOS) {
   fun deleteFactor(id: String) {
     workos.delete("/auth/factors/$id")
   }
-
 }

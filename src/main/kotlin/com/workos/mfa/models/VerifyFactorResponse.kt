@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents a [VerifyFactorResponse] in both successfull and error responses.
  */
 
-interface VerifyFactorResponse{}
+interface VerifyFactorResponse
 
 data class VerifyFactorResponseSuccess
 @JsonCreator constructor(
