@@ -10,7 +10,7 @@ data class Factor
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  val object: String = "authentication_factor",
+  val obj: String = "authentication_factor",
 
   @JvmField
   @JsonProperty("id")

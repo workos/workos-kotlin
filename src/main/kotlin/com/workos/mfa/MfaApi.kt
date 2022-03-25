@@ -78,15 +78,14 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Gets a Factor by id.
    */
-  fun deleteFactor(id: String) {
-    workos.delete("/auth/factors/$id")
+  fun getFactor(id: String): Factor {
+    return workos.get("/connections/$id", Factor::class.java)
   }
-
 
   /**
    * Deletes a Factor by id.
    */
-  fun getFactor(id: String) {
-    workos.get("/auth/factors/$id")
+  fun deleteFactor(id: String): Factor {
+    return workos.delete("/connections/$id", Factor::class.java)
   }
 }
