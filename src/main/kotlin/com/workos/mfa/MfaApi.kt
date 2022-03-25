@@ -2,6 +2,7 @@ package com.workos.mfa
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
