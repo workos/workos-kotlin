@@ -34,9 +34,9 @@ data class Factor
 
   @JvmField
   @JsonProperty("sms")
-  val sms: Sms,
+  val sms: Sms?,
 
   @JvmField
   @JsonProperty("totp")
-  val totp: Totp,
+  val totp: Totp?,
 )

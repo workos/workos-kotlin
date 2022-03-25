@@ -12,10 +12,10 @@ class MfaApiTest : TestBase() {
   fun deleteFactorShouldNotError() {
     val workos = createWorkOSClient()
 
-    val id = "auth_factor_1234"
+    val id = "auth_factor_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
 
     stubResponse(
-      "/auth/factorss/$id",
+      "/auth/factors/$id",
       "{}"
     )
 
@@ -28,7 +28,7 @@ class MfaApiTest : TestBase() {
   fun deleteFactorShouldThrowError() {
     val workos = createWorkOSClient()
 
-    val id = "auth_factor_1234"
+    val id = "auth_factor_01FJYCNTBC2ZTKT4CS1BX0WJ2B"
 
     stubResponse(
       "/auth/factors/$id",
@@ -70,14 +70,8 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/sso/token",
-      requestBody = """{
-        "client_id": "clientId",
-        "client_secret": "apiKey",
-        "code": "code",
-        "grant_type": "authorization_code"
-      }""",
-      responseBody = """{
+      "/auth/factors/enroll",
+      """{
         "object": "authentication_factor",
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",

@@ -103,7 +103,6 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Enrolls a Factor.
    */
-  @JvmOverloads
   fun enrollFactor(enrollFactorOptions: EnrollFactorOptions): Factor {
     val config = RequestConfig.builder()
       .data(enrollFactorOptions)
@@ -170,7 +169,6 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Challenges a Factor.
    */
-  @JvmOverloads
   fun challengeFactor(challengeFactorOptions: ChallengeFactorOptions): Challenge {
     val config = RequestConfig.builder()
       .data(challengeFactorOptions)
@@ -183,7 +181,7 @@ class MfaApi(private val workos: WorkOS) {
    * Parameters for the [verifyFactor] method.
    */
   @JsonInclude(Include.NON_NULL)
-  class VerifyFactorOptions @JvmOverloads constructor(
+  class VerifyFactorOptions constructor(
     @JsonProperty("authentication_challenge_id")
     val authenticationChallengeId: String,
 
@@ -241,7 +239,6 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Verifies a Factor.
    */
-  @JvmOverloads
   fun challengeFactor(verifyFactorOptions: VerifyFactorOptions): VerifyFactorResponse {
     val config = RequestConfig.builder()
       .data(verifyFactorOptions)
