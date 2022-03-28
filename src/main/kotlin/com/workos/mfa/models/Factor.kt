@@ -18,7 +18,7 @@ data class Factor
 
   @JvmField
   @JsonProperty("created_at")
-  val created_at: String,
+  val createdAt: String,
 
   @JvmField
   @JsonProperty("updated_at")

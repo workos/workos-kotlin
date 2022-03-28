@@ -10,7 +10,7 @@ data class Totp
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("qr_code")
-  val qr_code: String,
+  val qrCode: String,
 
   @JvmField
   @JsonProperty("secret")

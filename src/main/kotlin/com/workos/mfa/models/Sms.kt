@@ -10,5 +10,5 @@ data class Sms
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("phone_number")
-  val phone_number: String
+  val phoneNumber: String
 )
