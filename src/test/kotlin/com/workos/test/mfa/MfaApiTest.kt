@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class MfaApiTest : TestBase() {
   @Test
@@ -190,7 +191,6 @@ class MfaApiTest : TestBase() {
       "/auth/factors/challenge",
       """{
           "authentication_factor_id": "auth_factor_1234",
-          "code": "12345",
           "created_at": "2022-03-15T20:39:19.892Z",
           "expires_at": "2022-03-15T21:39:19.892Z",
           "id": "auth_challenge_1234",
@@ -206,8 +206,8 @@ class MfaApiTest : TestBase() {
 
     val challengeFactor = workos.mfa.challengeFactor(options)
 
-    assertEquals("12345", challengeFactor.code)
     assertEquals("auth_factor_1234", challengeFactor.authenticationFactorId)
+    assertNull(challengeFactor.code)
   }
 
   @Test
