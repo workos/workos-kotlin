@@ -30,7 +30,7 @@ data class Challenge
 
   @JvmField
   @JsonProperty("code")
-  val code: String,
+  val code: String?,
 
   @JvmField
   @JsonProperty("authentication_factor_id")
