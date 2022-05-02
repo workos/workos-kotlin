@@ -26,7 +26,7 @@ data class Challenge
 
   @JvmField
   @JsonProperty("expires_at")
-  val expiresAt: String,
+  val expiresAt: String?,
 
   @JvmField
   @JsonProperty("code")
