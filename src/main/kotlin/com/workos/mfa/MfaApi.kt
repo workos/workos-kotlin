@@ -19,10 +19,10 @@ class MfaApi(private val workos: WorkOS) {
     @JsonProperty("type")
     val type: String,
 
-    @JsonProperty("issuer")
+    @JsonProperty("totp_issuer")
     val issuer: String? = null,
 
-    @JsonProperty("user")
+    @JsonProperty("totp_user")
     val user: String? = null,
 
     @JsonProperty("phone_number")

@@ -73,14 +73,17 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/enroll",
-      """{
+      url = "/auth/factors/enroll",
+      responseBody = """{
         "object": "authentication_factor",
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",
         "updated_at": "2022-03-15T20:39:19.892Z",
         "type": "generic_otp",
         "environment_id": "environment_1234"
+      }""",
+      requestBody = """{
+        "type": "generic_otp"
       }"""
     )
 
@@ -97,8 +100,8 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/enroll",
-      """{
+      url = "/auth/factors/enroll",
+      responseBody = """{
         "object": "authentication_factor",
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",
@@ -109,6 +112,11 @@ class MfaApiTest : TestBase() {
           "qr_code": "qr-code-test",
           "secret": "secret-test"
         }
+      }""",
+      requestBody = """{
+        "type": "totp",
+        "totp_issuer": "WorkOS",
+        "totp_user": "some_user"
       }"""
     )
 
@@ -130,8 +138,8 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/enroll",
-      """{
+      url = "/auth/factors/enroll",
+      responseBody = """{
         "object": "authentication_factor",
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",
@@ -141,6 +149,10 @@ class MfaApiTest : TestBase() {
         "sms": {
           "phone_number": "+15555555555"
         }
+      }""",
+      requestBody = """{
+        "type": "sms",
+        "phone_number": "+15555555555"
       }"""
     )
 
