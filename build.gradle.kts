@@ -36,7 +36,7 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
 
-  implementation("org.apache.httpcomponents:httpclient:4.2.3")
+  implementation("org.apache.httpcomponents:httpclient:4.15.13")
 
   implementation("com.github.kittinunf.fuel:fuel:2.3.1")
 
