@@ -11,7 +11,7 @@ open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
   limit: Int? = null,
-  orer: String? = null,
+  order: String? = null,
 ) : HashMap<String, String>() {
 
   init {
