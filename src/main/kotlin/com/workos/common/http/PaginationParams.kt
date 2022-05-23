@@ -11,6 +11,7 @@ open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
   limit: Int? = null,
+  orer: String? = null,
 ) : HashMap<String, String>() {
 
   init {
@@ -24,6 +25,10 @@ open class PaginationParams @JvmOverloads constructor(
 
     if (limit != null) {
       set("limit", limit.toString())
+    }
+
+    if (order != null) {
+      set("order", order)
     }
   }
 
@@ -45,6 +50,7 @@ open class PaginationParams @JvmOverloads constructor(
      * Sets the `after` query parameter.
      */
     fun after(after: String) = apply { this.params["after"] = after }
+
     /**
      * Sets the `before` query parameter.
      */
@@ -54,6 +60,11 @@ open class PaginationParams @JvmOverloads constructor(
      * Sets the `limit` query parameter.
      */
     fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
+
+    /**
+     * Sets the `before` query parameter.
+     */
+    fun order(order: String) = apply { this.params["order"] = order }
 
     /**
      * Creates an instance of T with the given builder parameters.
