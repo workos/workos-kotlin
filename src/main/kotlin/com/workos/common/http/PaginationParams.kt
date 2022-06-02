@@ -8,6 +8,7 @@ import com.workos.common.models.Order
  * @param after A cursor to use for pagination. `after` is a resource object ID that defines your place in the paginated list of resource objects. `after` will return all resources after the cursor's value.
  * @param before A cursor to use for pagination. `before` is a resource object ID that defines your place in the paginated list of resource objects. `before` will return all resources before the cursor's value.
  * @param limit Upper limit on the number of resources to return, between 1 and 100. The default value is 10.
+ * @param order The order to paginate records
  */
 open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
@@ -64,9 +65,9 @@ open class PaginationParams @JvmOverloads constructor(
     fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
 
     /**
-     * Sets the `before` query parameter.
+     * Sets the `order` query parameter.
      */
-    fun order(order: String) = apply { this.params["order"] = order }
+    fun order(order: Order) = apply { this.params["order"] = order }
 
     /**
      * Creates an instance of T with the given builder parameters.
