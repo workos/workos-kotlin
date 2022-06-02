@@ -40,7 +40,7 @@ class PaginationParamsTest {
       .after("after")
       .before("before")
       .limit(10)
-      .order("desc")
+      .order(Order.Desc)
       .build()
 
     assertTrue(params is MutableMap<String, String>)
@@ -52,7 +52,7 @@ class PaginationParamsTest {
       .after("after")
       .before("before")
       .limit(10)
-      .order("desc")
+      .order(Order.Desc)
       .build()
 
     assertEquals(params["after"], "after")
