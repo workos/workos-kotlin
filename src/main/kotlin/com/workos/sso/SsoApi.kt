@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
 import com.workos.sso.models.Connection
 import com.workos.sso.models.ConnectionList
 import com.workos.sso.models.ConnectionType
-import com.workos.common.models.Order
 import com.workos.sso.models.Profile
 import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
