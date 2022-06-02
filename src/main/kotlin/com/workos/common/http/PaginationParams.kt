@@ -31,7 +31,7 @@ open class PaginationParams @JvmOverloads constructor(
     }
 
     if (order != null) {
-      set("order", order)
+      set("order", order.toString())
     }
   }
 

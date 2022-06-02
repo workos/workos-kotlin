@@ -197,7 +197,7 @@ class SsoApi(private val workos: WorkOS) {
     before: String? = null,
     limit: Int? = null,
     order: Order? = null,
-  ) : PaginationParams(after, before, , order) {
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (connectionType != null) set("connection_type", connectionType.toString())
       if (domain != null) set("domain", domain)
