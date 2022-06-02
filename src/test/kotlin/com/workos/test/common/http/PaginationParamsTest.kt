@@ -53,12 +53,11 @@ class PaginationParamsTest {
       .after("after")
       .before("before")
       .limit(10)
-      .order(Order.Desc).toString()
+      .order(Order.Desc)
       .build()
 
     assertEquals(params["after"], "after")
     assertEquals(params["before"], "before")
     assertEquals(params["limit"], "10")
-    assertEquals(params["order"], "desc")
   }
 }
