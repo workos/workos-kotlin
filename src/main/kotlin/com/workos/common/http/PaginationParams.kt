@@ -1,5 +1,7 @@
 package com.workos.common.http
 
+import com.workos.common.models.Order
+
 /**
  * Parameters for performing paginated requests on lists of resources.
  *
@@ -11,7 +13,7 @@ open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
   limit: Int? = null,
-  order: String? = null,
+  order: Order? = null,
 ) : HashMap<String, String>() {
 
   init {
