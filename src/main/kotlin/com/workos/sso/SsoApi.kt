@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
 import com.workos.sso.models.Connection
 import com.workos.sso.models.ConnectionList
 import com.workos.sso.models.ConnectionType
@@ -194,8 +195,9 @@ class SsoApi(private val workos: WorkOS) {
     organizationId: String? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
-  ) : PaginationParams(after, before, limit) {
+    limit: Int? = null,
+    order: Order? = null,
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (connectionType != null) set("connection_type", connectionType.toString())
       if (domain != null) set("domain", domain)

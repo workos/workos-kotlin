@@ -3,6 +3,7 @@ package com.workos.directorysync
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
 import com.workos.directorysync.models.* // ktlint-disable no-wildcard-imports
 import java.lang.IllegalArgumentException
 
@@ -50,13 +51,15 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * @param after @see [com.workos.common.http.PaginationParams].
    * @param before @see [com.workos.common.http.PaginationParams]
    * @param limit @see [com.workos.common.http.PaginationParams]
+   * @param order @see [com.workos.common.http.PaginationParams]
    */
   class ListDirectoriesOptions @JvmOverloads constructor(
     organization: String? = null,
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-  ) : PaginationParams(after, before, limit) {
+    order: Order? = null,
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (organization != null) set("organization_id", organization)
     }
@@ -167,7 +170,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-  ) : PaginationParams(after, before, limit) {
+    order: Order? = null,
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (directory != null) set("directory", directory)
       if (user != null) set("user", user)
@@ -213,7 +217,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-  ) : PaginationParams(after, before, limit) {
+    order: Order? = null,
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (directory != null) set("directory", directory)
       if (group != null) set("group", group)

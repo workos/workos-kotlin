@@ -1,16 +1,20 @@
 package com.workos.common.http
 
+import com.workos.common.models.Order
+
 /**
  * Parameters for performing paginated requests on lists of resources.
  *
  * @param after A cursor to use for pagination. `after` is a resource object ID that defines your place in the paginated list of resource objects. `after` will return all resources after the cursor's value.
  * @param before A cursor to use for pagination. `before` is a resource object ID that defines your place in the paginated list of resource objects. `before` will return all resources before the cursor's value.
  * @param limit Upper limit on the number of resources to return, between 1 and 100. The default value is 10.
+ * @param order The order to paginate records
  */
 open class PaginationParams @JvmOverloads constructor(
   after: String? = null,
   before: String? = null,
   limit: Int? = null,
+  order: Order? = null,
 ) : HashMap<String, String>() {
 
   init {
@@ -24,6 +28,10 @@ open class PaginationParams @JvmOverloads constructor(
 
     if (limit != null) {
       set("limit", limit.toString())
+    }
+
+    if (order != null) {
+      set("order", order.toString())
     }
   }
 
@@ -45,6 +53,7 @@ open class PaginationParams @JvmOverloads constructor(
      * Sets the `after` query parameter.
      */
     fun after(after: String) = apply { this.params["after"] = after }
+
     /**
      * Sets the `before` query parameter.
      */
@@ -54,6 +63,11 @@ open class PaginationParams @JvmOverloads constructor(
      * Sets the `limit` query parameter.
      */
     fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
+
+    /**
+     * Sets the `order` query parameter.
+     */
+    fun order(order: Order) = apply { this.params["order"] = order.toString() }
 
     /**
      * Creates an instance of T with the given builder parameters.

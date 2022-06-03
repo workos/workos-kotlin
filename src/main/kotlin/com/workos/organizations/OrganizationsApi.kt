@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 
@@ -107,13 +108,15 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param after @see [com.workos.common.http.PaginationParams]
    * @param before @see [com.workos.common.http.PaginationParams]
    * @param limit @see [com.workos.common.http.PaginationParams]
+   * @param order @see [com.workos.common.http.PaginationParams]
    */
   class ListOrganizationsOptions @JvmOverloads constructor(
     domains: List<String>? = null,
     after: String? = null,
     before: String? = null,
-    limit: Int? = null
-  ) : PaginationParams(after, before, limit) {
+    limit: Int? = null,
+    order: Order? = null,
+  ) : PaginationParams(after, before, limit, order) {
     init {
       if (domains != null) set("domains", domains.joinToString(","))
     }
