@@ -29,10 +29,6 @@ data class Factor
   val type: String,
 
   @JvmField
-  @JsonProperty("environment_id")
-  val environmentId: String,
-
-  @JvmField
   @JsonProperty("sms")
   val sms: Sms?,
 
