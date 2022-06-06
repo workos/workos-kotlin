@@ -178,6 +178,7 @@ class MfaApiTest : TestBase() {
           "authentication_factor_id": "auth_factor_1234",
           "code": "12345",
           "created_at": "2022-03-15T20:39:19.892Z",
+          "expires_at": "2022-03-15T21:39:19.892Z",
           "id": "auth_challenge_1234",
           "object": "authentication_challenge",
           "updated_at": "2022-03-15T20:39:19.892Z"
