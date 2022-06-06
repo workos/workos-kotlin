@@ -57,8 +57,7 @@ class MfaApiTest : TestBase() {
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",
         "updated_at": "2022-03-15T20:39:19.892Z",
-        "type": "generic_otp",
-        "environment_id": "environment_1234"
+        "type": "generic_otp"
       }"""
     )
 
@@ -79,8 +78,7 @@ class MfaApiTest : TestBase() {
         "id": "auth_factor_1234",
         "created_at": "2022-03-15T20:39:19.892Z",
         "updated_at": "2022-03-15T20:39:19.892Z",
-        "type": "generic_otp",
-        "environment_id": "environment_1234"
+        "type": "generic_otp"
       }""",
       requestBody = """{
         "type": "generic_otp"
@@ -107,7 +105,6 @@ class MfaApiTest : TestBase() {
         "created_at": "2022-03-15T20:39:19.892Z",
         "updated_at": "2022-03-15T20:39:19.892Z",
         "type": "totp",
-        "environment_id": "environment_1234",
         "totp": {
           "qr_code": "qr-code-test",
           "secret": "secret-test"
@@ -145,7 +142,6 @@ class MfaApiTest : TestBase() {
         "created_at": "2022-03-15T20:39:19.892Z",
         "updated_at": "2022-03-15T20:39:19.892Z",
         "type": "sms",
-        "environment_id": "environment_1234",
         "sms": {
           "phone_number": "+15555555555"
         }

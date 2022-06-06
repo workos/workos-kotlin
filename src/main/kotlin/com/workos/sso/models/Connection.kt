@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param organizationId Unique identifier for the Organization in which the Connection resides.
  * @param connectionType The type of SSO Connection used to authenticate a user.
  * @param domains Domain records for the Connection.
- * @param environmentId The environment id that the Connection is associated with.
  * @param name A human-readable name for the Connection. This will most commonly be the Enterprise Client's name.
  * @param state The state of the Connection.
  * @param createdAt The timestamp of when the Connection was created.
@@ -37,10 +36,6 @@ data class Connection
 
   @JvmField
   val domains: List<ConnectionDomain>?,
-
-  @JvmField
-  @JsonProperty("environment_id")
-  val environmentId: String?,
 
   @JvmField
   val name: String,

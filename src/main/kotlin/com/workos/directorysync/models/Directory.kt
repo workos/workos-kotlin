@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param id The unique identifier for the Directory.
  * @param name The name of the Directory.
  * @param domain The URL associated with an Enterprise Client.
- * @param environmentId The environment id that the Directory is associated with.
  * @param externalKey Externally used identifier for the Directory.
  * @param organizationId Identifier for the Directory's Organization.
  * @param state The state of the Directory.
@@ -33,10 +32,6 @@ data class Directory
 
   @JvmField
   val domain: String?,
-
-  @JvmField
-  @JsonProperty("environment_id")
-  val environmentId: String?,
 
   @JvmField
   @JsonProperty("external_key")
