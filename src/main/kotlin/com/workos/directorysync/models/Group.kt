@@ -36,11 +36,11 @@ open class Group
 
   @JvmField
   @JsonProperty("created_at")
-  val createdAt: String,
+  open val createdAt: String,
 
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String,
+  open val updatedAt: String,
 
   @JvmField
   @JsonProperty("raw_attributes")

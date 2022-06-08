@@ -47,4 +47,4 @@ class GroupUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>,
-) : Group(obj, directoryId, id, idpId, name, rawAttributes)
+) : Group(obj, directoryId, id, idpId, name, createdAt, updatedAt, rawAttributes)
