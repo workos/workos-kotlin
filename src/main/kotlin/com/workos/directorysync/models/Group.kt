@@ -35,6 +35,14 @@ open class Group
   open val name: String,
 
   @JvmField
+  @JsonProperty("created_at")
+  val createdAt: String,
+
+  @JvmField
+  @JsonProperty("updated_at")
+  val expiresAt: String,
+
+  @JvmField
   @JsonProperty("raw_attributes")
   open val rawAttributes: Map<String, Any>,
 )
