@@ -40,7 +40,7 @@ open class Group
 
   @JvmField
   @JsonProperty("updated_at")
-  val expiresAt: String,
+  val updatedAt: String,
 
   @JvmField
   @JsonProperty("raw_attributes")
