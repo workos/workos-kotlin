@@ -66,7 +66,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
         }"""
     )
 
@@ -97,7 +97,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
         },
         {
           "id": "$oktaDirectoryId",
@@ -109,7 +109,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "linked",
           "type": "okta scim v2.0",
           "created_at": "2021-06-25T19:09:33.155Z",
-          "updated_at": "2021-06-25T19:10:33.155Z"
+          "updated_at": "2021-06-25T19:10:33.155Z",
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -154,7 +154,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -200,7 +200,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -253,7 +253,7 @@ class DirectorySyncApiTest : TestBase() {
           "directory_id": "$gsuiteDirectoryId",
           "name": "Engineering",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {}
         }],
         "state": "active",
@@ -286,7 +286,7 @@ class DirectorySyncApiTest : TestBase() {
         "idp_id": "02grqrue4294w24",
         "name" : "Developers",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:08:33.155Z"
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "raw_attributes": {}
       }"""
     )
@@ -314,7 +314,7 @@ class DirectorySyncApiTest : TestBase() {
           "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {}
         }],
         "list_metadata" : {
@@ -355,7 +355,7 @@ class DirectorySyncApiTest : TestBase() {
           "directory_id": "$directoryId",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {}
         }],
         "list_metadata" : {
@@ -401,7 +401,7 @@ class DirectorySyncApiTest : TestBase() {
           "directory_id": "$directoryId",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z"
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {}
         }],
         "list_metadata" : {
@@ -459,7 +459,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
                 "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
@@ -486,7 +486,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
@@ -552,7 +552,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
@@ -579,7 +579,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
@@ -648,7 +648,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
@@ -675,7 +675,7 @@ class DirectorySyncApiTest : TestBase() {
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
               "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
-              "updated_at": "2021-06-25T19:08:33.155Z"
+              "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
             }],
             "state": "active",
