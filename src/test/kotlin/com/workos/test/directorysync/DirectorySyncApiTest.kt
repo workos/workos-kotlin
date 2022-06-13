@@ -66,7 +66,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
         }"""
     )
 
@@ -97,7 +97,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
         },
         {
           "id": "$oktaDirectoryId",
@@ -109,7 +109,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "linked",
           "type": "okta scim v2.0",
           "created_at": "2021-06-25T19:09:33.155Z",
-          "updated_at": "2021-06-25T19:10:33.155Z",
+          "updated_at": "2021-06-25T19:10:33.155Z"
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -154,7 +154,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -200,7 +200,7 @@ class DirectorySyncApiTest : TestBase() {
           "state": "unlinked",
           "type": "gsuite directory",
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:08:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
         }],
         "list_metadata" : {
           "after" : "someAfterId",
@@ -457,7 +457,7 @@ class DirectorySyncApiTest : TestBase() {
               "id": "$groupId",
               "idp_id": "02grqrue4294w24",
               "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
-                "name": "Engineering",
+              "name": "Engineering",
               "created_at": "2021-06-25T19:07:33.155Z",
               "updated_at": "2021-06-25T19:08:33.155Z",
               "raw_attributes": {}
