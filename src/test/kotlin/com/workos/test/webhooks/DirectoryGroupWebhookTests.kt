@@ -23,6 +23,8 @@ class DirectoryGroupWebhookTests : TestBase() {
         "idp_id": "02grqrue4294w24",
         "object": "directory_group",
         "directory_id": "$directoryId",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "raw_attributes": {
           "id": "02grqrue4294w24",
           "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/MtDmuYwi32TG-jS3s9jzPA4RCWI\"",
@@ -62,6 +64,8 @@ class DirectoryGroupWebhookTests : TestBase() {
           "last_name": "Hadley",
           "first_name": "Michael",
           "directory_id": "$directoryId",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {
             "id": "105777651754615852813",
             "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/E5jQHrdS88NS4ACUhZ4m9CYVR30\"",
@@ -106,6 +110,8 @@ class DirectoryGroupWebhookTests : TestBase() {
           "idp_id": "02grqrue4294w24",
           "object": "directory_group",
           "directory_id": "$directoryId",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {
             "id": "02grqrue4294w24",
             "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/MtDmuYwi32TG-jS3s9jzPA4RCWI\"",
@@ -137,6 +143,8 @@ class DirectoryGroupWebhookTests : TestBase() {
         "idp_id": "02grqrue4294w24",
         "object": "directory_group",
         "directory_id": "$directoryId",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "raw_attributes": {
           "id": "02grqrue4294w24",
           "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/MtDmuYwi32TG-jS3s9jzPA4RCWI\"",
