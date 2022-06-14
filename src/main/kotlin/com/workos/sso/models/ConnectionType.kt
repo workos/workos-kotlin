@@ -11,6 +11,10 @@ enum class ConnectionType(val type: String) {
    */
   ADFSSAML("ADFSSAML"),
   /**
+   * ADP OIDC
+   */
+  AdpOidc("AdpOidc"),
+  /**
    * Auth0 SAML Integration
    */
   Auth0SAML("Auth0SAML"),
@@ -18,6 +22,18 @@ enum class ConnectionType(val type: String) {
    * Azure SAML
    */
   AzureSAML("AzureSAML"),
+  /**
+   * Cas SAML
+   */
+  CasSAML("CasSAML"),
+  /**
+   * Cloudflare SAML
+   */
+  CloudflareSAML("CloudflareSAML"),
+  /**
+   * Classlink SAML
+   */
+  ClassLink("ClassLinkSAML"),
   /**
    * CyberArk SAML
    */
@@ -47,6 +63,10 @@ enum class ConnectionType(val type: String) {
    */
   JumpCloudSAML("JumpCloudSAML"),
   /**
+   * KeyCloak SAML
+   */
+  KeyCloakSAML("KeyCloakSAML"),
+  /**
    * Magic Link
    */
   MagicLink("MagicLink"),
@@ -55,6 +75,14 @@ enum class ConnectionType(val type: String) {
    */
   MicrosoftOAuth("MicrosoftOAuth"),
   /**
+   * MiniOrange SAML
+   */
+  MiniOrangeSAML("MiniOrangeSAML"),
+  /**
+   * NetIQ SAML
+   */
+  NetIQSAML("NetIQSAML"),
+  /**
    * Okta SAML
    */
   OktaSAML("OktaSAML"),
@@ -62,6 +90,10 @@ enum class ConnectionType(val type: String) {
    * OneLogin SAML
    */
   OneLoginSAML("OneLoginSAML"),
+  /**
+   * Oracle SAML
+   */
+  OracleSAML("OracleSAML"),
   /**
    * Ping Federate SAML
    */
@@ -79,9 +111,17 @@ enum class ConnectionType(val type: String) {
    */
   SalesforceSAML("SalesforceSAML"),
   /**
+   * Shibboleth Generic SAML
+   */
+  ShibbolethGenericSAML("ShibbolethGenericSAML"),
+  /**
    * Shibboleth SAML
    */
   ShibbolethSAML("ShibbolethSAML"),
+  /**
+   * SimpleSAMLPhp SAML
+   */
+  SimpleSamlPhpSAML("SimpleSamlPhpSAML"),
   /**
    * VMware SAML
    */
