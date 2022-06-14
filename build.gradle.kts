@@ -82,6 +82,10 @@ tasks.named("build") {
   finalizedBy("dokkaJavadoc")
 }
 
+tasks.named("javadoc") {
+  finalizedBy("dokkaJavadoc")
+}
+
 tasks.dokkaJavadoc.configure {
   outputDirectory.set(buildDir.resolve("docs/javadoc"))
   dokkaSourceSets {
