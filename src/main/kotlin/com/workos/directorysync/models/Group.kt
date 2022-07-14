@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  *
  * @param obj The unique object identifier type of the record.
  * @param directoryId The unique identifier for the [Directory] the Group belongs to.
+ * @param organizationId The identifier for the Organization in which the Directory resides.
  * @param id The unique identifier for the Directory Group
  * @param idpId Unique identifier for the group, assigned by the Directory Provider. Different Directory Providers use different ID formats.
  * @param name The name of the Directory Group.
@@ -23,6 +24,10 @@ open class Group
   @JvmField
   @JsonProperty("directory_id")
   open val directoryId: String,
+
+  @JvmField
+  @JsonProperty("organization_id")
+  open val organizationId: String?,
 
   @JvmField
   open val id: String,

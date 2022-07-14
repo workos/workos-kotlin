@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  *
  * @param obj The unique object identifier type of the record.
  * @param directoryId The unique identifier for the [Directory] the User belongs to.
+ * @param organizationId The identifier for the Organization in which the Directory resides.
  * @param id The unique identifier for the Directory User
  * @param idpId Unique identifier for the user, assigned by the Directory Provider. Different Directory Providers use different ID formats. One possible use case for idp_id is associating the Directory User with their SSO Profile.
  * @param userName The username of the user.
@@ -32,6 +33,10 @@ open class User
   @JvmField
   @JsonProperty("directory_id")
   open val directoryId: String,
+
+  @JvmField
+  @JsonProperty("organization_id")
+  open val organizationId: String?,
 
   @JvmField
   @JsonProperty("idp_id")

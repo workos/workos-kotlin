@@ -239,6 +239,7 @@ class DirectorySyncApiTest : TestBase() {
         "id": "$userId",
         "idp_id": "2836",
         "directory_id": "$gsuiteDirectoryId",
+        "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
         "emails": [{
           "primary": true,
           "type": "work",
@@ -282,6 +283,7 @@ class DirectorySyncApiTest : TestBase() {
       responseBody = """{
         "object": "directory_group",
         "directory_id": "$directoryId",
+        "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
         "id" : "$groupId",
         "idp_id": "02grqrue4294w24",
         "name" : "Developers",
@@ -312,6 +314,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "idp_id": "02grqrue4294w24",
           "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z",
@@ -353,6 +356,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "idp_id": "02grqrue4294w24",
           "directory_id": "$directoryId",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z",
@@ -399,6 +403,7 @@ class DirectorySyncApiTest : TestBase() {
           "id" : "$directoryGroupId",
           "idp_id": "02grqrue4294w24",
           "directory_id": "$directoryId",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
           "name" : "Developers",
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z",
@@ -445,6 +450,7 @@ class DirectorySyncApiTest : TestBase() {
             "id": "$userId1",
             "idp_id": "1902",
             "directory_id": "directory_01ECAZ4NV9QMV47GW873HDCX74",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
             "emails": [{
               "primary": true,
               "type": "work",
@@ -472,6 +478,7 @@ class DirectorySyncApiTest : TestBase() {
             "id": "$userId2",
             "idp_id": "8953",
             "directory_id": "directoryId",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
             "emails": [{
               "primary": true,
               "type": "work",
@@ -537,6 +544,7 @@ class DirectorySyncApiTest : TestBase() {
           "data": [{
             "id": "$userId1",
             "directory_id": "directoryId",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
             "idp_id": "1902",
             "emails": [{
               "primary": true,
@@ -634,6 +642,7 @@ class DirectorySyncApiTest : TestBase() {
             "id": "$userId1",
             "idp_id": "1902",
             "directory_id": "directoryId",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
             "emails": [{
               "primary": true,
               "type": "work",
@@ -661,6 +670,7 @@ class DirectorySyncApiTest : TestBase() {
             "id": "$userId2",
             "idp_id": "8953",
             "directory_id": "directoryId",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
             "emails": [{
               "primary": true,
               "type": "work",
