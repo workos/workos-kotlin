@@ -18,6 +18,10 @@ class GroupUpdated
   override val directoryId: String,
 
   @JvmField
+  @JsonProperty("organization_id")
+  override val organizationId: String?,
+
+  @JvmField
   override val id: String,
 
   @JvmField
@@ -47,4 +51,4 @@ class GroupUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>,
-) : Group(obj, directoryId, id, idpId, name, createdAt, updatedAt, rawAttributes)
+) : Group(obj, directoryId, organizationId, id, idpId, name, createdAt, updatedAt, rawAttributes)

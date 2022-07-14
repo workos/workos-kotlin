@@ -24,6 +24,10 @@ open class UserUpdated
   override val directoryId: String,
 
   @JvmField
+  @JsonProperty("organization_id")
+  override val organizationId: String?,
+
+  @JvmField
   @JsonProperty("idp_id")
   override val idpId: String,
 
@@ -64,4 +68,4 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>,
-) : User(obj, id, directoryId, idpId, userName, firstName, lastName, emails, groups, state, customAttributes, rawAttributes)
+) : User(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, emails, groups, state, customAttributes, rawAttributes)
