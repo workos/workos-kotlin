@@ -106,11 +106,11 @@ tasks.jar {
   }
 }
 
-java {
+/*java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(8))
   }
-}
+}*/
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {

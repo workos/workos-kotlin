@@ -226,7 +226,7 @@ class MfaApiTest : TestBase() {
       "/auth/challenges/auth_challenge_1234/verify",
       """{
           "challenge": {
-            "authentication_factor_id": "auth_factor_1234",
+            "authentication_factor_id": "auth_challenge_1234",
             "code": "12345",
             "created_at": "2022-03-15T20:39:19.892Z",
             "expires_at": "2022-03-15T21:39:19.892Z",
@@ -238,12 +238,12 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.VerifyFactorOptions.builder()
+    val options = MfaApi.VerifyChallengeOptions.builder()
       .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
-    val verifyResponse = workos.mfa.verifyFactor(options)
+    val verifyResponse = workos.mfa.verifyChallenge(options)
 
     assertEquals(true, verifyResponse.valid)
   }
@@ -261,13 +261,13 @@ class MfaApiTest : TestBase() {
       responseStatus = 422,
     )
 
-    val options = MfaApi.VerifyFactorOptions.builder()
+    val options = MfaApi.VerifyChallengeOptions.builder()
       .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
     assertThrows(UnprocessableEntityException::class.java) {
-      workos.mfa.verifyFactor(options)
+      workos.mfa.verifyChallenge(options)
     }
   }
 }

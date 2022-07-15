@@ -8,6 +8,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
 import com.workos.mfa.models.Factor
 import com.workos.mfa.models.VerifyFactorResponse
+import com.workos.mfa.models.VerifyChallengeResponse
 
 class MfaApi(private val workos: WorkOS) {
 
@@ -253,7 +254,7 @@ class MfaApi(private val workos: WorkOS) {
    * Parameters for the [verifyChallenge] method.
    */
   @JsonInclude(Include.NON_NULL)
-  class VerifyFactorOptions constructor(
+  class VerifyChallengeOptions constructor(
     @JsonProperty("authentication_challenge_id")
     val authenticationChallengeId: String,
 
@@ -311,12 +312,12 @@ class MfaApi(private val workos: WorkOS) {
    * Verifies a Challenge
    */
 
-   fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyFactorResponse {
+   fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyChallengeResponse {
     val config = RequestConfig.builder()
-      .data(verifyFactorOptions)
+      .data(verifyChallengeOptions)
       .build()
 
-    return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeID}/verify", VerifyChallengeResponse::class.java, config)
+    return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeId}/verify", VerifyChallengeResponse::class.java, config)
   }
 
   /**
