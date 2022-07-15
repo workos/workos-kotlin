@@ -7,8 +7,8 @@ import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.mfa.models.Challenge
 import com.workos.mfa.models.Factor
-import com.workos.mfa.models.VerifyFactorResponse
 import com.workos.mfa.models.VerifyChallengeResponse
+import com.workos.mfa.models.VerifyFactorResponse
 
 class MfaApi(private val workos: WorkOS) {
 
@@ -311,7 +311,7 @@ class MfaApi(private val workos: WorkOS) {
   /**
    * Verifies a Challenge
    */
-   fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyChallengeResponse {
+  fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyChallengeResponse {
     val config = RequestConfig.builder()
       .data(verifyChallengeOptions)
       .build()
