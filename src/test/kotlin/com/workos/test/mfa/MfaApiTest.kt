@@ -196,7 +196,7 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/challenge",
+      "/auth/factors/auth_factor_1234/challenge",
       """{
           "authentication_factor_id": "auth_factor_1234",
           "created_at": "2022-03-15T20:39:19.892Z",
@@ -249,11 +249,11 @@ class MfaApiTest : TestBase() {
   }
 
   @Test
-  fun verifyFactorAlreadyVerified() {
+  fun verifyChallengeAlreadyVerified() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/auth/factors/verify",
+      url = "/auth/challenges/auth_challenge_1234/verify",
       responseBody = """{
         "code": "Already verified",
         "message": "Already verified"
