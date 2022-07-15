@@ -174,10 +174,11 @@ class MfaApi(private val workos: WorkOS) {
       .data(challengeFactorOptions)
       .build()
 
-    return workos.post("/auth/factors/challenge", Challenge::class.java, config)
+    return workos.post("/auth/factors/${challengeFactorOptions.authenticationFactorId}/challenge", Challenge::class.java, config)
   }
 
   /**
+   * DEPRECATED - Please use `verifyChallenge` instead.
    * Parameters for the [verifyFactor] method.
    */
   @JsonInclude(Include.NON_NULL)
@@ -237,6 +238,7 @@ class MfaApi(private val workos: WorkOS) {
   }
 
   /**
+   * DEPRECATED - Please use `verifyChallenge` instead.
    * Verifies a Factor.
    */
   fun verifyFactor(verifyFactorOptions: VerifyFactorOptions): VerifyFactorResponse {
@@ -245,6 +247,76 @@ class MfaApi(private val workos: WorkOS) {
       .build()
 
     return workos.post("/auth/factors/verify", VerifyFactorResponse::class.java, config)
+  }
+
+  /**
+   * Parameters for the [verifyChallenge] method.
+   */
+  @JsonInclude(Include.NON_NULL)
+  class VerifyFactorOptions constructor(
+    @JsonProperty("authentication_challenge_id")
+    val authenticationChallengeId: String,
+
+    @JsonProperty("code")
+    val code: String,
+  ) {
+    /**
+     * Builder class for [VerifyChalllengeOptions].
+     */
+    class VerifyChallengeOptionsBuilder {
+      private var authenticationChallengeId: String? = null
+
+      private var code: String? = null
+
+      /**
+       * Sets the auth factor ID.
+       */
+      fun authenticationChallengeId(value: String) = apply { authenticationChallengeId = value }
+
+      /**
+       * Sets sms template.
+       */
+      fun code(value: String) = apply { code = value }
+
+      /**
+       * Creates a [VerifyChallengeOptions] with the given builder parameters.
+       */
+      fun build(): VerifyChallengeOptions {
+        if (authenticationChallengeId == null) {
+          throw IllegalArgumentException("Must provide a challenge factor ID")
+        }
+
+        if (code == null) {
+          throw IllegalArgumentException("Must provide an mfa code")
+        }
+
+        return VerifyChallengeOptions(
+          authenticationChallengeId = authenticationChallengeId!!,
+          code = code!!
+        )
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): VerifyChallengeOptionsBuilder {
+        return VerifyChallengeOptionsBuilder()
+      }
+    }
+  }
+  /**
+   * Verifies a Challenge
+   */
+
+   fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyFactorResponse {
+    val config = RequestConfig.builder()
+      .data(verifyFactorOptions)
+      .build()
+
+    return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeID}/verify", VerifyChallengeResponse::class.java, config)
   }
 
   /**

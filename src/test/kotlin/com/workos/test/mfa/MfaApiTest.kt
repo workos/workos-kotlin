@@ -169,7 +169,7 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/challenge",
+      "/auth/factors/auth_factor_1234/challenge",
       """{
           "authentication_factor_id": "auth_factor_1234",
           "code": "12345",
@@ -219,11 +219,11 @@ class MfaApiTest : TestBase() {
   }
 
   @Test
-  fun verifyFactor() {
+  fun verifyChallenge() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/verify",
+      "/auth/challenges/auth_challenge_1234/verify",
       """{
           "challenge": {
             "authentication_factor_id": "auth_factor_1234",
