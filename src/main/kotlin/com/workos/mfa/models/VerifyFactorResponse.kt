@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * DEPRECATED - Please use `verifyChallenge` instead.
+ * @DEPRECATED - Please use `verifyChallenge` instead.
  * Represents a [VerifyFactorResponse] in both successfull and error responses.
  */
 

@@ -182,7 +182,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.ChallengeFactorOptions.builder()
-      .authenticationFactorId("auth_challenge_1234")
+      .authenticationFactorId("auth_factor_1234")
       .build()
 
     val challengeFactor = workos.mfa.challengeFactor(options)

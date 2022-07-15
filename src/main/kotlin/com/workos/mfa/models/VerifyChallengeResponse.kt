@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /**
  * Represents a [VerifyChallengeResponse] in both successfull and error responses.
  */
-
 data class VerifyChallengeResponse
 @JsonCreator constructor(
   @JvmField
