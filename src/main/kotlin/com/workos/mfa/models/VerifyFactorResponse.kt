@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents a [VerifyFactorResponse] in both successfull and error responses.
  */
 
-@DEPRECATED("Please use `verifyChallenge` instead")
+@Deprecated("Please use `verifyChallenge` instead")
 data class VerifyFactorResponse
 @JsonCreator constructor(
   @JvmField
