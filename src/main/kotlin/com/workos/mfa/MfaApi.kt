@@ -179,9 +179,9 @@ class MfaApi(private val workos: WorkOS) {
   }
 
   /**
-   * @DEPRECATED - Please use `verifyChallenge` instead.
    * Parameters for the [verifyFactor] method.
    */
+  @DEPRECATED("Please use `verifyChallenge` instead")
   @JsonInclude(Include.NON_NULL)
   class VerifyFactorOptions constructor(
     @JsonProperty("authentication_challenge_id")
@@ -239,9 +239,9 @@ class MfaApi(private val workos: WorkOS) {
   }
 
   /**
-   * @DEPRECATED - Please use `verifyChallenge` instead.
    * Verifies a Factor.
    */
+  @DEPRECATED("Please use `verifyChallenge` instead")
   fun verifyFactor(verifyFactorOptions: VerifyFactorOptions): VerifyFactorResponse {
     val config = RequestConfig.builder()
       .data(verifyFactorOptions)
@@ -308,6 +308,7 @@ class MfaApi(private val workos: WorkOS) {
       }
     }
   }
+
   /**
    * Verifies a Challenge
    */
