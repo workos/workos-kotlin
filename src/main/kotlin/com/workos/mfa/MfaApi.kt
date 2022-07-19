@@ -173,6 +173,7 @@ class MfaApi(private val workos: WorkOS) {
    */
   fun challengeFactor(challengeFactorOptions: ChallengeFactorOptions): Challenge {
     val config = RequestConfig.builder()
+      .data(challengeFactorOptions)
       .build()
 
     return workos.post("/auth/factors/${challengeFactorOptions.authenticationFactorId}/challenge", Challenge::class.java, config)
@@ -314,6 +315,7 @@ class MfaApi(private val workos: WorkOS) {
    */
   fun verifyChallenge(verifyChallengeOptions: VerifyChallengeOptions): VerifyChallengeResponse {
     val config = RequestConfig.builder()
+      .data(verifyChallengeOptions)
       .build()
 
     return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeId}/verify", VerifyChallengeResponse::class.java, config)

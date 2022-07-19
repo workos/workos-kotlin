@@ -245,6 +245,7 @@ class MfaApiTest : TestBase() {
     val verifyResponse = workos.mfa.verifyChallenge(options)
 
     assertEquals(true, verifyResponse.valid)
+    assertNotNull(verifyResponse)
   }
 
   @Test
