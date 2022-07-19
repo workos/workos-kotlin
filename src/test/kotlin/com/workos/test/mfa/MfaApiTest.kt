@@ -182,7 +182,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.ChallengeFactorOptions.builder()
-      .factorId("auth_factor_1234")
+      .authenticationFactorId("auth_factor_1234")
       .build()
 
     val challengeFactor = workos.mfa.challengeFactor(options)
@@ -208,7 +208,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.ChallengeFactorOptions.builder()
-      .factorId("auth_factor_1234")
+      .authenticationFactorId("auth_factor_1234")
       .smsTemplate("sms template here")
       .build()
 
@@ -238,7 +238,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.VerifyChallengeOptions.builder()
-      .challengeId("auth_challenge_1234")
+      .challengeFactorId("auth_challenge_1234")
       .code("12345")
       .build()
 
@@ -261,7 +261,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.VerifyChallengeOptions.builder()
-      .challengeId("auth_challenge_1234")
+      .challengeFactorId("auth_challenge_1234")
       .code("12345")
       .build()
 

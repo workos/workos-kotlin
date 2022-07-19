@@ -34,5 +34,5 @@ data class Challenge
 
   @JvmField
   @JsonProperty("authentication_factor_id")
-  val authenticationFactorId: String,
+  val authenticationauthenticationFactorId: String,
 )
