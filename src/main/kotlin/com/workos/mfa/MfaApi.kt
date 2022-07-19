@@ -185,7 +185,7 @@ class MfaApi(private val workos: WorkOS) {
   @JsonInclude(Include.NON_NULL)
   class VerifyFactorOptions constructor(
     @JsonProperty("authentication_challenge_id")
-    val authenticationchallengeFactorId: String,
+    val authenticationauthenticationChallengeId: String,
 
     @JsonProperty("code")
     val code: String,
@@ -194,14 +194,14 @@ class MfaApi(private val workos: WorkOS) {
      * Builder class for [ChalllengeFactorOptions].
      */
     class VerifyFactorOptionsBuilder {
-      private var authenticationchallengeFactorId: String? = null
+      private var authenticationauthenticationChallengeId: String? = null
 
       private var code: String? = null
 
       /**
        * Sets the auth factor ID.
        */
-      fun authenticationchallengeFactorId(value: String) = apply { authenticationchallengeFactorId = value }
+      fun authenticationauthenticationChallengeId(value: String) = apply { authenticationauthenticationChallengeId = value }
 
       /**
        * Sets sms template.
@@ -212,7 +212,7 @@ class MfaApi(private val workos: WorkOS) {
        * Creates a [ChallengeFactorOptions] with the given builder parameters.
        */
       fun build(): VerifyFactorOptions {
-        if (authenticationchallengeFactorId == null) {
+        if (authenticationauthenticationChallengeId == null) {
           throw IllegalArgumentException("Must provide a challenge factor ID")
         }
 
@@ -221,7 +221,7 @@ class MfaApi(private val workos: WorkOS) {
         }
 
         return VerifyFactorOptions(
-          authenticationchallengeFactorId = authenticationchallengeFactorId!!,
+          authenticationauthenticationChallengeId = authenticationauthenticationChallengeId!!,
           code = code!!
         )
       }
@@ -256,7 +256,7 @@ class MfaApi(private val workos: WorkOS) {
   @JsonInclude(Include.NON_NULL)
   class VerifyChallengeOptions constructor(
     @JsonProperty("authentication_challenge_id")
-    val challengeFactorId: String,
+    val authenticationChallengeId: String,
 
     @JsonProperty("code")
     val code: String,
@@ -265,14 +265,14 @@ class MfaApi(private val workos: WorkOS) {
      * Builder class for [VerifyChalllengeOptions].
      */
     class VerifyChallengeOptionsBuilder {
-      private var challengeFactorId: String? = null
+      private var authenticationChallengeId: String? = null
 
       private var code: String? = null
 
       /**
        * Sets the auth factor ID.
        */
-      fun challengeFactorId(value: String) = apply { challengeFactorId = value }
+      fun authenticationChallengeId(value: String) = apply { authenticationChallengeId = value }
 
       /**
        * Sets sms template.
@@ -283,7 +283,7 @@ class MfaApi(private val workos: WorkOS) {
        * Creates a [VerifyChallengeOptions] with the given builder parameters.
        */
       fun build(): VerifyChallengeOptions {
-        if (challengeFactorId == null) {
+        if (authenticationChallengeId == null) {
           throw IllegalArgumentException("Must provide a challenge factor ID")
         }
 
@@ -292,7 +292,7 @@ class MfaApi(private val workos: WorkOS) {
         }
 
         return VerifyChallengeOptions(
-          challengeFactorId = challengeFactorId!!,
+          authenticationChallengeId = authenticationChallengeId!!,
           code = code!!
         )
       }
@@ -316,7 +316,7 @@ class MfaApi(private val workos: WorkOS) {
     val config = RequestConfig.builder()
       .build()
 
-    return workos.post("/auth/challenges/${verifyChallengeOptions.challengeFactorId}/verify", VerifyChallengeResponse::class.java, config)
+    return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeId}/verify", VerifyChallengeResponse::class.java, config)
   }
 
   /**

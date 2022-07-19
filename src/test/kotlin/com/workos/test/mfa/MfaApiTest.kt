@@ -238,7 +238,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.VerifyChallengeOptions.builder()
-      .challengeFactorId("auth_challenge_1234")
+      .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
@@ -261,7 +261,7 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.VerifyChallengeOptions.builder()
-      .challengeFactorId("auth_challenge_1234")
+      .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
