@@ -1,5 +1,6 @@
 package com.workos.mfa
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -117,8 +118,8 @@ class MfaApi(private val workos: WorkOS) {
    */
   @JsonInclude(Include.NON_NULL)
   class ChallengeFactorOptions @JvmOverloads constructor(
-    @JsonProperty("authentication_factor_id")
-    val authenticationFactorId: String,
+    @JsonIgnore
+    val factorId: String,
 
     @JsonProperty("sms_template")
     val smsTemplate: String? = null,
@@ -127,14 +128,14 @@ class MfaApi(private val workos: WorkOS) {
      * Builder class for [ChalllengeFactorOptions].
      */
     class ChallengeFactorOptionsBuilder {
-      private var authenticationFactorId: String? = null
+      private var factorId: String? = null
 
       private var smsTemplate: String? = null
 
       /**
        * Sets the auth factor ID.
        */
-      fun authenticationFactorId(value: String) = apply { authenticationFactorId = value }
+      fun factorId(value: String) = apply { factorId = value }
 
       /**
        * Sets sms template.
@@ -145,12 +146,12 @@ class MfaApi(private val workos: WorkOS) {
        * Creates a [ChallengeFactorOptions] with the given builder parameters.
        */
       fun build(): ChallengeFactorOptions {
-        if (authenticationFactorId == null) {
+        if (factorId == null) {
           throw IllegalArgumentException("Must provide an authentication factor ID")
         }
 
         return ChallengeFactorOptions(
-          authenticationFactorId = authenticationFactorId!!,
+          factorId = factorId!!,
           smsTemplate = smsTemplate,
         )
       }
@@ -175,7 +176,7 @@ class MfaApi(private val workos: WorkOS) {
       .data(challengeFactorOptions)
       .build()
 
-    return workos.post("/auth/factors/${challengeFactorOptions.authenticationFactorId}/challenge", Challenge::class.java, config)
+    return workos.post("/auth/factors/${challengeFactorOptions.factorId}/challenge", Challenge::class.java, config)
   }
 
   /**
@@ -256,7 +257,7 @@ class MfaApi(private val workos: WorkOS) {
   @JsonInclude(Include.NON_NULL)
   class VerifyChallengeOptions constructor(
     @JsonProperty("authentication_challenge_id")
-    val authenticationChallengeId: String,
+    val challengeId: String,
 
     @JsonProperty("code")
     val code: String,
@@ -265,14 +266,14 @@ class MfaApi(private val workos: WorkOS) {
      * Builder class for [VerifyChalllengeOptions].
      */
     class VerifyChallengeOptionsBuilder {
-      private var authenticationChallengeId: String? = null
+      private var challengeId: String? = null
 
       private var code: String? = null
 
       /**
        * Sets the auth factor ID.
        */
-      fun authenticationChallengeId(value: String) = apply { authenticationChallengeId = value }
+      fun challengeId(value: String) = apply { challengeId = value }
 
       /**
        * Sets sms template.
@@ -283,7 +284,7 @@ class MfaApi(private val workos: WorkOS) {
        * Creates a [VerifyChallengeOptions] with the given builder parameters.
        */
       fun build(): VerifyChallengeOptions {
-        if (authenticationChallengeId == null) {
+        if (challengeId == null) {
           throw IllegalArgumentException("Must provide a challenge factor ID")
         }
 
@@ -292,7 +293,7 @@ class MfaApi(private val workos: WorkOS) {
         }
 
         return VerifyChallengeOptions(
-          authenticationChallengeId = authenticationChallengeId!!,
+          challengeId = challengeId!!,
           code = code!!
         )
       }
@@ -317,7 +318,7 @@ class MfaApi(private val workos: WorkOS) {
       .data(verifyChallengeOptions)
       .build()
 
-    return workos.post("/auth/challenges/${verifyChallengeOptions.authenticationChallengeId}/verify", VerifyChallengeResponse::class.java, config)
+    return workos.post("/auth/challenges/${verifyChallengeOptions.challengeId}/verify", VerifyChallengeResponse::class.java, config)
   }
 
   /**
