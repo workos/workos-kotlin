@@ -256,7 +256,7 @@ class MfaApi(private val workos: WorkOS) {
    */
   @JsonInclude(Include.NON_NULL)
   class VerifyChallengeOptions constructor(
-    @JsonProperty("authentication_challenge_id")
+    @JsonIgnore
     val authenticationChallengeId: String,
 
     @JsonProperty("code")
