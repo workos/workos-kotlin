@@ -169,7 +169,7 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/challenge",
+      "/auth/factors/auth_factor_1234/challenge",
       """{
           "authentication_factor_id": "auth_factor_1234",
           "code": "12345",
@@ -182,13 +182,13 @@ class MfaApiTest : TestBase() {
     )
 
     val options = MfaApi.ChallengeFactorOptions.builder()
-      .authenticationFactorId("auth_challenge_1234")
+      .authenticationFactorId("auth_factor_1234")
       .build()
 
     val challengeFactor = workos.mfa.challengeFactor(options)
 
     assertEquals("12345", challengeFactor.code)
-    assertEquals("auth_factor_1234", challengeFactor.authenticationFactorId)
+    assertNotNull(challengeFactor)
   }
 
   @Test
@@ -196,7 +196,7 @@ class MfaApiTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/challenge",
+      "/auth/factors/auth_factor_1234/challenge",
       """{
           "authentication_factor_id": "auth_factor_1234",
           "created_at": "2022-03-15T20:39:19.892Z",
@@ -214,19 +214,18 @@ class MfaApiTest : TestBase() {
 
     val challengeFactor = workos.mfa.challengeFactor(options)
 
-    assertEquals("auth_factor_1234", challengeFactor.authenticationFactorId)
     assertNull(challengeFactor.code)
   }
 
   @Test
-  fun verifyFactor() {
+  fun verifyChallenge() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/auth/factors/verify",
+      "/auth/challenges/auth_challenge_1234/verify",
       """{
           "challenge": {
-            "authentication_factor_id": "auth_factor_1234",
+            "authentication_factor_id": "auth_challenge_1234",
             "code": "12345",
             "created_at": "2022-03-15T20:39:19.892Z",
             "expires_at": "2022-03-15T21:39:19.892Z",
@@ -238,22 +237,23 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.VerifyFactorOptions.builder()
+    val options = MfaApi.VerifyChallengeOptions.builder()
       .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
-    val verifyResponse = workos.mfa.verifyFactor(options)
+    val verifyResponse = workos.mfa.verifyChallenge(options)
 
     assertEquals(true, verifyResponse.valid)
+    assertNotNull(verifyResponse)
   }
 
   @Test
-  fun verifyFactorAlreadyVerified() {
+  fun verifyChallengeAlreadyVerified() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/auth/factors/verify",
+      url = "/auth/challenges/auth_challenge_1234/verify",
       responseBody = """{
         "code": "Already verified",
         "message": "Already verified"
@@ -261,13 +261,13 @@ class MfaApiTest : TestBase() {
       responseStatus = 422,
     )
 
-    val options = MfaApi.VerifyFactorOptions.builder()
+    val options = MfaApi.VerifyChallengeOptions.builder()
       .authenticationChallengeId("auth_challenge_1234")
       .code("12345")
       .build()
 
     assertThrows(UnprocessableEntityException::class.java) {
-      workos.mfa.verifyFactor(options)
+      workos.mfa.verifyChallenge(options)
     }
   }
 }

@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * Represents a [VerifyFactorResponse] in both successfull and error responses.
+ * Represents a [VerifyChallengeResponse] in both successfull and error responses.
  */
-
-@Deprecated("Please use `verifyChallenge` instead")
-data class VerifyFactorResponse
+data class VerifyChallengeResponse
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("challenge")
