@@ -5,14 +5,17 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
+import com.workos.common.exceptions.BadRequestException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
+import com.workos.common.http.BadRequestExceptionResponse
 import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.mfa.AuditLogsApi
 import com.workos.mfa.MfaApi
 import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
@@ -49,6 +52,12 @@ class WorkOS(
    */
   @JvmField
   var port: Int? = null
+
+  /**
+   * Module for interacting with the Audit Logs API.
+   */
+  @JvmField
+  val auditLogs = AuditLogsApi(this)
 
   /**
    * Module for interacting with the Directory Sync API.
@@ -159,6 +168,19 @@ class WorkOS(
   /**
    * Performs a POST request with WorkOS configuration parameters.
    */
+  fun post(path: String, config: RequestConfig? = null) {
+    val uri = URIBuilder(baseUrl).setPath(path).build()
+
+    val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
+
+    val request = manager.post(uri.toString()).body(body)
+
+    sendRequest(buildRequest(request, config))
+  }
+
+  /**
+   * Performs a POST request with WorkOS configuration parameters.
+   */
   fun <Res : Any> post(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
@@ -227,6 +249,10 @@ class WorkOS(
     val requestId = response.header("X-Request-ID").first()
 
     when (val status = response.statusCode) {
+      400 -> {
+        val responseData = mapper.readValue(payload, BadRequestExceptionResponse::class.java)
+        throw BadRequestException(responseData.message, responseData.code, responseData.errors, requestId)
+      }
       401 -> {
         val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)
         throw UnauthorizedException(responseData.message, requestId)
