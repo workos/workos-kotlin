@@ -255,7 +255,7 @@ class MfaApiTest : TestBase() {
     stubResponse(
       url = "/auth/challenges/auth_challenge_1234/verify",
       responseBody = """{
-        "code": "Already verified",
+        "code": "already_verifed",
         "message": "Already verified"
       }""",
       responseStatus = 422,
@@ -268,6 +268,13 @@ class MfaApiTest : TestBase() {
 
     assertThrows(UnprocessableEntityException::class.java) {
       workos.mfa.verifyChallenge(options)
+    }
+
+    try {
+      workos.mfa.verifyChallenge(options)
+    } catch (error: UnprocessableEntityException) {
+      assertEquals("already_verifed", error.code)
+      assertEquals("Already verified", error.message)
     }
   }
 }

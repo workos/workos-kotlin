@@ -11,9 +11,9 @@ import com.workos.common.http.EntityError
  */
 class UnprocessableEntityException(
   override val message: String?,
-  private val code: String?,
-  private val errors: List<EntityError>?,
-  private val requestId: String,
+  val code: String?,
+  val errors: List<EntityError>?,
+  val requestId: String,
 ) : Exception(message) {
-  private val status = 422
+  val status = 422
 }

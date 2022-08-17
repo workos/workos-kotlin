@@ -203,16 +203,16 @@ class WorkOS(
   }
 
   private fun sendRequest(request: Request): String {
-    val (_, response, result) = request.responseString()
+    val (_, response) = request.responseString()
 
-    val (payload) = result
+    var payload = String(response.data)
 
-    if (response.statusCode >= 400) {
-      handleResponseError(response, payload ?: "{}")
+    if (payload.isEmpty()) {
+      payload = "{}"
     }
 
-    if (payload == null) {
-      throw Exception("Path ${response.url.path} returned an empty response.")
+    if (response.statusCode >= 400) {
+      handleResponseError(response, payload)
     }
 
     return payload
