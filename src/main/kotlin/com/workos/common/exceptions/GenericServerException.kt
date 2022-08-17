@@ -9,6 +9,6 @@ package com.workos.common.exceptions
  */
 class GenericServerException(
   override val message: String?,
-  private val status: Int,
-  private val requestId: String
+  val status: Int,
+  val requestId: String
 ) : Exception(message)

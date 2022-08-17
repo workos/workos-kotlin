@@ -8,7 +8,7 @@ package com.workos.common.exceptions
  */
 class UnauthorizedException(
   override val message: String?,
-  private val requestId: String
+  val requestId: String
 ) : Exception(message) {
-  private val status = 401
+  val status = 401
 }
