@@ -1,5 +1,6 @@
 package com.workos.mfa
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -38,6 +39,7 @@ class AuditLogsApi(private val workos: WorkOS) {
   class CreateAuditLogEventOptions @JvmOverloads constructor(
     val action: String,
     @JsonProperty("occurred_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     val occurredAt: Date,
     val actor: Actor,
     val targets: List<Target>,

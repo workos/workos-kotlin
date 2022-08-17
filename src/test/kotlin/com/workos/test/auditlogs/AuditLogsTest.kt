@@ -19,7 +19,7 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-        "occurred_at": 1220227200,
+        "occurred_at": "1970-01-15T02:57:07.200Z",
         "action": "user.signed_in",
         "actor": {
           "id": "user_123",
@@ -58,7 +58,7 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-        "occurred_at": 1220227200,
+        "occurred_at": "1970-01-15T02:57:07.200Z",
         "action": "user.signed_in",
         "actor": {
           "id": "user_123",
@@ -149,7 +149,7 @@ class AuditLogsTest : TestBase() {
         }]
       }""",
       requestBody = """{
-        "occurred_at": 1220227200,
+        "occurred_at": "1970-01-15T02:57:07.200Z",
         "action": "user.signed_in",
         "actor": {
           "id": "user_123",
