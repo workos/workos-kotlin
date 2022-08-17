@@ -19,6 +19,7 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
+<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -38,6 +39,24 @@ class AuditLogsTest : TestBase() {
           },
           "version": 1
         }
+=======
+        "occurred_at": "1970-01-15T02:57:07.200Z",
+        "action": "user.signed_in",
+        "actor": {
+          "id": "user_123",
+          "type": "user"
+        },
+        "targets": [
+          {
+            "id": "team_123",
+            "type": "team"
+          }
+        ],
+        "context": {
+          "location": "0.0.0.0"
+        },
+        "version": 1
+>>>>>>> ffa1495 (Format occurred_at as ISO string)
       }"""
     )
 
@@ -61,6 +80,7 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
+<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -69,6 +89,23 @@ class AuditLogsTest : TestBase() {
             "id": "user_123",
             "type": "user",
             "name": "User",
+=======
+        "occurred_at": "1970-01-15T02:57:07.200Z",
+        "action": "user.signed_in",
+        "actor": {
+          "id": "user_123",
+          "type": "user",
+          "name": "User",
+          "metadata": {
+            "role": "admin"
+          }
+        },
+        "targets": [
+          {
+            "id": "team_123",
+            "type": "team",
+            "name": "Team",
+>>>>>>> ffa1495 (Format occurred_at as ISO string)
             "metadata": {
               "role": "admin"
             }
@@ -203,6 +240,7 @@ class AuditLogsTest : TestBase() {
         }]
       }""",
       requestBody = """{
+<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -222,6 +260,24 @@ class AuditLogsTest : TestBase() {
           },
           "version": 1
         }
+=======
+        "occurred_at": "1970-01-15T02:57:07.200Z",
+        "action": "user.signed_in",
+        "actor": {
+          "id": "user_123",
+          "type": "user"
+        },
+        "targets": [
+          {
+            "id": "team_123",
+            "type": "team"
+          }
+        ],
+        "context": {
+          "location": "0.0.0.0"
+        },
+        "version": 1
+>>>>>>> ffa1495 (Format occurred_at as ISO string)
       }""",
       responseStatus = 400
     )
