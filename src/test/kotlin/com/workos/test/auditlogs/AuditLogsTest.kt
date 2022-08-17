@@ -1,6 +1,7 @@
 package com.workos.test.auditlogs
 
 import com.workos.auditlogs.AuditLogsApi
+import com.workos.auditlogs.models.AuditLogExportState
 import com.workos.common.exceptions.BadRequestException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -19,7 +20,6 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -39,24 +39,6 @@ class AuditLogsTest : TestBase() {
           },
           "version": 1
         }
-=======
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user"
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team"
-          }
-        ],
-        "context": {
-          "location": "0.0.0.0"
-        },
-        "version": 1
->>>>>>> ffa1495 (Format occurred_at as ISO string)
       }"""
     )
 
@@ -80,7 +62,6 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -89,23 +70,6 @@ class AuditLogsTest : TestBase() {
             "id": "user_123",
             "type": "user",
             "name": "User",
-=======
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user",
-          "name": "User",
-          "metadata": {
-            "role": "admin"
-          }
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team",
-            "name": "Team",
->>>>>>> ffa1495 (Format occurred_at as ISO string)
             "metadata": {
               "role": "admin"
             }
@@ -240,7 +204,6 @@ class AuditLogsTest : TestBase() {
         }]
       }""",
       requestBody = """{
-<<<<<<< HEAD
         "organization_id": "org_123",
         "event": {
           "occurred_at": "1970-01-15T02:57:07.200Z",
@@ -260,24 +223,6 @@ class AuditLogsTest : TestBase() {
           },
           "version": 1
         }
-=======
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user"
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team"
-          }
-        ],
-        "context": {
-          "location": "0.0.0.0"
-        },
-        "version": 1
->>>>>>> ffa1495 (Format occurred_at as ISO string)
       }""",
       responseStatus = 400
     )
@@ -301,6 +246,118 @@ class AuditLogsTest : TestBase() {
       assertEquals("invalid_audit_log", exception.code)
       assertEquals("Invalid Audit Log event", exception.message)
       assert(exception.errors?.size == 1)
+    }
+  }
+
+  fun createExportShouldNotThrowException() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/audit_logs/exports",
+      responseBody = """{
+        "object": "audit_log_export",
+        "id": "audit_log_export_123",
+        "state": "pending",
+        "created_at": "2022-08-17T19:58:50.686Z",
+        "update_at": "2022-08-17T19:58:50.686Z"
+      }""",
+      requestBody = """{
+        "organization_id": "org_123",
+        "range_start": "2022-07-17T19:58:50.686Z",
+        "range_end": "2022-09-17T19:58:50.686Z"
+      }"""
+    )
+
+    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
+      .organizationId("org_123")
+      .rangeStart(Date(1658087930686))
+      .rangeEnd(Date(1663444730686))
+      .build()
+
+    val export = workos.auditLogs.createExport(options)
+
+    assertEquals("audit_log_export", export.obj)
+    assertEquals("audit_log_export_123", export.id)
+    assertEquals(AuditLogExportState.Pending, export.state)
+    assertEquals(Date(1660766330686), export.createdAt)
+    assertEquals(Date(1660766330686), export.updatedAt)
+  }
+
+  fun createExportWithAllOptionShouldNotThrowException() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/audit_logs/exports",
+      responseBody = """{
+        "object": "audit_log_export",
+        "id": "audit_log_export_123",
+        "state": "ready",
+        "url": "https://audit-logs.com/download.csv",
+        "created_at": "2022-08-17T19:58:50.686Z",
+        "update_at": "2022-08-17T19:58:50.686Z"
+      }""",
+      requestBody = """{
+        "organization_id": "org_123",
+        "range_start": "2022-07-17T19:58:50.686Z",
+        "range_end": "2022-09-17T19:58:50.686Z",
+        "actions": ["foo", "bar"],
+        "actors": ["foo", "bar"],
+        "targets": ["foo", "bar"]
+      }"""
+    )
+
+    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
+      .organizationId("org_123")
+      .rangeStart(Date(1658087930686))
+      .rangeEnd(Date(1663444730686))
+      .actions(listOf("foo", "bar"))
+      .actors(listOf("foo", "bar"))
+      .targets(listOf("foo", "bar"))
+      .build()
+
+    val export = workos.auditLogs.createExport(options)
+
+    assertEquals("audit_log_export", export.obj)
+    assertEquals("audit_log_export_123", export.id)
+    assertEquals(AuditLogExportState.Ready, export.state)
+    assertEquals("https://audit-logs.com/download.csv", export.url)
+    assertEquals(Date(1660766330686), export.createdAt)
+    assertEquals(Date(1660766330686), export.updatedAt)
+  }
+
+  fun createExportShouldThrowInvalidDateRangeException() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/audit_logs/exports",
+      responseBody = """{
+        "code": "invalid_date_range_exception",
+        "message": "Start date cannot be before 2022-05-17T00:00:00.000Z"
+      }""",
+      requestBody = """{
+        "organization_id": "org_123",
+        "range_start": "2022-07-17T19:58:50.686Z",
+        "range_end": "2022-09-17T19:58:50.686Z"
+      }""",
+      responseStatus = 400
+    )
+
+    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
+      .organizationId("org_123")
+      .rangeStart(Date(1658087930686))
+      .rangeEnd(Date(1663444730686))
+      .build()
+
+    assertThrows(BadRequestException::class.java) {
+      workos.auditLogs.createExport(options)
+    }
+
+    try {
+      workos.auditLogs.createExport(options)
+    } catch (exception: BadRequestException) {
+      assertEquals(400, exception.status)
+      assertEquals("invalid_date_range_exception", exception.code)
+      assertEquals("Start date cannot be before 2022-05-17T00:00:00.000Z", exception.message)
     }
   }
 }
