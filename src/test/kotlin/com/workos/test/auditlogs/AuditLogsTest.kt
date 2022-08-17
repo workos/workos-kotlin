@@ -19,22 +19,25 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user"
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team"
-          }
-        ],
-        "context": {
-          "location": "0.0.0.0"
-        },
-        "version": 1
+        "organization_id": "org_123",
+        "event": {
+          "occurred_at": "1970-01-15T02:57:07.200Z",
+          "action": "user.signed_in",
+          "actor": {
+            "id": "user_123",
+            "type": "user"
+          },
+          "targets": [
+            {
+              "id": "team_123",
+              "type": "team"
+            }
+          ],
+          "context": {
+            "location": "0.0.0.0"
+          },
+          "version": 1
+        }
       }"""
     )
 
@@ -46,7 +49,7 @@ class AuditLogsTest : TestBase() {
       .context("0.0.0.0")
       .build()
 
-    workos.auditLogs.createEvent(options)
+    workos.auditLogs.createEvent("org_123", options)
   }
 
   fun createEventWithAllOptionsShouldNotThrowException() {
@@ -58,39 +61,42 @@ class AuditLogsTest : TestBase() {
         "success": true
       }""",
       requestBody = """{
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user",
-          "name": "User",
-          "metadata": {
-            "role": "admin"
-          }
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team",
-            "name": "Team",
+        "organization_id": "org_123",
+        "event": {
+          "occurred_at": "1970-01-15T02:57:07.200Z",
+          "action": "user.signed_in",
+          "actor": {
+            "id": "user_123",
+            "type": "user",
+            "name": "User",
             "metadata": {
-              "foo": "foo",
-              "bar": "bar"
+              "role": "admin"
             }
           },
-          {
-            "id": "team_abc",
-            "type": "team",
-            "name": "Another Team"
+          "targets": [
+            {
+              "id": "team_123",
+              "type": "team",
+              "name": "Team",
+              "metadata": {
+                "foo": "foo",
+                "bar": "bar"
+              }
+            },
+            {
+              "id": "team_abc",
+              "type": "team",
+              "name": "Another Team"
+            }
+          ],
+          "context": {
+            "location": "0.0.0.0",
+            "user_agent": "User Agent"
+          },
+          "version": 1,
+          "metadata": {
+            "client": "web"
           }
-        ],
-        "context": {
-          "location": "0.0.0.0",
-          "user_agent": "User Agent"
-        },
-        "version": 1,
-        "metadata": {
-          "client": "web"
         }
       }"""
     )
@@ -120,7 +126,7 @@ class AuditLogsTest : TestBase() {
       )
       .build()
 
-    workos.auditLogs.createEvent(options)
+    workos.auditLogs.createEvent("org_123", options)
   }
 
   @Test
@@ -149,22 +155,25 @@ class AuditLogsTest : TestBase() {
         }]
       }""",
       requestBody = """{
-        "occurred_at": "1970-01-15T02:57:07.200Z",
-        "action": "user.signed_in",
-        "actor": {
-          "id": "user_123",
-          "type": "user"
-        },
-        "targets": [
-          {
-            "id": "team_123",
-            "type": "team"
-          }
-        ],
-        "context": {
-          "location": "0.0.0.0"
-        },
-        "version": 1
+        "organization_id": "org_123",
+        "event": {
+          "occurred_at": "1970-01-15T02:57:07.200Z",
+          "action": "user.signed_in",
+          "actor": {
+            "id": "user_123",
+            "type": "user"
+          },
+          "targets": [
+            {
+              "id": "team_123",
+              "type": "team"
+            }
+          ],
+          "context": {
+            "location": "0.0.0.0"
+          },
+          "version": 1
+        }
       }""",
       responseStatus = 400
     )
@@ -178,11 +187,11 @@ class AuditLogsTest : TestBase() {
       .build()
 
     assertThrows(BadRequestException::class.java) {
-      workos.auditLogs.createEvent(options)
+      workos.auditLogs.createEvent("org_123", options)
     }
 
     try {
-      workos.auditLogs.createEvent(options)
+      workos.auditLogs.createEvent("org_123", options)
     } catch (exception: BadRequestException) {
       assertEquals(400, exception.status)
       assertEquals("invalid_audit_log", exception.code)

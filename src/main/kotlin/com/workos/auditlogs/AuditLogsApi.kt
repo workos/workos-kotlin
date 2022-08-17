@@ -164,9 +164,14 @@ class AuditLogsApi(private val workos: WorkOS) {
   /**
    * Emits an Audit Log event.
    */
-  fun createEvent(createAuditLogEventOptions: CreateAuditLogEventOptions) {
+  fun createEvent(organizationId: String, createAuditLogEventOptions: CreateAuditLogEventOptions) {
     val config = RequestConfig.builder()
-      .data(createAuditLogEventOptions)
+      .data(
+        mapOf(
+          "organization_id" to organizationId,
+          "event" to createAuditLogEventOptions
+        )
+      )
       .build()
 
     workos.post("/audit_logs", config)
