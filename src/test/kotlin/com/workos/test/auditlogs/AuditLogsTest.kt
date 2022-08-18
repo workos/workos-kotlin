@@ -1,7 +1,7 @@
 package com.workos.test.auditlogs
 
+import com.workos.auditlogs.AuditLogsApi
 import com.workos.common.exceptions.BadRequestException
-import com.workos.mfa.AuditLogsApi
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import java.util.Date
@@ -127,6 +127,54 @@ class AuditLogsTest : TestBase() {
       .build()
 
     workos.auditLogs.createEvent("org_123", options)
+  }
+
+  @Test
+  fun createEventShouldPassIdempotencyKey() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/audit_logs",
+      responseBody = """{
+        "success": true
+      }""",
+      requestBody = """{
+        "organization_id": "org_123",
+        "event": {
+          "occurred_at": "1970-01-15T02:57:07.200Z",
+          "action": "user.signed_in",
+          "actor": {
+            "id": "user_123",
+            "type": "user"
+          },
+          "targets": [
+            {
+              "id": "team_123",
+              "type": "team"
+            }
+          ],
+          "context": {
+            "location": "0.0.0.0"
+          },
+          "version": 1
+        }
+      }""",
+      requestHeaders = mapOf("Idempotency-Key" to "some-idempotency-key-value")
+    )
+
+    val event = AuditLogsApi.CreateAuditLogEventOptions.builder()
+      .action("user.signed_in")
+      .occurredAt(Date(1220227200))
+      .actor("user_123", "user")
+      .target("team_123", "team")
+      .context("0.0.0.0")
+      .build()
+
+    val requestOptions = AuditLogsApi.CreateAuditLogEventRequestOptions.builder()
+      .idempotencyKey("some-idempotency-key-value")
+      .build()
+
+    workos.auditLogs.createEvent("org_123", event, requestOptions)
   }
 
   @Test

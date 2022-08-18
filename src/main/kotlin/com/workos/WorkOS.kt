@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
+import com.workos.auditlogs.AuditLogsApi
 import com.workos.common.exceptions.BadRequestException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -15,7 +16,6 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
-import com.workos.mfa.AuditLogsApi
 import com.workos.mfa.MfaApi
 import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi

@@ -1,4 +1,4 @@
-package com.workos.mfa
+package com.workos.auditlogs
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -162,18 +162,69 @@ class AuditLogsApi(private val workos: WorkOS) {
   }
 
   /**
+   * Parameters for the [createEvent] method.
+   */
+  @JsonInclude(Include.NON_NULL)
+  class CreateAuditLogEventRequestOptions constructor(
+    val idempotencyKey: String,
+  ) {
+    /**
+     * Builder class for [CreateAuditLogEventRequestOptions].
+     */
+    class CreateAuditLogEventRequestOptionsBuilder {
+      private var idempotencyKey: String? = null
+
+      /**
+       * Sets the idempotencyKey.
+       */
+      fun idempotencyKey(value: String) = apply { idempotencyKey = value }
+
+      /**
+       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       */
+      fun build(): CreateAuditLogEventRequestOptions {
+        if (idempotencyKey == null) {
+          throw IllegalArgumentException("An idempotencyKey must be provided")
+        }
+
+        return CreateAuditLogEventRequestOptions(
+          idempotencyKey = idempotencyKey!!,
+        )
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): CreateAuditLogEventRequestOptionsBuilder {
+        return CreateAuditLogEventRequestOptionsBuilder()
+      }
+    }
+  }
+
+  /**
    * Emits an Audit Log event.
    */
-  fun createEvent(organizationId: String, createAuditLogEventOptions: CreateAuditLogEventOptions) {
-    val config = RequestConfig.builder()
+  @JvmOverloads
+  fun createEvent(
+    organizationId: String,
+    createAuditLogEventOptions: CreateAuditLogEventOptions,
+    createAuditLogEventRequestOptions: CreateAuditLogEventRequestOptions? = null
+  ) {
+    val configBuilder = RequestConfig.builder()
       .data(
         mapOf(
           "organization_id" to organizationId,
           "event" to createAuditLogEventOptions
         )
       )
-      .build()
 
-    workos.post("/audit_logs", config)
+    if (createAuditLogEventRequestOptions != null) {
+      configBuilder.headers(mapOf("Idempotency-Key" to createAuditLogEventRequestOptions.idempotencyKey))
+    }
+
+    workos.post("/audit_logs", configBuilder.build())
   }
 }
