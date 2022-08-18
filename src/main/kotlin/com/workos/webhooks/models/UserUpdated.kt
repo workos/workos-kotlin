@@ -40,8 +40,16 @@ open class UserUpdated
   override val firstName: String?,
 
   @JvmField
-  @JsonProperty("last_name")
-  override val lastName: String?,
+  @JsonProperty("updated_at")
+  override val updatedAt: String,
+
+  @JvmField
+  @JsonProperty("created_at")
+  override val createdAt: String,
+
+  @JvmField
+  @JsonProperty("updated_at")
+  override val updatedAt: String?,
 
   @JvmField
   override val emails: List<Email>,
