@@ -111,7 +111,7 @@ class AuditLogsApi(private val workos: WorkOS) {
       fun metadata(value: Map<String, String>) = apply { metadata = value }
 
       /**
-       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       * Creates a [CreateAuditLogEventOptions] with the given builder parameters.
        */
       fun build(): CreateAuditLogEventOptions {
         if (action == null) {
@@ -180,7 +180,7 @@ class AuditLogsApi(private val workos: WorkOS) {
       fun idempotencyKey(value: String) = apply { idempotencyKey = value }
 
       /**
-       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       * Creates a [CreateAuditLogEventRequestOptions] with the given builder parameters.
        */
       fun build(): CreateAuditLogEventRequestOptions {
         if (idempotencyKey == null) {
