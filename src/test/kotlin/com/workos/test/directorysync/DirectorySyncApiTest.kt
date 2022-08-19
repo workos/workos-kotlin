@@ -258,6 +258,8 @@ class DirectorySyncApiTest : TestBase() {
           "raw_attributes": {}
         }],
         "state": "active",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "custom_attributes": {
           "department": "Engineering"
         },
@@ -267,8 +269,6 @@ class DirectorySyncApiTest : TestBase() {
 
     val response = workos.directorySync.getDirectoryUser(userId)
     assertEquals(response.id, userId)
-    assertEquals(response.createdAt, "2021-06-25T19:07:33.155Z")
-    assertEquals(response.updatedAt, "2021-06-25T19:08:33.155Z")
     assertEquals(response.state, UserState.Active)
     assertEquals(response.customAttributes["department"], "Engineering")
   }
@@ -471,6 +471,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -499,6 +501,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -566,6 +570,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -593,6 +599,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -663,6 +671,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -691,6 +701,8 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
               "department": "Engineering"
             },

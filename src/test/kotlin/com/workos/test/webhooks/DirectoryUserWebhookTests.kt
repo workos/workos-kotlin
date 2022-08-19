@@ -33,6 +33,8 @@ class DirectoryUserWebhookTests : TestBase() {
         "username": "michael.hadley@foo-corp.com",
         "last_name": "Hadley",
         "first_name": "Michael",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "$directoryId",
         "raw_attributes": {
           "id": "105777651754615852813",
@@ -94,6 +96,8 @@ class DirectoryUserWebhookTests : TestBase() {
         "username": "michael.hadley@foo-corp.com",
         "last_name": "Hadley",
         "first_name": "Michael",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "$directoryId",
         "raw_attributes": {
           "id": "105777651754615852813",
