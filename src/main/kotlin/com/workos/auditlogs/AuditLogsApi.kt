@@ -289,7 +289,7 @@ class AuditLogsApi(private val workos: WorkOS) {
       fun targets(value: List<String>) = apply { targets = value }
 
       /**
-       * Creates a [EnrollFactorOptions] with the given builder parameters.
+       * Creates a [CreateAuditLogExportOptions] with the given builder parameters.
        */
       fun build(): CreateAuditLogExportOptions {
         if (organizationId == null) {
