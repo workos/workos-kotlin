@@ -294,7 +294,7 @@ class AuditLogsTest : TestBase() {
         "state": "ready",
         "url": "https://audit-logs.com/download.csv",
         "created_at": "2022-08-17T19:58:50.686Z",
-        "update_at": "2022-08-17T19:58:50.686Z"
+        "updated_at": "2022-08-17T19:58:50.686Z"
       }""",
       requestBody = """{
         "organization_id": "org_123",
