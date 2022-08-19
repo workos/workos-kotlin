@@ -383,5 +383,4 @@ class AuditLogsTest : TestBase() {
     assertEquals(Date(1660766330686), export.createdAt)
     assertEquals(Date(1660766330686), export.updatedAt)
   }
-
 }
