@@ -55,6 +55,14 @@ open class User
   open val lastName: String?,
 
   @JvmField
+  @JsonProperty("created_at")
+  open val createdAt: String,
+
+  @JvmField
+  @JsonProperty("updated_at")
+  open val updatedAt: String,
+
+  @JvmField
   open val emails: List<Email>,
 
   @JvmField

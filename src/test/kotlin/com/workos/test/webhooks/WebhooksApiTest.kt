@@ -34,6 +34,8 @@ class WebhooksApiTest : TestBase() {
         "username": "blair@foo-corp.com",
         "last_name": "Lunceford",
         "first_name": "Blair",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
         "custom_attributes": {},
         "raw_attributes": {
@@ -87,6 +89,8 @@ class WebhooksApiTest : TestBase() {
         "username": "blair@foo-corp.com",
         "last_name": "Lunceford",
         "first_name": "Blair",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
         "custom_attributes": {},
         "raw_attributes": {},
