@@ -371,7 +371,7 @@ class AuditLogsTest : TestBase() {
         "id": "audit_log_export_123",
         "state": "pending",
         "created_at": "2022-08-17T19:58:50.686Z",
-        "update_at": "2022-08-17T19:58:50.686Z"
+        "updated_at": "2022-08-17T19:58:50.686Z"
       }""",
     )
 
