@@ -76,4 +76,4 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>,
-) : User(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, emails, groups, state, createdAt, updatedAt, customAttributes, rawAttributes)
+) : User(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, createdAt, updatedAt, emails, groups, state,  customAttributes, rawAttributes)
