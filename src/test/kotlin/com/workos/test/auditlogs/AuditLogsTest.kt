@@ -249,6 +249,7 @@ class AuditLogsTest : TestBase() {
     }
   }
 
+  @Test
   fun createExportShouldNotThrowException() {
     val workos = createWorkOSClient()
 
@@ -283,6 +284,7 @@ class AuditLogsTest : TestBase() {
     assertEquals(Date(1660766330686), export.updatedAt)
   }
 
+  @Test
   fun createExportWithAllOptionShouldNotThrowException() {
     val workos = createWorkOSClient()
 
@@ -325,6 +327,7 @@ class AuditLogsTest : TestBase() {
     assertEquals(Date(1660766330686), export.updatedAt)
   }
 
+  @Test
   fun createExportShouldThrowInvalidDateRangeException() {
     val workos = createWorkOSClient()
 
@@ -361,6 +364,7 @@ class AuditLogsTest : TestBase() {
     }
   }
 
+  @Test
   fun getExportShouldNotThrowException() {
     val workos = createWorkOSClient()
 
