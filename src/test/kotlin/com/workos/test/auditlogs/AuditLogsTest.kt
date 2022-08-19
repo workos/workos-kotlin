@@ -360,4 +360,28 @@ class AuditLogsTest : TestBase() {
       assertEquals("Start date cannot be before 2022-05-17T00:00:00.000Z", exception.message)
     }
   }
+
+  fun getExportShouldNotThrowException() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/audit_logs/exports/audit_log_export_123",
+      responseBody = """{
+        "object": "audit_log_export",
+        "id": "audit_log_export_123",
+        "state": "pending",
+        "created_at": "2022-08-17T19:58:50.686Z",
+        "update_at": "2022-08-17T19:58:50.686Z"
+      }""",
+    )
+
+    val export = workos.auditLogs.getExport("audit_log_export_123")
+
+    assertEquals("audit_log_export", export.obj)
+    assertEquals("audit_log_export_123", export.id)
+    assertEquals(AuditLogExportState.Pending, export.state)
+    assertEquals(Date(1660766330686), export.createdAt)
+    assertEquals(Date(1660766330686), export.updatedAt)
+  }
+
 }
