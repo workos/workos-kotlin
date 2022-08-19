@@ -338,7 +338,7 @@ class AuditLogsApi(private val workos: WorkOS) {
   }
 
   /**
-   * Returns an Audit Log Export.
+   * Retrieves an existing Audit Log Export.
    */
   fun getExport(auditLogExportId: String): AuditLogExport {
     return workos.get("/audit_logs/exports/$auditLogExportId", AuditLogExport::class.java)
