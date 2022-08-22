@@ -2,7 +2,7 @@ import java.io.FileOutputStream
 import java.util.Properties
 
 group = "com.workos"
-version = "2.3.0"
+version = "2.3.1"
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
@@ -105,12 +105,12 @@ tasks.jar {
     )
   }
 }
-
+/*
 java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(8))
   }
-}
+}*/
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
