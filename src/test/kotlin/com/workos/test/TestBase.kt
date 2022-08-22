@@ -45,6 +45,7 @@ open class TestBase {
     responseStatus: Int = 200,
     params: Map<String, StringValuePattern> = emptyMap(),
     requestBody: String? = null,
+    requestHeaders: Map<String, String>? = null,
   ): StubMapping {
     val mapping = any(urlPathEqualTo(url))
       .withQueryParams(params)
@@ -57,6 +58,12 @@ open class TestBase {
 
     if (requestBody != null) {
       mapping.withRequestBody(equalToJson(requestBody))
+    }
+
+    if (requestHeaders != null) {
+      for (header in requestHeaders.entries.iterator()) {
+        mapping.withHeader(header.key, equalTo(header.value))
+      }
     }
 
     val stub = stubFor(mapping)
