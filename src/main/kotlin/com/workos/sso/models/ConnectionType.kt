@@ -65,7 +65,7 @@ enum class ConnectionType(val type: String) {
   /**
    * KeyCloak SAML
    */
-  KeyCloakSAML("KeycloakSAML"),
+  KeycloakSAML("KeycloakSAML"),
   /**
    * Magic Link
    */
