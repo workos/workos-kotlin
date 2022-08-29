@@ -40,7 +40,7 @@ class WebhooksApi() {
     }
   }
 
-  private fun verifyHeader(
+  fun verifyHeader(
     payload: String,
     signatureHeader: String,
     secret: String,
@@ -71,7 +71,7 @@ class WebhooksApi() {
     }
   }
 
-  private fun createSignature(timestamp: String, data: String, key: String): String {
+  fun createSignature(timestamp: String, data: String, key: String): String {
     val payload = "$timestamp.$data"
     val sha256Hmac = Mac.getInstance("HmacSHA256")
     val secretKey = SecretKeySpec(key.toByteArray(), "HmacSHA256")
