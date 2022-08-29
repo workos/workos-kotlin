@@ -6,7 +6,6 @@ import org.apache.commons.codec.binary.Hex
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
-import java.security.MessageDigest
 import java.security.SignatureException
 import java.time.Instant
 import javax.crypto.Mac
@@ -220,7 +219,7 @@ class WebhooksApiTest : TestBase() {
         testWebhook,
         testData["signature"] as String,
         testData["secret"] as String,
-        tolerance = 0
+        -1
       )
     }
   }
@@ -241,17 +240,17 @@ class WebhooksApiTest : TestBase() {
 
   @Test
   fun createSignatureHappyPath() {
-      val workos = createWorkOSClient()
-      val testData = prepareTest(testWebhook)
-      val stringData = testData["signature"] as String
-      val splitHeader = stringData.split(",")
-      val timestamp = splitHeader[0].split("=")[1]
-      val signatureHash = splitHeader[1].split("=")[1]
-      val expectedSignature: String = workos.webhooks.createSignature(
-        timestamp,
-        testWebhook,
-        testData["secret"] as String
-      )
-      assertEquals(expectedSignature, signatureHash)
+    val workos = createWorkOSClient()
+    val testData = prepareTest(testWebhook)
+    val stringData = testData["signature"] as String
+    val splitHeader = stringData.split(",")
+    val timestamp = splitHeader[0].split("=")[1]
+    val signatureHash = splitHeader[1].split("=")[1]
+    val expectedSignature: String = workos.webhooks.createSignature(
+      timestamp,
+      testWebhook,
+      testData["secret"] as String
+    )
+    assertEquals(expectedSignature, signatureHash)
   }
 }
