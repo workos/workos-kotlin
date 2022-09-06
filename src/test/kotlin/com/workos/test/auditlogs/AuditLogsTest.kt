@@ -15,7 +15,7 @@ class AuditLogsTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/audit_logs",
+      url = "/audit_logs/events",
       responseBody = """{
         "success": true
       }""",
@@ -57,7 +57,7 @@ class AuditLogsTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/audit_logs",
+      url = "/audit_logs/events",
       responseBody = """{
         "success": true
       }""",
@@ -135,7 +135,7 @@ class AuditLogsTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/audit_logs",
+      url = "/audit_logs/events",
       responseBody = """{
         "success": true
       }""",
@@ -183,7 +183,7 @@ class AuditLogsTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      url = "/audit_logs",
+      url = "/audit_logs/events",
       responseBody = """{
         "code": "invalid_audit_log",
         "message": "Invalid Audit Log event",
