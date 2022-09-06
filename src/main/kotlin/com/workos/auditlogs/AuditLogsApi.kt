@@ -227,7 +227,7 @@ class AuditLogsApi(private val workos: WorkOS) {
       configBuilder.headers(mapOf("Idempotency-Key" to createAuditLogEventRequestOptions.idempotencyKey))
     }
 
-    workos.post("/audit_logs", configBuilder.build())
+    workos.post("/audit_logs/events", configBuilder.build())
   }
 
   /**
