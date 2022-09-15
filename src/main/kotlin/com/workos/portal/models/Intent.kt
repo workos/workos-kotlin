@@ -16,5 +16,10 @@ enum class Intent(@JsonValue val value: String) {
   /**
    * Directory Sync.
    */
-  DirectorySync("dsync")
+  DirectorySync("dsync"),
+
+  /**
+   * Audit Logs.
+   */
+  AuditLogs("audit_logs")
 }
