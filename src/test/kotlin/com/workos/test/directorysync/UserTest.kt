@@ -49,6 +49,6 @@ class UserTest : TestBase() {
       }"""
     )
     val directoryUser = workos.directorySync.getDirectoryUser(userId)
-    assertEquals(response.primaryEmail(), "marcelina1@foo-corp.com")
+    assertEquals(directoryUser.primaryEmail(), "marcelina1@foo-corp.com")
   }
 }
