@@ -48,7 +48,7 @@ class UserTest : TestBase() {
         "raw_attributes": {}
       }"""
     )
-    val response = workos.directorySync.getDirectoryUser(userId)
+    val directoryUser = workos.directorySync.getDirectoryUser(userId)
     assertEquals(response.primaryEmail(), "marcelina1@foo-corp.com")
   }
 }
