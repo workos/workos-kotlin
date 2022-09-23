@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class UserTest : TestBase() {
   @Test
-  fun userPrimaryMethodReturn(){
+  fun userPrimaryMethodReturn() {
     val workos = createWorkOSClient()
     val userId = "directory_user_01E1JG7J09H96KYP8HM9B0G5SJ"
     val gsuiteDirectoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
@@ -50,7 +50,5 @@ class UserTest : TestBase() {
     )
     val response = workos.directorySync.getDirectoryUser(userId)
     assertEquals(response.primaryEmail(), "marcelina1@foo-corp.com")
-
   }
-
 }
