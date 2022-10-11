@@ -29,6 +29,7 @@ class UserTest : TestBase() {
         }],
         "first_name": "Marcelina",
         "last_name": "Davis",
+        "job_title": "Software Engineer",
         "username": "marcelina@foo-corp.com",
         "groups": [{
           "id": "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT",

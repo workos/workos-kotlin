@@ -44,6 +44,10 @@ open class UserUpdated
   override val lastName: String?,
 
   @JvmField
+  @JsonProperty("job_title")
+  override val jobTitle: String?,
+
+  @JvmField
   @JsonProperty("updated_at")
   override val updatedAt: String,
 
