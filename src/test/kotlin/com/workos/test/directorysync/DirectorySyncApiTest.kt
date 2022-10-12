@@ -247,6 +247,7 @@ class DirectorySyncApiTest : TestBase() {
         }],
         "first_name": "Marcelina",
         "last_name": "Davis",
+        "job_title": "Software Engineer",
         "username": "marcelina@foo-corp.com",
         "groups": [{
           "id": "directory_group_01E64QTDNS0EGJ0FMCVY9BWGZT",
@@ -462,6 +463,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Jan",
             "last_name": "Brown",
+            "job_title": "Software Engineer",
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
@@ -492,6 +494,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Rosalinda",
             "last_name": "Swift",
+            "job_title": "Software Engineer",
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",
@@ -561,6 +564,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Jan",
             "last_name": "Brown",
+            "job_title": "Software Engineer",
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
@@ -590,6 +594,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Rosalinda",
             "last_name": "Swift",
+            "job_title": "Software Engineer",
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",
@@ -662,6 +667,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Jan",
             "last_name": "Brown",
+            "job_title": "Software Engineer",
             "username": "jan@foo-corp.com",
             "groups": [{
               "id": "$groupId",
@@ -692,6 +698,7 @@ class DirectorySyncApiTest : TestBase() {
             }],
             "first_name": "Rosalinda",
             "last_name": "Swift",
+            "job_title": "Software Engineer",
             "username": "rosalinda@foo-corp.com",
             "groups": [{
               "id": "$groupId",

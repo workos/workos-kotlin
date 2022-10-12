@@ -63,6 +63,7 @@ class DirectoryGroupWebhookTests : TestBase() {
           "username": "michael.hadley@foo-corp.com",
           "last_name": "Hadley",
           "first_name": "Michael",
+          "job_title": "Software Engineer",
           "directory_id": "$directoryId",
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z",
