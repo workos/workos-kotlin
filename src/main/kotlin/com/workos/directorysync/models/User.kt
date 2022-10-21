@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param userName The username of the user.
  * @param firstName The first name of the user.
  * @param lastName The last name for the user.
+ * @param jobTitle The job title for the user.
  * @param emails The emails of the user.
  * @param groups The groups that the user is a member of.
  * @param state The state of the user.
@@ -53,6 +54,10 @@ open class User
   @JvmField
   @JsonProperty("last_name")
   open val lastName: String?,
+
+  @JvmField
+  @JsonProperty("job_title")
+  open val jobTitle: String?,
 
   @JvmField
   @JsonProperty("created_at")
