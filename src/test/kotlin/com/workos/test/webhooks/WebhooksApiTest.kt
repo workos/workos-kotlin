@@ -211,4 +211,48 @@ class WebhooksApiTest : TestBase() {
       )
     }
   }
+
+  @Test
+  fun verifyHeaderOutsideTolerance() {
+    assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+      val testData = prepareTest(testWebhook)
+      workos.webhooks.verifyHeader(
+        testWebhook,
+        testData["signature"] as String,
+        testData["secret"] as String,
+        -1
+      )
+    }
+  }
+
+  @Test
+  fun verifyHeaderIncorrectSecret() {
+    assertThrows(SignatureException::class.java) {
+      val workos = createWorkOSClient()
+      val testData = prepareTest(testWebhook)
+      workos.webhooks.verifyHeader(
+        testWebhook,
+        testData["signature"] as String,
+        "not-the-secret" as String,
+        tolerance = 1000
+      )
+    }
+  }
+
+  @Test
+  fun createSignatureHappyPath() {
+    val workos = createWorkOSClient()
+    val testData = prepareTest(testWebhook)
+    val stringData = testData["signature"] as String
+    val splitHeader = stringData.split(",")
+    val timestamp = splitHeader[0].split("=")[1]
+    val signatureHash = splitHeader[1].split("=")[1]
+    val expectedSignature: String = workos.webhooks.createSignature(
+      timestamp,
+      testWebhook,
+      testData["secret"] as String
+    )
+    assertEquals(expectedSignature, signatureHash)
+  }
 }

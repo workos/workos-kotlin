@@ -40,7 +40,15 @@ class WebhooksApi() {
     }
   }
 
-  private fun verifyHeader(
+  /**
+   * Verifies the header received in a WorkOS Webhook payload.
+   *
+   * @param payload The request body from the webhook
+   * @param signatureHeader Value from the request header "WorkOS-Signature"
+   * @param secret The secret for generating webhooks for the webhook endpoint. You can find this in the WorkOS Dashboard https://dashboard.workos.com/webhooks.
+   * @param tolerance Time allowance specified in milliseconds since the Webhook's `issued_timestamp`. If the current time exceeds the allowance, the request will fail validation. This is to prevent replay attacks.
+   */
+  fun verifyHeader(
     payload: String,
     signatureHeader: String,
     secret: String,
@@ -71,7 +79,14 @@ class WebhooksApi() {
     }
   }
 
-  private fun createSignature(timestamp: String, data: String, key: String): String {
+  /**
+   * Creates expected signature value based on the values in the received WorkOS Webhook payload
+   *
+   * @param timestamp The timestamp parsed from the webhook header
+   * @param data The request body from the webhook
+   * @param key The secret for generating webhooks for the webhook endpoint.
+   */
+  fun createSignature(timestamp: String, data: String, key: String): String {
     val payload = "$timestamp.$data"
     val sha256Hmac = Mac.getInstance("HmacSHA256")
     val secretKey = SecretKeySpec(key.toByteArray(), "HmacSHA256")
