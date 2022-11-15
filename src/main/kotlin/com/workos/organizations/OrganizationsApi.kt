@@ -76,7 +76,6 @@ class OrganizationsApi(private val workos: WorkOS) {
     }
   }
 
-
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationRequestOptions constructor(
     val idempotencyKey: String? = null,
@@ -86,7 +85,6 @@ class OrganizationsApi(private val workos: WorkOS) {
      */
     class CreateOrganizationRequestOptionsBuilder {
       private var idempotencyKey: String? = null
-
 
       /**
        * Sets the idempotencyKey.
@@ -119,8 +117,8 @@ class OrganizationsApi(private val workos: WorkOS) {
   @JvmOverloads
   fun createOrganization(
     options: CreateOrganizationOptions = CreateOrganizationOptions(),
-    requestOptions: CreateOrganizationRequestOptions ? = null): Organization
-  {
+    requestOptions: CreateOrganizationRequestOptions ? = null
+  ): Organization {
     val config = RequestConfig.builder()
       .data(options)
 

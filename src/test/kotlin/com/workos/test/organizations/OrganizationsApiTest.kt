@@ -1,7 +1,6 @@
 package com.workos.test.organizations
 
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
-import com.workos.auditlogs.AuditLogsApi
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.organizations.OrganizationsApi
 import com.workos.organizations.OrganizationsApi.CreateOrganizationOptions
@@ -9,7 +8,6 @@ import com.workos.organizations.OrganizationsApi.CreateOrganizationRequestOption
 import com.workos.organizations.OrganizationsApi.UpdateOrganizationOptions
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
-import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -111,7 +109,6 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
-
   @Test
   fun createOrganizationWithIdempotencyKeyReturnPayload() {
     val workos = createWorkOSClient()
@@ -136,16 +133,15 @@ class OrganizationsApiTest : TestBase() {
       requestHeaders = mapOf("Idempotency-Key" to "some-idempotency-key-value")
     )
 
-
     val organization = workos.organizations.createOrganization(
       CreateOrganizationOptions(
         "Organization Name",
         false,
         listOf("foo.com")
       ),
-        CreateOrganizationRequestOptions(
-          "some-idempotency-key-value"
-        )
+      CreateOrganizationRequestOptions(
+        "some-idempotency-key-value"
+      )
     )
   }
   @Test
