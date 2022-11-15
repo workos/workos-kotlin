@@ -116,6 +116,7 @@ class OrganizationsApi(private val workos: WorkOS) {
    * Creates a new organization.
    */
 
+  @JvmOverloads
   fun createOrganization(
     options: CreateOrganizationOptions = CreateOrganizationOptions(),
     requestOptions: CreateOrganizationRequestOptions ? = null): Organization
