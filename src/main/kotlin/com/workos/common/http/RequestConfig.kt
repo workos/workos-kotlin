@@ -40,7 +40,7 @@ class RequestConfig(
     /**
      * Set the request headers.
      */
-    fun headers(value: Map<String, String>) = apply { headers = value }
+    fun headers(value: Map<String, String?>) = apply { headers = value as Map<String, String> }
 
     /**
      * Set the request body.

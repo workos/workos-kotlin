@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wi
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.organizations.OrganizationsApi
 import com.workos.organizations.OrganizationsApi.CreateOrganizationOptions
+import com.workos.organizations.OrganizationsApi.CreateOrganizationRequestOptions
 import com.workos.organizations.OrganizationsApi.UpdateOrganizationOptions
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -108,6 +109,41 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
+  @Test
+  fun createOrganizationWithIdempotencyKeyReturnPayload() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/organizations",
+      responseBody = """{
+        "name": "Organization Name",
+        "object": "organization",
+        "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+        "allow_profiles_outside_organization": false,
+        "created_at": "2021-10-28T15:13:51.874Z",
+        "updated_at": "2021-10-28T15:14:03.032Z",
+        "domains": [
+          {
+            "domain": "foo.com",
+            "object": "organization_domain",
+            "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+          }
+        ]
+      }""",
+      requestHeaders = mapOf("Idempotency-Key" to "some-idempotency-key-value")
+    )
+
+    val organization = workos.organizations.createOrganization(
+      CreateOrganizationOptions(
+        "Organization Name",
+        false,
+        listOf("foo.com")
+      ),
+      CreateOrganizationRequestOptions(
+        "some-idempotency-key-value"
+      )
+    )
+  }
   @Test
   fun deleteOrganizationShouldNotError() {
     val workos = createWorkOSClient()

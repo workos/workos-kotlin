@@ -29,7 +29,8 @@ class OrganizationsApi(private val workos: WorkOS) {
     @JsonProperty("allow_profiles_outside_organization")
     val allowProfilesOutsideOrganization: Boolean? = null,
 
-    val domains: List<String>? = null
+    val domains: List<String>? = null,
+
   ) {
     /**
      * Builder class for creating [CreateOrganizationOptions].
@@ -75,15 +76,57 @@ class OrganizationsApi(private val workos: WorkOS) {
     }
   }
 
+  @JsonInclude(Include.NON_NULL)
+  class CreateOrganizationRequestOptions constructor(
+    val idempotencyKey: String? = null,
+  ) {
+    /**
+     * Builder class for [CreateOrganizationRequestOptions].
+     */
+    class CreateOrganizationRequestOptionsBuilder {
+      private var idempotencyKey: String? = null
+
+      /**
+       * Sets the idempotencyKey.
+       */
+      fun idempotencyKey(value: String) = apply { idempotencyKey = value }
+
+      /**
+       * Creates a [CreateOrganizationRequestOptions] with the given builder parameters.
+       */
+      fun build(): CreateOrganizationRequestOptions {
+        return CreateOrganizationRequestOptions(idempotencyKey)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): CreateOrganizationRequestOptionsBuilder {
+        return CreateOrganizationRequestOptionsBuilder()
+      }
+    }
+  }
+
   /**
    * Creates a new organization.
    */
-  fun createOrganization(options: CreateOrganizationOptions = CreateOrganizationOptions()): Organization {
+
+  @JvmOverloads
+  fun createOrganization(
+    options: CreateOrganizationOptions = CreateOrganizationOptions(),
+    requestOptions: CreateOrganizationRequestOptions ? = null
+  ): Organization {
     val config = RequestConfig.builder()
       .data(options)
-      .build()
 
-    return workos.post("/organizations", Organization::class.java, config)
+    if (requestOptions != null) {
+      config.headers(mapOf("Idempotency-Key" to requestOptions.idempotencyKey))
+    }
+
+    return workos.post("/organizations", Organization::class.java, config.build())
   }
 
   /**
