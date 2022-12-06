@@ -93,6 +93,29 @@ class PortalApiTest : TestBase() {
   }
 
   @Test
+  fun createPortalLinkWithLogStreamsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val portalLink = prepareGeneratePortalLinkTest(
+      """{
+        "organization": "organizationId",
+        "intent": "log_streams",
+        "return_url": "returnUrl"
+      }"""
+    )
+
+    val options = PortalApi.GeneratePortalLinkOptions.builder()
+      .organization("organizationId")
+      .intent(Intent.LogStreams)
+      .returnUrl("returnUrl")
+      .build()
+
+    val response = workos.portal.generateLink(options)
+
+    assertEquals(response.link, portalLink)
+  }
+
+  @Test
   fun createPortalLinkWithRawOptionsShouldReturnPayload() {
     val workos = createWorkOSClient()
 

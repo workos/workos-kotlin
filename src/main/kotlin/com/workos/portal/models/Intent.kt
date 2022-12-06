@@ -21,5 +21,10 @@ enum class Intent(@JsonValue val value: String) {
   /**
    * Audit Logs.
    */
-  AuditLogs("audit_logs")
+  AuditLogs("audit_logs"),
+  
+  /**
+   * Log Streams.
+   */
+  AuditLogs("log_streams")  
 }
