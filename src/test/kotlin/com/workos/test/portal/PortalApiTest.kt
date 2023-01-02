@@ -116,6 +116,31 @@ class PortalApiTest : TestBase() {
   }
 
   @Test
+  fun createPortalLinkWithSuccessUrlShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val portalLink = prepareGeneratePortalLinkTest(
+      """{
+        "organization": "organizationId",
+        "intent": "sso",
+        "return_url": "returnUrl"
+        "success_url": "successUrl"
+      }"""
+    )
+
+    val options = PortalApi.GeneratePortalLinkOptions(
+      organization = "organizationId",
+      intent = Intent.Sso,
+      returnUrl = "returnUrl"
+      successUrl = "successUrl"
+    )
+
+    val response = workos.portal.generateLink(options)
+
+    assertEquals(response.link, portalLink)
+  }
+
+  @Test
   fun buildGeneratePortalLinkOptionsWithNoOrganizationShouldThrow() {
 
     assertThrows(IllegalArgumentException::class.java) {
