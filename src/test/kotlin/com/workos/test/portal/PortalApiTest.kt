@@ -123,7 +123,7 @@ class PortalApiTest : TestBase() {
       """{
         "organization": "organizationId",
         "intent": "sso",
-        "return_url": "returnUrl"
+        "return_url": "returnUrl",
         "success_url": "successUrl"
       }"""
     )
@@ -131,7 +131,7 @@ class PortalApiTest : TestBase() {
     val options = PortalApi.GeneratePortalLinkOptions(
       organization = "organizationId",
       intent = Intent.Sso,
-      returnUrl = "returnUrl"
+      returnUrl = "returnUrl",
       successUrl = "successUrl"
     )
 
