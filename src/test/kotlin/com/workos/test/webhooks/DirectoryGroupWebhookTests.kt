@@ -222,7 +222,7 @@ class DirectoryGroupWebhookTests : TestBase() {
     assertTrue(webhook is DirectoryGroupUpdatedEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as DirectoryGroupUpdatedEvent).data.id, groupId)
-    val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any>
+    val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any?>
     assertEquals(previousRawAttributes["adminCreated"], null)
     assertEquals(previousRawAttributes["name"], "Account Mgmt")
   }

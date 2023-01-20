@@ -210,7 +210,7 @@ class DirectoryUserWebhookTests : TestBase() {
     Assertions.assertTrue(webhook is DirectoryUserUpdatedEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as DirectoryUserUpdatedEvent).data.id, userId)
-    val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any>
+    val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any?>
     assertEquals(previousRawAttributes["aliases"], null)
     assertEquals((previousRawAttributes["emails"] as List<Any>).size, 2)
   }
