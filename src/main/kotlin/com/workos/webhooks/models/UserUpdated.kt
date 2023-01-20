@@ -66,7 +66,7 @@ open class UserUpdated
 
   @JvmField
   @JsonProperty("custom_attributes")
-  override val customAttributes: Map<String, Any>,
+  override val customAttributes: Map<String, Any?>,
 
   @JvmField
   @JsonProperty("raw_attributes")
