@@ -66,11 +66,11 @@ open class UserUpdated
 
   @JvmField
   @JsonProperty("custom_attributes")
-  override val customAttributes: Map<String, String>,
+  override val customAttributes: Map<String, Any?>,
 
   @JvmField
   @JsonProperty("raw_attributes")
-  override val rawAttributes: Map<String, Any>,
+  override val rawAttributes: Map<String, Any?>,
 
   /**
    * Object containing the names and values of attributes and their previous values.
@@ -79,5 +79,5 @@ open class UserUpdated
    */
   @JvmField
   @JsonProperty("previous_attributes")
-  val previousAttributes: Map<String, Any>,
+  val previousAttributes: Map<String, Any?>,
 ) : User(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, jobTitle, createdAt, updatedAt, emails, groups, state, customAttributes, rawAttributes)
