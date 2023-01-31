@@ -21,6 +21,10 @@ enum class DirectoryType(@JsonValue val type: String) {
    */
   BreatheHr("breathehr"),
   /**
+   * Cezanne HR
+   */
+  CezanneHr("cezanne hr"),
+  /**
    * Cyberark SCIM 2.0
    */
   CyberarkSCIMV2_0("cyberark scim v2.0\""),
