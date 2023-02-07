@@ -8,6 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 data class Totp
 @JsonCreator constructor(
+
+  @JvmField
+  @JsonProperty("issuer")
+  val issuer: String,
+
+  @JvmField
+  @JsonProperty("user")
+  val user: String,
+
   @JvmField
   @JsonProperty("qr_code")
   val qrCode: String?,
