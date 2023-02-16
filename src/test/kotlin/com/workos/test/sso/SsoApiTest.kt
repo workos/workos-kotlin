@@ -185,6 +185,42 @@ class SsoApiTest : TestBase() {
   }
 
   @Test
+  fun getProfileAndTokenWithGroupsShouldReturnGroups() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      url = "/sso/token",
+      requestBody = """{
+        "client_id": "clientId",
+        "client_secret": "apiKey",
+        "code": "code",
+        "grant_type": "authorization_code"
+      }""",
+      responseBody = """{
+        "access_token": "01DMEK0J53CVMC32CK5SE0KZ8Q",
+        "profile": {
+          "connection_id": "conn_01E4ZCR3C56J083X43JQXF3JK5",
+          "connection_type": "OktaSAML",
+          "email": "todd@foo-corp.com",
+          "first_name": "Todd",
+          "id": "prof_01DMC79VCBZ0NY2099737PSVF1",
+          "idp_id": "00u1a0ufowBJlzPlk357",
+          "last_name": "Rundgren",
+          "groups":["Admins", "Developers"],
+          "object": "profile",
+          "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
+          "raw_attributes": {"foo": "bar", "groups":["Admins", "Developers"]}
+        }
+      }"""
+    )
+
+    val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
+    val profile = profileAndToken.profile
+
+    assertEquals(["Admins", "Developers"], profile.groups)
+  }
+
+  @Test
   fun getProfileShouldReturnPayload() {
     val workos = createWorkOSClient()
 

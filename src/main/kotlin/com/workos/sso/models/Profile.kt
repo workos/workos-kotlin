@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param email The user's email address.
  * @param firstName The user's first name.
  * @param lastName The user's last name.
+ * @param groups The user's group memberships.
  * @param rawAttributes Object of key-value pairs containing relevant user data from the Identity Provider.
  */
 data class Profile
@@ -53,6 +54,10 @@ data class Profile
   @JvmField
   @JsonProperty("last_name")
   val lastName: String?,
+
+  @JvmField
+  @JsonProperty("groups")
+  val groups: List<String>?,
 
   @JvmField
   @JsonProperty("raw_attributes")
