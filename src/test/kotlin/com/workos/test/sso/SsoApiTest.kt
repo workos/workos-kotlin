@@ -217,7 +217,7 @@ class SsoApiTest : TestBase() {
     val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
     val profile = profileAndToken.profile
 
-    assertEquals(["Admins", "Developers"], profile.groups)
+    assertEquals(listOf("Admins", "Developers"), profile.groups)
   }
 
   @Test
