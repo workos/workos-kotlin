@@ -21,6 +21,7 @@ class PortalApi(private val workos: WorkOS) {
    * @param organization Unique identifier for an [com.workos.organizations.models.Organization].
    * @param intent The type of setup to generate an Admin Portal link.
    * @param returnUrl The URL to which WorkOS should send users when they click on the link to return to your website.
+   * @param successUrl The URL to which WorkOS will redirect users to upon successfully setting up Single Sign On or Directory Sync.
    */
   @JsonInclude(Include.NON_NULL)
   class GeneratePortalLinkOptions @JvmOverloads constructor(
@@ -30,6 +31,9 @@ class PortalApi(private val workos: WorkOS) {
 
     @JsonProperty("return_url")
     val returnUrl: String? = null,
+
+    @JsonProperty("success_url")
+    val successUrl: String? = null,
   ) {
     /**
      * Builder class for [GeneratePortalLinkOptions].
@@ -40,6 +44,8 @@ class PortalApi(private val workos: WorkOS) {
       private var intent: Intent? = null
 
       private var returnUrl: String? = null
+
+      private var successUrl: String? = null
 
       /**
        * Sets the organizationId.
@@ -57,6 +63,11 @@ class PortalApi(private val workos: WorkOS) {
       fun returnUrl(value: String) = apply { returnUrl = value }
 
       /**
+       * Sets the success URL.
+       */
+      fun successUrl(value: String) = apply { successUrl = value }
+
+      /**
        * Creates a [GeneratePortalLinkOptions] with the given builder parameters.
        */
       fun build(): GeneratePortalLinkOptions {
@@ -71,7 +82,8 @@ class PortalApi(private val workos: WorkOS) {
         return GeneratePortalLinkOptions(
           organization = organization!!,
           intent = intent!!,
-          returnUrl = returnUrl
+          returnUrl = returnUrl,
+          successUrl = successUrl
         )
       }
     }
