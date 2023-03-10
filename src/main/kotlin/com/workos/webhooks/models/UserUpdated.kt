@@ -59,9 +59,6 @@ open class UserUpdated
   override val emails: List<Email>,
 
   @JvmField
-  override val groups: List<Group>?,
-
-  @JvmField
   override val state: UserState,
 
   @JvmField
