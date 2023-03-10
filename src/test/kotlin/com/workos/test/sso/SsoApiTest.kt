@@ -362,7 +362,7 @@ class SsoApiTest : TestBase() {
       params = mapOf(
         "connection_type" to equalTo(ConnectionType.GoogleSAML.toString()),
         "domain" to equalTo("domain.com"),
-        "organization_id" to equalTo("org_123"),
+        "organization_id" to equalTo("org_123")
       ),
       responseBody = """{
         "data": [

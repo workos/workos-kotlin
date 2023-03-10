@@ -3,8 +3,8 @@ package com.workos.webhooks.models
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.Email
-import com.workos.directorysync.models.UserUpdate
 import com.workos.directorysync.models.UserState
+import com.workos.directorysync.models.UserUpdate
 
 /**
  * @suppress
@@ -75,5 +75,5 @@ open class UserUpdated
    */
   @JvmField
   @JsonProperty("previous_attributes")
-  val previousAttributes: Map<String, Any?>,
+  val previousAttributes: Map<String, Any?>
 ) : UserUpdate(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, jobTitle, createdAt, updatedAt, emails, state, customAttributes, rawAttributes)

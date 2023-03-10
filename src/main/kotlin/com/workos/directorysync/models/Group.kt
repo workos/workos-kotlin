@@ -49,5 +49,5 @@ open class Group
 
   @JvmField
   @JsonProperty("raw_attributes")
-  open val rawAttributes: Map<String, Any?>,
+  open val rawAttributes: Map<String, Any?>
 )

@@ -21,5 +21,5 @@ data class ConnectionDomain
   val domain: String,
 
   @JvmField
-  val id: String,
+  val id: String
 )

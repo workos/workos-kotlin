@@ -25,7 +25,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   fun getDirectory(id: String): Directory {
     return workos.get(
-      "/directories/$id", Directory::class.java
+      "/directories/$id",
+      Directory::class.java
     )
   }
 
@@ -34,13 +35,14 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   @JvmOverloads
   fun listDirectories(listOptions: ListDirectoriesOptions? = null): DirectoryList {
-
     val requestConfig = RequestConfig.builder()
       .params(listOptions ?: emptyMap())
       .build()
 
     return workos.get(
-      "/directories", DirectoryList::class.java, requestConfig
+      "/directories",
+      DirectoryList::class.java,
+      requestConfig
     )
   }
 
@@ -58,7 +60,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    order: Order? = null,
+    order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
       if (organization != null) set("organization_id", organization)
@@ -93,6 +95,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
      * The directory identifier to filter on.
      */
     fun directory(value: String) = apply { this.params["directory"] = value }
+
     /**
      * The user identifier to filter on.
      */
@@ -104,7 +107,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   fun getDirectoryUser(id: String): User {
     return workos.get(
-      "/directory_users/$id", User::class.java
+      "/directory_users/$id",
+      User::class.java
     )
   }
 
@@ -123,7 +127,9 @@ class DirectorySyncApi(private val workos: WorkOS) {
       .build()
 
     return workos.get(
-      "/directory_users", DirectoryUserList::class.java, requestConfig
+      "/directory_users",
+      DirectoryUserList::class.java,
+      requestConfig
     )
   }
 
@@ -132,7 +138,8 @@ class DirectorySyncApi(private val workos: WorkOS) {
    */
   fun getDirectoryGroup(id: String): Group {
     return workos.get(
-      "/directory_groups/$id", Group::class.java
+      "/directory_groups/$id",
+      Group::class.java
     )
   }
 
@@ -151,7 +158,9 @@ class DirectorySyncApi(private val workos: WorkOS) {
       .build()
 
     return workos.get(
-      "/directory_groups", DirectoryGroupList::class.java, requestConfig
+      "/directory_groups",
+      DirectoryGroupList::class.java,
+      requestConfig
     )
   }
 
@@ -170,7 +179,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    order: Order? = null,
+    order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
       if (directory != null) set("directory", directory)
@@ -195,6 +204,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
        * The directory identifier to filter on.
        */
       fun directory(value: String) = apply { this.params["directory"] = value }
+
       /**
        * The user identifier to filter on.
        */
@@ -217,7 +227,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    order: Order? = null,
+    order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
       if (directory != null) set("directory", directory)
@@ -242,6 +252,7 @@ class DirectorySyncApi(private val workos: WorkOS) {
        * The directory identifier to filter on.
        */
       fun directory(value: String) = apply { this.params["directory"] = value }
+
       /**
        * The group identifier to filter on.
        */

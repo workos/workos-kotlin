@@ -61,5 +61,5 @@ data class Profile
 
   @JvmField
   @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, Any>,
+  val rawAttributes: Map<String, Any>
 )

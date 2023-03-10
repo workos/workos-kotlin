@@ -23,5 +23,5 @@ data class OrganizationDomain
   val id: String,
 
   @JvmField
-  val domain: String,
+  val domain: String
 )

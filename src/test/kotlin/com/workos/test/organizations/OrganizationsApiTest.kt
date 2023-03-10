@@ -34,7 +34,7 @@ class OrganizationsApiTest : TestBase() {
           }
         ]
       }""",
-      requestBody = body,
+      requestBody = body
     )
 
     return mapOf(
@@ -144,6 +144,7 @@ class OrganizationsApiTest : TestBase() {
       )
     )
   }
+
   @Test
   fun deleteOrganizationShouldNotError() {
     val workos = createWorkOSClient()
@@ -366,7 +367,7 @@ class OrganizationsApiTest : TestBase() {
           }
         ]
       }""",
-      requestBody = body,
+      requestBody = body
     )
 
     return mapOf(

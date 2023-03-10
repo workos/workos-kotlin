@@ -106,13 +106,17 @@ class AuditLogsTest : TestBase() {
       .action("user.signed_in")
       .occurredAt(Date(1220227200))
       .actor(
-        "user_123", "user", "User",
+        "user_123",
+        "user",
+        "User",
         mapOf(
-          "role" to "admin",
+          "role" to "admin"
         )
       )
       .target(
-        "team_123", "team", "Team",
+        "team_123",
+        "team",
+        "Team",
         mapOf(
           "foo" to "foo",
           "bar" to "bar"
@@ -122,7 +126,7 @@ class AuditLogsTest : TestBase() {
       .context("0.0.0.0", "User Agent")
       .metadata(
         mapOf(
-          "client" to "web",
+          "client" to "web"
         )
       )
       .build()
@@ -376,7 +380,7 @@ class AuditLogsTest : TestBase() {
         "state": "pending",
         "created_at": "2022-08-17T19:58:50.686Z",
         "updated_at": "2022-08-17T19:58:50.686Z"
-      }""",
+      }"""
     )
 
     val export = workos.auditLogs.getExport("audit_log_export_123")

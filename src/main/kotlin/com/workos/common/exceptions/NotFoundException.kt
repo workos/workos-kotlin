@@ -8,7 +8,7 @@ package com.workos.common.exceptions
  */
 class NotFoundException(
   private val path: String,
-  val requestId: String,
+  val requestId: String
 ) : Exception("NotFoundException") {
   val status = 404
 }

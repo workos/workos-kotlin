@@ -17,7 +17,7 @@ class PortalApiTest : TestBase() {
       responseBody = """{
           "link": "$portalLink"
         }""",
-      requestBody = body,
+      requestBody = body
     )
 
     return portalLink
@@ -165,9 +165,7 @@ class PortalApiTest : TestBase() {
 
   @Test
   fun buildGeneratePortalLinkOptionsWithNoOrganizationShouldThrow() {
-
     assertThrows(IllegalArgumentException::class.java) {
-
       PortalApi.GeneratePortalLinkOptions
         .builder()
         .intent(Intent.Sso)

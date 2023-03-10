@@ -12,7 +12,7 @@ class BadRequestException(
   override val message: String?,
   val code: String?,
   val errors: List<Map<String, Any>>?,
-  val requestId: String,
+  val requestId: String
 ) : Exception(message) {
   val status = 400
 }
