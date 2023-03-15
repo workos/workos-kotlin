@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.Email
 import com.workos.directorysync.models.UserState
-import com.workos.directorysync.models.UserUpdate
 
 /**
  * @suppress
@@ -76,4 +75,68 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any?>
-) : UserUpdate(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, jobTitle, createdAt, updatedAt, emails, state, customAttributes, rawAttributes)
+) : PreviousAttributes(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, jobTitle, createdAt, updatedAt, emails, state, customAttributes, rawAttributes)
+
+open class PreviousAttributes
+@JsonCreator constructor(
+  @JvmField
+  @JsonProperty("object")
+  open val obj: String = "directory_user",
+
+  @JvmField
+  open val id: String,
+
+  @JvmField
+  @JsonProperty("directory_id")
+  open val directoryId: String,
+
+  @JvmField
+  @JsonProperty("organization_id")
+  open val organizationId: String?,
+
+  @JvmField
+  @JsonProperty("idp_id")
+  open val idpId: String,
+
+  @JvmField
+  @JsonProperty("username")
+  open val userName: String?,
+
+  @JvmField
+  @JsonProperty("first_name")
+  open val firstName: String?,
+
+  @JvmField
+  @JsonProperty("last_name")
+  open val lastName: String?,
+
+  @JvmField
+  @JsonProperty("job_title")
+  open val jobTitle: String?,
+
+  @JvmField
+  @JsonProperty("created_at")
+  open val createdAt: String,
+
+  @JvmField
+  @JsonProperty("updated_at")
+  open val updatedAt: String,
+
+  @JvmField
+  open val emails: List<Email>,
+
+  @JvmField
+  open val state: UserState,
+
+  @JvmField
+  @JsonProperty("custom_attributes")
+  open val customAttributes: Map<String, Any?>,
+
+  @JvmField
+  @JsonProperty("raw_attributes")
+  open val rawAttributes: Map<String, Any?>
+) {
+  open fun primaryEmail(): String? {
+    return emails.first { it.primary == true }.value
+  }
+}
