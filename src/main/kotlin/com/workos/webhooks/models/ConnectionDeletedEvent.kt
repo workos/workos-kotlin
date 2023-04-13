@@ -14,5 +14,8 @@ class ConnectionDeletedEvent @JsonCreator constructor(
   override val event: EventType,
 
   @JvmField
-  override val data: Connection
+  override val data: Connection,
+
+  @JvmField
+  override val created_at: String
 ) : WebhookEvent(id, event, data)

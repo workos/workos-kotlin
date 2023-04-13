@@ -14,5 +14,8 @@ class DirectoryGroupUpdatedEvent
   override val event: EventType,
 
   @JvmField
-  override val data: GroupUpdated
+  override val data: GroupUpdated,
+
+  @JvmField
+  override val created_at: String
 ) : WebhookEvent(id, event, data)

@@ -13,5 +13,8 @@ class DirectoryGroupCreatedEvent(
   override val event: EventType,
 
   @JvmField
-  override val data: Group
+  override val data: Group,
+
+  @JvmField
+  override val created_at: String
 ) : WebhookEvent(id, event, data)

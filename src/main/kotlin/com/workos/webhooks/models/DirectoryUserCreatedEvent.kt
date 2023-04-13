@@ -13,5 +13,8 @@ class DirectoryUserCreatedEvent(
   override val event: EventType,
 
   @JvmField
-  override val data: User
+  override val data: User,
+
+  @JvmField
+  override val created_at: String
 ) : WebhookEvent(id, event, data)

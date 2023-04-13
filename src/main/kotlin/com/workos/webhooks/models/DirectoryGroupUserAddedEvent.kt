@@ -13,5 +13,8 @@ class DirectoryGroupUserAddedEvent @JsonCreator constructor(
   override val event: EventType,
 
   @JvmField
-  override val data: DirectoryGroupUserEvent
+  override val data: DirectoryGroupUserEvent,
+
+  @JvmField
+  override val created_at: String
 ) : WebhookEvent(id, event, data)
