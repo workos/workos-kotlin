@@ -24,5 +24,5 @@ abstract class WebhookEvent
   open val data: Any,
 
   @JvmField
-  override val created_at: String
+  override val createdAt: String
 )

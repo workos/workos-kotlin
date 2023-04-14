@@ -14,5 +14,5 @@ class DirectoryGroupUserRemovedEvent(
   override val data: DirectoryGroupUserEvent,
 
   @JvmField
-  override val created_at: String
-) : WebhookEvent(id, event, data)
+  override val createdAt: String
+) : WebhookEvent(id, event, data, createdAt)

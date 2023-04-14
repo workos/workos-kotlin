@@ -30,23 +30,23 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
     val id = mapper.readValue(rootNode?.get("id")?.traverse(), String::class.java)
     val eventType = mapper.readValue(rootNode?.get("event")?.traverse(), EventType::class.java)!!
     val data = rootNode?.get("data")
-    val created_at = mapper.readValue(rootNode?.get("created_at")?.traverse(), String::class.java)
+    val createdAt = mapper.readValue(rootNode?.get("created_at")?.traverse(), String::class.java)
 
     return when (eventType) {
-      EventType.ConnectionActivated -> ConnectionActivatedEvent(id, eventType, deserializeData(data, Connection::class.java), created_at)
-      EventType.ConnectionDeactivated -> ConnectionDeactivatedEvent(id, eventType, deserializeData(data, Connection::class.java), created_at)
-      EventType.ConnectionDeleted -> ConnectionDeletedEvent(id, eventType, deserializeData(data, Connection::class.java), created_at)
-      EventType.DirectoryActivated -> DirectoryActivatedEvent(id, eventType, deserializeData(data, Directory::class.java), created_at)
-      EventType.DirectoryDeactivated -> DirectoryDeactivatedEvent(id, eventType, deserializeData(data, Directory::class.java), created_at)
-      EventType.DirectoryDeleted -> DirectoryDeletedEvent(id, eventType, deserializeData(data, Directory::class.java), created_at)
-      EventType.DirectoryUserCreated -> DirectoryUserCreatedEvent(id, eventType, deserializeData(data, User::class.java), created_at)
-      EventType.DirectoryUserUpdated -> DirectoryUserUpdatedEvent(id, eventType, deserializeData(data, UserUpdated::class.java), created_at)
-      EventType.DirectoryUserDeleted -> DirectoryUserDeletedEvent(id, eventType, deserializeData(data, User::class.java), created_at)
-      EventType.DirectoryGroupCreated -> DirectoryGroupCreatedEvent(id, eventType, deserializeData(data, Group::class.java), created_at)
-      EventType.DirectoryGroupUpdated -> DirectoryGroupUpdatedEvent(id, eventType, deserializeData(data, GroupUpdated::class.java), created_at)
-      EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java), created_at)
-      EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), created_at)
-      EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserRemovedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), created_at)
+      EventType.ConnectionActivated -> ConnectionActivatedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
+      EventType.ConnectionDeactivated -> ConnectionDeactivatedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
+      EventType.ConnectionDeleted -> ConnectionDeletedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
+      EventType.DirectoryActivated -> DirectoryActivatedEvent(id, eventType, deserializeData(data, Directory::class.java), createdAt)
+      EventType.DirectoryDeactivated -> DirectoryDeactivatedEvent(id, eventType, deserializeData(data, Directory::class.java), createdAt)
+      EventType.DirectoryDeleted -> DirectoryDeletedEvent(id, eventType, deserializeData(data, Directory::class.java), createdAt)
+      EventType.DirectoryUserCreated -> DirectoryUserCreatedEvent(id, eventType, deserializeData(data, User::class.java), createdAt)
+      EventType.DirectoryUserUpdated -> DirectoryUserUpdatedEvent(id, eventType, deserializeData(data, UserUpdated::class.java), createdAt)
+      EventType.DirectoryUserDeleted -> DirectoryUserDeletedEvent(id, eventType, deserializeData(data, User::class.java), createdAt)
+      EventType.DirectoryGroupCreated -> DirectoryGroupCreatedEvent(id, eventType, deserializeData(data, Group::class.java), createdAt)
+      EventType.DirectoryGroupUpdated -> DirectoryGroupUpdatedEvent(id, eventType, deserializeData(data, GroupUpdated::class.java), createdAt)
+      EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java), createdAt)
+      EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
+      EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserRemovedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
     }
   }
 
