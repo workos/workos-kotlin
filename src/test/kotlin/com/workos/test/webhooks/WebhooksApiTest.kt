@@ -75,7 +75,8 @@ class WebhooksApiTest : TestBase() {
           }
         }
       },
-      "event": "$eventType"
+      "event": "$eventType",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }"""
 
   private val testWebhookWithUnknownProperties = """
@@ -99,7 +100,8 @@ class WebhooksApiTest : TestBase() {
         "new_unknown_property": {},
         "another_unknown_property": "foo bar"
       },
-      "event": "$eventType"
+      "event": "$eventType",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }"""
 
   companion object {

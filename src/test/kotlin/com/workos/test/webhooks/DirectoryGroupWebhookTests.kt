@@ -39,7 +39,8 @@ class DirectoryGroupWebhookTests : TestBase() {
           ]
         }
       },
-      "event": "${eventType.value}"
+      "event": "${eventType.value}",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }
     """
   }
@@ -129,7 +130,8 @@ class DirectoryGroupWebhookTests : TestBase() {
         },
         "directory_id": "$directoryId"
       },
-      "event": "${eventType.value}"
+      "event": "${eventType.value}",
+      "created_at": "2021-06-25T19:07:33.155Z",
     }
     """
   }
@@ -167,7 +169,8 @@ class DirectoryGroupWebhookTests : TestBase() {
           }
         }
       },
-      "event": "${eventType.value}"
+      "event": "${eventType.value}",
+      "created_at": "2021-06-25T19:07:33.155Z",
     }
     """
   }
