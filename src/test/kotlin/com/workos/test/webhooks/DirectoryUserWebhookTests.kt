@@ -158,7 +158,7 @@ class DirectoryUserWebhookTests : TestBase() {
         }
       },
       "event": "${eventType.value}",
-      "created_at": "2021-06-25T19:07:33.155Z",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }"""
   }
 
