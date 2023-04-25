@@ -1,5 +1,6 @@
 package com.workos.directorysync.models
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
 /**
@@ -88,5 +89,5 @@ enum class DirectoryType(@JsonValue val type: String) {
    * An unknown directory type.
    */
   @JsonEnumDefaultValue
-  Unknown
+  Unknown("unknown")
 }
