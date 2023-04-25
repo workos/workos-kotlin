@@ -84,4 +84,9 @@ enum class DirectoryType(@JsonValue val type: String) {
    * Workday https://www.workday.com/
    */
   Workday("workday"),
+  /**
+   * An unknown directory type.
+   */
+  @JsonEnumDefaultValue
+  Unknown
 }
