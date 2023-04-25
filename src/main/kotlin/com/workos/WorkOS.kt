@@ -1,7 +1,7 @@
 package com.workos
 
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
@@ -128,7 +128,7 @@ class WorkOS(
   private val manager = FuelManager()
 
   private val mapper = jacksonMapperBuilder()
-    .enable(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+    .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
     .build()
 
   init {
