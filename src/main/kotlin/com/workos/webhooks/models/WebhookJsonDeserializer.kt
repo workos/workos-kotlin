@@ -19,6 +19,7 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
   private val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 
   init {
+    mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
   }
 
