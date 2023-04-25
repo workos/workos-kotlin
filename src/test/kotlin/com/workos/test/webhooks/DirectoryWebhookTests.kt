@@ -1,5 +1,6 @@
 package com.workos.test.webhooks
 
+import com.workos.directorysync.models.DirectoryType
 import com.workos.test.TestBase
 import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
 import org.junit.Test
