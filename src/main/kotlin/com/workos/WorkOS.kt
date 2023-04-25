@@ -127,7 +127,9 @@ class WorkOS(
 
   private val manager = FuelManager()
 
-  private val mapper = jacksonObjectMapper()
+  private val mapper = jacksonMapperBuilder()
+    .enable(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+    .build()
 
   init {
     if (apiKey.isNullOrBlank()) {
