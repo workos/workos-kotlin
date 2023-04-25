@@ -9,6 +9,7 @@ agent:
 
 blocks:
   - name: Gradle build
+    dependencies: []
     task:
       jobs:
         - name: Build
@@ -17,6 +18,7 @@ blocks:
             - ./gradlew build
 
   - name: Gradle test
+    dependencies: []
     task:
       jobs:
         - name: Test
