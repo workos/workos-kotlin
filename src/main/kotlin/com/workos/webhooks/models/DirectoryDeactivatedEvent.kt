@@ -14,5 +14,8 @@ class DirectoryDeactivatedEvent @JsonCreator constructor(
   override val event: EventType,
 
   @JvmField
-  override val data: Directory
-) : WebhookEvent(id, event, data)
+  override val data: Directory,
+
+  @JvmField
+  override val createdAt: String
+) : WebhookEvent(id, event, data, createdAt)
