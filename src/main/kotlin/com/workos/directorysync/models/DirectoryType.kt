@@ -21,7 +21,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * Breathe HR
    */
-  BreatheHr("breathehr"),
+  BreatheHr("breathe hr"),
 
   /**
    * Cezanne HR
@@ -31,7 +31,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * Cyberark SCIM 2.0
    */
-  CyberarkSCIMV2_0("cyberark scim v2.0\""),
+  CyberarkSCIMV2_0("cyberark scim v2.0"),
 
   /**
    * FourthHR
@@ -52,11 +52,6 @@ enum class DirectoryType(@JsonValue val type: String) {
    * Google Workspace https://workspace.google.com/
    */
   GSuiteDirectory("gsuite directory"),
-
-  /**
-   * Gusto https://gusto.com/
-   */
-  Gusto("gusto"),
 
   /**
    * Hibob https://www.hibob.com/
@@ -89,6 +84,10 @@ enum class DirectoryType(@JsonValue val type: String) {
   PeopleHR("people hr"),
 
   /**
+   * Persionio  https://www.personio.com/
+   */
+  Personio("personio"),
+  /**
    * PingFederate SCIM 2.0  https://pingfederate.com/
    */
   PingFederateSCIMV2_0("pingfederate scim v2.0"),
@@ -96,7 +95,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * Rippling https://www.rippling.com/
    */
-  Rippling("rippling"),
+  Rippling("rippling scim v2.0"),
 
   /**
    * Workday https://www.workday.com/

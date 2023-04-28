@@ -26,7 +26,8 @@ class ConnectionWebhookTests : TestBase() {
         "connection_type": "GoogleSAML",
         "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
       },
-      "event": "${eventType.value}"
+      "event": "${eventType.value}",
+      "created_at": "2021-11-20T10:15:23.713Z"
     }
     """
   }
