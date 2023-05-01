@@ -7,7 +7,10 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param value The Event Type string value.
  */
-enum class EventType(@JsonValue @JvmField val value: String) {
+enum class EventType(
+  @JsonValue @JvmField
+  val value: String
+) {
   /**
    * Triggers when a Connection's state changes to active.
    */
@@ -76,5 +79,5 @@ enum class EventType(@JsonValue @JvmField val value: String) {
   /**
    * Triggers when a group is removed from a directory.
    */
-  DirectoryGroupDeleted("dsync.group.deleted"),
+  DirectoryGroupDeleted("dsync.group.deleted")
 }

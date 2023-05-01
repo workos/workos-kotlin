@@ -28,7 +28,7 @@ class MfaApi(private val workos: WorkOS) {
     val user: String? = null,
 
     @JsonProperty("phone_number")
-    val phoneNumber: String? = null,
+    val phoneNumber: String? = null
   ) {
     /**
      * Builder class for [enrollFactorOptions].
@@ -122,7 +122,7 @@ class MfaApi(private val workos: WorkOS) {
     val authenticationFactorId: String,
 
     @JsonProperty("sms_template")
-    val smsTemplate: String? = null,
+    val smsTemplate: String? = null
   ) {
     /**
      * Builder class for [ChalllengeFactorOptions].
@@ -152,7 +152,7 @@ class MfaApi(private val workos: WorkOS) {
 
         return ChallengeFactorOptions(
           authenticationFactorId = authenticationFactorId!!,
-          smsTemplate = smsTemplate,
+          smsTemplate = smsTemplate
         )
       }
     }
@@ -189,7 +189,7 @@ class MfaApi(private val workos: WorkOS) {
     val authenticationChallengeId: String,
 
     @JsonProperty("code")
-    val code: String,
+    val code: String
   ) {
     /**
      * Builder class for [ChalllengeFactorOptions].
@@ -260,7 +260,7 @@ class MfaApi(private val workos: WorkOS) {
     val authenticationChallengeId: String,
 
     @JsonProperty("code")
-    val code: String,
+    val code: String
   ) {
     /**
      * Builder class for [VerifyChalllengeOptions].

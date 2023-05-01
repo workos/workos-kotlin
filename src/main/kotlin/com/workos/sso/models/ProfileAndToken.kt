@@ -17,5 +17,5 @@ data class ProfileAndToken
 
   @JvmField
   @JsonProperty("access_token")
-  val token: String,
+  val token: String
 )

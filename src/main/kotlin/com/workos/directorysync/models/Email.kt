@@ -19,5 +19,5 @@ data class Email
   val type: String?,
 
   @JvmField
-  val value: String?,
+  val value: String?
 )

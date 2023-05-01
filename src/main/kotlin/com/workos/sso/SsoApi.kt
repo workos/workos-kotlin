@@ -196,7 +196,7 @@ class SsoApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    order: Order? = null,
+    order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
       if (connectionType != null) set("connection_type", connectionType.toString())
@@ -222,10 +222,12 @@ class SsoApi(private val workos: WorkOS) {
        * The [ConnectionType] to filter on.
        */
       fun connectionType(value: ConnectionType) = apply { this.params["connection_type"] = value.toString() }
+
       /**
        * The domain to filter on.
        */
       fun domain(value: String) = apply { this.params["domain"] = value }
+
       /**
        * The id of an [com.workos.organizations.models.Organization] to filter on.
        */

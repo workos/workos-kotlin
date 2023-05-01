@@ -45,7 +45,7 @@ open class TestBase {
     responseStatus: Int = 200,
     params: Map<String, StringValuePattern> = emptyMap(),
     requestBody: String? = null,
-    requestHeaders: Map<String, String>? = null,
+    requestHeaders: Map<String, String>? = null
   ): StubMapping {
     val mapping = any(urlPathEqualTo(url))
       .withQueryParams(params)

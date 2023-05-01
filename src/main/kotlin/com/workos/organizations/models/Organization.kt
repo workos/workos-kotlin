@@ -40,5 +40,5 @@ data class Organization
 
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String,
+  val updatedAt: String
 )

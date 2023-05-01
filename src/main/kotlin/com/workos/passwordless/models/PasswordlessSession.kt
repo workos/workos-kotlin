@@ -29,5 +29,5 @@ data class PasswordlessSession @JsonCreator constructor(
   val expiresAt: String,
 
   @JvmField
-  val link: String,
+  val link: String
 )

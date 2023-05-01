@@ -23,5 +23,5 @@ data class DirectoryGroupUserEvent
   val user: User,
 
   @JvmField
-  val group: Group,
+  val group: Group
 )

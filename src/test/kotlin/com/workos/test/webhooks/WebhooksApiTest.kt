@@ -118,7 +118,7 @@ class WebhooksApiTest : TestBase() {
       return mapOf(
         "secret" to secret,
         "signature" to "t=$timestamp, v1=$signature",
-        "timestamp" to timestamp,
+        "timestamp" to timestamp
       )
     }
   }
@@ -166,7 +166,7 @@ class WebhooksApiTest : TestBase() {
 
         "wrong payload",
         testData["signature"] as String,
-        "secret",
+        "secret"
       )
     }
   }
@@ -178,7 +178,7 @@ class WebhooksApiTest : TestBase() {
       workos.webhooks.constructEvent(
         testWebhook,
         "wrong signature",
-        "secret",
+        "secret"
       )
     }
   }
@@ -193,7 +193,7 @@ class WebhooksApiTest : TestBase() {
       workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
-        "not so secret",
+        "not so secret"
       )
     }
   }

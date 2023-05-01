@@ -67,7 +67,7 @@ class PasswordlessApi(private val workos: WorkOS) {
     @JsonProperty("expires_in")
     val expiresIn: Int? = null,
 
-    val state: String? = null,
+    val state: String? = null
   ) {
     init {
       if (email.isNullOrBlank()) {

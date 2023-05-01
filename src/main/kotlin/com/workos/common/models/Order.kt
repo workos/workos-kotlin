@@ -8,8 +8,9 @@ enum class Order(val type: String) {
    * Ascending Order
    */
   Asc("asc"),
+
   /**
    * Descending Order
    */
-  Desc("desc"),
+  Desc("desc")
 }

@@ -11,5 +11,5 @@ enum class SessionType(@JsonValue val state: String) {
   /**
    * Magic Link.
    */
-  MagicLink("MagicLink"),
+  MagicLink("MagicLink")
 }

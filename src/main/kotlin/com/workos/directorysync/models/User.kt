@@ -82,7 +82,7 @@ open class User
 
   @JvmField
   @JsonProperty("raw_attributes")
-  open val rawAttributes: Map<String, Any?>,
+  open val rawAttributes: Map<String, Any?>
 ) {
   open fun primaryEmail(): String? {
     return emails.first { it.primary == true }.value
