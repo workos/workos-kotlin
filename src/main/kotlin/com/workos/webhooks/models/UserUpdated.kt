@@ -12,60 +12,60 @@ open class UserUpdated
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  override val obj: String = "directory_user",
+  val obj: String = "directory_user",
 
   @JvmField
-  override val id: String,
+  val id: String,
 
   @JvmField
   @JsonProperty("directory_id")
-  override val directoryId: String,
+  val directoryId: String,
 
   @JvmField
   @JsonProperty("organization_id")
-  override val organizationId: String?,
+  val organizationId: String?,
 
   @JvmField
   @JsonProperty("idp_id")
-  override val idpId: String,
+  val idpId: String,
 
   @JvmField
   @JsonProperty("username")
-  override val userName: String?,
+  val userName: String?,
 
   @JvmField
   @JsonProperty("first_name")
-  override val firstName: String?,
+  val firstName: String?,
 
   @JvmField
   @JsonProperty("last_name")
-  override val lastName: String?,
+  val lastName: String?,
 
   @JvmField
   @JsonProperty("job_title")
-  override val jobTitle: String?,
+  val jobTitle: String?,
 
   @JvmField
   @JsonProperty("updated_at")
-  override val updatedAt: String,
+  val updatedAt: String,
 
   @JvmField
   @JsonProperty("created_at")
-  override val createdAt: String,
+  val createdAt: String,
 
   @JvmField
-  override val emails: List<Email>,
+  val emails: List<Email>,
 
   @JvmField
-  override val state: UserState,
+  val state: UserState,
 
   @JvmField
   @JsonProperty("custom_attributes")
-  override val customAttributes: Map<String, Any?>,
+  val customAttributes: Map<String, Any?>,
 
   @JvmField
   @JsonProperty("raw_attributes")
-  override val rawAttributes: Map<String, Any?>,
+  val rawAttributes: Map<String, Any?>,
 
   /**
    * Object containing the names and values of attributes and their previous values.
@@ -75,64 +75,4 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any?>
-) : PreviousAttributes(obj, id, directoryId, organizationId, idpId, userName, firstName, lastName, jobTitle, createdAt, updatedAt, emails, state, customAttributes, rawAttributes)
-
-open class PreviousAttributes
-@JsonCreator constructor(
-  @JvmField
-  @JsonProperty("object")
-  open val obj: String = "directory_user",
-
-  @JvmField
-  open val id: String,
-
-  @JvmField
-  @JsonProperty("directory_id")
-  open val directoryId: String,
-
-  @JvmField
-  @JsonProperty("organization_id")
-  open val organizationId: String?,
-
-  @JvmField
-  @JsonProperty("idp_id")
-  open val idpId: String,
-
-  @JvmField
-  @JsonProperty("username")
-  open val userName: String?,
-
-  @JvmField
-  @JsonProperty("first_name")
-  open val firstName: String?,
-
-  @JvmField
-  @JsonProperty("last_name")
-  open val lastName: String?,
-
-  @JvmField
-  @JsonProperty("job_title")
-  open val jobTitle: String?,
-
-  @JvmField
-  @JsonProperty("created_at")
-  open val createdAt: String,
-
-  @JvmField
-  @JsonProperty("updated_at")
-  open val updatedAt: String,
-
-  @JvmField
-  open val emails: List<Email>,
-
-  @JvmField
-  open val state: UserState,
-
-  @JvmField
-  @JsonProperty("custom_attributes")
-  open val customAttributes: Map<String, Any?>,
-
-  @JvmField
-  @JsonProperty("raw_attributes")
-  open val rawAttributes: Map<String, Any?>
 )
