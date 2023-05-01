@@ -57,7 +57,7 @@ open class UserUpdated
   val emails: List<Email>,
 
   @JvmField
-  val state: UserState,
+  val state: GroupState,
 
   @JvmField
   @JsonProperty("custom_attributes")
