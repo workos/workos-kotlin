@@ -3,7 +3,7 @@ package com.workos.webhooks.models
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.Email
-import com.workos.directorysync.models.GroupState
+import com.workos.directorysync.models.UserState
 
 /**
  * @suppress
@@ -57,7 +57,7 @@ open class UserUpdated
   val emails: List<Email>,
 
   @JvmField
-  val state: GroupState,
+  val state: UserState,
 
   @JvmField
   @JsonProperty("custom_attributes")
