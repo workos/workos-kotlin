@@ -245,7 +245,11 @@ class AuditLogsApi(private val workos: WorkOS) {
     val rangeEnd: Date,
     val actions: List<String>?,
     val actors: List<String>?,
-    val targets: List<String>?
+    val targets: List<String>?,
+    @JsonProperty("actor_names")
+    val actorNames: List<String>?,
+    @JsonProperty("actor_ids")
+    val actorIds: List<String>?
   ) {
     /**
      * Builder class for [CreateAuditLogExportOptions].
@@ -256,6 +260,8 @@ class AuditLogsApi(private val workos: WorkOS) {
       private var rangeEnd: Date? = null
       private var actions: List<String>? = null
       private var actors: List<String>? = null
+      private var actorNames: List<String>? = null
+      private var actorIds: List<String>? = null
       private var targets: List<String>? = null
 
       /**
@@ -281,7 +287,18 @@ class AuditLogsApi(private val workos: WorkOS) {
       /**
        * Sets the actors export filter.
        */
+      @Deprecated("Use the new actorNames() method")
       fun actors(value: List<String>) = apply { actors = value }
+
+      /**
+       * Sets the actorNames export filter.
+       */
+      fun actorNames(value: List<String>) = apply { actorNames = value }
+
+      /**
+       * Sets the actorIds export filter.
+       */
+      fun actorIds(value: List<String>) = apply { actorIds = value }
 
       /**
        * Sets the targets export filter.
@@ -310,7 +327,9 @@ class AuditLogsApi(private val workos: WorkOS) {
           rangeEnd = rangeEnd!!,
           actions = actions,
           actors = actors,
-          targets = targets
+          targets = targets,
+          actorNames = actorNames,
+          actorIds = actorIds,
         )
       }
     }
