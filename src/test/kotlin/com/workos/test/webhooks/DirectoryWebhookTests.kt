@@ -67,7 +67,8 @@ class DirectoryWebhookTests : TestBase() {
           "updated_at": "2021-11-20T10:16:26.921Z",
           "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
         },
-        "event": "${EventType.DirectoryActivated.value}"
+        "event": "${EventType.DirectoryActivated.value}",
+        "created_at": "2021-11-20T10:15:50.695Z"
       }
       """
     val testData = WebhooksApiTest.prepareTest(webhookData)
