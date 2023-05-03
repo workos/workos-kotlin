@@ -1,5 +1,6 @@
 package com.workos.webhooks
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.workos.webhooks.models.WebhookEvent
 import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest
@@ -14,7 +15,9 @@ import kotlin.jvm.Throws
  * with WorkOS Webhooks.
  */
 class WebhooksApi() {
-  private val objectMapper = jacksonObjectMapper()
+  private val objectMapper = jacksonMapperBuilder()
+    .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+    .build()
 
   /**
    * Validates a WorkOS Webhook payload and constructs the corresponding event.

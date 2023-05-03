@@ -227,6 +227,59 @@ class DirectorySyncApiTest : TestBase() {
   }
 
   @Test
+  fun listDirectoriesHandlesUnknownDirectoryTypes() {
+    val workos = createWorkOSClient()
+
+    val unknownDirectoryId = "directory_01ECAZ4NV9QMV47GW873HDCX74"
+    val oktaDirectoryId = "directory_01E8CS3GSBEBZ1F1CZAEE3KHDG"
+
+    stubResponse(
+      url = "/directories",
+      responseBody = """{
+        "data": [{
+          "id": "$unknownDirectoryId",
+          "idp_id": "02grqrue4294w24",
+          "domain": "foo-corp.com",
+          "external_key": "abcdefghi",
+          "name": "Foo Corp",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+          "object": "directory",
+          "state": "unlinked",
+          "type": "unknown type",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:08:33.155Z"
+        },
+        {
+          "id": "$oktaDirectoryId",
+          "domain": "foo-corp.com",
+          "external_key": "r3NDlInUnAe6i4wG",
+          "name": "Foo Corp",
+          "organization_id": "org_01EHZNVPK3SFK441A1RGBFPANT",
+          "object": "directory",
+          "state": "linked",
+          "type": "okta scim v2.0",
+          "created_at": "2021-06-25T19:09:33.155Z",
+          "updated_at": "2021-06-25T19:10:33.155Z"
+        }],
+        "list_metadata" : {
+          "after" : "someAfterId",
+          "before" : "someBeforeId"
+        }
+      }""",
+    )
+
+    val (data) = workos.directorySync.listDirectories()
+
+    val unknownDirectory = data[0]
+    val oktaDirectory = data[1]
+
+    assertEquals(unknownDirectory.id, unknownDirectoryId)
+    assertEquals(unknownDirectory.type, DirectoryType.Unknown)
+    assertEquals(oktaDirectory.id, oktaDirectoryId)
+    assertEquals(oktaDirectory.type, DirectoryType.OktaSCIMV2_0)
+  }
+
+  @Test
   fun getDirectoryUserShouldReturnDirectoryUser() {
     val workos = createWorkOSClient()
 

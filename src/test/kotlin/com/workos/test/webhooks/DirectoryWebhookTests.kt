@@ -1,5 +1,6 @@
 package com.workos.test.webhooks
 
+import com.workos.directorysync.models.DirectoryType
 import com.workos.test.TestBase
 import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
 import org.junit.Test
@@ -47,6 +48,41 @@ class DirectoryWebhookTests : TestBase() {
     assertTrue(webhook is DirectoryActivatedEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as DirectoryActivatedEvent).data.id, directoryId)
+  }
+
+  @Test
+  fun constructDirectoryActivatedEventWithUnknownDirectoryType() {
+    val workos = createWorkOSClient()
+    val webhookData =
+      """
+      {
+        "id": "$webhookId",
+        "data": {
+          "id": "$directoryId",
+          "name": "F",
+          "type": "unknown directory",
+          "state": "linked",
+          "object": "directory",
+          "created_at": "2021-11-20T10:15:50.695Z",
+          "updated_at": "2021-11-20T10:16:26.921Z",
+          "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
+        },
+        "event": "${EventType.DirectoryActivated.value}",
+        "created_at": "2021-11-20T10:15:50.695Z"
+      }
+      """
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is DirectoryActivatedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as DirectoryActivatedEvent).data.id, directoryId)
+    assertEquals((webhook as DirectoryActivatedEvent).data.type, DirectoryType.Unknown)
   }
 
   @Test
