@@ -13,7 +13,7 @@ class UnprocessableEntityException(
   override val message: String?,
   val code: String?,
   val errors: List<EntityError>?,
-  val requestId: String,
+  val requestId: String
 ) : Exception(message) {
   val status = 422
 }

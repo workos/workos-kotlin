@@ -16,7 +16,7 @@ class AuditLogsApi(private val workos: WorkOS) {
     val id: String,
     val type: String,
     val name: String? = null,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String>? = null
   )
 
   @JsonInclude(Include.NON_NULL)
@@ -24,14 +24,14 @@ class AuditLogsApi(private val workos: WorkOS) {
     val id: String,
     val type: String,
     val name: String? = null,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String>? = null
   )
 
   @JsonInclude(Include.NON_NULL)
   class Context constructor(
     val location: String,
     @JsonProperty("user_agent")
-    val userAgent: String? = null,
+    val userAgent: String? = null
   )
 
   /**
@@ -47,7 +47,7 @@ class AuditLogsApi(private val workos: WorkOS) {
     val targets: List<Target>,
     val context: Context,
     val version: Int? = 1,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String>? = null
   ) {
     /**
      * Builder class for [CreateAuditLogEventOptions].
@@ -74,7 +74,7 @@ class AuditLogsApi(private val workos: WorkOS) {
         id: String,
         type: String,
         name: String? = null,
-        metadata: Map<String, String>? = null,
+        metadata: Map<String, String>? = null
       ) = apply { actor = Actor(id, type, name, metadata) }
 
       /**
@@ -83,7 +83,7 @@ class AuditLogsApi(private val workos: WorkOS) {
       @JvmOverloads
       fun context(
         location: String,
-        userAgent: String? = null,
+        userAgent: String? = null
       ) = apply { context = Context(location, userAgent) }
 
       /**
@@ -99,7 +99,7 @@ class AuditLogsApi(private val workos: WorkOS) {
         id: String,
         type: String,
         name: String? = null,
-        metadata: Map<String, String>? = null,
+        metadata: Map<String, String>? = null
       ) = apply { targets.add(Target(id, type, name, metadata)) }
 
       /**
@@ -147,7 +147,7 @@ class AuditLogsApi(private val workos: WorkOS) {
           occurredAt = occurredAt!!,
           targets = targets,
           version = version,
-          metadata = metadata,
+          metadata = metadata
         )
       }
     }
@@ -168,7 +168,7 @@ class AuditLogsApi(private val workos: WorkOS) {
    */
   @JsonInclude(Include.NON_NULL)
   class CreateAuditLogEventRequestOptions constructor(
-    val idempotencyKey: String,
+    val idempotencyKey: String
   ) {
     /**
      * Builder class for [CreateAuditLogEventRequestOptions].
@@ -190,7 +190,7 @@ class AuditLogsApi(private val workos: WorkOS) {
         }
 
         return CreateAuditLogEventRequestOptions(
-          idempotencyKey = idempotencyKey!!,
+          idempotencyKey = idempotencyKey!!
         )
       }
     }
@@ -310,7 +310,7 @@ class AuditLogsApi(private val workos: WorkOS) {
           rangeEnd = rangeEnd!!,
           actions = actions,
           actors = actors,
-          targets = targets,
+          targets = targets
         )
       }
     }

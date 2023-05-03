@@ -12,12 +12,14 @@ enum class ConnectionState(@JsonValue val state: String) {
    * The connection is active and able to authenticate users.
    */
   Active("active"),
+
   /**
    * The connection has been created and requires configuration to be activated.
    */
   Draft("draft"),
+
   /**
    * The connection is inactive and unable to authenticate users.
    */
-  Inactive("inactive"),
+  Inactive("inactive")
 }

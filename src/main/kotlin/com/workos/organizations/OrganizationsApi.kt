@@ -29,7 +29,7 @@ class OrganizationsApi(private val workos: WorkOS) {
     @JsonProperty("allow_profiles_outside_organization")
     val allowProfilesOutsideOrganization: Boolean? = null,
 
-    val domains: List<String>? = null,
+    val domains: List<String>? = null
 
   ) {
     /**
@@ -78,7 +78,7 @@ class OrganizationsApi(private val workos: WorkOS) {
 
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationRequestOptions constructor(
-    val idempotencyKey: String? = null,
+    val idempotencyKey: String? = null
   ) {
     /**
      * Builder class for [CreateOrganizationRequestOptions].
@@ -158,7 +158,7 @@ class OrganizationsApi(private val workos: WorkOS) {
     after: String? = null,
     before: String? = null,
     limit: Int? = null,
-    order: Order? = null,
+    order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
       if (domains != null) set("domains", domains.joinToString(","))

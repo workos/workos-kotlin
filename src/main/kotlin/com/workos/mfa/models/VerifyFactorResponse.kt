@@ -16,5 +16,5 @@ data class VerifyFactorResponse
 
   @JvmField
   @JsonProperty("valid")
-  val valid: Boolean,
+  val valid: Boolean
 )

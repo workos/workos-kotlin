@@ -33,7 +33,7 @@ class PortalApi(private val workos: WorkOS) {
     val returnUrl: String? = null,
 
     @JsonProperty("success_url")
-    val successUrl: String? = null,
+    val successUrl: String? = null
   ) {
     /**
      * Builder class for [GeneratePortalLinkOptions].

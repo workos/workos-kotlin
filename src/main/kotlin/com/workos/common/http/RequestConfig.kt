@@ -10,7 +10,7 @@ package com.workos.common.http
 class RequestConfig(
   val params: Map<String, String>? = null,
   val headers: Map<String, String>? = null,
-  val data: Any? = null,
+  val data: Any? = null
 ) {
   /**
    * @suppress

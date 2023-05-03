@@ -75,7 +75,8 @@ class WebhooksApiTest : TestBase() {
           }
         }
       },
-      "event": "$eventType"
+      "event": "$eventType",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }"""
 
   private val testWebhookWithUnknownProperties = """
@@ -99,7 +100,8 @@ class WebhooksApiTest : TestBase() {
         "new_unknown_property": {},
         "another_unknown_property": "foo bar"
       },
-      "event": "$eventType"
+      "event": "$eventType",
+      "created_at": "2021-06-25T19:07:33.155Z"
     }"""
 
   companion object {
@@ -116,7 +118,7 @@ class WebhooksApiTest : TestBase() {
       return mapOf(
         "secret" to secret,
         "signature" to "t=$timestamp, v1=$signature",
-        "timestamp" to timestamp,
+        "timestamp" to timestamp
       )
     }
   }
@@ -164,7 +166,7 @@ class WebhooksApiTest : TestBase() {
 
         "wrong payload",
         testData["signature"] as String,
-        "secret",
+        "secret"
       )
     }
   }
@@ -176,7 +178,7 @@ class WebhooksApiTest : TestBase() {
       workos.webhooks.constructEvent(
         testWebhook,
         "wrong signature",
-        "secret",
+        "secret"
       )
     }
   }
@@ -191,7 +193,7 @@ class WebhooksApiTest : TestBase() {
       workos.webhooks.constructEvent(
         testWebhook,
         testData["signature"] as String,
-        "not so secret",
+        "not so secret"
       )
     }
   }

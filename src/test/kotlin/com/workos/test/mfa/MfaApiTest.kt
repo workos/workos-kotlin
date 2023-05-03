@@ -261,7 +261,7 @@ class MfaApiTest : TestBase() {
         "code": "already_verifed",
         "message": "Already verified"
       }""",
-      responseStatus = 422,
+      responseStatus = 422
     )
 
     val options = MfaApi.VerifyChallengeOptions.builder()

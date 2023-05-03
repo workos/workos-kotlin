@@ -8,5 +8,5 @@ internal data class BadRequestExceptionResponse
 
   val code: String? = null,
 
-  val errors: List<Map<String, Any>>? = null,
+  val errors: List<Map<String, Any>>? = null
 )

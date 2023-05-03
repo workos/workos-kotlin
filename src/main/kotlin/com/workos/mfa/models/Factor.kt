@@ -34,5 +34,5 @@ data class Factor
 
   @JvmField
   @JsonProperty("totp")
-  val totp: Totp?,
+  val totp: Totp?
 )

@@ -18,5 +18,5 @@ data class OrganizationList
 
   @JvmField
   @JsonProperty("list_metadata")
-  val listMetadata: ListMetadata,
+  val listMetadata: ListMetadata
 )
