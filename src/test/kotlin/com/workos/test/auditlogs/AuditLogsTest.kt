@@ -308,6 +308,8 @@ class AuditLogsTest : TestBase() {
         "range_end": "2022-09-17T19:58:50.686Z",
         "actions": ["foo", "bar"],
         "actors": ["foo", "bar"],
+        "actor_names": ["foo", "bar"],
+        "actor_ids": ["user_foo", "user_bar"],
         "targets": ["foo", "bar"]
       }"""
     )
@@ -318,6 +320,8 @@ class AuditLogsTest : TestBase() {
       .rangeEnd(Date(1663444730686))
       .actions(listOf("foo", "bar"))
       .actors(listOf("foo", "bar"))
+      .actorNames(listOf("foo", "bar"))
+      .actorIds(listOf("user_foo", "user_bar"))
       .targets(listOf("foo", "bar"))
       .build()
 
