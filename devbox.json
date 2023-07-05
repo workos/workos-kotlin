@@ -5,6 +5,7 @@
   "shell": {
     "init_hook": [],
     "scripts": {
+      "format": "gradle ktlintFormat --no-daemon",
       "build": "gradle build --no-daemon",
       "test": "gradle test --info --no-daemon"
     }
