@@ -3,9 +3,7 @@
     "gradle@7.4.2"
   ],
   "shell": {
-    "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
-    ],
+    "init_hook": [],
     "scripts": {
       "build": "gradle build --no-daemon",
       "test": "gradle test --info --no-daemon"
