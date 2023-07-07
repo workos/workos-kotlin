@@ -1,0 +1,13 @@
+{
+  "packages": [
+    "gradle@7.4.2"
+  ],
+  "shell": {
+    "init_hook": [],
+    "scripts": {
+      "format": "gradle ktlintFormat --no-daemon",
+      "build": "gradle build --no-daemon",
+      "test": "gradle test --info --no-daemon"
+    }
+  }
+}
