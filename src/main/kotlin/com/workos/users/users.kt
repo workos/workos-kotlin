@@ -14,7 +14,7 @@ class UsersApi(private val workos: WorkOS) {
   fun createUser(createUserOptions: CreateUserOptions): User {
     val config = RequestConfig
       .builder()
-      .data(CreateUserOptions)
+      .data(createUserOptions)
       .build()
 
     return workos.post(
@@ -39,7 +39,7 @@ class UsersApi(private val workos: WorkOS) {
     val email: String,
 
     @JsonProperty("password")
-    val password: String,
+    val password: String? = null,
 
     @JsonProperty("first_name")
     val firstName: String? = null,
@@ -53,10 +53,6 @@ class UsersApi(private val workos: WorkOS) {
     init {
       if (email.isBlank()) {
         throw IllegalArgumentException("email is required")
-      }
-
-      if (password.isBlank()) {
-        throw IllegalArgumentException("password is required")
       }
     }
 
@@ -72,7 +68,7 @@ class UsersApi(private val workos: WorkOS) {
      */
     class CreateUserOptionsBuilder {
       private lateinit var email: String
-      private lateinit var password: String
+      private var password: String? = null
       private var firstName: String? = null
       private var lastName: String? = null
       private var emailVerified: Boolean = false
