@@ -41,6 +41,35 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun deleteUserFromOrganizationShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+    val organization = "organization_123"
+
+    stubResponse(
+      "/users",
+      """{
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "unmanaged",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+
+    val options = UsersApi.RemoveUserFromOrganizationOptions.builder()
+      .id(id)
+      .organization(organization)
+      .build()
+
+    val user = workos.users.removeUserFromOrganization(options)
+
+    assertEquals(id, user.id)
+  }
+
+  @Test
   fun getUserShouldReturnUser() {
     val workos = createWorkOSClient()
 

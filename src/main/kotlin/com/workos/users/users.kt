@@ -9,7 +9,7 @@ import com.workos.users.models.UserType
 import com.workos.users.models.UserList
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.sso.models.Connection
+import com.fasterxml.jackson.databind.ObjectMapper
 
 
 class UsersApi(private val workos: WorkOS) {
@@ -38,6 +38,23 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
+   * removes a user from a specified organization.
+   */
+  fun removeUserFromOrganization(removeUserFromOrganizationOptions: RemoveUserFromOrganizationOptions): User {
+    val config = RequestConfig
+      .builder()
+      .data(removeUserFromOrganizationOptions)
+      .build()
+
+
+    val users = workos.delete("/users", config)
+
+    val mapper = ObjectMapper()
+    return mapper.readValue(users, User::class.java)
+
+  }
+
+  /**
    * Lists Users.
    */
   @JvmOverloads
@@ -50,7 +67,7 @@ class UsersApi(private val workos: WorkOS) {
 }
 
   /**
-   * Parameters for the listUsers method.
+   * Options for listing users.
    */
   class ListUsersOptions @JvmOverloads constructor(
     type: UserType? = null,
@@ -67,9 +84,6 @@ class UsersApi(private val workos: WorkOS) {
       if (organization != null) set("organization", organization)
     }
 
-    /**
-     * @suppress
-     */
     companion object {
       @JvmStatic
       fun builder(): ListUsersOptionsPaginationParamsBuilder {
@@ -77,57 +91,58 @@ class UsersApi(private val workos: WorkOS) {
       }
     }
 
-    /**
-     * Parameters builder for listUsers method.
-     */
     class ListUsersOptionsPaginationParamsBuilder : PaginationParamsBuilder<ListUsersOptions>(ListUsersOptions()) {
-      /**
-       * The UserType to filter on.
-       */
       fun type(value: UserType) = apply { this.params["type"] = value.toString() }
-
-      /**
-       * The email to filter on.
-       */
       fun email(value: String) = apply { this.params["email"] = value }
-
-      /**
-       * The organization to filter on.
-       */
       fun organization(value: String) = apply { this.params["organization"] = value }
     }
   }
 
-/**
-   * Parameters for creating a user.
-   *
-   * @param email The email of the user.
-   * @param password The password of the user.
-   * @param firstName The first name of the user.
-   * @param lastName The last name of the user.
-   * @param emailVerified The status indicating if the user's email is verified.
+  /**
+   * Options for removing a user from an organization.
+   */
+  class RemoveUserFromOrganizationOptions(
+    val id: String,
+    val organization: String
+  ) {
+    init {
+      require(id.isNotBlank()) { "User id is required" }
+      require(organization.isNotBlank()) { "Organization id is required" }
+    }
+
+    companion object {
+      @JvmStatic
+      fun builder(): RemoveUserFromOrganizationOptionsBuilder {
+        return RemoveUserFromOrganizationOptionsBuilder()
+      }
+    }
+
+    class RemoveUserFromOrganizationOptionsBuilder {
+      private lateinit var id: String
+      private lateinit var organization: String
+
+      fun id(value: String) = apply { this.id= value }
+      fun organization(value: String) = apply { this.organization = value }
+
+      fun build(): RemoveUserFromOrganizationOptions {
+        return RemoveUserFromOrganizationOptions(id, organization)
+      }
+    }
+  }
+
+  /**
+   * Options for creating a user.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   data class CreateUserOptions @JvmOverloads constructor(
-    @JsonProperty("email")
-    val email: String,
-
-    @JsonProperty("password")
-    val password: String? = null,
-
-    @JsonProperty("first_name")
-    val firstName: String? = null,
-
-    @JsonProperty("last_name")
-    val lastName: String? = null,
-
-    @JsonProperty("email_verified")
-    val emailVerified: Boolean = false
+    @JsonProperty("email") val email: String,
+    @JsonProperty("password") val password: String? = null,
+    @JsonProperty("first_name") val firstName: String? = null,
+    @JsonProperty("last_name") val lastName: String? = null,
+    @JsonProperty("email_verified") val emailVerified: Boolean = false
   ) {
     init {
-      if (email.isBlank()) {
-        throw IllegalArgumentException("email is required")
-      }
+      require(email.isNotBlank()) { "Email is required" }
     }
 
     companion object {
@@ -137,9 +152,6 @@ class UsersApi(private val workos: WorkOS) {
       }
     }
 
-    /**
-     * Builder class for creating [CreateUserOptions].
-     */
     class CreateUserOptionsBuilder {
       private lateinit var email: String
       private var password: String? = null
@@ -148,23 +160,13 @@ class UsersApi(private val workos: WorkOS) {
       private var emailVerified: Boolean = false
 
       fun email(value: String) = apply { this.email = value }
-
       fun password(value: String) = apply { this.password = value }
-
       fun firstName(value: String) = apply { this.firstName = value }
-
       fun lastName(value: String) = apply { this.lastName = value }
-
       fun emailVerified(value: Boolean) = apply { this.emailVerified = value }
 
       fun build(): CreateUserOptions {
-        return CreateUserOptions(
-          email = email,
-          password = password,
-          firstName = firstName,
-          lastName = lastName,
-          emailVerified = emailVerified
-        )
+        return CreateUserOptions(email, password, firstName, lastName, emailVerified)
       }
     }
   }
