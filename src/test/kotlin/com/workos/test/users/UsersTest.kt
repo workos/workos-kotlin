@@ -48,7 +48,7 @@ class UsersTest : TestBase() {
     val organization = "organization_123"
 
     stubResponse(
-      "/users",
+      "/users/user_123/organizations/organization_123",
       """{
          "id": "user_123",
         "email": "marcelina@foo-corp.com",

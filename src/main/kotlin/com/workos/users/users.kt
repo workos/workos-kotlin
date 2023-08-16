@@ -38,16 +38,27 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
-   * removes a user from a specified organization.
+   * Adds a user to a specified organization.
+   */
+  fun addUserToOrganization(addUserToOrganizationOptions: AddUserToOrganizationOptions): User {
+    val id = addUserToOrganizationOptions.id
+    val organization = addUserToOrganizationOptions.organization
+
+    val users = workos.delete("/users/$id/organizations/$organization")
+
+    val mapper = ObjectMapper()
+    return mapper.readValue(users, User::class.java)
+
+  }
+
+  /**
+   * Removes a user from a specified organization.
    */
   fun removeUserFromOrganization(removeUserFromOrganizationOptions: RemoveUserFromOrganizationOptions): User {
-    val config = RequestConfig
-      .builder()
-      .data(removeUserFromOrganizationOptions)
-      .build()
+    val id = removeUserFromOrganizationOptions.id
+    val organization = removeUserFromOrganizationOptions.organization
 
-
-    val users = workos.delete("/users", config)
+    val users = workos.delete("/users/$id/organizations/$organization")
 
     val mapper = ObjectMapper()
     return mapper.readValue(users, User::class.java)
