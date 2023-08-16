@@ -9,6 +9,7 @@ import com.workos.users.models.UserType
 import com.workos.users.models.UserList
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.sso.models.Connection
 
 
 class UsersApi(private val workos: WorkOS) {
@@ -26,6 +27,14 @@ class UsersApi(private val workos: WorkOS) {
       User::class.java,
       config
     )
+  }
+
+
+  /**
+   * Fetches a single user by id.
+   */
+  fun getUser(id: String): User {
+    return workos.get("/users/$id", User::class.java)
   }
 
   /**
