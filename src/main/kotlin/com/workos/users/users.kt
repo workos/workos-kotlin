@@ -1,8 +1,12 @@
 package com.workos.users
 
 import com.workos.WorkOS
+import com.workos.common.http.PaginationParams
+import com.workos.common.models.Order
 import com.workos.common.http.RequestConfig
 import com.workos.users.models.User
+import com.workos.users.models.UserType
+import com.workos.users.models.UserList
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -25,6 +29,67 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
+   * Lists Users.
+   */
+  @JvmOverloads
+  fun listUsers(options: ListUsersOptions? = null): UserList {
+    val config = RequestConfig.builder()
+      .params(options ?: ListUsersOptions())
+      .build()
+
+    return workos.get("/users", UserList::class.java, config)
+}
+
+  /**
+   * Parameters for the listUsers method.
+   */
+  class ListUsersOptions @JvmOverloads constructor(
+    type: UserType? = null,
+    email: String? = null,
+    organization: String? = null,
+    limit: Int? = null,
+    order: Order? = null,
+    before: String? = null,
+    after: String? = null
+  ) : PaginationParams(after, before, limit, order) {
+    init {
+      if (type != null) set("type", type.toString())
+      if (email != null) set("email", email)
+      if (organization != null) set("organization", organization)
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): ListUsersOptionsPaginationParamsBuilder {
+        return ListUsersOptionsPaginationParamsBuilder()
+      }
+    }
+
+    /**
+     * Parameters builder for listUsers method.
+     */
+    class ListUsersOptionsPaginationParamsBuilder : PaginationParamsBuilder<ListUsersOptions>(ListUsersOptions()) {
+      /**
+       * The UserType to filter on.
+       */
+      fun type(value: UserType) = apply { this.params["type"] = value.toString() }
+
+      /**
+       * The email to filter on.
+       */
+      fun email(value: String) = apply { this.params["email"] = value }
+
+      /**
+       * The organization to filter on.
+       */
+      fun organization(value: String) = apply { this.params["organization"] = value }
+    }
+  }
+
+/**
    * Parameters for creating a user.
    *
    * @param email The email of the user.
