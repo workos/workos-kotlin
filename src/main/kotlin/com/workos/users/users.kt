@@ -49,6 +49,9 @@ class UsersApi(private val workos: WorkOS) {
 
     val users = workos.delete("/users", config)
 
+    /**
+     * Uncertain about this.
+     */
     val mapper = ObjectMapper()
     return mapper.readValue(users, User::class.java)
 
