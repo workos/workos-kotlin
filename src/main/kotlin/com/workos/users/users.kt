@@ -44,10 +44,7 @@ class UsersApi(private val workos: WorkOS) {
     val id = addUserToOrganizationOptions.id
     val organization = addUserToOrganizationOptions.organization
 
-    val users = workos.delete("/users/$id/organizations/$organization")
-
-    val mapper = ObjectMapper()
-    return mapper.readValue(users, User::class.java)
+    return workos.post("/users/$id/organizations/$organization",  User::class.java)
 
   }
 
@@ -106,6 +103,38 @@ class UsersApi(private val workos: WorkOS) {
       fun type(value: UserType) = apply { this.params["type"] = value.toString() }
       fun email(value: String) = apply { this.params["email"] = value }
       fun organization(value: String) = apply { this.params["organization"] = value }
+    }
+  }
+
+  /**
+   * Options for adding a user to an organization.
+   */
+  class AddUserToOrganizationOptions(
+    val id: String,
+    val organization: String
+  ) {
+    init {
+      require(id.isNotBlank()) { "User id is required" }
+      require(organization.isNotBlank()) { "Organization id is required" }
+    }
+
+    companion object {
+      @JvmStatic
+      fun builder(): AddUserToOrganizationOptionsBuilder {
+        return AddUserToOrganizationOptionsBuilder()
+      }
+    }
+
+    class AddUserToOrganizationOptionsBuilder {
+      private lateinit var id: String
+      private lateinit var organization: String
+
+      fun id(value: String) = apply { this.id= value }
+      fun organization(value: String) = apply { this.organization = value }
+
+      fun build(): AddUserToOrganizationOptions {
+        return AddUserToOrganizationOptions(id, organization)
+      }
     }
   }
 
