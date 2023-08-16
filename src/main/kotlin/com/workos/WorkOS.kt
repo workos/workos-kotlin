@@ -21,6 +21,7 @@ import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
+import com.workos.users.UsersApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
@@ -94,6 +95,12 @@ class WorkOS(
    */
   @JvmField
   val mfa = MfaApi(this)
+
+  /**
+   * Module for interacting with the Users API.
+   */
+  @JvmField
+  val users = UsersApi(this)
 
   /**
    * Module for interacting with the Webhooks API.
