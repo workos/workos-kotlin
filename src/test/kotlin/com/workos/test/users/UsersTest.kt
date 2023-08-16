@@ -2,6 +2,8 @@ package com.workos.test.users
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.workos.sso.models.ConnectionState
+import com.workos.sso.models.ConnectionType
 import com.workos.test.TestBase
 import com.workos.users.UsersApi
 import kotlin.test.Test
@@ -38,7 +40,27 @@ class UsersTest : TestBase() {
     assertEquals(user.email, email)
   }
 
+  @Test
+  fun getUserShouldReturnUser() {
+    val workos = createWorkOSClient()
 
+    val id = "user_123"
+
+    stubResponse(
+      "/users/$id",
+      """{
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "unmanaged",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val user = workos.users.getUser(id)
+
+    assertEquals(id, user.id)
+  }
   @Test
   fun listUsersShouldReturnPayload() {
     val workos = createWorkOSClient()
