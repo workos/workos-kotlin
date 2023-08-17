@@ -7,6 +7,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.users.models.User
 import com.workos.users.models.UserType
 import com.workos.users.models.UserList
+import com.workos.users.models.VerifySessionResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -72,7 +73,23 @@ class UsersApi(private val workos: WorkOS) {
       .build()
 
     return workos.get("/users", UserList::class.java, config)
-}
+  }
+
+  /**
+   * Adds a user to a specified organization.
+   */
+  fun verifySession(verifySessionOptions: VerifySessionOptions): VerifySessionResponse {
+    val config = RequestConfig
+      .builder()
+      .data(verifySessionOptions)
+      .build()
+
+    return workos.post(
+      "/users/sessions/verify",
+      VerifySessionResponse::class.java,
+      config
+    )
+  }
 
   /**
    * Options for listing users.
@@ -138,6 +155,38 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
+
+  /**
+   * Options for verifying a session.
+   */
+  class VerifySessionOptions(
+    val token: String,
+    val clientID: String
+  ) {
+    init {
+      require(token.isNotBlank()) { "Token is required." }
+      require(clientID.isNotBlank()) { "ClientID is required." }
+    }
+
+    companion object {
+      @JvmStatic
+      fun builder(): VerifySessionOptionsBuilder {
+        return VerifySessionOptionsBuilder()
+      }
+    }
+
+    class VerifySessionOptionsBuilder {
+      private var token: String = ""
+      private var clientID: String = ""
+
+      fun token(value: String) = apply { this.token= value }
+      fun clientID(value: String) = apply { this.clientID = value }
+
+      fun build(): VerifySessionOptions {
+        return VerifySessionOptions(token, clientID)
+      }
+    }
+  }
   /**
    * Options for removing a user from an organization.
    */
