@@ -23,10 +23,10 @@ data class Session @JsonCreator constructor(
 
   @JvmField
   @JsonProperty("authorized_organizations")
-  val authorizedOrganizations: AuthorizedOrganization? = null,
+  val authorizedOrganizations: List<AuthorizedOrganization>? = null,
 
   @JvmField
   @JsonProperty("unauthorized_organization")
-  val unauthorizedOrganizations: UnauthorizedOrganization? = null,
+  val unauthorizedOrganizations: List<UnauthorizedOrganization>? = null,
 )
 

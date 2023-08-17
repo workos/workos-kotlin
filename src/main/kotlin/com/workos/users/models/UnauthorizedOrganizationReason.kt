@@ -11,5 +11,5 @@ data class UnauthorizedOrganizationReason @JsonCreator constructor(
 
   @JvmField
   @JsonProperty("allowedAuthenticationMethods")
-  val allowedAuthenticationMethods: SessionAuthenticationMethod
+  val allowedAuthenticationMethods: List<SessionAuthenticationMethod>
 )

@@ -11,5 +11,5 @@ data class UnauthorizedOrganization @JsonCreator constructor(
 
   @JvmField
   @JsonProperty("reasons")
-  val reasons: UnauthorizedOrganizationReason,
+  val reasons: List<UnauthorizedOrganizationReason>,
 )
