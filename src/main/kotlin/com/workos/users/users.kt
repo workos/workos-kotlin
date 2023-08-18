@@ -8,6 +8,7 @@ import com.workos.users.models.User
 import com.workos.users.models.UserType
 import com.workos.users.models.UserList
 import com.workos.users.models.VerifySessionResponse
+import com.workos.users.models.CreatePasswordResetChallengeResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -103,6 +104,22 @@ class UsersApi(private val workos: WorkOS) {
     return workos.post(
       "/users/password_reset",
       User::class.java,
+      config
+    )
+  }
+
+  /**
+   * Creates a password reset challenge and emails a password reset link to an unmanaged user.
+   */
+  fun createPasswordResetChallenge(createPasswordResetChallengeOptions: CreatePasswordResetChallengeOptions): CreatePasswordResetChallengeResponse {
+    val config = RequestConfig
+      .builder()
+      .data(createPasswordResetChallengeOptions)
+      .build()
+
+    return workos.post(
+      "/users/password_reset_challenge",
+      CreatePasswordResetChallengeResponse::class.java,
       config
     )
   }
@@ -305,6 +322,39 @@ class UsersApi(private val workos: WorkOS) {
 
       fun build(): CompletePasswordResetOptions {
         return CompletePasswordResetOptions(token, newPassword)
+      }
+    }
+  }
+
+
+  /**
+   * Options for creating a password reset challenge.
+   */
+  class CreatePasswordResetChallengeOptions(
+    val email: String,
+    val passwordResetUrl: String
+  ) {
+    init {
+      require(email.isNotBlank()) { "Email is required" }
+      require(passwordResetUrl.isNotBlank()) { "Password Reset URL is required" }
+    }
+
+    companion object {
+      @JvmStatic
+      fun builder(): CreatePasswordResetChallengeOptionsBuilder {
+        return CreatePasswordResetChallengeOptionsBuilder()
+      }
+    }
+
+    class CreatePasswordResetChallengeOptionsBuilder {
+      private lateinit var email: String
+      private lateinit var passwordResetUrl: String
+
+      fun email(value: String) = apply { this.email = value }
+      fun passwordResetUrl(value: String) = apply { this.passwordResetUrl = value }
+
+      fun build(): CreatePasswordResetChallengeOptions {
+        return CreatePasswordResetChallengeOptions(email, passwordResetUrl)
       }
     }
   }

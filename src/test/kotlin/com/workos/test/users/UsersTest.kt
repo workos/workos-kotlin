@@ -39,6 +39,37 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun createPasswordResetChallengeShouldReturnPasswordResetChallengeResponse() {
+    val workos = createWorkOSClient()
+
+    val email = "marcelina@foo-corp.com"
+
+    stubResponse(
+      "/users/password_reset_challenge",
+      """{
+        "token": "token_123",
+        "user": {
+            "id": "user_123",
+            "email": "marcelina@foo-corp.com",
+            "user_type": "unmanaged",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+    }"""
+    )
+
+    val createPasswordResetChallengeOptions = UsersApi.CreatePasswordResetChallengeOptions
+      .builder()
+      .email(email)
+      .passwordResetUrl("passwordreseturl.com")
+      .build()
+
+    val response = workos.users.createPasswordResetChallenge(createPasswordResetChallengeOptions)
+
+    assertEquals(email, response.user.email)
+  }
+
+  @Test
   fun createUserShouldReturnUser() {
     val workos = createWorkOSClient()
 
