@@ -92,6 +92,22 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
+   * Resets user password using token that was sent to the user.
+   */
+  fun completePasswordReset(completePasswordResetOptions: CompletePasswordResetOptions): User {
+    val config = RequestConfig
+      .builder()
+      .data(completePasswordResetOptions)
+      .build()
+
+    return workos.post(
+      "/users/password_reset",
+      User::class.java,
+      config
+    )
+  }
+
+  /**
    * Options for listing users.
    */
   class ListUsersOptions @JvmOverloads constructor(
@@ -187,6 +203,7 @@ class UsersApi(private val workos: WorkOS) {
       }
     }
   }
+
   /**
    * Options for removing a user from an organization.
    */
@@ -256,6 +273,38 @@ class UsersApi(private val workos: WorkOS) {
 
       fun build(): CreateUserOptions {
         return CreateUserOptions(email, password, firstName, lastName, emailVerified)
+      }
+    }
+  }
+
+  /**
+   * Options for completing a password reset.
+   */
+  class CompletePasswordResetOptions(
+    val token: String,
+    val newPassword: String
+  ) {
+    init {
+      require(token.isNotBlank()) { "Token is required" }
+      require(newPassword.isNotBlank()) { "New Password id is required" }
+    }
+
+    companion object {
+      @JvmStatic
+      fun builder(): CompletePasswordResetOptionsBuilder {
+        return CompletePasswordResetOptionsBuilder()
+      }
+    }
+
+    class CompletePasswordResetOptionsBuilder {
+      private lateinit var token: String
+      private lateinit var newPassword: String
+
+      fun token(value: String) = apply { this.token = value }
+      fun newPassword(value: String) = apply { this.newPassword = value }
+
+      fun build(): CompletePasswordResetOptions {
+        return CompletePasswordResetOptions(token, newPassword)
       }
     }
   }

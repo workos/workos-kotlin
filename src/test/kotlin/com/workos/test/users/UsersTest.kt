@@ -13,6 +13,32 @@ class UsersTest : TestBase() {
   private val mapper = jacksonObjectMapper()
 
   @Test
+  fun completePasswordResetShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/users/password_reset",
+      """{
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "unmanaged",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val completePasswordResetOptions = UsersApi.CompletePasswordResetOptions
+      .builder()
+      .token("token_123")
+      .newPassword("test_123")
+      .build()
+
+    val user = workos.users.completePasswordReset(completePasswordResetOptions)
+
+    assertEquals("marcelina@foo-corp.com", user.email)
+  }
+
+  @Test
   fun createUserShouldReturnUser() {
     val workos = createWorkOSClient()
 
