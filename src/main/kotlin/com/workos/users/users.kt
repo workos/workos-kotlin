@@ -4,6 +4,7 @@ import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.models.Order
 import com.workos.common.http.RequestConfig
+import com.workos.users.models.AuthenticationResponse
 import com.workos.users.models.User
 import com.workos.users.models.UserType
 import com.workos.users.models.UserList
@@ -462,5 +463,66 @@ class UsersApi(private val workos: WorkOS) {
       .build()
 
     return workos.post("/users/password_reset_challenge", CreatePasswordResetChallengeResponse::class.java, config)
+  }
+
+  /**
+   * Parameters for the [authenticateUserWithPassword] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class AuthenticateUserWithPasswordOptions @JvmOverloads constructor(
+    @JsonProperty("email") val email: String,
+    @JsonProperty("password") val password: String,
+    @JsonProperty("ip_address") val ipAddress: String? = null,
+    @JsonProperty("user_agent") val userAgent: String? = null,
+    @JsonProperty("start_session") val startSession: Boolean? = null,
+    @JsonProperty("expires_in") val expiresIn: Int? = null,
+    @JsonProperty("client_secret") val clientSecret: String,
+    @JsonProperty("grant_type") val grantType: String = "password",
+  ) {
+    init {
+      require(email.isNotBlank()) { "Email is required." }
+      require(password.isNotBlank()) { "Password is required." }
+    }
+
+    /**
+     * Builder class for [AuthenticateUserWithPasswordOptions].
+     */
+    class AuthenticateUserWithPasswordOptionsBuilder {
+      private lateinit var email: String
+      private lateinit var password: String
+      private var ipAddress: String? = null
+      private var userAgent: String? = null
+      private var startSession: Boolean? = null
+      private var expiresIn: Int? = null
+
+      fun email(value: String) = apply { this.email = value }
+      fun password(value: String) = apply { this.password = value }
+      fun ipAddress(value: String) = apply { this.ipAddress = value }
+      fun userAgent(value: String) = apply { this.userAgent = value }
+      fun startSession(value: Boolean) = apply { this.startSession = value }
+      fun expiresIn(value: Int) = apply { this.expiresIn = value }
+
+      fun build(): AuthenticateUserWithPasswordOptions {
+        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, WorkOS.apiKey)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): AuthenticateUserWithPasswordOptionsBuilder {
+        return AuthenticateUserWithPasswordOptionsBuilder()
+      }
+    }
+  }
+
+  fun authenticateUserWithPassword(opts: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
+    val config = RequestConfig.builder()
+      .data(opts)
+      .build()
+
+    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
   }
 }

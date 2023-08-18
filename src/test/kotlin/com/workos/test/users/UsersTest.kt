@@ -41,6 +41,46 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun authenticateUserWithPasswordReturnsAuthenticationResponse() {
+    val workos = createWorkOSClient()
+
+    val email = "marcelina@foo-corp.com"
+
+    stubResponse(
+      "/users/sessions/token",
+      """{
+        "session": {
+          "id": "sample_id_12345",
+          "token": "token_123",
+          "created_at": "2023-07-15T19:07:33.155Z",
+          "expires_at": "2023-08-15T19:07:33.155Z",
+          "authorized_organizations": [{
+              "organization": {
+                  "name": "OrgName",
+                  "id": "Org123"
+              }
+          }]
+        },
+        "user": {
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "unmanaged",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+      }"""
+    )
+
+    val options = UsersApi.AuthenticateUserWithPasswordOptions.builder()
+      .email(email)
+      .password("pass_123")
+      .build()
+
+    val response = workos.users.authenticateUserWithPassword(options)
+
+    assertEquals(email, response.user.email)
+  }
+  @Test
   fun completePasswordResetShouldReturnUser() {
     val workos = createWorkOSClient()
 

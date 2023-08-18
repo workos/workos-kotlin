@@ -35,6 +35,17 @@ import java.util.Properties
 class WorkOS(
   val apiKey: String
 ) {
+  /**
+   * Allows APIKey to be used in other packages as needed.
+   */
+  init {
+    Companion.apiKey = apiKey
+  }
+
+  companion object {
+    lateinit var apiKey: String
+    private set
+  }
 
   /**
    * Host to send requests to.
