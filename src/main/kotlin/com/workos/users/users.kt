@@ -476,7 +476,7 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("user_agent") val userAgent: String? = null,
     @JsonProperty("start_session") val startSession: Boolean? = null,
     @JsonProperty("expires_in") val expiresIn: Int? = null,
-    @JsonProperty("client_secret") val clientSecret: String,
+    @JsonProperty("client_secret") val clientSecret: String? = null,
     @JsonProperty("grant_type") val grantType: String = "password",
   ) {
     init {
@@ -494,6 +494,8 @@ class UsersApi(private val workos: WorkOS) {
       private var userAgent: String? = null
       private var startSession: Boolean? = null
       private var expiresIn: Int? = null
+      private var clientSecret: String? = null
+
 
       fun email(value: String) = apply { this.email = value }
       fun password(value: String) = apply { this.password = value }
@@ -502,8 +504,10 @@ class UsersApi(private val workos: WorkOS) {
       fun startSession(value: Boolean) = apply { this.startSession = value }
       fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
+      fun clientSecret(value: String) = apply {this.clientSecret = value }
+
       fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, WorkOS.apiKey)
+        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, clientSecret)
       }
     }
 
@@ -518,9 +522,13 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun authenticateUserWithPassword(opts: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
+  fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
+
+    val updatedOptions = authenticateUserWithPasswordOptions.copy(clientSecret = workos.apiKey)
+
+
     val config = RequestConfig.builder()
-      .data(opts)
+      .data(updatedOptions)
       .build()
 
     return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
