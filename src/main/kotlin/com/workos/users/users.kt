@@ -1,19 +1,18 @@
 package com.workos.users
 
-import com.workos.WorkOS
-import com.workos.common.http.PaginationParams
-import com.workos.common.models.Order
-import com.workos.common.http.RequestConfig
-import com.workos.users.models.AuthenticationResponse
-import com.workos.users.models.User
-import com.workos.users.models.UserType
-import com.workos.users.models.UserList
-import com.workos.users.models.VerifySessionResponse
-import com.workos.users.models.CreatePasswordResetChallengeResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
-
+import com.workos.WorkOS
+import com.workos.common.http.PaginationParams
+import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
+import com.workos.users.models.AuthenticationResponse
+import com.workos.users.models.CreatePasswordResetChallengeResponse
+import com.workos.users.models.User
+import com.workos.users.models.UserList
+import com.workos.users.models.UserType
+import com.workos.users.models.VerifySessionResponse
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -496,7 +495,6 @@ class UsersApi(private val workos: WorkOS) {
       private var expiresIn: Int? = null
       private var clientSecret: String? = null
 
-
       fun email(value: String) = apply { this.email = value }
       fun password(value: String) = apply { this.password = value }
       fun ipAddress(value: String) = apply { this.ipAddress = value }
@@ -504,10 +502,8 @@ class UsersApi(private val workos: WorkOS) {
       fun startSession(value: Boolean) = apply { this.startSession = value }
       fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
-      fun clientSecret(value: String) = apply {this.clientSecret = value }
-
       fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, clientSecret)
+        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, this.clientSecret)
       }
     }
 
@@ -525,7 +521,6 @@ class UsersApi(private val workos: WorkOS) {
   fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
 
     val updatedOptions = authenticateUserWithPasswordOptions.copy(clientSecret = workos.apiKey)
-
 
     val config = RequestConfig.builder()
       .data(updatedOptions)

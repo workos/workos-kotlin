@@ -45,5 +45,3 @@ data class User @JsonCreator constructor(
   @JsonProperty("updated_at")
   val updatedAt: String
 )
-
-
