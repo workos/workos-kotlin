@@ -503,7 +503,7 @@ class UsersApi(private val workos: WorkOS) {
       fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
       fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, this.clientSecret)
+        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, clientSecret)
       }
     }
 

@@ -66,6 +66,12 @@ class UsersTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
         }
+      }""",
+      requestBody = """{
+        "email": "marcelina@foo-corp.com",
+        "password": "pass_123",
+        "client_secret": "apiKey",
+        "grant_type": "password"
       }"""
     )
 
