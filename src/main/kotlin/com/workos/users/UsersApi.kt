@@ -591,4 +591,70 @@ class UsersApi(private val workos: WorkOS) {
 
     return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
   }
+
+  /**
+   * Parameters for the [authenticateUserWithMagicAuth] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class AuthenticateUserWithMagicAuthOptions @JvmOverloads constructor(
+    @JsonProperty("client_id") val clientId: String,
+    @JsonProperty("code") val code: String,
+    @JsonProperty("magic_auth_challenge_id") val magicAuthChallengeId: String,
+    @JsonProperty("ip_address") val ipAddress: String? = null,
+    @JsonProperty("user_agent") val userAgent: String? = null,
+    @JsonProperty("expires_in") val expiresIn: Int? = null,
+    @JsonProperty("client_secret") val clientSecret: String? = null,
+    @JsonProperty("grant_type") val grantType: String = "urn:workos:oauth:grant-type:magic-auth:code",
+  ) {
+    init {
+      require(code.isNotBlank()) { "Code is required." }
+      require(clientId.isNotBlank()) { "ClientID is required." }
+      require(magicAuthChallengeId.isNotBlank()) { "Magic auth challenge ID is required." }
+    }
+
+    /**
+     * Builder class for [AuthenticateUserWithMagicAuthOptions].
+     */
+    class AuthenticateUserWithMagicAuthOptionsBuilder {
+      private lateinit var clientId: String
+      private lateinit var code: String
+      private lateinit var magicAuthChallengeId: String
+      private var ipAddress: String? = null
+      private var userAgent: String? = null
+      private var expiresIn: Int? = null
+      private var clientSecret: String? = null
+
+      fun clientId(value: String) = apply { this.clientId = value }
+      fun code(value: String) = apply { this.code = value }
+      fun magicAuthChallengeId(value: String) = apply { this.magicAuthChallengeId = value }
+      fun ipAddress(value: String) = apply { this.ipAddress = value }
+      fun userAgent(value: String) = apply { this.userAgent = value }
+      fun expiresIn(value: Int) = apply { this.expiresIn = value }
+
+      fun build(): AuthenticateUserWithMagicAuthOptions {
+        return AuthenticateUserWithMagicAuthOptions(clientId, code, magicAuthChallengeId, ipAddress, userAgent, expiresIn, clientSecret)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): AuthenticateUserWithMagicAuthOptionsBuilder {
+        return AuthenticateUserWithMagicAuthOptionsBuilder()
+      }
+    }
+  }
+
+  fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): AuthenticationResponse {
+
+    val updatedOptions = authenticateUserWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
+
+    val config = RequestConfig.builder()
+      .data(updatedOptions)
+      .build()
+
+    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
+  }
 }
