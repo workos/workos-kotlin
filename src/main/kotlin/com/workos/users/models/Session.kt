@@ -29,4 +29,3 @@ data class Session @JsonCreator constructor(
   @JsonProperty("unauthorized_organization")
   val unauthorizedOrganizations: List<UnauthorizedOrganization>? = null,
 )
-

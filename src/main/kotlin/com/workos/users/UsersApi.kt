@@ -1,18 +1,17 @@
 package com.workos.users
 
-import com.workos.WorkOS
-import com.workos.common.http.PaginationParams
-import com.workos.common.models.Order
-import com.workos.common.http.RequestConfig
-import com.workos.users.models.User
-import com.workos.users.models.UserType
-import com.workos.users.models.UserList
-import com.workos.users.models.VerifySessionResponse
-import com.workos.users.models.CreatePasswordResetChallengeResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
-
+import com.workos.WorkOS
+import com.workos.common.http.PaginationParams
+import com.workos.common.http.RequestConfig
+import com.workos.common.models.Order
+import com.workos.users.models.CreatePasswordResetChallengeResponse
+import com.workos.users.models.User
+import com.workos.users.models.UserList
+import com.workos.users.models.UserType
+import com.workos.users.models.VerifySessionResponse
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -518,6 +517,6 @@ class UsersApi(private val workos: WorkOS) {
    */
   fun verifyEmail(verifyEmailOptions: VerifyEmailOptions): User {
     val config = RequestConfig.builder().data(verifyEmailOptions).build()
-    return workos.post("/users/verify_email",User::class.java, config)
+    return workos.post("/users/verify_email", User::class.java, config)
   }
 }

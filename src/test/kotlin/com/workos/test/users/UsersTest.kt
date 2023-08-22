@@ -2,8 +2,6 @@ package com.workos.test.users
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.workos.sso.models.ConnectionState
-import com.workos.sso.models.ConnectionType
 import com.workos.test.TestBase
 import com.workos.users.UsersApi
 import kotlin.test.Test
@@ -143,7 +141,6 @@ class UsersTest : TestBase() {
       }"""
     )
 
-
     val options = UsersApi.RemoveUserFromOrganizationOptions.builder()
       .id(id)
       .organization(organization)
@@ -203,7 +200,6 @@ class UsersTest : TestBase() {
 
     assertEquals("user_123", users.get(0).id)
   }
-
 
   @Test
   fun listUsersWithPaginationParamsShouldReturnPayload() {
@@ -348,4 +344,3 @@ class UsersTest : TestBase() {
     assertEquals("sample_id_12345", response.session.id)
   }
 }
-

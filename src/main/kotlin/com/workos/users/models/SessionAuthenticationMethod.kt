@@ -1,6 +1,4 @@
 package com.workos.users.models
-import com.workos.users.models.UserType
-
 import com.fasterxml.jackson.annotation.JsonValue
 
 enum class SessionAuthenticationMethod(@JsonValue val type: String) {
