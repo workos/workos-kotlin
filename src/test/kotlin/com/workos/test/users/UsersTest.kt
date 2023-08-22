@@ -39,6 +39,98 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun authenticateUserWithCodeReturnsAuthenticationResponse() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/users/sessions/token",
+      """{
+        "session": {
+          "id": "sample_id_12345",
+          "token": "token_123",
+          "created_at": "2023-07-15T19:07:33.155Z",
+          "expires_at": "2023-08-15T19:07:33.155Z",
+          "authorized_organizations": [{
+              "organization": {
+                  "name": "OrgName",
+                  "id": "Org123"
+              }
+          }]
+        },
+        "user": {
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "managed",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+      }""",
+      requestBody = """{
+        "code": "code_123",
+        "client_id": "client_123",
+        "client_secret": "apiKey",
+        "grant_type": "authorization_code"
+      }"""
+    )
+
+    val options = UsersApi.AuthenticateUserWithCodeOptions.builder()
+      .code("code_123")
+      .clientId("client_123")
+      .build()
+
+    val response = workos.users.authenticateUserWithCode(options)
+
+    assertEquals("marcelina@foo-corp.com", response.user.email)
+  }
+
+  @Test
+  fun authenticateUserWithMagicAuthReturnsAuthenticationResponse() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/users/sessions/token",
+      """{
+        "session": {
+          "id": "sample_id_12345",
+          "token": "token_123",
+          "created_at": "2023-07-15T19:07:33.155Z",
+          "expires_at": "2023-08-15T19:07:33.155Z",
+          "authorized_organizations": [{
+              "organization": {
+                  "name": "OrgName",
+                  "id": "Org123"
+              }
+          }]
+        },
+        "user": {
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "user_type": "unmanaged",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+      }""",
+      requestBody = """{
+        "code": "code_123",
+        "magic_auth_challenge_id": "challenge_123",
+        "client_id": "client_123",
+        "client_secret": "apiKey",
+        "grant_type": "urn:workos:oauth:grant-type:magic-auth:code"
+      }"""
+    )
+
+    val options = UsersApi.AuthenticateUserWithMagicAuthOptions.builder()
+      .code("code_123")
+      .magicAuthChallengeId("challenge_123")
+      .clientId("client_123")
+      .build()
+
+    val response = workos.users.authenticateUserWithMagicAuth(options)
+
+    assertEquals("marcelina@foo-corp.com", response.user.email)
+  }
+
+  @Test
   fun authenticateUserWithPasswordReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
@@ -70,6 +162,7 @@ class UsersTest : TestBase() {
       requestBody = """{
         "email": "marcelina@foo-corp.com",
         "password": "pass_123",
+        "client_id": "client_123",
         "client_secret": "apiKey",
         "grant_type": "password"
       }"""
@@ -78,6 +171,7 @@ class UsersTest : TestBase() {
     val options = UsersApi.AuthenticateUserWithPasswordOptions.builder()
       .email(email)
       .password("pass_123")
+      .clientId("client_123")
       .build()
 
     val response = workos.users.authenticateUserWithPassword(options)
