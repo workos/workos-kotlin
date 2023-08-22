@@ -471,14 +471,15 @@ class UsersApi(private val workos: WorkOS) {
   data class AuthenticateUserWithPasswordOptions @JvmOverloads constructor(
     @JsonProperty("email") val email: String,
     @JsonProperty("password") val password: String,
+    @JsonProperty("client_id") val clientId: String,
     @JsonProperty("ip_address") val ipAddress: String? = null,
     @JsonProperty("user_agent") val userAgent: String? = null,
-    @JsonProperty("start_session") val startSession: Boolean? = null,
     @JsonProperty("expires_in") val expiresIn: Int? = null,
     @JsonProperty("client_secret") val clientSecret: String? = null,
     @JsonProperty("grant_type") val grantType: String = "password",
   ) {
     init {
+      require(clientId.isNotBlank()) { "ClientID is required." }
       require(email.isNotBlank()) { "Email is required." }
       require(password.isNotBlank()) { "Password is required." }
     }
@@ -489,21 +490,21 @@ class UsersApi(private val workos: WorkOS) {
     class AuthenticateUserWithPasswordOptionsBuilder {
       private lateinit var email: String
       private lateinit var password: String
+      private lateinit var clientId: String
       private var ipAddress: String? = null
       private var userAgent: String? = null
-      private var startSession: Boolean? = null
       private var expiresIn: Int? = null
       private var clientSecret: String? = null
 
       fun email(value: String) = apply { this.email = value }
       fun password(value: String) = apply { this.password = value }
+      fun clientId(value: String) = apply { this.clientId = value }
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
-      fun startSession(value: Boolean) = apply { this.startSession = value }
       fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
       fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, ipAddress, userAgent, startSession, expiresIn, clientSecret)
+        return AuthenticateUserWithPasswordOptions(email, password, clientId, ipAddress, userAgent, expiresIn, clientSecret)
       }
     }
 
@@ -521,6 +522,68 @@ class UsersApi(private val workos: WorkOS) {
   fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
 
     val updatedOptions = authenticateUserWithPasswordOptions.copy(clientSecret = workos.apiKey)
+
+    val config = RequestConfig.builder()
+      .data(updatedOptions)
+      .build()
+
+    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
+  }
+
+  /**
+   * Parameters for the [authenticateUserWithCode] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class AuthenticateUserWithCodeOptions @JvmOverloads constructor(
+    @JsonProperty("client_id") val clientId: String,
+    @JsonProperty("code") val code: String,
+    @JsonProperty("ip_address") val ipAddress: String? = null,
+    @JsonProperty("user_agent") val userAgent: String? = null,
+    @JsonProperty("expires_in") val expiresIn: Int? = null,
+    @JsonProperty("client_secret") val clientSecret: String? = null,
+    @JsonProperty("grant_type") val grantType: String = "authorization_code",
+  ) {
+    init {
+      require(code.isNotBlank()) { "Code is required." }
+      require(clientId.isNotBlank()) { "ClientID is required." }
+    }
+
+    /**
+     * Builder class for [AuthenticateUserWithCodeOptions].
+     */
+    class AuthenticateUserWithCodeOptionsBuilder {
+      private lateinit var clientId: String
+      private lateinit var code: String
+      private var ipAddress: String? = null
+      private var userAgent: String? = null
+      private var expiresIn: Int? = null
+      private var clientSecret: String? = null
+
+      fun clientId(value: String) = apply { this.clientId = value }
+      fun code(value: String) = apply { this.code = value }
+      fun ipAddress(value: String) = apply { this.ipAddress = value }
+      fun userAgent(value: String) = apply { this.userAgent = value }
+      fun expiresIn(value: Int) = apply { this.expiresIn = value }
+
+      fun build(): AuthenticateUserWithCodeOptions {
+        return AuthenticateUserWithCodeOptions(clientId, code, ipAddress, userAgent, expiresIn, clientSecret)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): AuthenticateUserWithCodeOptionsBuilder {
+        return AuthenticateUserWithCodeOptionsBuilder()
+      }
+    }
+  }
+
+  fun authenticateUserWithCode(authenticateUserWithCodeOptions: AuthenticateUserWithCodeOptions): AuthenticationResponse {
+
+    val updatedOptions = authenticateUserWithCodeOptions.copy(clientSecret = workos.apiKey)
 
     val config = RequestConfig.builder()
       .data(updatedOptions)
