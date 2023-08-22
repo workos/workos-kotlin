@@ -519,4 +519,53 @@ class UsersApi(private val workos: WorkOS) {
     val config = RequestConfig.builder().data(verifyEmailOptions).build()
     return workos.post("/users/verify_email", User::class.java, config)
   }
+
+  /**
+   * Parameters for the [sendVerificationEmail] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class SendVerificationEmailOptions @JvmOverloads constructor(
+    @JsonProperty("user_id") val userId: String
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User ID is required" }
+    }
+
+    /**
+     * Builder class for [SendVerificationEmailOptions].
+     */
+    class SendVerificationEmailOptionsBuilder {
+      private lateinit var userId: String
+
+      /**
+       * Sets the user ID.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Creates a [SendVerificationEmailOptions] with the given builder parameters.
+       */
+      fun build(): SendVerificationEmailOptions {
+        return SendVerificationEmailOptions(userId)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): SendVerificationEmailOptionsBuilder {
+        return SendVerificationEmailOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Sends a verification email to a user.
+   */
+  fun sendVerificationEmail(options: SendVerificationEmailOptions): User {
+    val config = RequestConfig.builder().data(options).build()
+    return workos.post("/users/${options.userId}/send_verification_email", User::class.java, config)
+  }
 }
