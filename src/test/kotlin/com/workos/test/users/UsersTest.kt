@@ -277,6 +277,36 @@ class UsersTest : TestBase() {
     assertEquals("user_123", users.get(0).id)
   }
 
+  fun verifyEmailShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    val magicAuthChallengeId = "auth_challenge_123"
+    val code = "123456"
+
+    stubResponse(
+      "/users/verify_email",
+      """{
+            "id": "user_123",
+            "email": "marcelina@foo-corp.com",
+            "user_type": "unmanaged",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:07:33.155Z"
+        }""",
+      requestBody = """{
+            "magic_auth_challenge_id": "auth_challenge_123",
+            "code": "123456"
+      }"""
+    )
+
+    val options = UsersApi.VerifyEmailOptions.builder()
+      .magicAuthChallengeId(magicAuthChallengeId)
+      .code(code)
+      .build()
+
+    val verificationResponse = workos.users.verifyEmail(options)
+
+    assertEquals("user_123", verificationResponse.id)
+  }
   @Test
   fun verifySessionShouldReturnVerifySessionResponse() {
     val workos = createWorkOSClient()

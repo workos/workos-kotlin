@@ -463,4 +463,61 @@ class UsersApi(private val workos: WorkOS) {
 
     return workos.post("/users/password_reset_challenge", CreatePasswordResetChallengeResponse::class.java, config)
   }
+
+  /**
+   * Parameters for the [verifyEmail] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class VerifyEmailOptions @JvmOverloads constructor(
+    @JsonProperty("magic_auth_challenge_id") val magicAuthChallengeId: String,
+    @JsonProperty("code") val code: String
+  ) {
+    init {
+      require(magicAuthChallengeId.isNotBlank()) { "Magic Auth Challenge ID is required" }
+      require(code.isNotBlank()) { "Code is required" }
+    }
+
+    /**
+     * Builder class for [VerifyEmailOptions].
+     */
+    class VerifyEmailOptionsBuilder {
+      private lateinit var magicAuthChallengeId: String
+      private lateinit var code: String
+
+      /**
+       * Sets the magic auth challenge id.
+       */
+      fun magicAuthChallengeId(value: String) = apply { this.magicAuthChallengeId = value }
+
+      /**
+       * Sets the code.
+       */
+      fun code(value: String) = apply { this.code = value }
+
+      /**
+       * Creates a [VerifyEmailOptions] with the given builder parameters.
+       */
+      fun build(): VerifyEmailOptions {
+        return VerifyEmailOptions(magicAuthChallengeId, code)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): VerifyEmailOptionsBuilder {
+        return VerifyEmailOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Verifies an email.
+   */
+  fun verifyEmail(verifyEmailOptions: VerifyEmailOptions): User {
+    val config = RequestConfig.builder().data(verifyEmailOptions).build()
+    return workos.post("/users/verify_email",User::class.java, config)
+  }
 }
