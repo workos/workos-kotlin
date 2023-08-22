@@ -35,7 +35,6 @@ import java.util.Properties
 class WorkOS(
   val apiKey: String
 ) {
-
   /**
    * Host to send requests to.
    */
