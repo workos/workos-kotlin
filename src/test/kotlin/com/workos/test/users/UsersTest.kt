@@ -43,7 +43,7 @@ class UsersTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/users/sessions/token",
+      "/users/authentications",
       """{
         "session": {
           "id": "sample_id_12345",
@@ -88,7 +88,7 @@ class UsersTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/users/sessions/token",
+      "/users/authentications",
       """{
         "session": {
           "id": "sample_id_12345",
@@ -137,7 +137,7 @@ class UsersTest : TestBase() {
     val email = "marcelina@foo-corp.com"
 
     stubResponse(
-      "/users/sessions/token",
+      "/users/authentications",
       """{
         "session": {
           "id": "sample_id_12345",
@@ -205,7 +205,7 @@ class UsersTest : TestBase() {
   }
 
   @Test
-  fun createPasswordResetChallengeShouldReturnPasswordResetChallengeResponse() {
+  fun createPasswordResetChallengeShouldReturnChallengeResponse() {
     val workos = createWorkOSClient()
 
     val email = "marcelina@foo-corp.com"

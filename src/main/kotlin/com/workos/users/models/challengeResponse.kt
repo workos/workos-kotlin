@@ -3,7 +3,7 @@ package com.workos.users.models
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class CreatePasswordResetChallengeResponse @JsonCreator constructor(
+data class challengeResponse @JsonCreator constructor(
 
   @JvmField
   @JsonProperty("token")

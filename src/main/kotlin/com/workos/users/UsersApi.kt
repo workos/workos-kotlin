@@ -8,7 +8,7 @@ import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.users.models.AuthenticationResponse
-import com.workos.users.models.CreatePasswordResetChallengeResponse
+import com.workos.users.models.challengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
@@ -397,12 +397,12 @@ class UsersApi(private val workos: WorkOS) {
   /**
    * Initiates a password reset challenge and emails a password reset link to an unmanaged user.
    */
-  fun createPasswordResetChallenge(createPasswordResetChallengeOptions: CreatePasswordResetChallengeOptions): CreatePasswordResetChallengeResponse {
+  fun createPasswordResetChallenge(createPasswordResetChallengeOptions: CreatePasswordResetChallengeOptions): challengeResponse {
     val config = RequestConfig.builder()
       .data(createPasswordResetChallengeOptions)
       .build()
 
-    return workos.post("/users/password_reset_challenge", CreatePasswordResetChallengeResponse::class.java, config)
+    return workos.post("/users/password_reset_challenge", challengeResponse::class.java, config)
   }
 
   /**
@@ -468,7 +468,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
   }
 
   /**
@@ -530,7 +530,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
   }
 
   /**
@@ -596,7 +596,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/sessions/token", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
   }
   /**
    * Parameters for the [verifyEmail] method.
