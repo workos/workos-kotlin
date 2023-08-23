@@ -453,4 +453,60 @@ class UsersTest : TestBase() {
     assertEquals("marcelina@foo-corp.com", response.user.email)
     assertEquals("sample_id_12345", response.session.id)
   }
+
+  fun verifyEmailShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    val magicAuthChallengeId = "auth_challenge_123"
+    val code = "123456"
+
+    stubResponse(
+      "/users/verify_email",
+      """{
+            "id": "user_123",
+            "email": "marcelina@foo-corp.com",
+            "user_type": "unmanaged",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:07:33.155Z"
+        }""",
+      requestBody = """{
+            "magic_auth_challenge_id": "auth_challenge_123",
+            "code": "123456"
+      }"""
+    )
+
+    val options = UsersApi.VerifyEmailOptions.builder()
+      .magicAuthChallengeId(magicAuthChallengeId)
+      .code(code)
+      .build()
+
+    val verificationResponse = workos.users.verifyEmail(options)
+
+    assertEquals("user_123", verificationResponse.id)
+  }
+
+  @Test
+  fun sendVerificationEmailShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    val userId = "user_01E4ZCR3C56J083X43JQXF3JK5"
+
+    stubResponse(
+      "/users/$userId/send_verification_email",
+      """{
+           "id": "magic_auth_challenge_123"
+        }""",
+      requestBody = """{
+        "user_id": "$userId"
+      }"""
+    )
+
+    val options = UsersApi.SendVerificationEmailOptions.builder()
+      .userId(userId)
+      .build()
+
+    val response = workos.users.sendVerificationEmail(options)
+
+    assertEquals("magic_auth_challenge_123", response.id)
+  }
 }
