@@ -14,8 +14,8 @@ class UsersTest : TestBase() {
   fun addUserToOrganizationShouldReturnUser() {
     val workos = createWorkOSClient()
 
-    val id = "user_123"
-    val organization = "organization_123"
+    val userId = "user_123"
+    val organizationId = "organization_123"
 
     stubResponse(
       "/users/user_123/organizations/organization_123",
@@ -28,13 +28,13 @@ class UsersTest : TestBase() {
     )
 
     val options = UsersApi.AddUserToOrganizationOptions.builder()
-      .id(id)
-      .organization(organization)
+      .user(userId)
+      .organization(organizationId)
       .build()
 
     val user = workos.users.addUserToOrganization(options)
 
-    assertEquals(id, user.id)
+    assertEquals(userId, user.id)
   }
 
   @Test
@@ -260,7 +260,7 @@ class UsersTest : TestBase() {
   fun deleteUserFromOrganizationShouldReturnUser() {
     val workos = createWorkOSClient()
 
-    val id = "user_123"
+    val userId = "user_123"
     val organization = "organization_123"
 
     stubResponse(
@@ -274,13 +274,13 @@ class UsersTest : TestBase() {
     )
 
     val options = UsersApi.RemoveUserFromOrganizationOptions.builder()
-      .id(id)
+      .user(userId)
       .organization(organization)
       .build()
 
     val user = workos.users.removeUserFromOrganization(options)
 
-    assertEquals(id, user.id)
+    assertEquals(userId, user.id)
   }
 
   @Test
@@ -399,46 +399,6 @@ class UsersTest : TestBase() {
     val (users) = workos.users.listUsers(options)
 
     assertEquals("user_123", users.get(0).id)
-  }
-
-  @Test
-  fun verifySessionShouldReturnVerifySessionResponse() {
-    val workos = createWorkOSClient()
-
-    stubResponse(
-      "/users/sessions/verify",
-      """{
-        "user": {
-          "id": "user_123",
-          "email": "marcelina@foo-corp.com",
-          "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
-        },
-      "session": {
-          "id": "sample_id_12345",
-          "token": "token_123",
-          "created_at": "2023-07-15T19:07:33.155Z",
-          "expires_at": "2023-08-15T19:07:33.155Z",
-          "authorized_organizations": [{
-              "organization": {
-                  "name": "OrgName",
-                  "id": "Org123"
-              }
-          }]
-      }
-}"""
-
-    )
-
-    val options = UsersApi.VerifySessionOptions.builder()
-      .token("token_123")
-      .clientID("client_123")
-      .build()
-
-    val response = workos.users.verifySession(options)
-
-    assertEquals("marcelina@foo-corp.com", response.user.email)
-    assertEquals("sample_id_12345", response.session.id)
   }
 
   fun verifyEmailShouldReturnUser() {

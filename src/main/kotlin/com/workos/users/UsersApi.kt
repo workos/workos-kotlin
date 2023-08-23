@@ -12,7 +12,8 @@ import com.workos.users.models.CreatePasswordResetChallengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
-import com.workos.users.models.VerifySessionResponse
+import com.workos.users.models.UserType
+
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -103,11 +104,11 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class AddUserToOrganizationOptions @JvmOverloads constructor(
-    @JsonProperty("id") val id: String,
+    @JsonProperty("user") val user: String,
     @JsonProperty("organization") val organization: String
   ) {
     init {
-      require(id.isNotBlank()) { "User id is required" }
+      require(user.isNotBlank()) { "User id is required" }
       require(organization.isNotBlank()) { "Organization id is required" }
     }
 
@@ -115,13 +116,13 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [AddUserToOrganizationOptions].
      */
     class AddUserToOrganizationOptionsBuilder {
-      private lateinit var id: String
+      private lateinit var user: String
       private lateinit var organization: String
 
       /**
        * Sets the user id.
        */
-      fun id(value: String) = apply { this.id = value }
+      fun user(value: String) = apply { this.user = value }
 
       /**
        * Sets the organization id.
@@ -132,7 +133,7 @@ class UsersApi(private val workos: WorkOS) {
        * Creates a [AddUserToOrganizationOptions] with the given builder parameters.
        */
       fun build(): AddUserToOrganizationOptions {
-        return AddUserToOrganizationOptions(id, organization)
+        return AddUserToOrganizationOptions(user, organization)
       }
     }
 
@@ -151,7 +152,7 @@ class UsersApi(private val workos: WorkOS) {
    * Adds a user to a specified organization.
    */
   fun addUserToOrganization(addUserToOrganizationOptions: AddUserToOrganizationOptions): User {
-    val id = addUserToOrganizationOptions.id
+    val id = addUserToOrganizationOptions.user
     val organization = addUserToOrganizationOptions.organization
     return workos.post("/users/$id/organizations/$organization", User::class.java)
   }
@@ -161,11 +162,11 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class RemoveUserFromOrganizationOptions @JvmOverloads constructor(
-    @JsonProperty("id") val id: String,
+    @JsonProperty("user") val user: String,
     @JsonProperty("organization") val organization: String
   ) {
     init {
-      require(id.isNotBlank()) { "User id is required" }
+      require(user.isNotBlank()) { "User id is required" }
       require(organization.isNotBlank()) { "Organization id is required" }
     }
 
@@ -173,13 +174,13 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [RemoveUserFromOrganizationOptions].
      */
     class RemoveUserFromOrganizationOptionsBuilder {
-      private lateinit var id: String
+      private lateinit var user: String
       private lateinit var organization: String
 
       /**
        * Sets the user id.
        */
-      fun id(value: String) = apply { this.id = value }
+      fun user(value: String) = apply { this.user = value }
 
       /**
        * Sets the organization id.
@@ -190,7 +191,7 @@ class UsersApi(private val workos: WorkOS) {
        * Creates a [RemoveUserFromOrganizationOptions] with the given builder parameters.
        */
       fun build(): RemoveUserFromOrganizationOptions {
-        return RemoveUserFromOrganizationOptions(id, organization)
+        return RemoveUserFromOrganizationOptions(user, organization)
       }
     }
 
@@ -209,7 +210,7 @@ class UsersApi(private val workos: WorkOS) {
    * Removes a user from a specified organization.
    */
   fun removeUserFromOrganization(removeUserFromOrganizationOptions: RemoveUserFromOrganizationOptions): User {
-    val id = removeUserFromOrganizationOptions.id
+    val id = removeUserFromOrganizationOptions.user
     val organization = removeUserFromOrganizationOptions.organization
     val users = workos.delete("/users/$id/organizations/$organization")
     val mapper = ObjectMapper()
@@ -279,65 +280,6 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  /**
-   * Verifies a user's session.
-   */
-  fun verifySession(verifySessionOptions: VerifySessionOptions): VerifySessionResponse {
-    val config = RequestConfig.builder()
-      .data(verifySessionOptions)
-      .build()
-
-    return workos.post("/users/sessions/verify", VerifySessionResponse::class.java, config)
-  }
-
-  /**
-   * Parameters for the [verifySession] method.
-   */
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  class VerifySessionOptions @JvmOverloads constructor(
-    @JsonProperty("token") val token: String,
-    @JsonProperty("client_id") val clientID: String
-  ) {
-    init {
-      require(token.isNotBlank()) { "Token is required." }
-      require(clientID.isNotBlank()) { "ClientID is required." }
-    }
-
-    /**
-     * Builder class for [VerifySessionOptions].
-     */
-    class VerifySessionOptionsBuilder {
-      private lateinit var token: String
-      private lateinit var clientID: String
-
-      /**
-       * Sets the token.
-       */
-      fun token(value: String) = apply { this.token = value }
-
-      /**
-       * Sets the client ID.
-       */
-      fun clientID(value: String) = apply { this.clientID = value }
-
-      /**
-       * Creates a [VerifySessionOptions] with the given builder parameters.
-       */
-      fun build(): VerifySessionOptions {
-        return VerifySessionOptions(token, clientID)
-      }
-    }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): VerifySessionOptionsBuilder {
-        return VerifySessionOptionsBuilder()
-      }
-    }
-  }
 
   /**
    * Resets a user's password using the token that was sent to the user.
