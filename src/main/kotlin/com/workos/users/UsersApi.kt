@@ -104,11 +104,11 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class AddUserToOrganizationOptions @JvmOverloads constructor(
-    @JsonProperty("id") val id: String,
+    @JsonProperty("user") val user: String,
     @JsonProperty("organization") val organization: String
   ) {
     init {
-      require(id.isNotBlank()) { "User id is required" }
+      require(user.isNotBlank()) { "User id is required" }
       require(organization.isNotBlank()) { "Organization id is required" }
     }
 
@@ -116,13 +116,13 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [AddUserToOrganizationOptions].
      */
     class AddUserToOrganizationOptionsBuilder {
-      private lateinit var id: String
+      private lateinit var user: String
       private lateinit var organization: String
 
       /**
        * Sets the user id.
        */
-      fun id(value: String) = apply { this.id = value }
+      fun user(value: String) = apply { this.user = value }
 
       /**
        * Sets the organization id.
@@ -133,7 +133,7 @@ class UsersApi(private val workos: WorkOS) {
        * Creates a [AddUserToOrganizationOptions] with the given builder parameters.
        */
       fun build(): AddUserToOrganizationOptions {
-        return AddUserToOrganizationOptions(id, organization)
+        return AddUserToOrganizationOptions(user, organization)
       }
     }
 
@@ -152,7 +152,7 @@ class UsersApi(private val workos: WorkOS) {
    * Adds a user to a specified organization.
    */
   fun addUserToOrganization(addUserToOrganizationOptions: AddUserToOrganizationOptions): User {
-    val id = addUserToOrganizationOptions.id
+    val id = addUserToOrganizationOptions.user
     val organization = addUserToOrganizationOptions.organization
     return workos.post("/users/$id/organizations/$organization", User::class.java)
   }
