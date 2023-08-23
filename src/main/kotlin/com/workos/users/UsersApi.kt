@@ -13,7 +13,6 @@ import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
 import com.workos.users.models.UserType
-import com.workos.users.models.VerifySessionResponse
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -285,65 +284,6 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  /**
-   * Verifies a user's session.
-   */
-  fun verifySession(verifySessionOptions: VerifySessionOptions): VerifySessionResponse {
-    val config = RequestConfig.builder()
-      .data(verifySessionOptions)
-      .build()
-
-    return workos.post("/users/sessions/verify", VerifySessionResponse::class.java, config)
-  }
-
-  /**
-   * Parameters for the [verifySession] method.
-   */
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  class VerifySessionOptions @JvmOverloads constructor(
-    @JsonProperty("token") val token: String,
-    @JsonProperty("client_id") val clientID: String
-  ) {
-    init {
-      require(token.isNotBlank()) { "Token is required." }
-      require(clientID.isNotBlank()) { "ClientID is required." }
-    }
-
-    /**
-     * Builder class for [VerifySessionOptions].
-     */
-    class VerifySessionOptionsBuilder {
-      private lateinit var token: String
-      private lateinit var clientID: String
-
-      /**
-       * Sets the token.
-       */
-      fun token(value: String) = apply { this.token = value }
-
-      /**
-       * Sets the client ID.
-       */
-      fun clientID(value: String) = apply { this.clientID = value }
-
-      /**
-       * Creates a [VerifySessionOptions] with the given builder parameters.
-       */
-      fun build(): VerifySessionOptions {
-        return VerifySessionOptions(token, clientID)
-      }
-    }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): VerifySessionOptionsBuilder {
-        return VerifySessionOptionsBuilder()
-      }
-    }
-  }
 
   /**
    * Resets a user's password using the token that was sent to the user.
