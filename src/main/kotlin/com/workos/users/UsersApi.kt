@@ -12,8 +12,6 @@ import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
-import com.workos.users.models.UserType
-
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -734,5 +732,48 @@ class UsersApi(private val workos: WorkOS) {
   fun sendVerificationEmail(options: SendVerificationEmailOptions): MagicAuthChallenge {
     val config = RequestConfig.builder().data(options).build()
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
+  }
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class DeleteUserOptions @JvmOverloads constructor(
+    @JsonProperty("userId") val userId: String
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User ID is required" }
+    }
+
+    /**
+     * Builder class for [DeleteUserOptions].
+     */
+    class DeleteUserOptionsBuilder {
+      private lateinit var userId: String
+
+      /**
+       * Sets the user ID.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Creates a [DeleteUserOptions] with the given builder parameters.
+       */
+      fun build(): DeleteUserOptions {
+        return DeleteUserOptions(userId)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): DeleteUserOptionsBuilder {
+        return DeleteUserOptionsBuilder()
+      }
+    }
+  }
+
+  fun deleteUser(deleteUserOptions: DeleteUserOptions) {
+    val id = deleteUserOptions.userId
+    workos.delete("/users/$id")
   }
 }
