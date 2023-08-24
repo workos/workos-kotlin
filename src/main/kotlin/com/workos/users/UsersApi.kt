@@ -12,8 +12,6 @@ import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
-import com.workos.users.models.UserType
-
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -734,5 +732,62 @@ class UsersApi(private val workos: WorkOS) {
   fun sendVerificationEmail(options: SendVerificationEmailOptions): MagicAuthChallenge {
     val config = RequestConfig.builder().data(options).build()
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
+  }
+
+  /**
+   * Parameters for the [updateUserPassword] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class UpdateUserPasswordOptions @JvmOverloads constructor(
+    @JsonProperty("userId") val userId: String,
+    @JsonProperty("password") val password: String
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User id is required" }
+      require(password.isNotBlank()) { "Password is required" }
+    }
+
+    /**
+     * Builder class for [UpdateUserPasswordOptions].
+     */
+    class UpdateUserPasswordOptionsBuilder {
+      private lateinit var userId: String
+      private lateinit var password: String
+
+      /**
+       * Sets the user id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Sets the password.
+       */
+      fun password(value: String) = apply { this.password = value }
+
+      /**
+       * Creates an [UpdateUserPasswordOptions] with the given builder parameters.
+       */
+      fun build(): UpdateUserPasswordOptions {
+        return UpdateUserPasswordOptions(userId, password)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): UpdateUserPasswordOptionsBuilder {
+        return UpdateUserPasswordOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Updates the password of a specified user.
+   */
+  fun updateUserPassword(updateUserPasswordOptions: UpdateUserPasswordOptions): User {
+    val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
+    return workos.post("/users/${ updateUserPasswordOptions.userId}/password", User::class.java, config)
   }
 }

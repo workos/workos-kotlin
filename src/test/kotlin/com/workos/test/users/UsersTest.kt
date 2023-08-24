@@ -480,4 +480,35 @@ class UsersTest : TestBase() {
 
     assertEquals("magic_auth_challenge_123", response.id)
   }
+
+  @Test
+  fun updateUserPasswordShouldReturnUpdatedUser() {
+    val workos = createWorkOSClient()
+
+    val userId = "user_123"
+    val newPassword = "new_password"
+
+    stubResponse(
+      "/users/$userId/password",
+      """{
+            "id": "$userId",
+            "email": "example@foo-corp.com",
+            "created_at": "2021-06-25T19:07:33.155Z",
+            "updated_at": "2021-06-25T19:07:33.155Z"
+        }""",
+      requestBody = """{
+            "userId": "$userId",
+            "password": "$newPassword"
+      }"""
+    )
+
+    val options = UsersApi.UpdateUserPasswordOptions.builder()
+      .userId(userId)
+      .password(newPassword)
+      .build()
+
+    val updateResponse = workos.users.updateUserPassword(options)
+
+    assertEquals(userId, updateResponse.id)
+  }
 }
