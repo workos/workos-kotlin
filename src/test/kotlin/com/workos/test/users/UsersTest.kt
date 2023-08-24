@@ -401,32 +401,34 @@ class UsersTest : TestBase() {
     assertEquals("user_123", users.get(0).id)
   }
 
-  fun verifyEmailShouldReturnUser() {
+  @Test
+  fun verifyEmailCodeShouldReturnUser() {
     val workos = createWorkOSClient()
 
-    val magicAuthChallengeId = "auth_challenge_123"
+    val userId = "user_123"
     val code = "123456"
 
     stubResponse(
-      "/users/verify_email",
+      "/users/$userId/verify_email_code",
       """{
-            "id": "user_123",
-            "email": "marcelina@foo-corp.com",
-            "created_at": "2021-06-25T19:07:33.155Z",
-            "updated_at": "2021-06-25T19:07:33.155Z"
-        }""",
+        "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "email_verified": true
+    }""",
       requestBody = """{
-            "magic_auth_challenge_id": "auth_challenge_123",
-            "code": "123456"
-      }"""
+    "userId": "$userId",
+    "code": "$code"
+  }"""
     )
 
-    val options = UsersApi.VerifyEmailOptions.builder()
-      .magicAuthChallengeId(magicAuthChallengeId)
+    val options = UsersApi.VerifyEmailCodeOptions.builder()
       .code(code)
+      .userId(userId)
       .build()
 
-    val verificationResponse = workos.users.verifyEmail(options)
+    val verificationResponse = workos.users.verifyEmailCode(options)
 
     assertEquals("user_123", verificationResponse.id)
   }
