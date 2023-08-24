@@ -772,8 +772,7 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun deleteUser(deleteUserOptions: DeleteUserOptions) {
-    val id = deleteUserOptions.userId
+  fun deleteUser(id: String) {
     workos.delete("/users/$id")
   }
 }
