@@ -788,6 +788,6 @@ class UsersApi(private val workos: WorkOS) {
    */
   fun updateUserPassword(updateUserPasswordOptions: UpdateUserPasswordOptions): User {
     val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
-    return workos.post("/users/${ updateUserPasswordOptions.userId}/password", User::class.java, config)
+    return workos.put("/users/${updateUserPasswordOptions.userId}/password", User::class.java, config)
   }
 }
