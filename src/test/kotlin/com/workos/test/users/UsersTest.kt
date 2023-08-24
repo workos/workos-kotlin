@@ -22,7 +22,6 @@ class UsersTest : TestBase() {
       """{
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }"""
@@ -60,7 +59,6 @@ class UsersTest : TestBase() {
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "managed",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
         }
@@ -105,7 +103,6 @@ class UsersTest : TestBase() {
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
         }
@@ -154,7 +151,6 @@ class UsersTest : TestBase() {
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
         }
@@ -187,7 +183,6 @@ class UsersTest : TestBase() {
       """{
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }"""
@@ -217,7 +212,6 @@ class UsersTest : TestBase() {
         "user": {
             "id": "user_123",
             "email": "marcelina@foo-corp.com",
-            "user_type": "unmanaged",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
         }
@@ -242,7 +236,6 @@ class UsersTest : TestBase() {
     val responseBody = """{
         "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
      }"""
@@ -275,7 +268,6 @@ class UsersTest : TestBase() {
       """{
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }"""
@@ -302,7 +294,6 @@ class UsersTest : TestBase() {
       """{
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
-        "user_type": "unmanaged",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }"""
@@ -324,7 +315,6 @@ class UsersTest : TestBase() {
           {
             "id": "user_123",
             "email": "marcelina@foo-corp.com",
-            "user_type": "unmanaged",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
           }
@@ -353,7 +343,6 @@ class UsersTest : TestBase() {
           {
             "id": "user_123",
             "email": "marcelina@foo-corp.com",
-            "user_type": "unmanaged",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
           }
@@ -391,7 +380,6 @@ class UsersTest : TestBase() {
 
             "id": "user_123",
             "email": "marcelina@foo-corp.com",
-            "user_type": "unmanaged",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
           }
@@ -424,7 +412,6 @@ class UsersTest : TestBase() {
       """{
             "id": "user_123",
             "email": "marcelina@foo-corp.com",
-            "user_type": "unmanaged",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
         }""",

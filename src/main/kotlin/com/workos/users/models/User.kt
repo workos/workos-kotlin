@@ -10,10 +10,6 @@ data class User @JsonCreator constructor(
   val id: String,
 
   @JvmField
-  @JsonProperty("user_type")
-  val userType: UserType,
-
-  @JvmField
   @JsonProperty("email")
   val email: String,
 
@@ -26,16 +22,8 @@ data class User @JsonCreator constructor(
   val lastName: String? = null,
 
   @JvmField
-  @JsonProperty("email_verified_at")
-  val emailVerifiedAt: String? = null,
-
-  @JvmField
-  @JsonProperty("google_oauth_profile_id")
-  val googleOAuthProfileId: String? = null,
-
-  @JvmField
-  @JsonProperty("sso_profile_id")
-  val ssoProfileId: String? = null,
+  @JsonProperty("email_verified")
+  val emailVerifiedAt: Boolean,
 
   @JvmField
   @JsonProperty("created_at")

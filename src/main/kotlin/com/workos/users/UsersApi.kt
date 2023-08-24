@@ -14,6 +14,7 @@ import com.workos.users.models.User
 import com.workos.users.models.UserList
 import com.workos.users.models.UserType
 
+
 class UsersApi(private val workos: WorkOS) {
   /**
    * Parameters for the [createUser] method.
@@ -229,7 +230,6 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class ListUsersOptions @JvmOverloads constructor(
-    @JsonProperty("type") val type: UserType? = null,
     @JsonProperty("email") val email: String? = null,
     @JsonProperty("organization") val organization: String? = null,
     @JsonProperty("limit") val limit: Int? = null,
@@ -238,7 +238,6 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("after") val after: String? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
-      if (type != null) set("type", type.toString())
       if (email != null) set("email", email)
       if (organization != null) set("organization", organization)
     }
@@ -247,7 +246,6 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [ListUsersOptions].
      */
     class ListUsersOptionsBuilder {
-      private var type: UserType? = null
       private var email: String? = null
       private var organization: String? = null
       private var limit: Int? = null
@@ -255,7 +253,6 @@ class UsersApi(private val workos: WorkOS) {
       private var before: String? = null
       private var after: String? = null
 
-      fun type(value: UserType) = apply { this.type = value }
       fun email(value: String) = apply { this.email = value }
       fun organization(value: String) = apply { this.organization = value }
       fun limit(value: Int?) = apply { this.limit = value }
@@ -265,7 +262,6 @@ class UsersApi(private val workos: WorkOS) {
 
       fun build(): ListUsersOptions {
         return ListUsersOptions(
-          type = this.type,
           email = this.email,
           organization = this.organization,
           limit = this.limit,
