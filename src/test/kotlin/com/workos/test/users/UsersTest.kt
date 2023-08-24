@@ -491,10 +491,6 @@ class UsersTest : TestBase() {
       "",
     )
 
-    val options = UsersApi.DeleteUserOptions.builder()
-      .userId(userId)
-      .build()
-
-    workos.users.deleteUser(options)
+    workos.users.deleteUser(userId)
   }
 }
