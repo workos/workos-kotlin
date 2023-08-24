@@ -8,7 +8,7 @@ import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.users.models.AuthenticationResponse
-import com.workos.users.models.challengeResponse
+import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
@@ -284,7 +284,6 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-
   /**
    * Resets a user's password using the token that was sent to the user.
    */
@@ -397,12 +396,12 @@ class UsersApi(private val workos: WorkOS) {
   /**
    * Initiates a password reset challenge and emails a password reset link to an unmanaged user.
    */
-  fun createPasswordResetChallenge(createPasswordResetChallengeOptions: CreatePasswordResetChallengeOptions): challengeResponse {
+  fun createPasswordResetChallenge(createPasswordResetChallengeOptions: CreatePasswordResetChallengeOptions): ChallengeResponse {
     val config = RequestConfig.builder()
       .data(createPasswordResetChallengeOptions)
       .build()
 
-    return workos.post("/users/password_reset_challenge", challengeResponse::class.java, config)
+    return workos.post("/users/password_reset_challenge", ChallengeResponse::class.java, config)
   }
 
   /**
@@ -598,6 +597,51 @@ class UsersApi(private val workos: WorkOS) {
 
     return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
   }
+
+  /**
+   * Parameters for the [sendMagicAuthCode] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class SendMagicAuthCodeOptions @JvmOverloads constructor(
+    @JsonProperty("email") val email: String,
+  ) {
+    init {
+      require(email.isNotBlank()) { "Email is required." }
+    }
+
+    /**
+     * Builder class for [ SendMagicAuthCodeOptions].
+     */
+    class SendMagicAuthCodeBuilder {
+      private lateinit var email: String
+
+      fun email(value: String) = apply { this.email = value }
+
+      fun build(): SendMagicAuthCodeOptions {
+        return SendMagicAuthCodeOptions(email)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): SendMagicAuthCodeBuilder {
+        return SendMagicAuthCodeBuilder()
+      }
+    }
+  }
+
+  fun sendMagicAuthCode(sendMagicAuthCodeOptions: SendMagicAuthCodeOptions): MagicAuthChallenge {
+
+    val config = RequestConfig.builder()
+      .data(sendMagicAuthCodeOptions)
+      .build()
+
+    return workos.post("/users/magic_auth/send", MagicAuthChallenge::class.java, config)
+  }
+
   /**
    * Parameters for the [verifyEmail] method.
    */

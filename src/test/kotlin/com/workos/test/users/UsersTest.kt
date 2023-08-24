@@ -468,4 +468,29 @@ class UsersTest : TestBase() {
 
     assertEquals("magic_auth_challenge_123", response.id)
   }
+
+  @Test
+  fun sendMagicAuthCodeShouldReturnMagicAuthChallenge() {
+    val workos = createWorkOSClient()
+
+    val email = "marcelina@foo-corp.com"
+
+    stubResponse(
+      "/users/magic_auth/send",
+      """{
+           "id": "magic_auth_challenge_123"
+        }""",
+      requestBody = """{
+        "email": "$email"
+      }"""
+    )
+
+    val options = UsersApi.SendMagicAuthCodeOptions.builder()
+      .email(email)
+      .build()
+
+    val response = workos.users.sendMagicAuthCode(options)
+
+    assertEquals("magic_auth_challenge_123", response.id)
+  }
 }
