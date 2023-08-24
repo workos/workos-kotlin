@@ -12,8 +12,6 @@ import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
-import com.workos.users.models.UserType
-
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -410,7 +408,6 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("client_id") val clientId: String,
     @JsonProperty("ip_address") val ipAddress: String? = null,
     @JsonProperty("user_agent") val userAgent: String? = null,
-    @JsonProperty("expires_in") val expiresIn: Int? = null,
     @JsonProperty("client_secret") val clientSecret: String? = null,
     @JsonProperty("grant_type") val grantType: String = "password",
   ) {
@@ -429,7 +426,6 @@ class UsersApi(private val workos: WorkOS) {
       private lateinit var clientId: String
       private var ipAddress: String? = null
       private var userAgent: String? = null
-      private var expiresIn: Int? = null
       private var clientSecret: String? = null
 
       fun email(value: String) = apply { this.email = value }
@@ -437,10 +433,9 @@ class UsersApi(private val workos: WorkOS) {
       fun clientId(value: String) = apply { this.clientId = value }
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
-      fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
       fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, clientId, ipAddress, userAgent, expiresIn, clientSecret)
+        return AuthenticateUserWithPasswordOptions(email, password, clientId, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -463,7 +458,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
   }
 
   /**
@@ -475,7 +470,6 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("code") val code: String,
     @JsonProperty("ip_address") val ipAddress: String? = null,
     @JsonProperty("user_agent") val userAgent: String? = null,
-    @JsonProperty("expires_in") val expiresIn: Int? = null,
     @JsonProperty("client_secret") val clientSecret: String? = null,
     @JsonProperty("grant_type") val grantType: String = "authorization_code",
   ) {
@@ -492,17 +486,15 @@ class UsersApi(private val workos: WorkOS) {
       private lateinit var code: String
       private var ipAddress: String? = null
       private var userAgent: String? = null
-      private var expiresIn: Int? = null
       private var clientSecret: String? = null
 
       fun clientId(value: String) = apply { this.clientId = value }
       fun code(value: String) = apply { this.code = value }
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
-      fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
       fun build(): AuthenticateUserWithCodeOptions {
-        return AuthenticateUserWithCodeOptions(clientId, code, ipAddress, userAgent, expiresIn, clientSecret)
+        return AuthenticateUserWithCodeOptions(clientId, code, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -525,7 +517,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
   }
 
   /**
@@ -535,17 +527,16 @@ class UsersApi(private val workos: WorkOS) {
   data class AuthenticateUserWithMagicAuthOptions @JvmOverloads constructor(
     @JsonProperty("client_id") val clientId: String,
     @JsonProperty("code") val code: String,
-    @JsonProperty("magic_auth_challenge_id") val magicAuthChallengeId: String,
+    @JsonProperty("user_id") val userId: String,
     @JsonProperty("ip_address") val ipAddress: String? = null,
     @JsonProperty("user_agent") val userAgent: String? = null,
-    @JsonProperty("expires_in") val expiresIn: Int? = null,
     @JsonProperty("client_secret") val clientSecret: String? = null,
     @JsonProperty("grant_type") val grantType: String = "urn:workos:oauth:grant-type:magic-auth:code",
   ) {
     init {
       require(code.isNotBlank()) { "Code is required." }
       require(clientId.isNotBlank()) { "ClientID is required." }
-      require(magicAuthChallengeId.isNotBlank()) { "Magic auth challenge ID is required." }
+      require(userId.isNotBlank()) { "Magic auth challenge ID is required." }
     }
 
     /**
@@ -554,21 +545,19 @@ class UsersApi(private val workos: WorkOS) {
     class AuthenticateUserWithMagicAuthOptionsBuilder {
       private lateinit var clientId: String
       private lateinit var code: String
-      private lateinit var magicAuthChallengeId: String
+      private lateinit var userId: String
       private var ipAddress: String? = null
       private var userAgent: String? = null
-      private var expiresIn: Int? = null
       private var clientSecret: String? = null
 
       fun clientId(value: String) = apply { this.clientId = value }
       fun code(value: String) = apply { this.code = value }
-      fun magicAuthChallengeId(value: String) = apply { this.magicAuthChallengeId = value }
+      fun userId(value: String) = apply { this.userId = value }
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
-      fun expiresIn(value: Int) = apply { this.expiresIn = value }
 
       fun build(): AuthenticateUserWithMagicAuthOptions {
-        return AuthenticateUserWithMagicAuthOptions(clientId, code, magicAuthChallengeId, ipAddress, userAgent, expiresIn, clientSecret)
+        return AuthenticateUserWithMagicAuthOptions(clientId, code, userId, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -591,7 +580,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authentications", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
   }
 
   /**

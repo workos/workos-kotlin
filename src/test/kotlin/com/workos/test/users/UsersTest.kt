@@ -42,20 +42,8 @@ class UsersTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/users/authentications",
+      "/users/authenticate",
       """{
-        "session": {
-          "id": "sample_id_12345",
-          "token": "token_123",
-          "created_at": "2023-07-15T19:07:33.155Z",
-          "expires_at": "2023-08-15T19:07:33.155Z",
-          "authorized_organizations": [{
-              "organization": {
-                  "name": "OrgName",
-                  "id": "Org123"
-              }
-          }]
-        },
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
@@ -86,20 +74,8 @@ class UsersTest : TestBase() {
     val workos = createWorkOSClient()
 
     stubResponse(
-      "/users/authentications",
+      "/users/authenticate",
       """{
-        "session": {
-          "id": "sample_id_12345",
-          "token": "token_123",
-          "created_at": "2023-07-15T19:07:33.155Z",
-          "expires_at": "2023-08-15T19:07:33.155Z",
-          "authorized_organizations": [{
-              "organization": {
-                  "name": "OrgName",
-                  "id": "Org123"
-              }
-          }]
-        },
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
@@ -109,7 +85,7 @@ class UsersTest : TestBase() {
       }""",
       requestBody = """{
         "code": "code_123",
-        "magic_auth_challenge_id": "challenge_123",
+        "user_id": "user_123",
         "client_id": "client_123",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:magic-auth:code"
@@ -118,7 +94,7 @@ class UsersTest : TestBase() {
 
     val options = UsersApi.AuthenticateUserWithMagicAuthOptions.builder()
       .code("code_123")
-      .magicAuthChallengeId("challenge_123")
+      .userId("user_123")
       .clientId("client_123")
       .build()
 
@@ -134,20 +110,8 @@ class UsersTest : TestBase() {
     val email = "marcelina@foo-corp.com"
 
     stubResponse(
-      "/users/authentications",
+      "/users/authenticate",
       """{
-        "session": {
-          "id": "sample_id_12345",
-          "token": "token_123",
-          "created_at": "2023-07-15T19:07:33.155Z",
-          "expires_at": "2023-08-15T19:07:33.155Z",
-          "authorized_organizations": [{
-              "organization": {
-                  "name": "OrgName",
-                  "id": "Org123"
-              }
-          }]
-        },
         "user": {
          "id": "user_123",
         "email": "marcelina@foo-corp.com",
