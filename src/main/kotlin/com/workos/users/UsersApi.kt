@@ -725,7 +725,6 @@ class UsersApi(private val workos: WorkOS) {
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
   }
 
-
   /**
    * Parameters for the [updateUserPassword] method.
    */
@@ -777,7 +776,7 @@ class UsersApi(private val workos: WorkOS) {
     val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
     return workos.put("/users/$userId/password", User::class.java, config)
   }
-  
+
   fun deleteUser(id: String) {
     workos.delete("/users/$id")
   }
