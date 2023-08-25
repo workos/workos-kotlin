@@ -733,4 +733,8 @@ class UsersApi(private val workos: WorkOS) {
     val config = RequestConfig.builder().data(options).build()
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
   }
+
+  fun deleteUser(id: String) {
+    workos.delete("/users/$id")
+  }
 }

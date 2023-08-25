@@ -482,4 +482,17 @@ class UsersTest : TestBase() {
 
     assertEquals("magic_auth_challenge_123", response.id)
   }
+  @Test
+  fun deleteUserShouldSendDeleteRequest() {
+    val workos = createWorkOSClient()
+
+    val userId = "user_01E4ZCR3C56J083X43JQXF3JK5"
+
+    stubResponse(
+      "/users/$userId",
+      "",
+    )
+
+    workos.users.deleteUser(userId)
+  }
 }
