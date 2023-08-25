@@ -497,17 +497,15 @@ class UsersTest : TestBase() {
             "updated_at": "2021-06-25T19:07:33.155Z"
         }""",
       requestBody = """{
-            "userId": "$userId",
             "password": "$newPassword"
       }"""
     )
 
     val options = UsersApi.UpdateUserPasswordOptions.builder()
-      .userId(userId)
       .password(newPassword)
       .build()
 
-    val updateResponse = workos.users.updateUserPassword(options)
+    val updateResponse = workos.users.updateUserPassword(userId, options)
 
     assertEquals(userId, updateResponse.id)
   }

@@ -739,11 +739,9 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class UpdateUserPasswordOptions @JvmOverloads constructor(
-    @JsonProperty("userId") val userId: String,
     @JsonProperty("password") val password: String
   ) {
     init {
-      require(userId.isNotBlank()) { "User id is required" }
       require(password.isNotBlank()) { "Password is required" }
     }
 
@@ -751,13 +749,7 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [UpdateUserPasswordOptions].
      */
     class UpdateUserPasswordOptionsBuilder {
-      private lateinit var userId: String
       private lateinit var password: String
-
-      /**
-       * Sets the user id.
-       */
-      fun userId(value: String) = apply { this.userId = value }
 
       /**
        * Sets the password.
@@ -768,7 +760,7 @@ class UsersApi(private val workos: WorkOS) {
        * Creates an [UpdateUserPasswordOptions] with the given builder parameters.
        */
       fun build(): UpdateUserPasswordOptions {
-        return UpdateUserPasswordOptions(userId, password)
+        return UpdateUserPasswordOptions(password)
       }
     }
 
@@ -786,8 +778,11 @@ class UsersApi(private val workos: WorkOS) {
   /**
    * Updates the password of a specified user.
    */
-  fun updateUserPassword(updateUserPasswordOptions: UpdateUserPasswordOptions): User {
+  fun updateUserPassword(
+    userId: String,
+    updateUserPasswordOptions: UpdateUserPasswordOptions
+  ): User {
     val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
-    return workos.put("/users/${updateUserPasswordOptions.userId}/password", User::class.java, config)
+    return workos.put("/users/$userId/password", User::class.java, config)
   }
 }
