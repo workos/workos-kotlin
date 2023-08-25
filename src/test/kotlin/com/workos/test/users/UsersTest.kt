@@ -14,7 +14,7 @@ class UsersTest : TestBase() {
   fun addUserToOrganizationShouldReturnUser() {
     val workos = createWorkOSClient()
 
-    val userId = "user_123"
+    val id = "user_123"
     val organizationId = "organization_123"
 
     stubResponse(
@@ -28,13 +28,13 @@ class UsersTest : TestBase() {
     )
 
     val options = UsersApi.AddUserToOrganizationOptions.builder()
-      .user(userId)
+      .userId(id)
       .organization(organizationId)
       .build()
 
     val user = workos.users.addUserToOrganization(options)
 
-    assertEquals(userId, user.id)
+    assertEquals(id, user.id)
   }
 
   @Test
