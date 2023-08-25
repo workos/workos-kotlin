@@ -637,29 +637,29 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for the [verifyEmail] method.
+   * Parameters for the [verifyEmailCode] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  class VerifyEmailOptions @JvmOverloads constructor(
-    @JsonProperty("magic_auth_challenge_id") val magicAuthChallengeId: String,
+  class VerifyEmailCodeOptions @JvmOverloads constructor(
+    @JsonProperty("userId") val userId: String,
     @JsonProperty("code") val code: String
   ) {
     init {
-      require(magicAuthChallengeId.isNotBlank()) { "Magic Auth Challenge ID is required" }
+      require(userId.isNotBlank()) { "User ID is required" }
       require(code.isNotBlank()) { "Code is required" }
     }
 
     /**
-     * Builder class for [VerifyEmailOptions].
+     * Builder class for [VerifyEmailCodeOptions].
      */
-    class VerifyEmailOptionsBuilder {
-      private lateinit var magicAuthChallengeId: String
+    class VerifyEmailCodeOptionsBuilder {
+      private lateinit var userId: String
       private lateinit var code: String
 
       /**
-       * Sets the magic auth challenge id.
+       * Sets the id.
        */
-      fun magicAuthChallengeId(value: String) = apply { this.magicAuthChallengeId = value }
+      fun userId(value: String) = apply { this.userId = value }
 
       /**
        * Sets the code.
@@ -667,10 +667,10 @@ class UsersApi(private val workos: WorkOS) {
       fun code(value: String) = apply { this.code = value }
 
       /**
-       * Creates a [VerifyEmailOptions] with the given builder parameters.
+       * Creates a [VerifyEmailCodeOptions] with the given builder parameters.
        */
-      fun build(): VerifyEmailOptions {
-        return VerifyEmailOptions(magicAuthChallengeId, code)
+      fun build(): VerifyEmailCodeOptions {
+        return VerifyEmailCodeOptions(userId, code)
       }
     }
 
@@ -679,14 +679,14 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): VerifyEmailOptionsBuilder {
-        return VerifyEmailOptionsBuilder()
+      fun builder(): VerifyEmailCodeOptionsBuilder {
+        return VerifyEmailCodeOptionsBuilder()
       }
     }
   }
-  fun verifyEmail(verifyEmailOptions: VerifyEmailOptions): User {
-    val config = RequestConfig.builder().data(verifyEmailOptions).build()
-    return workos.post("/users/verify_email", User::class.java, config)
+  fun verifyEmailCode(verifyEmailCodeOptions: VerifyEmailCodeOptions): User {
+    val config = RequestConfig.builder().data(verifyEmailCodeOptions).build()
+    return workos.post("users/${verifyEmailCodeOptions.userId}/verify_email_code", User::class.java, config)
   }
 
   /**
@@ -733,6 +733,7 @@ class UsersApi(private val workos: WorkOS) {
     val config = RequestConfig.builder().data(options).build()
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
   }
+
 
   /**
    * Parameters for the [updateUserPassword] method.
@@ -784,5 +785,9 @@ class UsersApi(private val workos: WorkOS) {
   ): User {
     val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
     return workos.put("/users/$userId/password", User::class.java, config)
+  }
+  
+  fun deleteUser(id: String) {
+    workos.delete("/users/$id")
   }
 }
