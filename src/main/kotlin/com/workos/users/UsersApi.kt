@@ -160,36 +160,36 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class RemoveUserFromOrganizationOptions @JvmOverloads constructor(
-    @JsonProperty("user") val user: String,
-    @JsonProperty("organization") val organization: String
+    @JsonProperty("id") val userId: String,
+    @JsonProperty("organization_id") val organizationId: String
   ) {
     init {
-      require(user.isNotBlank()) { "User id is required" }
-      require(organization.isNotBlank()) { "Organization id is required" }
+      require(userId.isNotBlank()) { "User id is required" }
+      require(organizationId.isNotBlank()) { "Organization id is required" }
     }
 
     /**
      * Builder class for [RemoveUserFromOrganizationOptions].
      */
     class RemoveUserFromOrganizationOptionsBuilder {
-      private lateinit var user: String
-      private lateinit var organization: String
+      private lateinit var userId: String
+      private lateinit var organizationId: String
 
       /**
        * Sets the user id.
        */
-      fun user(value: String) = apply { this.user = value }
+      fun userId(value: String) = apply { this.userId = value }
 
       /**
        * Sets the organization id.
        */
-      fun organization(value: String) = apply { this.organization = value }
+      fun organizationId(value: String) = apply { this.organizationId = value }
 
       /**
        * Creates a [RemoveUserFromOrganizationOptions] with the given builder parameters.
        */
       fun build(): RemoveUserFromOrganizationOptions {
-        return RemoveUserFromOrganizationOptions(user, organization)
+        return RemoveUserFromOrganizationOptions(userId, organizationId)
       }
     }
 
@@ -208,8 +208,8 @@ class UsersApi(private val workos: WorkOS) {
    * Removes a user from a specified organization.
    */
   fun removeUserFromOrganization(removeUserFromOrganizationOptions: RemoveUserFromOrganizationOptions): User {
-    val id = removeUserFromOrganizationOptions.user
-    val organization = removeUserFromOrganizationOptions.organization
+    val id = removeUserFromOrganizationOptions.userId
+    val organization = removeUserFromOrganizationOptions.organizationId
     val users = workos.delete("/users/$id/organizations/$organization")
     val mapper = ObjectMapper()
     return mapper.readValue(users, User::class.java)

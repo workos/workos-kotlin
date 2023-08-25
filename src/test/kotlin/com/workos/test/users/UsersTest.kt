@@ -234,7 +234,7 @@ class UsersTest : TestBase() {
   fun deleteUserFromOrganizationShouldReturnUser() {
     val workos = createWorkOSClient()
 
-    val userId = "user_123"
+    val id = "user_123"
     val organization = "organization_123"
 
     stubResponse(
@@ -248,13 +248,13 @@ class UsersTest : TestBase() {
     )
 
     val options = UsersApi.RemoveUserFromOrganizationOptions.builder()
-      .user(userId)
-      .organization(organization)
+      .userId(id)
+      .organizationId(organization)
       .build()
 
     val user = workos.users.removeUserFromOrganization(options)
 
-    assertEquals(userId, user.id)
+    assertEquals(id, user.id)
   }
 
   @Test
