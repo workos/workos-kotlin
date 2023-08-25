@@ -9,7 +9,6 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.users.models.AuthenticationResponse
 import com.workos.users.models.ChallengeResponse
-import com.workos.users.models.MagicAuthChallenge
 import com.workos.users.models.User
 import com.workos.users.models.UserList
 
@@ -23,7 +22,7 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("password") val password: String? = null,
     @JsonProperty("first_name") val firstName: String? = null,
     @JsonProperty("last_name") val lastName: String? = null,
-    @JsonProperty("email_verified") val emailVerified: Boolean = false
+    @JsonProperty("email_verified") val emailVerified: Boolean? = false
   ) {
     init {
       require(email.isNotBlank()) { "Email is required" }
@@ -37,7 +36,7 @@ class UsersApi(private val workos: WorkOS) {
       private var password: String? = null
       private var firstName: String? = null
       private var lastName: String? = null
-      private var emailVerified: Boolean = false
+      private var emailVerified: Boolean? = false
 
       /**
        * Sets the email.
@@ -103,7 +102,7 @@ class UsersApi(private val workos: WorkOS) {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class AddUserToOrganizationOptions @JvmOverloads constructor(
     @JsonProperty("id") val userId: String,
-    @JsonProperty("organization") val organization: String
+    @JsonProperty("organization_id") val organization: String
   ) {
     init {
       require(userId.isNotBlank()) { "User id is required" }
@@ -618,13 +617,13 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun sendMagicAuthCode(sendMagicAuthCodeOptions: SendMagicAuthCodeOptions): MagicAuthChallenge {
+  fun sendMagicAuthCode(sendMagicAuthCodeOptions: SendMagicAuthCodeOptions): User {
 
     val config = RequestConfig.builder()
       .data(sendMagicAuthCodeOptions)
       .build()
 
-    return workos.post("/users/magic_auth/send", MagicAuthChallenge::class.java, config)
+    return workos.post("/users/magic_auth/send", User::class.java, config)
   }
 
   /**
@@ -680,49 +679,8 @@ class UsersApi(private val workos: WorkOS) {
     return workos.post("users/${verifyEmailCodeOptions.userId}/verify_email_code", User::class.java, config)
   }
 
-  /**
-   * Parameters for the [sendVerificationEmail] method.
-   */
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  class SendVerificationEmailOptions @JvmOverloads constructor(
-    @JsonProperty("user_id") val userId: String
-  ) {
-    init {
-      require(userId.isNotBlank()) { "User ID is required" }
-    }
-
-    /**
-     * Builder class for [SendVerificationEmailOptions].
-     */
-    class SendVerificationEmailOptionsBuilder {
-      private lateinit var userId: String
-
-      /**
-       * Sets the user ID.
-       */
-      fun userId(value: String) = apply { this.userId = value }
-
-      /**
-       * Creates a [SendVerificationEmailOptions] with the given builder parameters.
-       */
-      fun build(): SendVerificationEmailOptions {
-        return SendVerificationEmailOptions(userId)
-      }
-    }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): SendVerificationEmailOptionsBuilder {
-        return SendVerificationEmailOptionsBuilder()
-      }
-    }
-  }
-  fun sendVerificationEmail(options: SendVerificationEmailOptions): MagicAuthChallenge {
-    val config = RequestConfig.builder().data(options).build()
-    return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
+  fun sendVerificationEmail(id: String): User {
+    return workos.post("/users/$id/send_verification_email", User::class.java)
   }
 
   /**

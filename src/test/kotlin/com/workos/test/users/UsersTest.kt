@@ -380,7 +380,6 @@ class UsersTest : TestBase() {
     val workos = createWorkOSClient()
 
     val userId = "user_123"
-    val code = "123456"
 
     stubResponse(
       "/users/$userId/verify_email_code",
@@ -393,12 +392,12 @@ class UsersTest : TestBase() {
     }""",
       requestBody = """{
     "userId": "$userId",
-    "code": "$code"
+    "code": "code_123"
   }"""
     )
 
     val options = UsersApi.VerifyEmailCodeOptions.builder()
-      .code(code)
+      .code("code_123")
       .userId(userId)
       .build()
 
@@ -416,20 +415,16 @@ class UsersTest : TestBase() {
     stubResponse(
       "/users/$userId/send_verification_email",
       """{
-           "id": "magic_auth_challenge_123"
-        }""",
-      requestBody = """{
-        "user_id": "$userId"
-      }"""
+          "id": "$userId",
+          "email": "example@foo-corp.com",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z"
+        }"""
     )
 
-    val options = UsersApi.SendVerificationEmailOptions.builder()
-      .userId(userId)
-      .build()
+    val response = workos.users.sendVerificationEmail(userId)
 
-    val response = workos.users.sendVerificationEmail(options)
-
-    assertEquals("magic_auth_challenge_123", response.id)
+    assertEquals("user_01E4ZCR3C56J083X43JQXF3JK5", response.id)
   }
 
   @Test
@@ -441,7 +436,10 @@ class UsersTest : TestBase() {
     stubResponse(
       "/users/magic_auth/send",
       """{
-           "id": "magic_auth_challenge_123"
+          "id": "user_123",
+          "email": "example@foo-corp.com",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z"
         }""",
       requestBody = """{
         "email": "$email"
@@ -454,7 +452,7 @@ class UsersTest : TestBase() {
 
     val response = workos.users.sendMagicAuthCode(options)
 
-    assertEquals("magic_auth_challenge_123", response.id)
+    assertEquals("user_123", response.id)
   }
 
   @Test
