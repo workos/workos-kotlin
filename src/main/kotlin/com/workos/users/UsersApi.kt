@@ -734,6 +734,59 @@ class UsersApi(private val workos: WorkOS) {
     return workos.post("/users/${options.userId}/send_verification_email", MagicAuthChallenge::class.java, config)
   }
 
+
+  /**
+   * Parameters for the [updateUserPassword] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class UpdateUserPasswordOptions @JvmOverloads constructor(
+    @JsonProperty("password") val password: String
+  ) {
+    init {
+      require(password.isNotBlank()) { "Password is required" }
+    }
+
+    /**
+     * Builder class for [UpdateUserPasswordOptions].
+     */
+    class UpdateUserPasswordOptionsBuilder {
+      private lateinit var password: String
+
+      /**
+       * Sets the password.
+       */
+      fun password(value: String) = apply { this.password = value }
+
+      /**
+       * Creates an [UpdateUserPasswordOptions] with the given builder parameters.
+       */
+      fun build(): UpdateUserPasswordOptions {
+        return UpdateUserPasswordOptions(password)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): UpdateUserPasswordOptionsBuilder {
+        return UpdateUserPasswordOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Updates the password of a specified user.
+   */
+  fun updateUserPassword(
+    userId: String,
+    updateUserPasswordOptions: UpdateUserPasswordOptions
+  ): User {
+    val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
+    return workos.put("/users/$userId/password", User::class.java, config)
+  }
+  
   fun deleteUser(id: String) {
     workos.delete("/users/$id")
   }
