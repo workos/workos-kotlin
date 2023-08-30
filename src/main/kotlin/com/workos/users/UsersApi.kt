@@ -150,8 +150,10 @@ class UsersApi(private val workos: WorkOS) {
    */
   fun addUserToOrganization(addUserToOrganizationOptions: AddUserToOrganizationOptions): User {
     val id = addUserToOrganizationOptions.userId
-    val organization = addUserToOrganizationOptions.organization
-    return workos.post("/users/$id/organizations/$organization", User::class.java)
+    val config = RequestConfig.builder()
+      .data(addUserToOrganizationOptions)
+      .build()
+    return workos.post("/users/$id/organizations", User::class.java, config)
   }
 
   /**
