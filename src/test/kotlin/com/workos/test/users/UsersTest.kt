@@ -142,16 +142,18 @@ class UsersTest : TestBase() {
     assertEquals(email, response.user.email)
   }
   @Test
-  fun completePasswordResetShouldReturnUser() {
+  fun resetPasswordShouldReturnUser() {
     val workos = createWorkOSClient()
 
     stubResponse(
       "/users/password_reset",
       """{
-         "id": "user_123",
-        "email": "marcelina@foo-corp.com",
-        "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "user": {
+          "id": "user_123",
+          "email": "marcelina@foo-corp.com",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z"
+       }
       }""",
       requestBody = """{
         "token": "token_123",
@@ -159,15 +161,15 @@ class UsersTest : TestBase() {
       }"""
     )
 
-    val completePasswordResetOptions = UsersApi.CompletePasswordResetOptions
+    val options = UsersApi.ResetPasswordOptions
       .builder()
       .token("token_123")
       .newPassword("test_123")
       .build()
 
-    val user = workos.users.completePasswordReset(completePasswordResetOptions)
+    val user = workos.users.resetPassword(options)
 
-    assertEquals("marcelina@foo-corp.com", user.email)
+    assertEquals("marcelina@foo-corp.com", user.user.email)
   }
 
   @Test
@@ -387,11 +389,13 @@ class UsersTest : TestBase() {
     stubResponse(
       "/users/$userId/verify_email_code",
       """{
-        "id": "user_123",
-        "email": "marcelina@foo-corp.com",
-        "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z",
-        "email_verified": true
+        "user": {
+          "id": "user_123",
+          "email": "marcelina@foo-corp.com",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "email_verified": true
+        }
     }""",
       requestBody = """{
     "code": "code_123"
@@ -405,7 +409,7 @@ class UsersTest : TestBase() {
 
     val verificationResponse = workos.users.verifyEmailCode(options)
 
-    assertEquals("user_123", verificationResponse.id)
+    assertEquals("user_123", verificationResponse.user.id)
   }
 
   @Test
