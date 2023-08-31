@@ -25,6 +25,9 @@ class UsersTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
+      requestBody = """{
+        "organization_id": "organization_123"
+      }"""
     )
 
     val options = UsersApi.AddUserToOrganizationOptions.builder()
@@ -391,7 +394,6 @@ class UsersTest : TestBase() {
         "email_verified": true
     }""",
       requestBody = """{
-    "userId": "$userId",
     "code": "code_123"
   }"""
     )
@@ -459,13 +461,13 @@ class UsersTest : TestBase() {
   fun updateUserPasswordShouldReturnUpdatedUser() {
     val workos = createWorkOSClient()
 
-    val userId = "user_123"
+    val id = "user_123"
     val newPassword = "new_password"
 
     stubResponse(
-      "/users/$userId/password",
+      "/users/$id/password",
       """{
-            "id": "$userId",
+            "id": "$id",
             "email": "example@foo-corp.com",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -477,11 +479,12 @@ class UsersTest : TestBase() {
 
     val options = UsersApi.UpdateUserPasswordOptions.builder()
       .password(newPassword)
+      .userId(id)
       .build()
 
-    val updateResponse = workos.users.updateUserPassword(userId, options)
+    val updateResponse = workos.users.updateUserPassword(options)
 
-    assertEquals(userId, updateResponse.id)
+    assertEquals(id, updateResponse.id)
   }
 
   @Test

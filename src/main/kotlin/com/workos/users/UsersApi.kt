@@ -1,5 +1,6 @@
 package com.workos.users
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -101,7 +102,8 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class AddUserToOrganizationOptions @JvmOverloads constructor(
-    @JsonProperty("id") val userId: String,
+    @JsonIgnore
+    val userId: String,
     @JsonProperty("organization_id") val organization: String
   ) {
     init {
@@ -633,7 +635,8 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class VerifyEmailCodeOptions @JvmOverloads constructor(
-    @JsonProperty("userId") val userId: String,
+    @JsonIgnore
+    val userId: String,
     @JsonProperty("code") val code: String
   ) {
     init {
@@ -677,8 +680,9 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
   fun verifyEmailCode(verifyEmailCodeOptions: VerifyEmailCodeOptions): User {
+    val id = verifyEmailCodeOptions.userId
     val config = RequestConfig.builder().data(verifyEmailCodeOptions).build()
-    return workos.post("users/${verifyEmailCodeOptions.userId}/verify_email_code", User::class.java, config)
+    return workos.post("users/$id/verify_email_code", User::class.java, config)
   }
 
   fun sendVerificationEmail(id: String): User {
@@ -690,9 +694,12 @@ class UsersApi(private val workos: WorkOS) {
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   class UpdateUserPasswordOptions @JvmOverloads constructor(
+    @JsonIgnore
+    val userId: String,
     @JsonProperty("password") val password: String
   ) {
     init {
+      require(password.isNotBlank()) { "User id is required" }
       require(password.isNotBlank()) { "Password is required" }
     }
 
@@ -700,7 +707,13 @@ class UsersApi(private val workos: WorkOS) {
      * Builder class for [UpdateUserPasswordOptions].
      */
     class UpdateUserPasswordOptionsBuilder {
+      private lateinit var userId: String
       private lateinit var password: String
+
+      /**
+       * Sets the User Id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
 
       /**
        * Sets the password.
@@ -711,7 +724,7 @@ class UsersApi(private val workos: WorkOS) {
        * Creates an [UpdateUserPasswordOptions] with the given builder parameters.
        */
       fun build(): UpdateUserPasswordOptions {
-        return UpdateUserPasswordOptions(password)
+        return UpdateUserPasswordOptions(userId, password)
       }
     }
 
@@ -730,11 +743,11 @@ class UsersApi(private val workos: WorkOS) {
    * Updates the password of a specified user.
    */
   fun updateUserPassword(
-    userId: String,
     updateUserPasswordOptions: UpdateUserPasswordOptions
   ): User {
+    val id = updateUserPasswordOptions.userId
     val config = RequestConfig.builder().data(updateUserPasswordOptions).build()
-    return workos.put("/users/$userId/password", User::class.java, config)
+    return workos.put("/users/$id/password", User::class.java, config)
   }
 
   fun deleteUser(id: String) {
