@@ -578,6 +578,68 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
+  /**
+   * Parameters for the [authenticateUserWithTotp] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class AuthenticateUserWithTotpOptions @JvmOverloads constructor(
+    @JsonProperty("pending_authentication_token") val pendingAuthenticationToken: String,
+    @JsonProperty("authentication_challenge_id") val authenticationChallengeId: String,
+    @JsonProperty("code") val code: String,
+    @JsonProperty("client_id") val clientId: String,
+    @JsonProperty("client_secret") val clientSecret: String? = null,
+    @JsonProperty("grant_type") val grantType: String = "urn:workos:oauth:grant-type:mfa-totp",
+  ) {
+    init {
+      require(clientId.isNotBlank()) { "ClientID is required." }
+      require(pendingAuthenticationToken.isNotBlank()) { "Email is required." }
+      require(authenticationChallengeId.isNotBlank()) { "Authentication Challenge Id is required." }
+      require(code.isNotBlank()) { "Code is required." }
+    }
+
+    /**
+     * Builder class for [AuthenticateUserWithTotpOptions].
+     */
+    class AuthenticateUserWithTotpOptionsBuilder {
+      private lateinit var pendingAuthenticationToken: String
+      private lateinit var authenticationChallengeId: String
+      private lateinit var code: String
+      private lateinit var clientId: String
+      private var clientSecret: String? = null
+
+      fun pendingAuthenticationToken(value: String) = apply { this.pendingAuthenticationToken = value }
+      fun authenticationChallengeId(value: String) = apply { this.authenticationChallengeId = value }
+
+      fun code(value: String) = apply { this.code = value }
+      fun clientId(value: String) = apply { this.clientId = value }
+
+      fun build(): AuthenticateUserWithTotpOptions {
+        return AuthenticateUserWithTotpOptions(pendingAuthenticationToken, authenticationChallengeId, code, clientId, clientSecret)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): AuthenticateUserWithTotpOptionsBuilder {
+        return AuthenticateUserWithTotpOptionsBuilder()
+      }
+    }
+  }
+
+  fun authenticateUserWithTotp(authenticateUserWithTotpOptions: AuthenticateUserWithTotpOptions): UserResponse {
+
+    val updatedOptions = authenticateUserWithTotpOptions.copy(clientSecret = workos.apiKey)
+
+    val config = RequestConfig.builder()
+      .data(updatedOptions)
+      .build()
+
+    return workos.post("/users/authenticate", UserResponse::class.java, config)
+  }
+
   fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): UserResponse {
 
     val updatedOptions = authenticateUserWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
