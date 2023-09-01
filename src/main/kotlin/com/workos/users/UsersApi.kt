@@ -8,10 +8,10 @@ import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
-import com.workos.users.models.AuthenticationResponse
 import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.User
 import com.workos.users.models.UserList
+import com.workos.users.models.UserResponse
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -284,19 +284,19 @@ class UsersApi(private val workos: WorkOS) {
   /**
    * Resets a user's password using the token that was sent to the user.
    */
-  fun completePasswordReset(completePasswordResetOptions: CompletePasswordResetOptions): User {
+  fun resetPassword(resetPasswordOptions: ResetPasswordOptions): UserResponse {
     val config = RequestConfig.builder()
-      .data(completePasswordResetOptions)
+      .data(resetPasswordOptions)
       .build()
 
-    return workos.post("/users/password_reset", User::class.java, config)
+    return workos.post("/users/password_reset", UserResponse::class.java, config)
   }
 
   /**
-   * Parameters for the [completePasswordReset] method.
+   * Parameters for the [resetPassword] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  class CompletePasswordResetOptions @JvmOverloads constructor(
+  class ResetPasswordOptions @JvmOverloads constructor(
     @JsonProperty("token") val token: String,
     @JsonProperty("new_password") val newPassword: String
   ) {
@@ -306,9 +306,9 @@ class UsersApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for [CompletePasswordResetOptions].
+     * Builder class for [ResetPasswordOptions].
      */
-    class CompletePasswordResetOptionsBuilder {
+    class ResetPasswordOptionsBuilder {
       private lateinit var token: String
       private lateinit var newPassword: String
 
@@ -323,10 +323,10 @@ class UsersApi(private val workos: WorkOS) {
       fun newPassword(value: String) = apply { this.newPassword = value }
 
       /**
-       * Creates a [CompletePasswordResetOptions] with the given builder parameters.
+       * Creates a [ResetPasswordOptions] with the given builder parameters.
        */
-      fun build(): CompletePasswordResetOptions {
-        return CompletePasswordResetOptions(token, newPassword)
+      fun build(): ResetPasswordOptions {
+        return ResetPasswordOptions(token, newPassword)
       }
     }
 
@@ -335,8 +335,8 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): CompletePasswordResetOptionsBuilder {
-        return CompletePasswordResetOptionsBuilder()
+      fun builder(): ResetPasswordOptionsBuilder {
+        return ResetPasswordOptionsBuilder()
       }
     }
   }
@@ -453,7 +453,7 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): AuthenticationResponse {
+  fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): UserResponse {
 
     val updatedOptions = authenticateUserWithPasswordOptions.copy(clientSecret = workos.apiKey)
 
@@ -461,7 +461,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", UserResponse::class.java, config)
   }
 
   /**
@@ -512,7 +512,7 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun authenticateUserWithCode(authenticateUserWithCodeOptions: AuthenticateUserWithCodeOptions): AuthenticationResponse {
+  fun authenticateUserWithCode(authenticateUserWithCodeOptions: AuthenticateUserWithCodeOptions): UserResponse {
 
     val updatedOptions = authenticateUserWithCodeOptions.copy(clientSecret = workos.apiKey)
 
@@ -520,7 +520,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", UserResponse::class.java, config)
   }
 
   /**
@@ -575,7 +575,7 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
-  fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): AuthenticationResponse {
+  fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): UserResponse {
 
     val updatedOptions = authenticateUserWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
 
@@ -583,7 +583,7 @@ class UsersApi(private val workos: WorkOS) {
       .data(updatedOptions)
       .build()
 
-    return workos.post("/users/authenticate", AuthenticationResponse::class.java, config)
+    return workos.post("/users/authenticate", UserResponse::class.java, config)
   }
 
   /**
@@ -679,10 +679,10 @@ class UsersApi(private val workos: WorkOS) {
       }
     }
   }
-  fun verifyEmailCode(verifyEmailCodeOptions: VerifyEmailCodeOptions): User {
+  fun verifyEmailCode(verifyEmailCodeOptions: VerifyEmailCodeOptions): UserResponse {
     val id = verifyEmailCodeOptions.userId
     val config = RequestConfig.builder().data(verifyEmailCodeOptions).build()
-    return workos.post("users/$id/verify_email_code", User::class.java, config)
+    return workos.post("users/$id/verify_email_code", UserResponse::class.java, config)
   }
 
   fun sendVerificationEmail(id: String): User {
