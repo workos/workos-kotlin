@@ -504,4 +504,36 @@ class UsersTest : TestBase() {
 
     workos.users.deleteUser(userId)
   }
+
+  @Test
+  fun listAuthFactorsShouldReturnAuthenticationFactorList() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+
+    stubResponse(
+      "/users/$id/auth/factors",
+      """{
+  "data": [
+    {
+      "object": "authentication_factor",
+      "id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+      "user_id": "user_01H96FETWYSJMJEGF0Q3ZB272F",
+      "type": "totp",
+      "totp": {
+        "issuer": "Foo Corp",
+        "user": "user@foo-corp.com"
+      },
+      "created_at": "2023-08-31T18:59:57.962Z",
+      "updated_at": "2023-08-31T18:59:57.962Z"
+    }
+  ]
+}
+""",
+    )
+
+    val FactorList = workos.users.listAuthFactors(id)
+
+    assertEquals("auth_factor_01H96FETXENNY99ARX0GRC804C", FactorList.data[0].id)
+  }
 }

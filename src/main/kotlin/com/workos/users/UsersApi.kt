@@ -8,6 +8,7 @@ import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
+import com.workos.users.models.AuthenticationFactorList
 import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.User
 import com.workos.users.models.UserList
@@ -752,5 +753,12 @@ class UsersApi(private val workos: WorkOS) {
 
   fun deleteUser(id: String) {
     workos.delete("/users/$id")
+  }
+
+  /**
+   * Gets a list of AuthenticationFactors for a user.
+   */
+  fun listAuthFactors(id: String): AuthenticationFactorList {
+    return workos.get("/users/$id/auth/factors", AuthenticationFactorList::class.java)
   }
 }
