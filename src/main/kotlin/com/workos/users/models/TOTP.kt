@@ -12,4 +12,15 @@ data class TOTP @JsonCreator constructor(
   @JsonProperty("user")
   val user: String,
 
+  @JvmField
+  @JsonProperty("qr_code")
+  val qrCode:  String? = null,
+
+  @JvmField
+  @JsonProperty("secret")
+  val secret:  String? = null,
+
+  @JvmField
+  @JsonProperty("uri")
+  val uri:  String? = null,
 )

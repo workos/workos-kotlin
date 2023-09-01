@@ -6,6 +6,7 @@ import com.workos.test.TestBase
 import com.workos.users.UsersApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import com.workos.users.models.FactorType
 
 class UsersTest : TestBase() {
   private val mapper = jacksonObjectMapper()
@@ -535,5 +536,54 @@ class UsersTest : TestBase() {
     val FactorList = workos.users.listAuthFactors(id)
 
     assertEquals("auth_factor_01H96FETXENNY99ARX0GRC804C", FactorList.data[0].id)
+  }
+
+  @Test
+  fun enrollFactoTypeReturnsEnrollFactorResponse() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+
+    stubResponse(
+      "/users/$id/auth/factors",
+      """{
+  "authentication_factor": {
+    "object": "authentication_factor",
+    "id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+    "user_id": "user_01H96FETWYSJMJEGF0Q3ZB272F",
+    "type": "totp",
+    "totp": {
+      "issuer": "Foo Corp",
+      "qr_code": "data:image/png;base64,iVBOR...",
+      "secret": "OFAFOQAPHR6XMQKAIYMWU72XIE3DGI3P",
+      "uri": "otpauth://totp/Foo%20Corp:user@foo-corp.com?secret=OFAFOQAPHR6XMQKAIYMWU72XIE3DGI3P&issuer=Foo%20Corp&algorithm=SHA1&digits=6&period=30",
+      "user": "user@foo-corp.com"
+    },
+    "created_at": "2023-08-31T18:59:57.962Z",
+    "updated_at": "2023-08-31T18:59:57.962Z"
+  },
+  "authentication_challenge": {
+    "object": "authentication_challenge",
+    "id": "auth_challenge_01H96FETXGTW1QMBSBT2T36PW0",
+    "authentication_factor_id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+    "expires_at": "2023-08-31T19:09:57.999Z",
+    "created_at": "2023-08-31T18:59:57.962Z",
+    "updated_at": "2023-08-31T18:59:57.962Z"
+  }
+}
+""",
+      requestBody= """{
+        "type": "totp"
+      }"""
+    )
+
+    val options = UsersApi.EnrollAuthFactorOptions.builder()
+      .userId(id)
+      .type(FactorType.TOTP)
+      .build()
+
+    val response = workos.users.enrollAuthFactor(options)
+
+    assertEquals("auth_factor_01H96FETXENNY99ARX0GRC804C", response.authenticationFactor.id)
   }
 }

@@ -13,6 +13,8 @@ import com.workos.users.models.ChallengeResponse
 import com.workos.users.models.User
 import com.workos.users.models.UserList
 import com.workos.users.models.UserResponse
+import com.workos.users.models.EnrollAuthFactorResponse
+import com.workos.users.models.FactorType
 
 class UsersApi(private val workos: WorkOS) {
   /**
@@ -700,7 +702,7 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("password") val password: String
   ) {
     init {
-      require(password.isNotBlank()) { "User id is required" }
+      require(userId.isNotBlank()) { "User id is required" }
       require(password.isNotBlank()) { "Password is required" }
     }
 
@@ -760,5 +762,64 @@ class UsersApi(private val workos: WorkOS) {
    */
   fun listAuthFactors(id: String): AuthenticationFactorList {
     return workos.get("/users/$id/auth/factors", AuthenticationFactorList::class.java)
+  }
+
+  /**
+   * Parameters for the [enrollAuthFactor] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class EnrollAuthFactorOptions @JvmOverloads constructor(
+    @JsonIgnore
+    val userId: String,
+    @JsonProperty("type") val type: FactorType
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User id is required" }
+    }
+
+    /**
+     * Builder class for [EnrollAuthFactorOptions].
+     */
+    class EnrollAuthFactorOptionsBuilder {
+      private lateinit var userId: String
+      private lateinit var type: FactorType
+
+      /**
+       * Sets the User Id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Sets the password.
+       */
+      fun type(value: FactorType) = apply { this.type = value }
+
+      /**
+       * Creates an [EnrollAuthFactorOptions] with the given builder parameters.
+       */
+      fun build(): EnrollAuthFactorOptions {
+        return EnrollAuthFactorOptions(userId, type)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): EnrollAuthFactorOptionsBuilder {
+        return EnrollAuthFactorOptionsBuilder()
+      }
+    }
+  }
+  /**
+   * Enrolls an AuthenticationFactors for a user.
+   */
+  fun enrollAuthFactor(enrollAuthFactorOptions: EnrollAuthFactorOptions): EnrollAuthFactorResponse {
+    val id = enrollAuthFactorOptions.userId
+    val config = RequestConfig.builder()
+      .data(enrollAuthFactorOptions)
+      .build()
+    return workos.post("/users/$id/auth/factors", EnrollAuthFactorResponse::class.java, config)
   }
 }
