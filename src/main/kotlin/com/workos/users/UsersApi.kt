@@ -10,11 +10,11 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.users.models.AuthenticationFactorList
 import com.workos.users.models.ChallengeResponse
+import com.workos.users.models.EnrollAuthFactorResponse
+import com.workos.users.models.FactorType
 import com.workos.users.models.User
 import com.workos.users.models.UserList
 import com.workos.users.models.UserResponse
-import com.workos.users.models.EnrollAuthFactorResponse
-import com.workos.users.models.FactorType
 
 class UsersApi(private val workos: WorkOS) {
   /**

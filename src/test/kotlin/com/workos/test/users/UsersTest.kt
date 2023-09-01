@@ -4,9 +4,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.workos.test.TestBase
 import com.workos.users.UsersApi
+import com.workos.users.models.FactorType
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import com.workos.users.models.FactorType
 
 class UsersTest : TestBase() {
   private val mapper = jacksonObjectMapper()
@@ -572,7 +572,7 @@ class UsersTest : TestBase() {
   }
 }
 """,
-      requestBody= """{
+      requestBody = """{
         "type": "totp"
       }"""
     )
