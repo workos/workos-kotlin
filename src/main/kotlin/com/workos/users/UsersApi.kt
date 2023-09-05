@@ -10,6 +10,8 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.users.models.AuthenticationFactorList
 import com.workos.users.models.ChallengeResponse
+import com.workos.users.models.EnrollAuthFactorResponse
+import com.workos.users.models.FactorType
 import com.workos.users.models.User
 import com.workos.users.models.UserList
 import com.workos.users.models.UserResponse
@@ -576,6 +578,68 @@ class UsersApi(private val workos: WorkOS) {
     }
   }
 
+  /**
+   * Parameters for the [authenticateUserWithTotp] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  data class AuthenticateUserWithTotpOptions @JvmOverloads constructor(
+    @JsonProperty("pending_authentication_token") val pendingAuthenticationToken: String,
+    @JsonProperty("authentication_challenge_id") val authenticationChallengeId: String,
+    @JsonProperty("code") val code: String,
+    @JsonProperty("client_id") val clientId: String,
+    @JsonProperty("client_secret") val clientSecret: String? = null,
+    @JsonProperty("grant_type") val grantType: String = "urn:workos:oauth:grant-type:mfa-totp",
+  ) {
+    init {
+      require(clientId.isNotBlank()) { "ClientID is required." }
+      require(pendingAuthenticationToken.isNotBlank()) { "Email is required." }
+      require(authenticationChallengeId.isNotBlank()) { "Authentication Challenge Id is required." }
+      require(code.isNotBlank()) { "Code is required." }
+    }
+
+    /**
+     * Builder class for [AuthenticateUserWithTotpOptions].
+     */
+    class AuthenticateUserWithTotpOptionsBuilder {
+      private lateinit var pendingAuthenticationToken: String
+      private lateinit var authenticationChallengeId: String
+      private lateinit var code: String
+      private lateinit var clientId: String
+      private var clientSecret: String? = null
+
+      fun pendingAuthenticationToken(value: String) = apply { this.pendingAuthenticationToken = value }
+      fun authenticationChallengeId(value: String) = apply { this.authenticationChallengeId = value }
+
+      fun code(value: String) = apply { this.code = value }
+      fun clientId(value: String) = apply { this.clientId = value }
+
+      fun build(): AuthenticateUserWithTotpOptions {
+        return AuthenticateUserWithTotpOptions(pendingAuthenticationToken, authenticationChallengeId, code, clientId, clientSecret)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): AuthenticateUserWithTotpOptionsBuilder {
+        return AuthenticateUserWithTotpOptionsBuilder()
+      }
+    }
+  }
+
+  fun authenticateUserWithTotp(authenticateUserWithTotpOptions: AuthenticateUserWithTotpOptions): UserResponse {
+
+    val updatedOptions = authenticateUserWithTotpOptions.copy(clientSecret = workos.apiKey)
+
+    val config = RequestConfig.builder()
+      .data(updatedOptions)
+      .build()
+
+    return workos.post("/users/authenticate", UserResponse::class.java, config)
+  }
+
   fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): UserResponse {
 
     val updatedOptions = authenticateUserWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
@@ -700,7 +764,7 @@ class UsersApi(private val workos: WorkOS) {
     @JsonProperty("password") val password: String
   ) {
     init {
-      require(password.isNotBlank()) { "User id is required" }
+      require(userId.isNotBlank()) { "User id is required" }
       require(password.isNotBlank()) { "Password is required" }
     }
 
@@ -760,5 +824,64 @@ class UsersApi(private val workos: WorkOS) {
    */
   fun listAuthFactors(id: String): AuthenticationFactorList {
     return workos.get("/users/$id/auth/factors", AuthenticationFactorList::class.java)
+  }
+
+  /**
+   * Parameters for the [enrollAuthFactor] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class EnrollAuthFactorOptions @JvmOverloads constructor(
+    @JsonIgnore
+    val userId: String,
+    @JsonProperty("type") val type: FactorType
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User id is required" }
+    }
+
+    /**
+     * Builder class for [EnrollAuthFactorOptions].
+     */
+    class EnrollAuthFactorOptionsBuilder {
+      private lateinit var userId: String
+      private lateinit var type: FactorType
+
+      /**
+       * Sets the User Id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Sets the password.
+       */
+      fun type(value: FactorType) = apply { this.type = value }
+
+      /**
+       * Creates an [EnrollAuthFactorOptions] with the given builder parameters.
+       */
+      fun build(): EnrollAuthFactorOptions {
+        return EnrollAuthFactorOptions(userId, type)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): EnrollAuthFactorOptionsBuilder {
+        return EnrollAuthFactorOptionsBuilder()
+      }
+    }
+  }
+  /**
+   * Enrolls an AuthenticationFactors for a user.
+   */
+  fun enrollAuthFactor(enrollAuthFactorOptions: EnrollAuthFactorOptions): EnrollAuthFactorResponse {
+    val id = enrollAuthFactorOptions.userId
+    val config = RequestConfig.builder()
+      .data(enrollAuthFactorOptions)
+      .build()
+    return workos.post("/users/$id/auth/factors", EnrollAuthFactorResponse::class.java, config)
   }
 }
