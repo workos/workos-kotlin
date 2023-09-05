@@ -74,6 +74,42 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun authenticateUserWithTotpReturnsAuthenticationResponse() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/users/authenticate",
+      """{
+        "user": {
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+      }""",
+      requestBody = """{
+        "code": "code_123",
+        "client_id": "client_123",
+        "client_secret": "apiKey",
+        "grant_type": "urn:workos:oauth:grant-type:mfa-totp",
+        "authentication_challenge_id": "auth_challenge_123",
+        "pending_authentication_token": "123"
+      }"""
+    )
+
+    val options = UsersApi.AuthenticateUserWithTotpOptions.builder()
+      .code("code_123")
+      .clientId("client_123")
+      .authenticationChallengeId("auth_challenge_123")
+      .pendingAuthenticationToken("123")
+      .build()
+
+    val response = workos.users.authenticateUserWithTotp(options)
+
+    assertEquals("marcelina@foo-corp.com", response.user.email)
+  }
+
+  @Test
   fun authenticateUserWithMagicAuthReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
