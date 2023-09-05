@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.workos.test.TestBase
 import com.workos.users.UsersApi
+import com.workos.users.models.FactorType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -68,6 +69,42 @@ class UsersTest : TestBase() {
       .build()
 
     val response = workos.users.authenticateUserWithCode(options)
+
+    assertEquals("marcelina@foo-corp.com", response.user.email)
+  }
+
+  @Test
+  fun authenticateUserWithTotpReturnsAuthenticationResponse() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/users/authenticate",
+      """{
+        "user": {
+         "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+        }
+      }""",
+      requestBody = """{
+        "code": "code_123",
+        "client_id": "client_123",
+        "client_secret": "apiKey",
+        "grant_type": "urn:workos:oauth:grant-type:mfa-totp",
+        "authentication_challenge_id": "auth_challenge_123",
+        "pending_authentication_token": "123"
+      }"""
+    )
+
+    val options = UsersApi.AuthenticateUserWithTotpOptions.builder()
+      .code("code_123")
+      .clientId("client_123")
+      .authenticationChallengeId("auth_challenge_123")
+      .pendingAuthenticationToken("123")
+      .build()
+
+    val response = workos.users.authenticateUserWithTotp(options)
 
     assertEquals("marcelina@foo-corp.com", response.user.email)
   }
@@ -503,5 +540,86 @@ class UsersTest : TestBase() {
     )
 
     workos.users.deleteUser(userId)
+  }
+
+  @Test
+  fun listAuthFactorsShouldReturnAuthenticationFactorList() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+
+    stubResponse(
+      "/users/$id/auth/factors",
+      """{
+  "data": [
+    {
+      "object": "authentication_factor",
+      "id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+      "user_id": "user_01H96FETWYSJMJEGF0Q3ZB272F",
+      "type": "totp",
+      "totp": {
+        "issuer": "Foo Corp",
+        "user": "user@foo-corp.com"
+      },
+      "created_at": "2023-08-31T18:59:57.962Z",
+      "updated_at": "2023-08-31T18:59:57.962Z"
+    }
+  ]
+}
+""",
+    )
+
+    val FactorList = workos.users.listAuthFactors(id)
+
+    assertEquals("auth_factor_01H96FETXENNY99ARX0GRC804C", FactorList.data[0].id)
+  }
+
+  @Test
+  fun enrollFactoTypeReturnsEnrollFactorResponse() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+
+    stubResponse(
+      "/users/$id/auth/factors",
+      """{
+  "authentication_factor": {
+    "object": "authentication_factor",
+    "id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+    "user_id": "user_01H96FETWYSJMJEGF0Q3ZB272F",
+    "type": "totp",
+    "totp": {
+      "issuer": "Foo Corp",
+      "qr_code": "data:image/png;base64,iVBOR...",
+      "secret": "OFAFOQAPHR6XMQKAIYMWU72XIE3DGI3P",
+      "uri": "otpauth://totp/Foo%20Corp:user@foo-corp.com?secret=OFAFOQAPHR6XMQKAIYMWU72XIE3DGI3P&issuer=Foo%20Corp&algorithm=SHA1&digits=6&period=30",
+      "user": "user@foo-corp.com"
+    },
+    "created_at": "2023-08-31T18:59:57.962Z",
+    "updated_at": "2023-08-31T18:59:57.962Z"
+  },
+  "authentication_challenge": {
+    "object": "authentication_challenge",
+    "id": "auth_challenge_01H96FETXGTW1QMBSBT2T36PW0",
+    "authentication_factor_id": "auth_factor_01H96FETXENNY99ARX0GRC804C",
+    "expires_at": "2023-08-31T19:09:57.999Z",
+    "created_at": "2023-08-31T18:59:57.962Z",
+    "updated_at": "2023-08-31T18:59:57.962Z"
+  }
+}
+""",
+      requestBody = """{
+        "type": "totp"
+      }"""
+    )
+
+    val options = UsersApi.EnrollAuthFactorOptions.builder()
+      .userId(id)
+      .type(FactorType.TOTP)
+      .build()
+
+    val response = workos.users.enrollAuthFactor(options)
+
+    assertEquals("auth_factor_01H96FETXENNY99ARX0GRC804C", response.authenticationFactor.id)
   }
 }
