@@ -273,6 +273,31 @@ class UsersTest : TestBase() {
   }
 
   @Test
+  fun updateUserShouldReturnUser() {
+    val workos = createWorkOSClient()
+
+    val id = "user_123"
+
+    stubResponse(
+      url = "/users/$id",
+      responseBody = """{
+        "id": "user_123",
+        "email": "marcelina@foo-corp.com",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+     }""",
+    )
+
+    val updateUserOptions = UsersApi.UpdateUserOptions
+      .builder()
+      .userId(id)
+      .build()
+
+    val user = workos.users.updateUser(updateUserOptions)
+    assertEquals(user.id, id)
+  }
+
+  @Test
   fun deleteUserFromOrganizationShouldReturnUser() {
     val workos = createWorkOSClient()
 

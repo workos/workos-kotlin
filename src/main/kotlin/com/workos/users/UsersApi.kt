@@ -820,6 +820,79 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
+   * Parameters for the [updateUser] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class UpdateUserOptions @JvmOverloads constructor(
+    @JsonIgnore
+    val userId: String,
+    @JsonProperty("first_name") val firstName: String? = null,
+    @JsonProperty("last_name") val lastName: String? = null,
+    @JsonProperty("email_verified") val emailVerified: Boolean? = false
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User id is required" }
+    }
+
+    /**
+     * Builder class for [UpdateUserOptions].
+     */
+    class UpdateUserOptionsBuilder {
+      private lateinit var userId: String
+      private var firstName: String? = null
+      private var lastName: String? = null
+      private var emailVerified: Boolean? = false
+
+      /**
+       * Sets the User Id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Sets the first name.
+       */
+      fun firstName(value: String) = apply { this.firstName = value }
+
+      /**
+       * Sets the last name.
+       */
+      fun lastName(value: String) = apply { this.lastName = value }
+
+      /**
+       * Sets the email verified status.
+       */
+      fun emailVerified(value: Boolean) = apply { this.emailVerified = value }
+
+      /**
+       * Creates an [UpdateUserOptions] with the given builder parameters.
+       */
+      fun build(): UpdateUserOptions {
+        return UpdateUserOptions(userId, firstName, lastName, emailVerified)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): UpdateUserOptionsBuilder {
+        return UpdateUserOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Updates a specified user.
+   */
+  fun updateUser(
+    updateUserOptions: UpdateUserOptions
+  ): User {
+    val id = updateUserOptions.userId
+    val config = RequestConfig.builder().data(updateUserOptions).build()
+    return workos.put("/users/$id", User::class.java, config)
+  }
+  /**
    * Gets a list of AuthenticationFactors for a user.
    */
   fun listAuthFactors(id: String): AuthenticationFactorList {
