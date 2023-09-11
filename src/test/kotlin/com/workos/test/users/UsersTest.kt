@@ -42,7 +42,7 @@ class UsersTest : TestBase() {
   }
 
   @Test
-  fun authenticateUserWithCodeReturnsAuthenticationResponse() {
+  fun authenticateWithCodeReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
     stubResponse(
@@ -63,18 +63,18 @@ class UsersTest : TestBase() {
       }"""
     )
 
-    val options = UsersApi.AuthenticateUserWithCodeOptions.builder()
+    val options = UsersApi.AuthenticateWithCodeOptions.builder()
       .code("code_123")
       .clientId("client_123")
       .build()
 
-    val response = workos.users.authenticateUserWithCode(options)
+    val response = workos.users.authenticateWithCode(options)
 
     assertEquals("marcelina@foo-corp.com", response.user.email)
   }
 
   @Test
-  fun authenticateUserWithTotpReturnsAuthenticationResponse() {
+  fun authenticateWithTotpReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
     stubResponse(
@@ -97,20 +97,20 @@ class UsersTest : TestBase() {
       }"""
     )
 
-    val options = UsersApi.AuthenticateUserWithTotpOptions.builder()
+    val options = UsersApi.AuthenticateWithTotpOptions.builder()
       .code("code_123")
       .clientId("client_123")
       .authenticationChallengeId("auth_challenge_123")
       .pendingAuthenticationToken("123")
       .build()
 
-    val response = workos.users.authenticateUserWithTotp(options)
+    val response = workos.users.authenticateWithTotp(options)
 
     assertEquals("marcelina@foo-corp.com", response.user.email)
   }
 
   @Test
-  fun authenticateUserWithMagicAuthReturnsAuthenticationResponse() {
+  fun authenticateWithMagicAuthReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
     stubResponse(
@@ -132,19 +132,19 @@ class UsersTest : TestBase() {
       }"""
     )
 
-    val options = UsersApi.AuthenticateUserWithMagicAuthOptions.builder()
+    val options = UsersApi.AuthenticateWithMagicAuthOptions.builder()
       .code("code_123")
       .userId("user_123")
       .clientId("client_123")
       .build()
 
-    val response = workos.users.authenticateUserWithMagicAuth(options)
+    val response = workos.users.authenticateWithMagicAuth(options)
 
     assertEquals("marcelina@foo-corp.com", response.user.email)
   }
 
   @Test
-  fun authenticateUserWithPasswordReturnsAuthenticationResponse() {
+  fun authenticateWithPasswordReturnsAuthenticationResponse() {
     val workos = createWorkOSClient()
 
     val email = "marcelina@foo-corp.com"
@@ -168,13 +168,13 @@ class UsersTest : TestBase() {
       }"""
     )
 
-    val options = UsersApi.AuthenticateUserWithPasswordOptions.builder()
+    val options = UsersApi.AuthenticateWithPasswordOptions.builder()
       .email(email)
       .password("pass_123")
       .clientId("client_123")
       .build()
 
-    val response = workos.users.authenticateUserWithPassword(options)
+    val response = workos.users.authenticateWithPassword(options)
 
     assertEquals(email, response.user.email)
   }
