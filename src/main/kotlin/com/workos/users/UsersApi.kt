@@ -405,10 +405,10 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for the [authenticateUserWithPassword] method.
+   * Parameters for the [authenticateWithPassword] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  data class AuthenticateUserWithPasswordOptions @JvmOverloads constructor(
+  data class AuthenticateWithPasswordOptions @JvmOverloads constructor(
     @JsonProperty("email") val email: String,
     @JsonProperty("password") val password: String,
     @JsonProperty("client_id") val clientId: String,
@@ -424,9 +424,9 @@ class UsersApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for [AuthenticateUserWithPasswordOptions].
+     * Builder class for [AuthenticateWithPasswordOptions].
      */
-    class AuthenticateUserWithPasswordOptionsBuilder {
+    class AuthenticateWithPasswordOptionsBuilder {
       private lateinit var email: String
       private lateinit var password: String
       private lateinit var clientId: String
@@ -440,8 +440,8 @@ class UsersApi(private val workos: WorkOS) {
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
 
-      fun build(): AuthenticateUserWithPasswordOptions {
-        return AuthenticateUserWithPasswordOptions(email, password, clientId, ipAddress, userAgent, clientSecret)
+      fun build(): AuthenticateWithPasswordOptions {
+        return AuthenticateWithPasswordOptions(email, password, clientId, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -450,15 +450,15 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): AuthenticateUserWithPasswordOptionsBuilder {
-        return AuthenticateUserWithPasswordOptionsBuilder()
+      fun builder(): AuthenticateWithPasswordOptionsBuilder {
+        return AuthenticateWithPasswordOptionsBuilder()
       }
     }
   }
 
-  fun authenticateUserWithPassword(authenticateUserWithPasswordOptions: AuthenticateUserWithPasswordOptions): UserResponse {
+  fun authenticateWithPassword(authenticateWithPasswordOptions: AuthenticateWithPasswordOptions): UserResponse {
 
-    val updatedOptions = authenticateUserWithPasswordOptions.copy(clientSecret = workos.apiKey)
+    val updatedOptions = authenticateWithPasswordOptions.copy(clientSecret = workos.apiKey)
 
     val config = RequestConfig.builder()
       .data(updatedOptions)
@@ -468,10 +468,10 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for the [authenticateUserWithCode] method.
+   * Parameters for the [authenticateWithCode] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  data class AuthenticateUserWithCodeOptions @JvmOverloads constructor(
+  data class AuthenticateWithCodeOptions @JvmOverloads constructor(
     @JsonProperty("client_id") val clientId: String,
     @JsonProperty("code") val code: String,
     @JsonProperty("ip_address") val ipAddress: String? = null,
@@ -485,9 +485,9 @@ class UsersApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for [AuthenticateUserWithCodeOptions].
+     * Builder class for [AuthenticateWithCodeOptions].
      */
-    class AuthenticateUserWithCodeOptionsBuilder {
+    class AuthenticateWithCodeOptionsBuilder {
       private lateinit var clientId: String
       private lateinit var code: String
       private var ipAddress: String? = null
@@ -499,8 +499,8 @@ class UsersApi(private val workos: WorkOS) {
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
 
-      fun build(): AuthenticateUserWithCodeOptions {
-        return AuthenticateUserWithCodeOptions(clientId, code, ipAddress, userAgent, clientSecret)
+      fun build(): AuthenticateWithCodeOptions {
+        return AuthenticateWithCodeOptions(clientId, code, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -509,15 +509,15 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): AuthenticateUserWithCodeOptionsBuilder {
-        return AuthenticateUserWithCodeOptionsBuilder()
+      fun builder(): AuthenticateWithCodeOptionsBuilder {
+        return AuthenticateWithCodeOptionsBuilder()
       }
     }
   }
 
-  fun authenticateUserWithCode(authenticateUserWithCodeOptions: AuthenticateUserWithCodeOptions): UserResponse {
+  fun authenticateWithCode(authenticateWithCodeOptions: AuthenticateWithCodeOptions): UserResponse {
 
-    val updatedOptions = authenticateUserWithCodeOptions.copy(clientSecret = workos.apiKey)
+    val updatedOptions = authenticateWithCodeOptions.copy(clientSecret = workos.apiKey)
 
     val config = RequestConfig.builder()
       .data(updatedOptions)
@@ -527,10 +527,10 @@ class UsersApi(private val workos: WorkOS) {
   }
 
   /**
-   * Parameters for the [authenticateUserWithMagicAuth] method.
+   * Parameters for the [authenticateWithMagicAuth] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  data class AuthenticateUserWithMagicAuthOptions @JvmOverloads constructor(
+  data class AuthenticateWithMagicAuthOptions @JvmOverloads constructor(
     @JsonProperty("client_id") val clientId: String,
     @JsonProperty("code") val code: String,
     @JsonProperty("user_id") val userId: String,
@@ -546,9 +546,9 @@ class UsersApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for [AuthenticateUserWithMagicAuthOptions].
+     * Builder class for [AuthenticateWithMagicAuthOptions].
      */
-    class AuthenticateUserWithMagicAuthOptionsBuilder {
+    class AuthenticateWithMagicAuthOptionsBuilder {
       private lateinit var clientId: String
       private lateinit var code: String
       private lateinit var userId: String
@@ -562,8 +562,8 @@ class UsersApi(private val workos: WorkOS) {
       fun ipAddress(value: String) = apply { this.ipAddress = value }
       fun userAgent(value: String) = apply { this.userAgent = value }
 
-      fun build(): AuthenticateUserWithMagicAuthOptions {
-        return AuthenticateUserWithMagicAuthOptions(clientId, code, userId, ipAddress, userAgent, clientSecret)
+      fun build(): AuthenticateWithMagicAuthOptions {
+        return AuthenticateWithMagicAuthOptions(clientId, code, userId, ipAddress, userAgent, clientSecret)
       }
     }
 
@@ -572,17 +572,17 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): AuthenticateUserWithMagicAuthOptionsBuilder {
-        return AuthenticateUserWithMagicAuthOptionsBuilder()
+      fun builder(): AuthenticateWithMagicAuthOptionsBuilder {
+        return AuthenticateWithMagicAuthOptionsBuilder()
       }
     }
   }
 
   /**
-   * Parameters for the [authenticateUserWithTotp] method.
+   * Parameters for the [authenticateWithTotp] method.
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  data class AuthenticateUserWithTotpOptions @JvmOverloads constructor(
+  data class AuthenticateWithTotpOptions @JvmOverloads constructor(
     @JsonProperty("pending_authentication_token") val pendingAuthenticationToken: String,
     @JsonProperty("authentication_challenge_id") val authenticationChallengeId: String,
     @JsonProperty("code") val code: String,
@@ -598,9 +598,9 @@ class UsersApi(private val workos: WorkOS) {
     }
 
     /**
-     * Builder class for [AuthenticateUserWithTotpOptions].
+     * Builder class for [AuthenticateWithTotpOptions].
      */
-    class AuthenticateUserWithTotpOptionsBuilder {
+    class AuthenticateWithTotpOptionsBuilder {
       private lateinit var pendingAuthenticationToken: String
       private lateinit var authenticationChallengeId: String
       private lateinit var code: String
@@ -613,8 +613,8 @@ class UsersApi(private val workos: WorkOS) {
       fun code(value: String) = apply { this.code = value }
       fun clientId(value: String) = apply { this.clientId = value }
 
-      fun build(): AuthenticateUserWithTotpOptions {
-        return AuthenticateUserWithTotpOptions(pendingAuthenticationToken, authenticationChallengeId, code, clientId, clientSecret)
+      fun build(): AuthenticateWithTotpOptions {
+        return AuthenticateWithTotpOptions(pendingAuthenticationToken, authenticationChallengeId, code, clientId, clientSecret)
       }
     }
 
@@ -623,15 +623,15 @@ class UsersApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): AuthenticateUserWithTotpOptionsBuilder {
-        return AuthenticateUserWithTotpOptionsBuilder()
+      fun builder(): AuthenticateWithTotpOptionsBuilder {
+        return AuthenticateWithTotpOptionsBuilder()
       }
     }
   }
 
-  fun authenticateUserWithTotp(authenticateUserWithTotpOptions: AuthenticateUserWithTotpOptions): UserResponse {
+  fun authenticateWithTotp(authenticateWithTotpOptions: AuthenticateWithTotpOptions): UserResponse {
 
-    val updatedOptions = authenticateUserWithTotpOptions.copy(clientSecret = workos.apiKey)
+    val updatedOptions = authenticateWithTotpOptions.copy(clientSecret = workos.apiKey)
 
     val config = RequestConfig.builder()
       .data(updatedOptions)
@@ -640,9 +640,9 @@ class UsersApi(private val workos: WorkOS) {
     return workos.post("/users/authenticate", UserResponse::class.java, config)
   }
 
-  fun authenticateUserWithMagicAuth(authenticateUserWithMagicAuthOptions: AuthenticateUserWithMagicAuthOptions): UserResponse {
+  fun authenticateWithMagicAuth(authenticateWithMagicAuthOptions: AuthenticateWithMagicAuthOptions): UserResponse {
 
-    val updatedOptions = authenticateUserWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
+    val updatedOptions = authenticateWithMagicAuthOptions.copy(clientSecret = workos.apiKey)
 
     val config = RequestConfig.builder()
       .data(updatedOptions)
@@ -819,6 +819,79 @@ class UsersApi(private val workos: WorkOS) {
     workos.delete("/users/$id")
   }
 
+  /**
+   * Parameters for the [updateUser] method.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  class UpdateUserOptions @JvmOverloads constructor(
+    @JsonIgnore
+    val userId: String,
+    @JsonProperty("first_name") val firstName: String? = null,
+    @JsonProperty("last_name") val lastName: String? = null,
+    @JsonProperty("email_verified") val emailVerified: Boolean? = false
+  ) {
+    init {
+      require(userId.isNotBlank()) { "User id is required" }
+    }
+
+    /**
+     * Builder class for [UpdateUserOptions].
+     */
+    class UpdateUserOptionsBuilder {
+      private lateinit var userId: String
+      private var firstName: String? = null
+      private var lastName: String? = null
+      private var emailVerified: Boolean? = false
+
+      /**
+       * Sets the User Id.
+       */
+      fun userId(value: String) = apply { this.userId = value }
+
+      /**
+       * Sets the first name.
+       */
+      fun firstName(value: String) = apply { this.firstName = value }
+
+      /**
+       * Sets the last name.
+       */
+      fun lastName(value: String) = apply { this.lastName = value }
+
+      /**
+       * Sets the email verified status.
+       */
+      fun emailVerified(value: Boolean) = apply { this.emailVerified = value }
+
+      /**
+       * Creates an [UpdateUserOptions] with the given builder parameters.
+       */
+      fun build(): UpdateUserOptions {
+        return UpdateUserOptions(userId, firstName, lastName, emailVerified)
+      }
+    }
+
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): UpdateUserOptionsBuilder {
+        return UpdateUserOptionsBuilder()
+      }
+    }
+  }
+
+  /**
+   * Updates a specified user.
+   */
+  fun updateUser(
+    updateUserOptions: UpdateUserOptions
+  ): User {
+    val id = updateUserOptions.userId
+    val config = RequestConfig.builder().data(updateUserOptions).build()
+    return workos.put("/users/$id", User::class.java, config)
+  }
   /**
    * Gets a list of AuthenticationFactors for a user.
    */
