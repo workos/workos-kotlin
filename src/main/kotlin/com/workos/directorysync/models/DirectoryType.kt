@@ -40,11 +40,6 @@ enum class DirectoryType(@JsonValue val type: String) {
   FourthHr("fourth hr"),
 
   /**
-   * Generic SCIM 1.1
-   */
-  GenericSCIMV1_1("generic scim v1.1"),
-
-  /**
    * Generic SCIM 2.0
    */
   GenericSCIMV2_0("generic scim v2.0"),
@@ -65,11 +60,6 @@ enum class DirectoryType(@JsonValue val type: String) {
   JumpCloudSCIM2_0("jump cloud scim v2.0"),
 
   /**
-   * Okta SCIM 1.1 https://developer.okta.com/docs/reference/scim/scim-11/
-   */
-  OktaSCIMV1_1("okta scim v1.1"),
-
-  /**
    * Okta SCIM 2.0 https://developer.okta.com/docs/reference/scim/scim-20/
    */
   OktaSCIMV2_0("okta scim v2.0"),
@@ -85,9 +75,10 @@ enum class DirectoryType(@JsonValue val type: String) {
   PeopleHR("people hr"),
 
   /**
-   * Persionio  https://www.personio.com/
+   * Personio  https://www.personio.com/
    */
   Personio("personio"),
+
   /**
    * PingFederate SCIM 2.0  https://pingfederate.com/
    */
@@ -97,6 +88,16 @@ enum class DirectoryType(@JsonValue val type: String) {
    * Rippling https://www.rippling.com/
    */
   Rippling("rippling scim v2.0"),
+
+  /**
+   * SFTP
+   */
+  SFTP("sftp"),
+
+  /**
+   * SFTP Workday
+   */
+  SFTPWorkday("sftp workday"),
 
   /**
    * Workday https://www.workday.com/
