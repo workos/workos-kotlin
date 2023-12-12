@@ -26,7 +26,7 @@ class SsoApi(private val workos: WorkOS) {
    * @param redirectUri A redirect URI to return an authorized user to.
    * @param connection Connection ID to determine which identity provider to authenticate with.
    * @param domain Use the domain to determine which connection and identity provider to authenticate with.
-   * @param provider Name of the identity provider e.g. GoogleOAuth or MicrosoftOAuth.
+   * @param provider Name of the identity provider e.g. GithubOAuth, GoogleOAuth, or MicrosoftOAuth.
    * @param state User defined information to persist application data between redirects.
    */
   class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
@@ -78,7 +78,7 @@ class SsoApi(private val workos: WorkOS) {
     /**
      * Value used to authenticate all users with the same connection and Identity Provider.
      *
-     * Currently, the only supported values for provider are GoogleOAuth and
+     * Currently, the only supported values for provider are GithubOAuth, GoogleOAuth, and
      * MicrosoftOAuth. Provide the provider parameter when authenticating Google OAuth
      * users, because Google OAuth does not take a user’s domain into account when logging
      * in with a “Sign in with Google” button.

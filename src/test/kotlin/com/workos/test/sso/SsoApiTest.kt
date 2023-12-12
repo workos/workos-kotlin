@@ -291,11 +291,11 @@ class SsoApiTest : TestBase() {
       """{
         "data": [
           {
-            "connection_type": "GoogleOAuth",
+            "connection_type": "GithubOAuth",
             "created_at": "2021-10-26 13:29:47.133382",
             "domains": [],
             "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-            "name": "Google OAuth 2.0",
+            "name": "GitHub OAuth",
             "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
             "state": "active",
@@ -312,6 +312,7 @@ class SsoApiTest : TestBase() {
     val (connections) = workos.sso.listConnections(SsoApi.ListConnectionsOptions.builder().build())
 
     assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    assertEquals(ConnectionType.GithubOAuth, connections.get(0).connectionType)
   }
 
   @Test

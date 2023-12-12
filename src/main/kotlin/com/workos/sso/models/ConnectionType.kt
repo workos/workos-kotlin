@@ -62,6 +62,11 @@ enum class ConnectionType(val type: String) {
   GenericSAML("GenericSAML"),
 
   /**
+   * Github OAuth
+   */
+  GithubOAuth("GithubOAuth"),
+
+  /**
    * Google OAuth
    */
   GoogleOAuth("GoogleOAuth"),
