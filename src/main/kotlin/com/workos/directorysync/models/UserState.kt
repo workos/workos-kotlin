@@ -16,10 +16,5 @@ enum class UserState(@JsonValue val state: String) {
   /**
    * The user is inactive.
    */
-  Inactive("inactive"),
-
-  /**
-   * The user is suspended.
-   */
-  Suspended("suspended")
+  Inactive("inactive")
 }
