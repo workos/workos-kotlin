@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wi
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.sso.SsoApi
 import com.workos.sso.models.ConnectionState
-import com.workos.sso.models.ConnectionType
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
@@ -147,7 +146,7 @@ class SsoApiTest : TestBase() {
     val connection = workos.sso.getConnection(id)
 
     assertEquals(id, connection.id)
-    assertEquals(ConnectionType.GoogleOAuth, connection.connectionType)
+    assertEquals("GoogleOAuth", connection.connectionType)
     assertEquals(ConnectionState.Active, connection.state)
   }
 
@@ -291,11 +290,11 @@ class SsoApiTest : TestBase() {
       """{
         "data": [
           {
-            "connection_type": "GoogleOAuth",
+            "connection_type": "GitHubOAuth",
             "created_at": "2021-10-26 13:29:47.133382",
             "domains": [],
             "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-            "name": "Google OAuth 2.0",
+            "name": "GitHub OAuth",
             "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
             "state": "active",
@@ -312,6 +311,7 @@ class SsoApiTest : TestBase() {
     val (connections) = workos.sso.listConnections(SsoApi.ListConnectionsOptions.builder().build())
 
     assertEquals("connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B", connections.get(0).id)
+    assertEquals("GitHubOAuth", connections.get(0).connectionType)
   }
 
   @Test
@@ -360,18 +360,18 @@ class SsoApiTest : TestBase() {
     stubResponse(
       url = "/connections",
       params = mapOf(
-        "connection_type" to equalTo(ConnectionType.GoogleSAML.toString()),
+        "connection_type" to equalTo("GoogleSAML"),
         "domain" to equalTo("domain.com"),
         "organization_id" to equalTo("org_123")
       ),
       responseBody = """{
         "data": [
           {
-            "connection_type": "GoogleOAuth",
+            "connection_type": "GoogleSAML",
             "created_at": "2021-10-26 13:29:47.133382",
             "domains": [],
             "id": "connection_01FJYCNTBC2ZTKT4CS1BX0WJ2B",
-            "name": "Google OAuth 2.0",
+            "name": "GoogleSAML Connection",
             "object": "connection",
             "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
             "state": "draft",
@@ -386,7 +386,7 @@ class SsoApiTest : TestBase() {
     )
 
     val options = SsoApi.ListConnectionsOptions.builder()
-      .connectionType(ConnectionType.GoogleSAML)
+      .connectionType("GoogleSAML")
       .domain("domain.com")
       .organizationId("org_123")
       .build()
