@@ -7,7 +7,6 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.sso.models.Connection
 import com.workos.sso.models.ConnectionList
-import com.workos.sso.models.ConnectionType
 import com.workos.sso.models.Profile
 import com.workos.sso.models.ProfileAndToken
 import org.apache.http.client.utils.URIBuilder
@@ -26,7 +25,7 @@ class SsoApi(private val workos: WorkOS) {
    * @param redirectUri A redirect URI to return an authorized user to.
    * @param connection Connection ID to determine which identity provider to authenticate with.
    * @param domain Use the domain to determine which connection and identity provider to authenticate with.
-   * @param provider Name of the identity provider e.g. GithubOAuth, GoogleOAuth, or MicrosoftOAuth.
+   * @param provider Name of the identity provider e.g. GitHubOAuth, GoogleOAuth, or MicrosoftOAuth.
    * @param state User defined information to persist application data between redirects.
    */
   class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
@@ -78,7 +77,7 @@ class SsoApi(private val workos: WorkOS) {
     /**
      * Value used to authenticate all users with the same connection and Identity Provider.
      *
-     * Currently, the only supported values for provider are GithubOAuth, GoogleOAuth, and
+     * Currently, the only supported values for provider are GitHubOAuth, GoogleOAuth, and
      * MicrosoftOAuth. Provide the provider parameter when authenticating Google OAuth
      * users, because Google OAuth does not take a user’s domain into account when logging
      * in with a “Sign in with Google” button.
@@ -190,7 +189,7 @@ class SsoApi(private val workos: WorkOS) {
    * Parameters for the [listConnections] method.
    */
   class ListConnectionsOptions @JvmOverloads constructor(
-    connectionType: ConnectionType? = null,
+    connectionType: String? = null,
     domain: String? = null,
     organizationId: String? = null,
     after: String? = null,
@@ -199,7 +198,7 @@ class SsoApi(private val workos: WorkOS) {
     order: Order? = null
   ) : PaginationParams(after, before, limit, order) {
     init {
-      if (connectionType != null) set("connection_type", connectionType.toString())
+      if (connectionType != null) set("connection_type", connectionType)
       if (domain != null) set("domain", domain)
       if (organizationId != null) set("organization_id", organizationId)
     }
@@ -219,9 +218,9 @@ class SsoApi(private val workos: WorkOS) {
      */
     class ListConnectionsOptionsPaginationParamsBuilder : PaginationParams.PaginationParamsBuilder<ListConnectionsOptions>(ListConnectionsOptions()) {
       /**
-       * The [ConnectionType] to filter on.
+       * The connection type to filter on.
        */
-      fun connectionType(value: ConnectionType) = apply { this.params["connection_type"] = value.toString() }
+      fun connectionType(value: String) = apply { this.params["connection_type"] = value }
 
       /**
        * The domain to filter on.

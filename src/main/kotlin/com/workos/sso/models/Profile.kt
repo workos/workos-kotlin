@@ -42,7 +42,7 @@ data class Profile
 
   @JvmField
   @JsonProperty("connection_type")
-  val connectionType: ConnectionType,
+  val connectionType: String,
 
   @JvmField
   val email: String,

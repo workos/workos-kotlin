@@ -32,7 +32,7 @@ data class Connection
 
   @JvmField
   @JsonProperty("connection_type")
-  val connectionType: ConnectionType,
+  val connectionType: String,
 
   @JvmField
   val domains: List<ConnectionDomain>?,
