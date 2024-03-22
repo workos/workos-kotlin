@@ -11,8 +11,8 @@ defaults:
     shell: bash
 
 jobs:
-  test:
-    name: Test Kotlin
+  build:
+    name: Build Kotlin SDK
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +20,11 @@ jobs:
         run: |
           ./gradlew build
 
+  test:
+    name: Test Kotlin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Test
         run: |
           ./gradlew test --info
