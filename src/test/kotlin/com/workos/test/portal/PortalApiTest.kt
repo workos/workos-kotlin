@@ -44,7 +44,6 @@ class PortalApiTest : TestBase() {
     val response = workos.portal.generateLink(options)
 
     assertEquals(response.link, portalLink)
-    assertEquals(1, 2)
   }
 
   @Test
