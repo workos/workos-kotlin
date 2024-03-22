@@ -67,7 +67,7 @@ open class PaginationParams @JvmOverloads constructor(
     /**
      * Sets the `order` query parameter.
      */
-    fun order(order: Order) = apply { this.params["order"] = order.toString() }
+    fun order(order: Order) = apply { this.params["order"] = order.type }
 
     /**
      * Creates an instance of T with the given builder parameters.

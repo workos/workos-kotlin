@@ -58,6 +58,7 @@ class PaginationParamsTest {
 
     assertEquals(params["after"], "after")
     assertEquals(params["before"], "before")
+    assertEquals(params["order"], "desc")
     assertEquals(params["limit"], "10")
   }
 }
