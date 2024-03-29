@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  # Support manually pushing a new release
+  workflow_dispatch: {}
+  # Trigger when a release is published
+  release:
+    types: [released]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    name: Publish to Maven
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Tests
+        run: |
+          ./gradlew test --info
+
+      - name: Publish
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_SIGNING_PASSWORD: ${{ secrest.NEXUS_SIGNING_PASSWORD }}
+
+        run: |
+          echo $MAVEN_SIGNING_KEY | base64 --decode > signing.key
+
+          cat << EOF > gradle.properties
+          myNexusUsername=${NEXUS_USERNAME}
+          myNexusPassword=${NEXUS_PASSWORD}
+          signingPassword=${NEXUS_SIGNING_PASSWORD}
+          EOF
+
+          ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
