@@ -62,13 +62,13 @@ For our SDKs WorkOS follows a Semantic Versioning ([SemVer](https://semver.org/)
 
 See full examples at https://github.com/workos-inc/java-example-applications.
 
-## Beta SDKs
+## Beta Releases
 
 WorkOS has features in Beta that can be accessed via Beta releases. We would love for you to try these
 and share feedback with us before these features reach the stable phase. To install a Beta version, please follow the
 Installation steps above using the Beta release version.
 
-> Note: there can be breaking changes between beta versions. Therefore, we recommend pinning the package version to a
+> Note: there can be breaking changes between Beta versions. Therefore, we recommend pinning the package version to a
 > specific version. This way you can install the same version each time without breaking changes unless you are
 > intentionally looking for the latest Beta version.
 
