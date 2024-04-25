@@ -5,6 +5,7 @@
 
 # Ignore IntelliJ projects
 .idea
+.settings/org.eclipse.jdt.core.prefs
 
 # Ignore Eclipse projects
 .project

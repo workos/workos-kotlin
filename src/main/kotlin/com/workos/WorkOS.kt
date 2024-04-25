@@ -21,6 +21,7 @@ import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
 import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
+import com.workos.usermanagement.UserManagementApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
 import java.lang.IllegalArgumentException
@@ -94,6 +95,12 @@ class WorkOS(
    */
   @JvmField
   val mfa = MfaApi(this)
+
+  /**
+   * Module for interacting with the User Management API.
+   */
+  @JvmField
+  val userManagement = UserManagementApi(this)
 
   /**
    * Module for interacting with the Webhooks API.
@@ -255,17 +262,21 @@ class WorkOS(
         val responseData = mapper.readValue(payload, BadRequestExceptionResponse::class.java)
         throw BadRequestException(responseData.message, responseData.code, responseData.errors, requestId)
       }
+
       401 -> {
         val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)
         throw UnauthorizedException(responseData.message, requestId)
       }
+
       404 -> {
         throw NotFoundException(response.url.path, requestId)
       }
+
       422 -> {
         val unprocessableEntityException = mapper.readValue(payload, UnprocessableEntityExceptionResponse::class.java)
         throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.code, unprocessableEntityException.errors, requestId)
       }
+
       else -> {
         val responseData = mapper.readValue(payload, GenericErrorResponse::class.java)
         throw GenericServerException(responseData.message, status, requestId)

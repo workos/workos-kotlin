@@ -53,6 +53,7 @@ WorkOS workos = new WorkOS("WORKOS_API_KEY");
 // workos.passwordless
 // workos.portal
 // workos.sso
+// workos.userManagement
 // workos.webhooks
 ```
 
@@ -79,5 +80,6 @@ can move to using the stable version.
 
 - [Single Sign-On Guide](https://workos.com/docs/sso/guide)
 - [Directory Sync Guide](https://workos.com/docs/directory-sync/guide)
+- [User Management](https://workos.com/docs/user-management/guide)
 - [Admin Portal Guide](https://workos.com/docs/admin-portal/guide)
 - [Magic Link Guide](https://workos.com/docs/magic-link/guide)
