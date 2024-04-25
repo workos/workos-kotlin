@@ -26,7 +26,7 @@ jobs:
           MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          NEXUS_SIGNING_PASSWORD: ${{ secrest.NEXUS_SIGNING_PASSWORD }}
+          NEXUS_SIGNING_PASSWORD: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
 
         run: |
           echo $MAVEN_SIGNING_KEY | base64 --decode > signing.key
