@@ -53,6 +53,7 @@ WorkOS workos = new WorkOS("WORKOS_API_KEY");
 // workos.passwordless
 // workos.portal
 // workos.sso
+// workos.userManagement
 // workos.webhooks
 ```
 
@@ -62,9 +63,23 @@ For our SDKs WorkOS follows a Semantic Versioning ([SemVer](https://semver.org/)
 
 See full examples at https://github.com/workos-inc/java-example-applications.
 
+## Beta Releases
+
+WorkOS has features in Beta that can be accessed via Beta releases. We would love for you to try these
+and share feedback with us before these features reach general availability (GA). To install a Beta version,
+please follow the [installation steps](#installation) above using the Beta release version.
+
+> Note: there can be breaking changes between Beta versions. Therefore, we recommend pinning the package version to a
+> specific version. This way you can install the same version each time without breaking changes unless you are
+> intentionally looking for the latest Beta version.
+
+We highly recommend keeping an eye on when the Beta feature you are interested in goes from Beta to stable so that you
+can move to using the stable version.
+
 ## More Information
 
 - [Single Sign-On Guide](https://workos.com/docs/sso/guide)
 - [Directory Sync Guide](https://workos.com/docs/directory-sync/guide)
+- [User Management](https://workos.com/docs/user-management/guide)
 - [Admin Portal Guide](https://workos.com/docs/admin-portal/guide)
 - [Magic Link Guide](https://workos.com/docs/magic-link/guide)
