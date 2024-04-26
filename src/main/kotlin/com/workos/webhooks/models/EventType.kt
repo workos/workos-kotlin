@@ -79,5 +79,20 @@ enum class EventType(
   /**
    * Triggers when a group is removed from a directory.
    */
-  DirectoryGroupDeleted("dsync.group.deleted")
+  DirectoryGroupDeleted("dsync.group.deleted"),
+
+  /**
+   * Triggers when an organization membership is created.
+   */
+  OrganizationMembershipCreated("organization_membership.created"),
+
+  /**
+   * Triggers when an organization membership is deleted.
+   */
+  OrganizationMembershipDeleted("organization_membership.deleted"),
+
+  /**
+   * Triggers when an organization membership is updated.
+   */
+  OrganizationMembershipUpdated("organization_membership.updated")
 }

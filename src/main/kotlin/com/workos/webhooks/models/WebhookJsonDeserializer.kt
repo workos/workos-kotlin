@@ -11,6 +11,7 @@ import com.workos.directorysync.models.Directory
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import com.workos.sso.models.Connection
+import com.workos.usermanagement.models.OrganizationMembership
 
 /**
  * Custom JSON deserializer for [com.workos.webhooks.models.WebhookEvent] events.
@@ -48,6 +49,9 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java), createdAt)
       EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
       EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserRemovedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
+      EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
     }
   }
 
