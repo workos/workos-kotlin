@@ -2,9 +2,7 @@ package com.workos.test.webhooks
 
 import com.workos.test.TestBase
 import com.workos.webhooks.models.EventType
-import com.workos.webhooks.models.OrganizationMembershipCreatedEvent
-import com.workos.webhooks.models.OrganizationMembershipDeletedEvent
-import com.workos.webhooks.models.OrganizationMembershipUpdatedEvent
+import com.workos.webhooks.models.OrganizationMembershipEvent
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
@@ -45,9 +43,9 @@ class OrganizationMembershipWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationMembershipCreatedEvent)
+    assertTrue(webhook is OrganizationMembershipEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationMembershipCreatedEvent).data.id, organizationMembershipId)
+    assertEquals((webhook as OrganizationMembershipEvent).data.id, organizationMembershipId)
   }
 
   @Test
@@ -62,9 +60,9 @@ class OrganizationMembershipWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationMembershipDeletedEvent)
+    assertTrue(webhook is OrganizationMembershipEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationMembershipDeletedEvent).data.id, organizationMembershipId)
+    assertEquals((webhook as OrganizationMembershipEvent).data.id, organizationMembershipId)
   }
 
   @Test
@@ -79,8 +77,8 @@ class OrganizationMembershipWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationMembershipUpdatedEvent)
+    assertTrue(webhook is OrganizationMembershipEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationMembershipUpdatedEvent).data.id, organizationMembershipId)
+    assertEquals((webhook as OrganizationMembershipEvent).data.id, organizationMembershipId)
   }
 }

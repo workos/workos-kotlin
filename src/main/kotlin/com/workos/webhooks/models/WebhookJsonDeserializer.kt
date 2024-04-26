@@ -49,9 +49,9 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java), createdAt)
       EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
       EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserRemovedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
-      EventType.OrganizationMembershipCreated -> OrganizationMembershipCreatedEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
-      EventType.OrganizationMembershipDeleted -> OrganizationMembershipDeletedEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
-      EventType.OrganizationMembershipUpdated -> OrganizationMembershipUpdatedEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
     }
   }
 

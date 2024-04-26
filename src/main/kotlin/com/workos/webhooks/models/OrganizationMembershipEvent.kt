@@ -3,9 +3,9 @@ package com.workos.webhooks.models
 import com.workos.usermanagement.models.OrganizationMembership
 
 /**
- * Webhook Event for `organization_membership.updated`.
+ * Webhook Event for `organization_membership.*` events.
  */
-class OrganizationMembershipUpdatedEvent(
+class OrganizationMembershipEvent(
   @JvmField
   override val id: String,
 
