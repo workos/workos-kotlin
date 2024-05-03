@@ -15,13 +15,11 @@ import com.workos.usermanagement.types.InvitationStateEnumType
  * @param acceptedAt The timestamp when the invitation was accepted.
  * @param revokedAt The timestamp when the invitation was revoked.
  * @param expiresAt The timestamp when the invitation will expire.
- * @param token The token of an invitation.
- * @param acceptInvitationUrl The URL where the user can accept the invitation.
  * @param organizationId The ID of the organization.
  * @param createdAt The timestamp when the invitation was created.
  * @param updatedAt The timestamp when the invitation was last updated.
  */
-data class Invitation @JsonCreator constructor(
+data class InvitationEventData @JsonCreator constructor(
   @JsonProperty("id")
   val id: String,
 
@@ -39,12 +37,6 @@ data class Invitation @JsonCreator constructor(
 
   @JsonProperty("expires_at")
   val expiresAt: String,
-
-  @JsonProperty("token")
-  val token: String,
-
-  @JsonProperty("accept_invitation_url")
-  val acceptInvitationUrl: String,
 
   @JsonProperty("organization_id")
   val organizationId: String? = null,

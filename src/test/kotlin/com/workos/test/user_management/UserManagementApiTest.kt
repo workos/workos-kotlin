@@ -4,6 +4,7 @@ import com.workos.common.models.ListMetadata
 import com.workos.common.models.Order
 import com.workos.test.TestBase
 import com.workos.usermanagement.builders.AuthenticationAdditionalOptionsBuilder
+import com.workos.usermanagement.builders.CreateMagicAuthOptionsBuilder
 import com.workos.usermanagement.builders.CreateOrganizationMembershipOptionsBuilder
 import com.workos.usermanagement.builders.CreateUserOptionsBuilder
 import com.workos.usermanagement.builders.EnrolledAuthenticationFactorOptionsBuilder
@@ -18,6 +19,7 @@ import com.workos.usermanagement.models.AuthenticationTotp
 import com.workos.usermanagement.models.EnrolledAuthenticationFactor
 import com.workos.usermanagement.models.Identity
 import com.workos.usermanagement.models.Invitation
+import com.workos.usermanagement.models.MagicAuth
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.usermanagement.models.OrganizationMembershipRole
 import com.workos.usermanagement.models.RefreshAuthentication
@@ -656,6 +658,74 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun getMagicAuthShouldReturnValidMagicAuthObject() {
+    stubResponse(
+      "/user_management/magic_auth/magic_auth_123",
+      """{
+        "id": "magic_auth_123",
+        "user_id": "user_123",
+        "email": "test01@example.com",
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "code": "123456",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val magicAuth = workos.userManagement.getMagicAuth("magic_auth_123")
+
+    assertEquals(
+      MagicAuth(
+        "magic_auth_123",
+        "user_123",
+        "test01@example.com",
+        "2021-07-01T19:07:33.155Z",
+        "123456",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      magicAuth
+    )
+  }
+
+  @Test
+  fun createMagicAuthShouldReturnValidMagicAuthObject() {
+    stubResponse(
+      "/user_management/magic_auth",
+      """{
+        "id": "magic_auth_123",
+        "user_id": "user_123",
+        "email": "test01@example.com",
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "code": "123456",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }""",
+      requestBody = """{
+        "email": "test01@example.com",
+        "invitation_token": null
+      }"""
+    )
+
+    val options = CreateMagicAuthOptionsBuilder("test01@example.com").build()
+
+    val magicAuth = workos.userManagement.createMagicAuth(options)
+
+    assertEquals(
+      MagicAuth(
+        "magic_auth_123",
+        "user_123",
+        "test01@example.com",
+        "2021-07-01T19:07:33.155Z",
+        "123456",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      magicAuth
+    )
+  }
+
+  @Test
   fun sendMagicAuthCodeShouldWorkAndReturnNothing() {
     stubResponse("/user_management/magic_auth/send", "")
 
@@ -1078,7 +1148,8 @@ class UserManagementApiTest : TestBase() {
         "accepted_at": null,
         "revoked_at": null,
         "expires_at": "2021-07-01T19:07:33.155Z",
-        "token": "token",
+        "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "organization_id": "org_456",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1095,7 +1166,8 @@ class UserManagementApiTest : TestBase() {
         null,
         null,
         "2021-07-01T19:07:33.155Z",
-        "token",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
@@ -1117,7 +1189,8 @@ class UserManagementApiTest : TestBase() {
             "accepted_at": null,
             "revoked_at": null,
             "expires_at": "2021-07-01T19:07:33.155Z",
-            "token": "token",
+            "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+            "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
             "organization_id": "org_456",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1140,7 +1213,8 @@ class UserManagementApiTest : TestBase() {
         null,
         null,
         "2021-07-01T19:07:33.155Z",
-        "token",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
@@ -1168,7 +1242,8 @@ class UserManagementApiTest : TestBase() {
             "accepted_at": null,
             "revoked_at": null,
             "expires_at": "2021-07-01T19:07:33.155Z",
-            "token": "token",
+            "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+            "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
             "organization_id": "org_456",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1200,7 +1275,8 @@ class UserManagementApiTest : TestBase() {
         null,
         null,
         "2021-07-01T19:07:33.155Z",
-        "token",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
@@ -1226,7 +1302,8 @@ class UserManagementApiTest : TestBase() {
         "accepted_at": null,
         "revoked_at": null,
         "expires_at": "2021-07-01T19:07:33.155Z",
-        "token": "token",
+        "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "organization_id": "org_456",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1257,7 +1334,8 @@ class UserManagementApiTest : TestBase() {
         null,
         null,
         "2021-07-01T19:07:33.155Z",
-        "token",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
@@ -1267,7 +1345,7 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
-  fun deleteInvitationShouldWorkAndReturnNothing() {
+  fun revokeInvitationShouldWorkAndReturnValidInvitation() {
     stubResponse(
       "/user_management/invitations/invitation_123/revoke",
       """{
@@ -1277,7 +1355,8 @@ class UserManagementApiTest : TestBase() {
         "accepted_at": null,
         "revoked_at": "2021-08-01T19:07:33.155Z",
         "expires_at": "2021-07-01T19:07:33.155Z",
-        "token": "token",
+        "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "organization_id": "org_456",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1294,7 +1373,8 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-08-01T19:07:33.155Z",
         "2021-07-01T19:07:33.155Z",
-        "token",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"

@@ -20,12 +20,14 @@ import com.workos.usermanagement.models.EnrolledAuthenticationFactor
 import com.workos.usermanagement.models.Identity
 import com.workos.usermanagement.models.Invitation
 import com.workos.usermanagement.models.Invitations
+import com.workos.usermanagement.models.MagicAuth
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.usermanagement.models.OrganizationMemberships
 import com.workos.usermanagement.models.RefreshAuthentication
 import com.workos.usermanagement.models.User
 import com.workos.usermanagement.models.Users
 import com.workos.usermanagement.types.AuthenticationAdditionalOptions
+import com.workos.usermanagement.types.CreateMagicAuthOptions
 import com.workos.usermanagement.types.CreateOrganizationMembershipOptions
 import com.workos.usermanagement.types.CreateUserOptions
 import com.workos.usermanagement.types.EnrolledAuthenticationFactorOptions
@@ -214,9 +216,28 @@ class UserManagementApi(private val workos: WorkOS) {
   }
 
   /**
+   * Get the details of an existing Magic Auth code.
+   */
+  fun getMagicAuth(id: String): MagicAuth {
+    return workos.get("/user_management/magic_auth/$id", MagicAuth::class.java)
+  }
+
+  /**
+   * Creates a Magic Auth code that can be used to authenticate into your app.
+   */
+  fun createMagicAuth(options: CreateMagicAuthOptions): MagicAuth {
+    return workos.post(
+      "/user_management/magic_auth",
+      MagicAuth::class.java,
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /**
    * Sends a one-time authentication code to the user’s email address. The code
    * expires in 10 minutes. To verify the code, authenticate the user with Magic Auth.
    */
+  @Deprecated("Please use `createMagicAuth` instead. This method will be removed in a future major version.")
   fun sendMagicAuthCode(email: String) {
     workos.post(
       "/user_management/magic_auth/send",
