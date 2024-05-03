@@ -702,12 +702,12 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody = """{
-        "email": "test01@example.com"
+        "email": "test01@example.com",
+        "invitation_token": null
       }"""
     )
 
-    val options = CreateMagicAuthOptionsBuilder("test01@example.com")
-      .build()
+    val options = CreateMagicAuthOptionsBuilder("test01@example.com").build()
 
     val magicAuth = workos.userManagement.createMagicAuth(options)
 
