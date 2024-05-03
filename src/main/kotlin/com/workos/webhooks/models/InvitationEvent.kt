@@ -1,6 +1,6 @@
 package com.workos.webhooks.models
 
-import com.workos.usermanagement.models.InvitationEvent
+import com.workos.usermanagement.models.InvitationEventData
 
 /**
  * Webhook Event for `invitation.*` events.
@@ -13,7 +13,7 @@ class InvitationEvent(
   override val event: EventType,
 
   @JvmField
-  override val data: InvitationEvent,
+  override val data: InvitationEventData,
 
   @JvmField
   override val createdAt: String

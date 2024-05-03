@@ -1,6 +1,6 @@
 package com.workos.webhooks.models
 
-import com.workos.usermanagement.models.MagicAuthEvent
+import com.workos.usermanagement.models.MagicAuthEventData
 
 /**
  * Webhook Event for `magic_auth.*` events.
@@ -13,7 +13,7 @@ class MagicAuthEvent(
   override val event: EventType,
 
   @JvmField
-  override val data: MagicAuthEvent,
+  override val data: MagicAuthEventData,
 
   @JvmField
   override val createdAt: String

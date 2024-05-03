@@ -11,8 +11,8 @@ import com.workos.directorysync.models.Directory
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import com.workos.sso.models.Connection
-import com.workos.usermanagement.models.InvitationEvent
-import com.workos.usermanagement.models.MagicAuthEvent
+import com.workos.usermanagement.models.InvitationEventData
+import com.workos.usermanagement.models.MagicAuthEventData
 import com.workos.usermanagement.models.OrganizationMembership
 
 /**
@@ -51,8 +51,8 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.DirectoryGroupDeleted -> DirectoryGroupDeletedEvent(id, eventType, deserializeData(data, Group::class.java), createdAt)
       EventType.DirectoryGroupUserAdded -> DirectoryGroupUserAddedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
       EventType.DirectoryGroupUserRemoved -> DirectoryGroupUserRemovedEvent(id, eventType, deserializeData(data, DirectoryGroupUserEvent::class.java), createdAt)
-      EventType.InvitationCreated -> InvitationEvent(id, eventType, deserializeData(data, InvitationEvent::class.java), createdAt)
-      EventType.MagicAuthCreated -> MagicAuthEvent(id, eventType, deserializeData(data, MagicAuthEvent::class.java), createdAt)
+      EventType.InvitationCreated -> InvitationEvent(id, eventType, deserializeData(data, InvitationEventData::class.java), createdAt)
+      EventType.MagicAuthCreated -> MagicAuthEvent(id, eventType, deserializeData(data, MagicAuthEventData::class.java), createdAt)
       EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)

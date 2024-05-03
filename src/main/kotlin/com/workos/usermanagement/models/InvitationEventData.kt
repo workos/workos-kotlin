@@ -19,7 +19,7 @@ import com.workos.usermanagement.types.InvitationStateEnumType
  * @param createdAt The timestamp when the invitation was created.
  * @param updatedAt The timestamp when the invitation was last updated.
  */
-data class InvitationEvent @JsonCreator constructor(
+data class InvitationEventData @JsonCreator constructor(
   @JsonProperty("id")
   val id: String,
 
