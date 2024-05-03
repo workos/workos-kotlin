@@ -82,9 +82,19 @@ enum class EventType(
   DirectoryGroupDeleted("dsync.group.deleted"),
 
   /**
+   * Triggers when a user is invited to sign up or to join an organization.
+   */
+  InvitationCreated("invitation.created"),
+
+  /**
    * Triggers when an organization membership is created.
    */
   OrganizationMembershipCreated("organization_membership.created"),
+
+  /**
+   * Triggers when a user initiates Magic Auth and an authentication code is created.
+   */
+  MagicAuthCreated("magic_auth.created"),
 
   /**
    * Triggers when an organization membership is deleted.
