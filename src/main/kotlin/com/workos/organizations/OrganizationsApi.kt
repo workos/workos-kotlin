@@ -46,6 +46,7 @@ class OrganizationsApi(private val workos: WorkOS) {
     @JsonProperty("domain_data")
     val domainData: List<OrganizationDomainDataOptions>? = null,
 
+    @Deprecated("Use domainData instead.")
     val domains: List<String>? = null
   ) {
     /**
@@ -78,6 +79,7 @@ class OrganizationsApi(private val workos: WorkOS) {
       /**
        * Sets the list of domains for the organization.
        */
+      @Deprecated("Use domainData instead.")
       fun domains(value: List<String>) = apply { domains = value }
 
       /**
@@ -239,6 +241,7 @@ class OrganizationsApi(private val workos: WorkOS) {
     @JsonProperty("domain_data")
     val domainData: List<OrganizationDomainDataOptions>? = null,
 
+    @Deprecated("Use domainData instead.")
     val domains: List<String>? = null
   ) {
     /**
@@ -271,6 +274,7 @@ class OrganizationsApi(private val workos: WorkOS) {
       /**
        * Sets the list of domains for the organization.
        */
+      @Deprecated("Use domainData instead.")
       fun domains(value: List<String>) = apply { domains = value }
 
       /**
