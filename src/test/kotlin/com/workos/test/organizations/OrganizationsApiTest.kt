@@ -5,6 +5,8 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.organizations.OrganizationsApi
 import com.workos.organizations.OrganizationsApi.CreateOrganizationOptions
 import com.workos.organizations.OrganizationsApi.CreateOrganizationRequestOptions
+import com.workos.organizations.OrganizationsApi.OrganizationDomainDataOptions
+import com.workos.organizations.OrganizationsApi.OrganizationDomainDataState
 import com.workos.organizations.OrganizationsApi.UpdateOrganizationOptions
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -67,14 +69,49 @@ class OrganizationsApiTest : TestBase() {
       """{
         "name": "Organization Name",
         "allow_profiles_outside_organization": true,
-        "domains": ["domain1.com", "domain2.com"]
+        "domain_data": [
+          {
+            "domain": "example.com",
+            "state": "pending"
+          }
+        ]
       }"""
     )
 
     val config = CreateOrganizationOptions.builder()
       .name("Organization Name")
       .allowProfilesOutsideOrganization(true)
-      .domains(listOf("domain1.com", "domain2.com"))
+      .domainData(listOf(
+        OrganizationDomainDataOptions(
+          "example.com",
+          OrganizationDomainDataState.PENDING
+        )
+      ))
+      .build()
+
+    val organization = workos.organizations.createOrganization(config)
+
+    assertEquals(data["organizationId"], organization.id)
+    assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(data["organizationDomainId"], organization.domains[0].id)
+  }
+
+  @Test
+  fun createOrganizationWithDeprecatedDomainsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val data = prepareCreateOrganizationTest(
+      """{
+        "name": "Organization Name",
+        "allow_profiles_outside_organization": false,
+        "domains": ["foo.com", "bar.com"]
+      }"""
+    )
+
+    val config = CreateOrganizationOptions.builder()
+      .name("Organization Name")
+      .allowProfilesOutsideOrganization(false)
+      .domains(listOf("foo.com", "bar.com"))
       .build()
 
     val organization = workos.organizations.createOrganization(config)
@@ -92,7 +129,16 @@ class OrganizationsApiTest : TestBase() {
       """{
         "name": "Organization Name",
         "allow_profiles_outside_organization": false,
-        "domains": ["foo.com", "bar.com"]
+        "domain_data": [
+          {
+            "domain": "foo.com",
+            "state": "pending"
+          },
+          {
+            "domain": "bar.com",
+            "state": "pending"
+          }
+        ]
       }"""
     )
 
@@ -100,8 +146,17 @@ class OrganizationsApiTest : TestBase() {
       CreateOrganizationOptions(
         "Organization Name",
         false,
-        null,
-        listOf("foo.com", "bar.com")
+        listOf(
+          OrganizationDomainDataOptions(
+            "foo.com",
+            OrganizationDomainDataState.PENDING
+          ),
+          OrganizationDomainDataOptions(
+            "bar.com",
+            OrganizationDomainDataState.PENDING
+          )
+        ),
+        null
       )
     )
 
@@ -139,12 +194,14 @@ class OrganizationsApiTest : TestBase() {
         "Organization Name",
         false,
         null,
-        listOf("foo.com")
+        null
       ),
       CreateOrganizationRequestOptions(
         "some-idempotency-key-value"
       )
     )
+
+    assertEquals("Organization Name", organization.name)
   }
 
   @Test
@@ -402,14 +459,24 @@ class OrganizationsApiTest : TestBase() {
       """{
         "name": "Organization Name",
         "allow_profiles_outside_organization": true,
-        "domains": ["domain1.com", "domain2.com"]
+        "domain_data": [
+          {
+            "domain": "example.com",
+            "state": "verified"
+          }
+        ]
       }"""
     )
 
     val config = UpdateOrganizationOptions.builder()
       .name("Organization Name")
       .allowProfilesOutsideOrganization(true)
-      .domains(listOf("domain1.com", "domain2.com"))
+      .domainData(listOf(
+        OrganizationDomainDataOptions(
+          "example.com",
+          OrganizationDomainDataState.VERIFIED
+        )
+      ))
       .build()
 
     val organization = workos.organizations.updateOrganization(data["organizationId"]!!, config)
@@ -442,6 +509,51 @@ class OrganizationsApiTest : TestBase() {
 
   @Test
   fun updateOrganizationWithRawOptionsShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val data = prepareUpdateOrganizationTest(
+      """{
+        "name": "Organization Name",
+        "allow_profiles_outside_organization": false,
+        "domain_data": [
+          {
+            "domain": "foo.com",
+            "state": "verified"
+          },
+          {
+            "domain": "bar.com",
+            "state": "verified"
+          }
+        ]
+      }"""
+    )
+
+    val organization = workos.organizations.updateOrganization(
+      data["organizationId"]!!,
+      UpdateOrganizationOptions(
+        "Organization Name",
+        false,
+        listOf(
+          OrganizationDomainDataOptions(
+            "foo.com",
+            OrganizationDomainDataState.VERIFIED
+          ),
+          OrganizationDomainDataOptions(
+            "bar.com",
+            OrganizationDomainDataState.VERIFIED
+          )
+        ),
+        null,
+      )
+    )
+
+    assertEquals(data["organizationId"], organization.id)
+    assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(data["organizationDomainId"], organization.domains[0].id)
+  }
+
+  @Test
+  fun updateOrganizationWithDeprecatedDomainsShouldReturnPayload() {
     val workos = createWorkOSClient()
 
     val data = prepareUpdateOrganizationTest(
