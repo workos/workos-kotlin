@@ -81,12 +81,14 @@ class OrganizationsApiTest : TestBase() {
     val config = CreateOrganizationOptions.builder()
       .name("Organization Name")
       .allowProfilesOutsideOrganization(true)
-      .domainData(listOf(
-        OrganizationDomainDataOptions(
-          "example.com",
-          OrganizationDomainDataState.PENDING
+      .domainData(
+        listOf(
+          OrganizationDomainDataOptions(
+            "example.com",
+            OrganizationDomainDataState.PENDING
+          )
         )
-      ))
+      )
       .build()
 
     val organization = workos.organizations.createOrganization(config)
@@ -471,12 +473,14 @@ class OrganizationsApiTest : TestBase() {
     val config = UpdateOrganizationOptions.builder()
       .name("Organization Name")
       .allowProfilesOutsideOrganization(true)
-      .domainData(listOf(
-        OrganizationDomainDataOptions(
-          "example.com",
-          OrganizationDomainDataState.VERIFIED
+      .domainData(
+        listOf(
+          OrganizationDomainDataOptions(
+            "example.com",
+            OrganizationDomainDataState.VERIFIED
+          )
         )
-      ))
+      )
       .build()
 
     val organization = workos.organizations.updateOrganization(data["organizationId"]!!, config)
