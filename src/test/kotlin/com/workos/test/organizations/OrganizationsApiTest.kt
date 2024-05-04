@@ -100,6 +100,7 @@ class OrganizationsApiTest : TestBase() {
       CreateOrganizationOptions(
         "Organization Name",
         false,
+        null,
         listOf("foo.com", "bar.com")
       )
     )
@@ -137,6 +138,7 @@ class OrganizationsApiTest : TestBase() {
       CreateOrganizationOptions(
         "Organization Name",
         false,
+        null,
         listOf("foo.com")
       ),
       CreateOrganizationRequestOptions(
@@ -455,6 +457,7 @@ class OrganizationsApiTest : TestBase() {
       UpdateOrganizationOptions(
         "Organization Name",
         false,
+        null,
         listOf("foo.com", "bar.com")
       )
     )

@@ -14,12 +14,26 @@ import com.workos.organizations.models.OrganizationList
  * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
  */
 class OrganizationsApi(private val workos: WorkOS) {
+  class OrganizationDomainDataOptions @JvmOverloads constructor(
+    val domain: String,
+    val state: OrganizationDomainDataState
+  )
+
+  enum class OrganizationDomainDataState {
+    @JsonProperty("verified")
+    VERIFIED,
+
+    @JsonProperty("pending")
+    PENDING
+  }
+
   /**
    * Parameters for [createOrganization].
    * Use `CreateOrganizationOptions.builder()` to create a new builder instance.
    *
    * @param name The name of the organization.
    * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
+   * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
@@ -29,8 +43,10 @@ class OrganizationsApi(private val workos: WorkOS) {
     @JsonProperty("allow_profiles_outside_organization")
     val allowProfilesOutsideOrganization: Boolean? = null,
 
-    val domains: List<String>? = null
+    @JsonProperty("domain_data")
+    val domainData: List<OrganizationDomainDataOptions>? = null,
 
+    val domains: List<String>? = null
   ) {
     /**
      * Builder class for creating [CreateOrganizationOptions].
@@ -39,6 +55,8 @@ class OrganizationsApi(private val workos: WorkOS) {
       private var name: String? = null
 
       private var allowProfilesOutsideOrganization: Boolean? = null
+
+      private var domainData: List<OrganizationDomainDataOptions>? = null
 
       private var domains: List<String>? = null
 
@@ -53,6 +71,11 @@ class OrganizationsApi(private val workos: WorkOS) {
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
       /**
+       * Sets the list of domain data for the organization.
+       */
+      fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
+
+      /**
        * Sets the list of domains for the organization.
        */
       fun domains(value: List<String>) = apply { domains = value }
@@ -61,7 +84,7 @@ class OrganizationsApi(private val workos: WorkOS) {
        * Creates an instance of [CreateOrganizationOptions] with the given params.
        */
       fun build(): CreateOrganizationOptions {
-        return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
+        return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
       }
     }
 
@@ -203,6 +226,7 @@ class OrganizationsApi(private val workos: WorkOS) {
    *
    * @param name The name of the organization.
    * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
+   * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
@@ -211,6 +235,9 @@ class OrganizationsApi(private val workos: WorkOS) {
 
     @JsonProperty("allow_profiles_outside_organization")
     val allowProfilesOutsideOrganization: Boolean? = null,
+
+    @JsonProperty("domain_data")
+    val domainData: List<OrganizationDomainDataOptions>? = null,
 
     val domains: List<String>? = null
   ) {
@@ -221,6 +248,8 @@ class OrganizationsApi(private val workos: WorkOS) {
       private var name: String? = null
 
       private var allowProfilesOutsideOrganization: Boolean? = null
+
+      private var domainData: List<OrganizationDomainDataOptions>? = null
 
       private var domains: List<String>? = null
 
@@ -235,6 +264,11 @@ class OrganizationsApi(private val workos: WorkOS) {
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
       /**
+       * Sets the list of domain data for the organization.
+       */
+      fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
+
+      /**
        * Sets the list of domains for the organization.
        */
       fun domains(value: List<String>) = apply { domains = value }
@@ -243,7 +277,7 @@ class OrganizationsApi(private val workos: WorkOS) {
        * Creates an instance of [UpdateOrganizationOptions].
        */
       fun build(): UpdateOrganizationOptions {
-        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domains)
+        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
       }
     }
 
