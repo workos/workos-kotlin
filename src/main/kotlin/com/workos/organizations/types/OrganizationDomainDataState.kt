@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
   */
 enum class OrganizationDomainDataState {
   @JsonProperty("verified")
-  VERIFIED,
+  Verified,
 
   @JsonProperty("pending")
-  PENDING
+  Pending
 }

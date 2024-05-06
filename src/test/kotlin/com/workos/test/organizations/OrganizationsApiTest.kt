@@ -85,7 +85,7 @@ class OrganizationsApiTest : TestBase() {
         listOf(
           OrganizationDomainDataOptions(
             "example.com",
-            OrganizationDomainDataState.PENDING
+            OrganizationDomainDataState.Pending
           )
         )
       )
@@ -151,11 +151,11 @@ class OrganizationsApiTest : TestBase() {
         listOf(
           OrganizationDomainDataOptions(
             "foo.com",
-            OrganizationDomainDataState.PENDING
+            OrganizationDomainDataState.Pending
           ),
           OrganizationDomainDataOptions(
             "bar.com",
-            OrganizationDomainDataState.PENDING
+            OrganizationDomainDataState.Pending
           )
         ),
         null
@@ -477,7 +477,7 @@ class OrganizationsApiTest : TestBase() {
         listOf(
           OrganizationDomainDataOptions(
             "example.com",
-            OrganizationDomainDataState.VERIFIED
+            OrganizationDomainDataState.Verified
           )
         )
       )
@@ -540,11 +540,11 @@ class OrganizationsApiTest : TestBase() {
         listOf(
           OrganizationDomainDataOptions(
             "foo.com",
-            OrganizationDomainDataState.VERIFIED
+            OrganizationDomainDataState.Verified
           ),
           OrganizationDomainDataOptions(
             "bar.com",
-            OrganizationDomainDataState.VERIFIED
+            OrganizationDomainDataState.Verified
           )
         ),
         null,
