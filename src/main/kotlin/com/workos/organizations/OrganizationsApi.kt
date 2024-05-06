@@ -10,7 +10,6 @@ import com.workos.common.models.Order
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 import com.workos.organizations.types.OrganizationDomainDataOptions
-import com.workos.organizations.types.OrganizationDomainDataState
 
 /**
  * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
