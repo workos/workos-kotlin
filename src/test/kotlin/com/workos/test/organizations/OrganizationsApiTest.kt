@@ -5,9 +5,9 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.organizations.OrganizationsApi
 import com.workos.organizations.OrganizationsApi.CreateOrganizationOptions
 import com.workos.organizations.OrganizationsApi.CreateOrganizationRequestOptions
-import com.workos.organizations.OrganizationsApi.OrganizationDomainDataOptions
-import com.workos.organizations.OrganizationsApi.OrganizationDomainDataState
 import com.workos.organizations.OrganizationsApi.UpdateOrganizationOptions
+import com.workos.organizations.types.OrganizationDomainDataOptions
+import com.workos.organizations.types.OrganizationDomainDataState
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test

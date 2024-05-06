@@ -9,37 +9,13 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
+import com.workos.organizations.types.OrganizationDomainDataOptions
+import com.workos.organizations.types.OrganizationDomainDataState
 
 /**
  * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
  */
 class OrganizationsApi(private val workos: WorkOS) {
-  /**
-   * Options when setting the domains for an organization.
-   *
-   * @param domain The domain of the organization.
-   * @param state The verificaction state of the domain.
-   */
-  class OrganizationDomainDataOptions @JvmOverloads constructor(
-    val domain: String,
-
-    val state: OrganizationDomainDataState
-  )
-
-  /**
-   * The verification state of the domain
-   *
-   * @property PENDING The domain is pending verification.
-   * @property VERIFIED The domain has been verified. Pass this if you've already verified the domain through other methods.
-   */
-  enum class OrganizationDomainDataState {
-    @JsonProperty("verified")
-    VERIFIED,
-
-    @JsonProperty("pending")
-    PENDING
-  }
-
   /**
    * Parameters for [createOrganization].
    * Use `CreateOrganizationOptions.builder()` to create a new builder instance.
