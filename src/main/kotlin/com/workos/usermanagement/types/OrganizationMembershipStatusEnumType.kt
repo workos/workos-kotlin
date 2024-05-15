@@ -10,6 +10,12 @@ enum class OrganizationMembershipStatusEnumType(val type: String) {
   Active("active"),
 
   /**
+   * Inactive
+   */
+  @JsonProperty("inactive")
+  Inactive("inactive"),
+
+  /**
    * Pending
    */
   @JsonProperty("pending")
