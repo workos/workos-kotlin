@@ -12,6 +12,9 @@ class ListOrganizationMembershipsOptions @JvmOverloads constructor(
   @JsonProperty("organization_id")
   val organizationId: String? = null,
 
+  @JsonProperty("statuses")
+  val statuses: List<OrganizationMembershipStatusEnumType>? = null,
+
   @JsonProperty("limit")
   val limit: Int? = null,
 

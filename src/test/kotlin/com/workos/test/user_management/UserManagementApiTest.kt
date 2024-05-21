@@ -1019,6 +1019,12 @@ class UserManagementApiTest : TestBase() {
     val options = ListOrganizationMembershipsOptionsBuilder()
       .userId("id_456")
       .organizationId("org_789")
+      .statuses(
+        listOf<OrganizationMembershipStatusEnumType>(
+          OrganizationMembershipStatusEnumType.Active,
+          OrganizationMembershipStatusEnumType.Inactive
+        )
+      )
       .order(Order.Desc)
       .limit(10)
       .after("someAfterId")
@@ -1135,6 +1141,74 @@ class UserManagementApiTest : TestBase() {
     assertDoesNotThrow() {
       workos.userManagement.deleteOrganizationMembership("om_123")
     }
+  }
+
+  @Test
+  fun deactivateOrganizationMembershipShouldReturnValidOrganizationMembershipObject() {
+    stubResponse(
+      "/user_management/organization_memberships/om_123/deactivate",
+      """{
+        "object": "organization_membership",
+        "id": "om_123",
+        "user_id": "user_456",
+        "organization_id": "org_789",
+        "role": {
+          "slug": "admin"
+        },
+        "status": "inactive",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val organizationMembership = workos.userManagement.deactivateOrganizationMembership("om_123")
+
+    assertEquals(
+      OrganizationMembership(
+        "om_123",
+        "user_456",
+        "org_789",
+        OrganizationMembershipRole("admin"),
+        OrganizationMembershipStatusEnumType.Inactive,
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z",
+      ),
+      organizationMembership
+    )
+  }
+
+  @Test
+  fun reactivateOrganizationMembershipShouldReturnValidOrganizationMembershipObject() {
+    stubResponse(
+      "/user_management/organization_memberships/om_123/reactivate",
+      """{
+        "object": "organization_membership",
+        "id": "om_123",
+        "user_id": "user_456",
+        "organization_id": "org_789",
+        "role": {
+          "slug": "admin"
+        },
+        "status": "active",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val organizationMembership = workos.userManagement.reactivateOrganizationMembership("om_123")
+
+    assertEquals(
+      OrganizationMembership(
+        "om_123",
+        "user_456",
+        "org_789",
+        OrganizationMembershipRole("admin"),
+        OrganizationMembershipStatusEnumType.Active,
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z",
+      ),
+      organizationMembership
+    )
   }
 
   @Test

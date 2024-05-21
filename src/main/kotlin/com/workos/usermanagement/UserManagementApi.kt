@@ -351,6 +351,20 @@ class UserManagementApi(private val workos: WorkOS) {
   }
 
   /**
+   * Deactivate an organization membership.
+   */
+  fun deactivateOrganizationMembership(id: String): OrganizationMembership {
+    return workos.put("/user_management/organization_memberships/$id/deactivate", OrganizationMembership::class.java)
+  }
+
+  /**
+   * Reactivate an organization membership.
+   */
+  fun reactivateOrganizationMembership(id: String): OrganizationMembership {
+    return workos.put("/user_management/organization_memberships/$id/reactivate", OrganizationMembership::class.java)
+  }
+
+  /**
    * Get the details of an existing invitation.
    */
   fun getInvitation(id: String): Invitation {
