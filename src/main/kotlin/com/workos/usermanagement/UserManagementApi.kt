@@ -16,6 +16,7 @@ import com.workos.usermanagement.builders.SendPasswordResetEmailOptionsBuilder
 import com.workos.usermanagement.builders.UpdateOrganizationMembershipOptionsBuilder
 import com.workos.usermanagement.models.Authentication
 import com.workos.usermanagement.models.AuthenticationFactors
+import com.workos.usermanagement.models.EmailVerification
 import com.workos.usermanagement.models.EnrolledAuthenticationFactor
 import com.workos.usermanagement.models.Identity
 import com.workos.usermanagement.models.Invitation
@@ -23,12 +24,14 @@ import com.workos.usermanagement.models.Invitations
 import com.workos.usermanagement.models.MagicAuth
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.usermanagement.models.OrganizationMemberships
+import com.workos.usermanagement.models.PasswordReset
 import com.workos.usermanagement.models.RefreshAuthentication
 import com.workos.usermanagement.models.User
 import com.workos.usermanagement.models.Users
 import com.workos.usermanagement.types.AuthenticationAdditionalOptions
 import com.workos.usermanagement.types.CreateMagicAuthOptions
 import com.workos.usermanagement.types.CreateOrganizationMembershipOptions
+import com.workos.usermanagement.types.CreatePasswordResetOptions
 import com.workos.usermanagement.types.CreateUserOptions
 import com.workos.usermanagement.types.EnrolledAuthenticationFactorOptions
 import com.workos.usermanagement.types.ListInvitationsOptions
@@ -271,8 +274,34 @@ class UserManagementApi(private val workos: WorkOS) {
   }
 
   /**
+   * Get the details of an existing email verification code.
+   */
+  fun getEmailVerification(id: String): EmailVerification {
+    return workos.get("/user_management/email_verification/$id", EmailVerification::class.java)
+  }
+
+  /**
+   * Get the details of an existing password reset token.
+   */
+  fun getPasswordReset(id: String): PasswordReset {
+    return workos.get("/user_management/password_reset/$id", PasswordReset::class.java)
+  }
+
+  /**
+   * Creates a password reset token that can be used to reset a user's password.
+   */
+  fun createPasswordReset(options: CreatePasswordResetOptions): PasswordReset {
+    return workos.post(
+      "/user_management/password_reset",
+      PasswordReset::class.java,
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /**
    * Send a password reset email and change the user’s password.
    */
+  @Deprecated("Please use `createPasswordReset` instead. This method will be removed in a future major version.")
   fun sendPasswordResetEmail(email: String, passwordResetUrl: String) {
     return workos.post(
       "/user_management/password_reset/send",

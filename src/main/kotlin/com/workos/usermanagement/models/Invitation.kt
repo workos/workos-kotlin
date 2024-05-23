@@ -18,6 +18,7 @@ import com.workos.usermanagement.types.InvitationStateEnumType
  * @param token The token of an invitation.
  * @param acceptInvitationUrl The URL where the user can accept the invitation.
  * @param organizationId The ID of the organization.
+ * @param inviterUserId The ID of the user that invited the recipient, if provided.
  * @param createdAt The timestamp when the invitation was created.
  * @param updatedAt The timestamp when the invitation was last updated.
  */
@@ -48,6 +49,9 @@ data class Invitation @JsonCreator constructor(
 
   @JsonProperty("organization_id")
   val organizationId: String? = null,
+
+  @JsonProperty("inviter_user_id")
+  val inviterUserId: String? = null,
 
   @JsonProperty("created_at")
   val createdAt: String,
