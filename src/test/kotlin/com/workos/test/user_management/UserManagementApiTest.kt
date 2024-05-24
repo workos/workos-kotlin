@@ -6,6 +6,7 @@ import com.workos.test.TestBase
 import com.workos.usermanagement.builders.AuthenticationAdditionalOptionsBuilder
 import com.workos.usermanagement.builders.CreateMagicAuthOptionsBuilder
 import com.workos.usermanagement.builders.CreateOrganizationMembershipOptionsBuilder
+import com.workos.usermanagement.builders.CreatePasswordResetOptionsBuilder
 import com.workos.usermanagement.builders.CreateUserOptionsBuilder
 import com.workos.usermanagement.builders.EnrolledAuthenticationFactorOptionsBuilder
 import com.workos.usermanagement.builders.ListInvitationsOptionsBuilder
@@ -16,12 +17,14 @@ import com.workos.usermanagement.builders.UpdateUserOptionsBuilder
 import com.workos.usermanagement.models.AuthenticationChallenge
 import com.workos.usermanagement.models.AuthenticationFactor
 import com.workos.usermanagement.models.AuthenticationTotp
+import com.workos.usermanagement.models.EmailVerification
 import com.workos.usermanagement.models.EnrolledAuthenticationFactor
 import com.workos.usermanagement.models.Identity
 import com.workos.usermanagement.models.Invitation
 import com.workos.usermanagement.models.MagicAuth
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.usermanagement.models.OrganizationMembershipRole
+import com.workos.usermanagement.models.PasswordReset
 import com.workos.usermanagement.models.RefreshAuthentication
 import com.workos.usermanagement.models.User
 import com.workos.usermanagement.types.IdentityProviderEnumType
@@ -862,6 +865,104 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun getEmailVerificationShouldReturnValidEmailVerificationObject() {
+    stubResponse(
+      "/user_management/email_verification/email_verification_123",
+      """{
+        "id": "email_verification_123",
+        "user_id": "user_123",
+        "email": "test01@example.com",
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "code": "123456",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val emailVerification = workos.userManagement.getEmailVerification("email_verification_123")
+
+    assertEquals(
+      EmailVerification(
+        "email_verification_123",
+        "user_123",
+        "test01@example.com",
+        "2021-07-01T19:07:33.155Z",
+        "123456",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      emailVerification
+    )
+  }
+
+  @Test
+  fun getPasswordResetShouldReturnValidPasswordResetObject() {
+    stubResponse(
+      "/user_management/password_reset/password_reset_123",
+      """{
+        "id": "password_reset_123",
+        "user_id": "user_123",
+        "email": "test01@example.com",
+        "password_reset_token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "password_reset_url": "https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "created_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val passwordReset = workos.userManagement.getPasswordReset("password_reset_123")
+
+    assertEquals(
+      PasswordReset(
+        "password_reset_123",
+        "user_123",
+        "test01@example.com",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "2021-07-01T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      passwordReset
+    )
+  }
+
+  @Test
+  fun createPasswordResetShouldReturnValidPasswordResetObject() {
+    stubResponse(
+      "/user_management/password_reset",
+      """{
+        "id": "password_reset_123",
+        "user_id": "user_123",
+        "email": "test01@example.com",
+        "password_reset_token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "password_reset_url": "https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "created_at": "2021-06-25T19:07:33.155Z"
+      }""",
+      requestBody = """{
+        "email": "test01@example.com"
+      }"""
+    )
+
+    val options = CreatePasswordResetOptionsBuilder("test01@example.com").build()
+
+    val passwordReset = workos.userManagement.createPasswordReset(options)
+
+    assertEquals(
+      PasswordReset(
+        "password_reset_123",
+        "user_123",
+        "test01@example.com",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/reset-password?token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "2021-07-01T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      passwordReset
+    )
+  }
+
+  @Test
   fun sendPasswordResetEmailShouldWorkAndReturnNothing() {
     stubResponse("/user_management/password_reset/send", "")
 
@@ -1223,8 +1324,9 @@ class UserManagementApiTest : TestBase() {
         "revoked_at": null,
         "expires_at": "2021-07-01T19:07:33.155Z",
         "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "organization_id": "org_456",
+        "inviter_user_id": "user_789",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }"""
@@ -1241,8 +1343,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-07-01T19:07:33.155Z",
         "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
+        "user_789",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),
@@ -1264,8 +1367,9 @@ class UserManagementApiTest : TestBase() {
             "revoked_at": null,
             "expires_at": "2021-07-01T19:07:33.155Z",
             "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
-            "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+            "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
             "organization_id": "org_456",
+            "inviter_user_id": "user_789",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
           }
@@ -1288,8 +1392,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-07-01T19:07:33.155Z",
         "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
+        "user_789",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),
@@ -1317,8 +1422,9 @@ class UserManagementApiTest : TestBase() {
             "revoked_at": null,
             "expires_at": "2021-07-01T19:07:33.155Z",
             "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
-            "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+            "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
             "organization_id": "org_456",
+            "inviter_user_id": "user_789",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
           }
@@ -1350,8 +1456,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-07-01T19:07:33.155Z",
         "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
+        "user_789",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),
@@ -1377,7 +1484,8 @@ class UserManagementApiTest : TestBase() {
         "revoked_at": null,
         "expires_at": "2021-07-01T19:07:33.155Z",
         "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "inviter_user_id": "user_789",
         "organization_id": "org_456",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1409,8 +1517,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-07-01T19:07:33.155Z",
         "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
+        "user_789",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),
@@ -1430,7 +1539,8 @@ class UserManagementApiTest : TestBase() {
         "revoked_at": "2021-08-01T19:07:33.155Z",
         "expires_at": "2021-07-01T19:07:33.155Z",
         "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "accept_invitation_url": "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "inviter_user_id": "user_789",
         "organization_id": "org_456",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1448,8 +1558,9 @@ class UserManagementApiTest : TestBase() {
         "2021-08-01T19:07:33.155Z",
         "2021-07-01T19:07:33.155Z",
         "Z1uX3RbwcIl5fIGJJJCXXisdI",
-        "https://myauthkit.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
         "org_456",
+        "user_789",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),

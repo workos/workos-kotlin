@@ -82,6 +82,11 @@ enum class EventType(
   DirectoryGroupDeleted("dsync.group.deleted"),
 
   /**
+   * Triggers when a user is required to verify their email.
+   */
+  EmailVerificationCreated("email_verification.created"),
+
+  /**
    * Triggers when a user is invited to sign up or to join an organization.
    */
   InvitationCreated("invitation.created"),
@@ -104,5 +109,10 @@ enum class EventType(
   /**
    * Triggers when an organization membership is updated.
    */
-  OrganizationMembershipUpdated("organization_membership.updated")
+  OrganizationMembershipUpdated("organization_membership.updated"),
+
+  /**
+   * Triggers when a user requests to reset their password.
+   */
+  PasswordResetCreated("password_reset.created")
 }
