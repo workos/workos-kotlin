@@ -1354,6 +1354,47 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun findInvitationByTokenShouldReturnValidUserObject() {
+    stubResponse(
+      "/user_management/invitations/by_token/Z1uX3RbwcIl5fIGJJJCXXisdI",
+      """{
+        "id": "invitation_123",
+        "email": "test01@example.com",
+        "state": "pending",
+        "accepted_at": null,
+        "revoked_at": null,
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "organization_id": "org_456",
+        "inviter_user_id": "user_789",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val invitation = workos.userManagement.findInvitationByToken("Z1uX3RbwcIl5fIGJJJCXXisdI")
+
+    assertEquals(
+      Invitation(
+        "invitation_123",
+        "test01@example.com",
+        InvitationStateEnumType.Pending,
+        null,
+        null,
+        "2021-07-01T19:07:33.155Z",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "org_456",
+        "user_789",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      invitation
+    )
+  }
+
+  @Test
   fun listInvitationsShouldReturnValidInvitations() {
     stubResponse(
       "/user_management/invitations",

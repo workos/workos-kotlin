@@ -401,6 +401,13 @@ class UserManagementApi(private val workos: WorkOS) {
   }
 
   /**
+   * Find an existing invitation by token.
+   */
+  fun findInvitationByToken(token: String): Invitation {
+    return workos.get("/user_management/invitations/by_token/$token", Invitation::class.java)
+  }
+
+  /**
    * Get a list of all the existing invitations matching the criteria specified.
    */
   fun listInvitations(options: ListInvitationsOptions? = null): Invitations {
