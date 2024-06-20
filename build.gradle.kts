@@ -40,6 +40,8 @@ dependencies {
 
   implementation("com.github.kittinunf.fuel:fuel:2.3.1")
 
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
+
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
