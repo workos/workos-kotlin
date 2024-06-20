@@ -50,30 +50,30 @@ class UserManagementApi(private val workos: WorkOS) {
   /** Get a list of all the existing users matching the criteria specified. */
   fun listUsers(options: ListUsersOptions? = null): Users {
     val params: Map<String, String> =
-        RequestConfig.toMap(options ?: ListUsersOptions()) as Map<String, String>
+      RequestConfig.toMap(options ?: ListUsersOptions()) as Map<String, String>
 
     return workos.get(
-        "/user_management/users",
-        Users::class.java,
-        RequestConfig.builder().params(params).build()
+      "/user_management/users",
+      Users::class.java,
+      RequestConfig.builder().params(params).build()
     )
   }
 
   /** Create a new user in the current environment. */
   fun createUser(options: CreateUserOptions): User {
     return workos.post(
-        "/user_management/users",
-        User::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/users",
+      User::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
   /** Updates properties of a user. The omitted properties will be left unchanged. */
   fun updateUser(userId: String, options: UpdateUserOptions): User {
     return workos.put(
-        "/user_management/users/$userId",
-        User::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/users/$userId",
+      User::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
@@ -97,69 +97,69 @@ class UserManagementApi(private val workos: WorkOS) {
 
   /** Authenticates a user using AuthKit, OAuth or an organization’s SSO connection. */
   fun authenticateWithCode(
-      clientId: String,
-      code: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    code: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithCodeOptionsBuilder.create(clientId, workos.apiKey, code, options)
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithCodeOptionsBuilder.create(clientId, workos.apiKey, code, options)
             .build()
+        )
+        .build()
     )
   }
 
   /** Authenticates a user with email and password. */
   fun authenticateWithPassword(
-      clientId: String,
-      email: String,
-      password: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    email: String,
+    password: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithPasswordOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        email,
-                        password,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithPasswordOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            email,
+            password,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
   /** Authenticates a user by verifying the Magic Auth code sent to the user’s email. */
   fun authenticateWithMagicAuth(
-      clientId: String,
-      email: String,
-      code: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    email: String,
+    code: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithMagicAuthOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        email,
-                        code,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithMagicAuthOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            email,
+            code,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
@@ -168,101 +168,101 @@ class UserManagementApi(private val workos: WorkOS) {
    * use, so a new refresh token is returned.
    */
   fun authenticateWithRefreshToken(
-      clientId: String,
-      refreshToken: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    refreshToken: String,
+    options: AuthenticationAdditionalOptions? = null
   ): RefreshAuthentication {
     return workos.post(
-        "/user_management/authenticate",
-        RefreshAuthentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithRefreshTokenOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        refreshToken,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      RefreshAuthentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithRefreshTokenOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            refreshToken,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
   /** Authenticates a user with an unverified email and verifies their email address. */
   fun authenticateWithEmailVerification(
-      clientId: String,
-      code: String,
-      pendingAuthenticationToken: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    code: String,
+    pendingAuthenticationToken: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithEmailVerificationOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        code,
-                        pendingAuthenticationToken,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithEmailVerificationOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            code,
+            pendingAuthenticationToken,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
   /** Authenticates a user enrolled into MFA using time-based one-time password (TOTP). */
   fun authenticateWithTotp(
-      clientId: String,
-      code: String,
-      authenticationChallengeId: String,
-      pendingAuthenticationToken: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    code: String,
+    authenticationChallengeId: String,
+    pendingAuthenticationToken: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithTotpOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        code,
-                        authenticationChallengeId,
-                        pendingAuthenticationToken,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithTotpOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            code,
+            authenticationChallengeId,
+            pendingAuthenticationToken,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
   /** Authenticates a user into an organization they are a member of. */
   fun authenticateWithOrganizationSelection(
-      clientId: String,
-      organizationId: String,
-      pendingAuthenticationToken: String,
-      options: AuthenticationAdditionalOptions? = null
+    clientId: String,
+    organizationId: String,
+    pendingAuthenticationToken: String,
+    options: AuthenticationAdditionalOptions? = null
   ): Authentication {
     return workos.post(
-        "/user_management/authenticate",
-        Authentication::class.java,
-        RequestConfig.builder()
-            .data(
-                AuthenticationWithOrganizationSelectionOptionsBuilder.create(
-                        clientId,
-                        workos.apiKey,
-                        organizationId,
-                        pendingAuthenticationToken,
-                        options
-                    )
-                    .build()
-            )
+      "/user_management/authenticate",
+      Authentication::class.java,
+      RequestConfig.builder()
+        .data(
+          AuthenticationWithOrganizationSelectionOptionsBuilder.create(
+            clientId,
+            workos.apiKey,
+            organizationId,
+            pendingAuthenticationToken,
+            options
+          )
             .build()
+        )
+        .build()
     )
   }
 
@@ -279,9 +279,9 @@ class UserManagementApi(private val workos: WorkOS) {
   /** Creates a Magic Auth code that can be used to authenticate into your app. */
   fun createMagicAuth(options: CreateMagicAuthOptions): MagicAuth {
     return workos.post(
-        "/user_management/magic_auth",
-        MagicAuth::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/magic_auth",
+      MagicAuth::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
@@ -290,32 +290,32 @@ class UserManagementApi(private val workos: WorkOS) {
    * minutes. To verify the code, authenticate the user with Magic Auth.
    */
   @Deprecated(
-      "Please use `createMagicAuth` instead. This method will be removed in a future major version."
+    "Please use `createMagicAuth` instead. This method will be removed in a future major version."
   )
   fun sendMagicAuthCode(email: String) {
     workos.post(
-        "/user_management/magic_auth/send",
-        RequestConfig.builder().data(SendMagicAuthCodeOptionsBuilder.create(email).build()).build()
+      "/user_management/magic_auth/send",
+      RequestConfig.builder().data(SendMagicAuthCodeOptionsBuilder.create(email).build()).build()
     )
   }
 
   /** Enrolls a user in a new authentication factor. */
   fun enrollAuthFactor(
-      id: String,
-      options: EnrolledAuthenticationFactorOptions? = null
+    id: String,
+    options: EnrolledAuthenticationFactorOptions? = null
   ): EnrolledAuthenticationFactor {
     return workos.post(
-        "/user_management/users/$id/auth_factors",
-        EnrolledAuthenticationFactor::class.java,
-        RequestConfig.builder().data(options ?: EnrolledAuthenticationFactorOptions()).build()
+      "/user_management/users/$id/auth_factors",
+      EnrolledAuthenticationFactor::class.java,
+      RequestConfig.builder().data(options ?: EnrolledAuthenticationFactorOptions()).build()
     )
   }
 
   /** Get a list of all authentication factors of a given user. */
   fun listAuthFactors(id: String): AuthenticationFactors {
     return workos.get(
-        "/user_management/users/$id/auth_factors",
-        AuthenticationFactors::class.java,
+      "/user_management/users/$id/auth_factors",
+      AuthenticationFactors::class.java,
     )
   }
 
@@ -332,77 +332,77 @@ class UserManagementApi(private val workos: WorkOS) {
   /** Creates a password reset token that can be used to reset a user's password. */
   fun createPasswordReset(options: CreatePasswordResetOptions): PasswordReset {
     return workos.post(
-        "/user_management/password_reset",
-        PasswordReset::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/password_reset",
+      PasswordReset::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
   /** Send a password reset email and change the user’s password. */
   @Deprecated(
-      "Please use `createPasswordReset` instead. This method will be removed in a future major version."
+    "Please use `createPasswordReset` instead. This method will be removed in a future major version."
   )
   fun sendPasswordResetEmail(email: String, passwordResetUrl: String) {
     return workos.post(
-        "/user_management/password_reset/send",
-        RequestConfig.builder()
-            .data(SendPasswordResetEmailOptionsBuilder.create(email, passwordResetUrl).build())
-            .build()
+      "/user_management/password_reset/send",
+      RequestConfig.builder()
+        .data(SendPasswordResetEmailOptionsBuilder.create(email, passwordResetUrl).build())
+        .build()
     )
   }
 
   /** Sets a new password using the `token` query parameter from the link that the user received. */
   fun resetPassword(token: String, newPassword: String): User {
     return workos.post(
-        "/user_management/password_reset/confirm",
-        User::class.java,
-        RequestConfig.builder()
-            .data(ResetPasswordOptionsBuilder.create(token, newPassword).build())
-            .build()
+      "/user_management/password_reset/confirm",
+      User::class.java,
+      RequestConfig.builder()
+        .data(ResetPasswordOptionsBuilder.create(token, newPassword).build())
+        .build()
     )
   }
 
   /** Get the details of an existing organization membership. */
   fun getOrganizationMembership(id: String): OrganizationMembership {
     return workos.get(
-        "/user_management/organization_memberships/$id",
-        OrganizationMembership::class.java
+      "/user_management/organization_memberships/$id",
+      OrganizationMembership::class.java
     )
   }
 
   /** Get a list of all organization memberships matching the criteria specified. */
   fun listOrganizationMemberships(
-      options: ListOrganizationMembershipsOptions? = null
+    options: ListOrganizationMembershipsOptions? = null
   ): OrganizationMemberships {
     val params: Map<String, String> =
-        RequestConfig.toMap(options ?: ListOrganizationMembershipsOptions()) as Map<String, String>
+      RequestConfig.toMap(options ?: ListOrganizationMembershipsOptions()) as Map<String, String>
 
     return workos.get(
-        "/user_management/organization_memberships",
-        OrganizationMemberships::class.java,
-        RequestConfig.builder().params(params).build()
+      "/user_management/organization_memberships",
+      OrganizationMemberships::class.java,
+      RequestConfig.builder().params(params).build()
     )
   }
 
   /** Creates a new organization membership for the given organization and user. */
   fun createOrganizationMembership(
-      options: CreateOrganizationMembershipOptions
+    options: CreateOrganizationMembershipOptions
   ): OrganizationMembership {
     return workos.post(
-        "/user_management/organization_memberships",
-        OrganizationMembership::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/organization_memberships",
+      OrganizationMembership::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
   /** Update the details of an existing organization membership. */
   fun updateOrganizationMembership(id: String, roleSlug: String): OrganizationMembership {
     return workos.put(
-        "/user_management/organization_memberships/$id",
-        OrganizationMembership::class.java,
-        RequestConfig.builder()
-            .data(UpdateOrganizationMembershipOptionsBuilder.create(id, roleSlug).build())
-            .build()
+      "/user_management/organization_memberships/$id",
+      OrganizationMembership::class.java,
+      RequestConfig.builder()
+        .data(UpdateOrganizationMembershipOptionsBuilder.create(id, roleSlug).build())
+        .build()
     )
   }
 
@@ -414,16 +414,16 @@ class UserManagementApi(private val workos: WorkOS) {
   /** Deactivate an organization membership. */
   fun deactivateOrganizationMembership(id: String): OrganizationMembership {
     return workos.put(
-        "/user_management/organization_memberships/$id/deactivate",
-        OrganizationMembership::class.java
+      "/user_management/organization_memberships/$id/deactivate",
+      OrganizationMembership::class.java
     )
   }
 
   /** Reactivate an organization membership. */
   fun reactivateOrganizationMembership(id: String): OrganizationMembership {
     return workos.put(
-        "/user_management/organization_memberships/$id/reactivate",
-        OrganizationMembership::class.java
+      "/user_management/organization_memberships/$id/reactivate",
+      OrganizationMembership::class.java
     )
   }
 
@@ -440,21 +440,21 @@ class UserManagementApi(private val workos: WorkOS) {
   /** Get a list of all the existing invitations matching the criteria specified. */
   fun listInvitations(options: ListInvitationsOptions? = null): Invitations {
     val params: Map<String, String> =
-        RequestConfig.toMap(options ?: ListInvitationsOptions()) as Map<String, String>
+      RequestConfig.toMap(options ?: ListInvitationsOptions()) as Map<String, String>
 
     return workos.get(
-        "/user_management/invitations",
-        Invitations::class.java,
-        RequestConfig.builder().params(params).build()
+      "/user_management/invitations",
+      Invitations::class.java,
+      RequestConfig.builder().params(params).build()
     )
   }
 
   /** Sends an invitation email to the recipient. */
   fun sendInvitation(options: SendInvitationOptions): Invitation {
     return workos.post(
-        "/user_management/invitations",
-        Invitation::class.java,
-        RequestConfig.builder().data(options).build()
+      "/user_management/invitations",
+      Invitation::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 
@@ -466,8 +466,8 @@ class UserManagementApi(private val workos: WorkOS) {
   /** End a user's session. The user's browser should be redirected to this URL. */
   fun getLogoutUrl(sessionId: String): String {
     return URIBuilder(workos.baseUrl)
-        .setPath("/user_management/sessions/logout")
-        .addParameter("session_id", sessionId)
-        .toString()
+      .setPath("/user_management/sessions/logout")
+      .addParameter("session_id", sessionId)
+      .toString()
   }
 }
