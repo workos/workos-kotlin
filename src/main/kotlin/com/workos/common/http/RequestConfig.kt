@@ -32,7 +32,7 @@ class RequestConfig(
                   if (value::class.isData) {
                     toMap(value)
                   } else {
-                    value
+                    value.toString()
                   }
                 }
           }
