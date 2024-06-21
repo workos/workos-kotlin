@@ -109,12 +109,7 @@ class UserManagementApiTest : TestBase() {
       ),
       users.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "user_234"
-      ),
-      users.listMetadata
-    )
+    assertEquals(ListMetadata(null, "user_234"), users.listMetadata)
   }
 
   @Test
@@ -138,14 +133,15 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = ListUsersOptionsBuilder()
-      .email("test01@example.com")
-      .organizationId("org_123")
-      .order(Order.Desc)
-      .limit(10)
-      .after("someAfterId")
-      .before("someBeforeId")
-      .build()
+    val options =
+      ListUsersOptionsBuilder()
+        .email("test01@example.com")
+        .organizationId("org_123")
+        .order(Order.Desc)
+        .limit(10)
+        .after("someAfterId")
+        .before("someBeforeId")
+        .build()
 
     val users = workos.userManagement.listUsers(options)
 
@@ -162,12 +158,7 @@ class UserManagementApiTest : TestBase() {
       ),
       users.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "user_234"
-      ),
-      users.listMetadata
-    )
+    assertEquals(ListMetadata(null, "user_234"), users.listMetadata)
   }
 
   @Test
@@ -185,7 +176,8 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "email": "test01@example.com",
         "password": "password",
         "first_name": "Test",
@@ -194,12 +186,13 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = CreateUserOptionsBuilder("test01@example.com")
-      .password("password")
-      .firstName("Test")
-      .lastName("User")
-      .emailVerified(true)
-      .build()
+    val options =
+      CreateUserOptionsBuilder("test01@example.com")
+        .password("password")
+        .firstName("Test")
+        .lastName("User")
+        .emailVerified(true)
+        .build()
 
     val user = workos.userManagement.createUser(options)
 
@@ -233,7 +226,8 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "id": "user_123",
         "password": "password",
         "first_name": "Test",
@@ -242,12 +236,13 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = UpdateUserOptionsBuilder("user_123")
-      .password("password")
-      .firstName("Test")
-      .lastName("User")
-      .emailVerified(true)
-      .build()
+    val options =
+      UpdateUserOptionsBuilder("user_123")
+        .password("password")
+        .firstName("Test")
+        .lastName("User")
+        .emailVerified(true)
+        .build()
 
     val user = workos.userManagement.updateUser("user_123", options)
 
@@ -270,9 +265,7 @@ class UserManagementApiTest : TestBase() {
   fun deleteUserShouldWorkAndReturnNothing() {
     stubResponse("/user_management/users/user_123", "")
 
-    assertDoesNotThrow() {
-      workos.userManagement.deleteUser("user_123")
-    }
+    assertDoesNotThrow() { workos.userManagement.deleteUser("user_123") }
   }
 
   @Test
@@ -300,7 +293,12 @@ class UserManagementApiTest : TestBase() {
 
   @Test
   fun getAuthorizationUrlShouldReturnValidUrl() {
-    val url = workos.userManagement.getAuthorizationUrl("client_id", "http://localhost:8080/redirect").provider(UserManagementProviderEnumType.AuthKit).build()
+    val url =
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .provider(UserManagementProviderEnumType.AuthKit)
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/user_management/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&provider=authkit",
@@ -310,14 +308,17 @@ class UserManagementApiTest : TestBase() {
 
   @Test
   fun getAuthorizationUrlShouldAcceptAdditionalParams() {
-    val url = workos.userManagement.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-      .connectionId("connection_value")
-      .domainHint("domain_hint")
-      .loginHint("login_hint")
-      .screenHint("screen_hint")
-      .provider(UserManagementProviderEnumType.AuthKit)
-      .state("state_value")
-      .build()
+    val url =
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .connectionId("connection_value")
+        .domainHint("domain_hint")
+        .loginHint("login_hint")
+        .screenHint("screen_hint")
+        .provider(UserManagementProviderEnumType.AuthKit)
+        .state("state_value")
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/user_management/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection_id=connection_value&domain_hint=domain_hint&login_hint=login_hint&screen_hint=screen_hint&provider=authkit&state=state_value",
@@ -328,14 +329,19 @@ class UserManagementApiTest : TestBase() {
   @Test
   fun getAuthorizationUrlShouldValidateUrlParams() {
     assertThrows(IllegalArgumentException::class.java) {
-      workos.userManagement.getAuthorizationUrl("client_id", "http://localhost:8080/redirect").build()
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .build()
     }
   }
 
   @Test
   fun getAuthorizationUrlShouldValidateUrlAdditionalParams() {
     assertThrows(IllegalArgumentException::class.java) {
-      workos.userManagement.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
         .connectionId("connection_value")
         .domainHint("domain_hint")
         .loginHint("login_hint")
@@ -372,7 +378,8 @@ class UserManagementApiTest : TestBase() {
           "reason": "Investigating an issue with the customer's account."
         }
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "authorization_code",
@@ -382,14 +389,15 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithCode(
-      "client_id",
-      "code_123",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithCode(
+        "client_id",
+        "code_123",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -416,7 +424,8 @@ class UserManagementApiTest : TestBase() {
         "access_token": "access_token",
         "refresh_token": "refresh_token"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "password",
@@ -427,15 +436,16 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithPassword(
-      "client_id",
-      "test01@example.com",
-      "password",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithPassword(
+        "client_id",
+        "test01@example.com",
+        "password",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -460,7 +470,8 @@ class UserManagementApiTest : TestBase() {
         },
         "organization_id": "org_456"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:magic-auth:code",
@@ -471,15 +482,16 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithMagicAuth(
-      "client_id",
-      "test01@example.com",
-      "code_123",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithMagicAuth(
+        "client_id",
+        "test01@example.com",
+        "code_123",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -494,7 +506,8 @@ class UserManagementApiTest : TestBase() {
         "access_token": "access_token",
         "refresh_token": "refresh_token"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "refresh_token",
@@ -504,14 +517,15 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithRefreshToken(
-      "client_id",
-      "refresh_token",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithRefreshToken(
+        "client_id",
+        "refresh_token",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals(RefreshAuthentication("access_token", "refresh_token"), response)
   }
@@ -536,7 +550,8 @@ class UserManagementApiTest : TestBase() {
         },
         "organization_id": "org_456"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:email-verification:code",
@@ -547,15 +562,16 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithEmailVerification(
-      "client_id",
-      "code_123",
-      "token_456",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithEmailVerification(
+        "client_id",
+        "code_123",
+        "token_456",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -580,7 +596,8 @@ class UserManagementApiTest : TestBase() {
         },
         "organization_id": "org_456"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:mfa-totp",
@@ -592,16 +609,17 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithTotp(
-      "client_id",
-      "code_123",
-      "challenge_789",
-      "token_456",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithTotp(
+        "client_id",
+        "code_123",
+        "challenge_789",
+        "token_456",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -626,7 +644,8 @@ class UserManagementApiTest : TestBase() {
         },
         "organization_id": "org_456"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:organization-selection",
@@ -637,15 +656,16 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val response = workos.userManagement.authenticateWithOrganizationSelection(
-      "client_id",
-      "org_123",
-      "token_456",
-      AuthenticationAdditionalOptionsBuilder()
-        .ipAddress("192.0.2.1")
-        .userAgent("Mozilla/5.0")
-        .build()
-    )
+    val response =
+      workos.userManagement.authenticateWithOrganizationSelection(
+        "client_id",
+        "org_123",
+        "token_456",
+        AuthenticationAdditionalOptionsBuilder()
+          .ipAddress("192.0.2.1")
+          .userAgent("Mozilla/5.0")
+          .build()
+      )
 
     assertEquals("test01@example.com", response.user?.email)
   }
@@ -654,10 +674,7 @@ class UserManagementApiTest : TestBase() {
   fun getJwksUrlShouldReturnValidUrlResponse() {
     val url = workos.userManagement.getJwksUrl("client_123")
 
-    assertEquals(
-      "http://localhost:${getWireMockPort()}/sso/jwks/client_123",
-      url
-    )
+    assertEquals("http://localhost:${getWireMockPort()}/sso/jwks/client_123", url)
   }
 
   @Test
@@ -704,7 +721,8 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "email": "test01@example.com",
         "invitation_token": null
       }"""
@@ -732,9 +750,7 @@ class UserManagementApiTest : TestBase() {
   fun sendMagicAuthCodeShouldWorkAndReturnNothing() {
     stubResponse("/user_management/magic_auth/send", "")
 
-    assertDoesNotThrow() {
-      workos.userManagement.sendMagicAuthCode("test01@example.com")
-    }
+    assertDoesNotThrow() { workos.userManagement.sendMagicAuthCode("test01@example.com") }
   }
 
   @Test
@@ -766,17 +782,19 @@ class UserManagementApiTest : TestBase() {
           "user_id": "user_123"
         }
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "type": "totp",
         "totp_issuer": "Foo Corp",
         "totp_user": "test01@example.com"
       }"""
     )
 
-    val options = EnrolledAuthenticationFactorOptionsBuilder()
-      .totpUser("test01@example.com")
-      .totpIssuer("Foo Corp")
-      .build()
+    val options =
+      EnrolledAuthenticationFactorOptionsBuilder()
+        .totpUser("test01@example.com")
+        .totpIssuer("Foo Corp")
+        .build()
 
     val enrolledAuthenticationFactor = workos.userManagement.enrollAuthFactor("user_123", options)
 
@@ -856,12 +874,7 @@ class UserManagementApiTest : TestBase() {
       ),
       authenticationFactors.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "auth_factor_234"
-      ),
-      authenticationFactors.listMetadata
-    )
+    assertEquals(ListMetadata(null, "auth_factor_234"), authenticationFactors.listMetadata)
   }
 
   @Test
@@ -967,7 +980,10 @@ class UserManagementApiTest : TestBase() {
     stubResponse("/user_management/password_reset/send", "")
 
     assertDoesNotThrow() {
-      workos.userManagement.sendPasswordResetEmail("test01@example.com", "https://your-app.com/reset-password")
+      workos.userManagement.sendPasswordResetEmail(
+        "test01@example.com",
+        "https://your-app.com/reset-password"
+      )
     }
   }
 
@@ -986,7 +1002,8 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "token": "token_123",
         "new_password": "new_password"
       }"""
@@ -1069,7 +1086,10 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val organizationMemberships = workos.userManagement.listOrganizationMemberships(ListOrganizationMembershipsOptionsBuilder().build())
+    val organizationMemberships =
+      workos.userManagement.listOrganizationMemberships(
+        ListOrganizationMembershipsOptionsBuilder().build()
+      )
 
     assertEquals(
       OrganizationMembership(
@@ -1083,12 +1103,7 @@ class UserManagementApiTest : TestBase() {
       ),
       organizationMemberships.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "om_234"
-      ),
-      organizationMemberships.listMetadata
-    )
+    assertEquals(ListMetadata(null, "om_234"), organizationMemberships.listMetadata)
   }
 
   @Test
@@ -1117,20 +1132,21 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = ListOrganizationMembershipsOptionsBuilder()
-      .userId("id_456")
-      .organizationId("org_789")
-      .statuses(
-        listOf<OrganizationMembershipStatusEnumType>(
-          OrganizationMembershipStatusEnumType.Active,
-          OrganizationMembershipStatusEnumType.Inactive
+    val options =
+      ListOrganizationMembershipsOptionsBuilder()
+        .userId("id_456")
+        .organizationId("org_789")
+        .statuses(
+          listOf<OrganizationMembershipStatusEnumType>(
+            OrganizationMembershipStatusEnumType.Active,
+            OrganizationMembershipStatusEnumType.Inactive
+          )
         )
-      )
-      .order(Order.Desc)
-      .limit(10)
-      .after("someAfterId")
-      .before("someBeforeId")
-      .build()
+        .order(Order.Desc)
+        .limit(10)
+        .after("someAfterId")
+        .before("someBeforeId")
+        .build()
 
     val organizationMemberships = workos.userManagement.listOrganizationMemberships(options)
 
@@ -1146,12 +1162,7 @@ class UserManagementApiTest : TestBase() {
       ),
       organizationMemberships.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "om_234"
-      ),
-      organizationMemberships.listMetadata
-    )
+    assertEquals(ListMetadata(null, "om_234"), organizationMemberships.listMetadata)
   }
 
   @Test
@@ -1170,16 +1181,16 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "user_id": "user_456",
         "organization_id": "org_789",
         "role_slug": "admin"
       }"""
     )
 
-    val options = CreateOrganizationMembershipOptionsBuilder("user_456", "org_789")
-      .roleSlug("admin")
-      .build()
+    val options =
+      CreateOrganizationMembershipOptionsBuilder("user_456", "org_789").roleSlug("admin").build()
 
     val organizationMembership = workos.userManagement.createOrganizationMembership(options)
 
@@ -1219,7 +1230,8 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val organizationMembership = workos.userManagement.updateOrganizationMembership("om_123", "member")
+    val organizationMembership =
+      workos.userManagement.updateOrganizationMembership("om_123", "member")
 
     assertEquals(
       OrganizationMembership(
@@ -1239,9 +1251,7 @@ class UserManagementApiTest : TestBase() {
   fun deleteOrganizationMembershipShouldWorkAndReturnNothing() {
     stubResponse("/user_management/organization_memberships/om_123", "")
 
-    assertDoesNotThrow() {
-      workos.userManagement.deleteOrganizationMembership("om_123")
-    }
+    assertDoesNotThrow() { workos.userManagement.deleteOrganizationMembership("om_123") }
   }
 
   @Test
@@ -1441,12 +1451,7 @@ class UserManagementApiTest : TestBase() {
       ),
       invitations.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "invitation_234"
-      ),
-      invitations.listMetadata
-    )
+    assertEquals(ListMetadata(null, "invitation_234"), invitations.listMetadata)
   }
 
   @Test
@@ -1477,14 +1482,15 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = ListInvitationsOptionsBuilder()
-      .email("test01@example.com")
-      .organizationId("org_123")
-      .order(Order.Desc)
-      .limit(10)
-      .after("someAfterId")
-      .before("someBeforeId")
-      .build()
+    val options =
+      ListInvitationsOptionsBuilder()
+        .email("test01@example.com")
+        .organizationId("org_123")
+        .order(Order.Desc)
+        .limit(10)
+        .after("someAfterId")
+        .before("someBeforeId")
+        .build()
 
     val invitations = workos.userManagement.listInvitations(options)
 
@@ -1505,12 +1511,7 @@ class UserManagementApiTest : TestBase() {
       ),
       invitations.data[0]
     )
-    assertEquals(
-      ListMetadata(
-        null, "invitation_234"
-      ),
-      invitations.listMetadata
-    )
+    assertEquals(ListMetadata(null, "invitation_234"), invitations.listMetadata)
   }
 
   @Test
@@ -1531,7 +1532,8 @@ class UserManagementApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
-      requestBody = """{
+      requestBody =
+      """{
         "email": "test01@example.com",
         "organization_id": "org_456",
         "expires_in_days": 10,
@@ -1540,12 +1542,13 @@ class UserManagementApiTest : TestBase() {
       }"""
     )
 
-    val options = SendInvitationOptionsBuilder("test01@example.com")
-      .organizationId("org_456")
-      .expiresInDays(10)
-      .inviterUserId("user_789")
-      .roleSlug("admin")
-      .build()
+    val options =
+      SendInvitationOptionsBuilder("test01@example.com")
+        .organizationId("org_456")
+        .expiresInDays(10)
+        .inviterUserId("user_789")
+        .roleSlug("admin")
+        .build()
 
     val invitation = workos.userManagement.sendInvitation(options)
 
