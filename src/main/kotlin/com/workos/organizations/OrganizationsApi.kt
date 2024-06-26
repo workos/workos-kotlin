@@ -57,6 +57,7 @@ class OrganizationsApi(private val workos: WorkOS) {
       /**
        * Sets whether profiles with unmatched domains can exist within the organization.
        */
+      @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
       /**
@@ -252,6 +253,7 @@ class OrganizationsApi(private val workos: WorkOS) {
       /**
        * Sets whether profiles with unmatched domains can exist within the organization.
        */
+      @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
       fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
 
       /**
