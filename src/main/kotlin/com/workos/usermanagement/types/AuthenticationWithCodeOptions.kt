@@ -31,15 +31,15 @@ class AuthenticationWithCodeOptions @JvmOverloads constructor(
   @JsonProperty("code")
   val code: String,
 
-  @JsonProperty("invitation_code")
-  override val invitationCode: String? = null,
+  @JsonProperty("invitation_token")
+  override val invitationToken: String? = null,
 
   @JsonProperty("ip_address")
   override val ipAddress: String? = null,
 
   @JsonProperty("user_agent")
   override val userAgent: String? = null
-) : AuthenticationAdditionalOptions(invitationCode, ipAddress, userAgent) {
+) : AuthenticationAdditionalOptions(invitationToken, ipAddress, userAgent) {
   init {
     require(clientId.isNotBlank()) { "Client ID is required" }
     require(clientSecret.isNotBlank()) { "Client Secret is required" }

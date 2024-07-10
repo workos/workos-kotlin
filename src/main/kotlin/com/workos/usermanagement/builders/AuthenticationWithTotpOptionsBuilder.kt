@@ -32,7 +32,7 @@ class AuthenticationWithTotpOptionsBuilder(
       code = this.code,
       authenticationChallengeId = this.authenticationChallengeId,
       pendingAuthenticationToken = this.pendingAuthenticationToken,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

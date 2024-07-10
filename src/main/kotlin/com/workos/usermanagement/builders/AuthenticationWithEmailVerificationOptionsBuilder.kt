@@ -29,7 +29,7 @@ class AuthenticationWithEmailVerificationOptionsBuilder(
       grantType = "urn:workos:oauth:grant-type:email-verification:code",
       code = this.code,
       pendingAuthenticationToken = this.pendingAuthenticationToken,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

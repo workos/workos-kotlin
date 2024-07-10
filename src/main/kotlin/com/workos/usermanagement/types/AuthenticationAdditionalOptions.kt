@@ -11,8 +11,8 @@ open class AuthenticationAdditionalOptions(
    * a specific organization, attaching the token to a user's authenticate call
    * automatically provisions their membership to the organization.
    */
-  @JsonProperty("invitation_code")
-  open val invitationCode: String? = null,
+  @JsonProperty("invitation_token")
+  open val invitationToken: String? = null,
 
   /**
    * The IP address of the request from the user who is attempting to authenticate.
