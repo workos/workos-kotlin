@@ -29,7 +29,7 @@ class AuthenticationWithMagicAuthOptionsBuilder(
       grantType = "urn:workos:oauth:grant-type:magic-auth:code",
       email = this.email,
       code = this.code,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

@@ -29,7 +29,7 @@ class AuthenticationWithPasswordOptionsBuilder(
       grantType = "password",
       email = this.email,
       password = this.password,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

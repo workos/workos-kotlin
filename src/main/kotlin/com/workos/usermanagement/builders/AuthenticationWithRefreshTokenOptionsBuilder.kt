@@ -26,7 +26,7 @@ class AuthenticationWithRefreshTokenOptionsBuilder(
       clientSecret = this.clientSecret,
       grantType = "refresh_token",
       refreshToken = this.refreshToken,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

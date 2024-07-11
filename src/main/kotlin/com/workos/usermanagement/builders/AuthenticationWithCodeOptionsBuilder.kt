@@ -26,7 +26,7 @@ class AuthenticationWithCodeOptionsBuilder(
       clientSecret = this.clientSecret,
       grantType = "authorization_code",
       code = this.code,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )

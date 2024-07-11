@@ -29,7 +29,7 @@ class AuthenticationWithOrganizationSelectionOptionsBuilder(
       grantType = "urn:workos:oauth:grant-type:organization-selection",
       organizationId = this.organizationId,
       pendingAuthenticationToken = this.pendingAuthenticationToken,
-      invitationCode = this.options?.invitationCode,
+      invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
     )
