@@ -160,9 +160,6 @@ publishing {
 }
 
 nexusPublishing {
-  val sonatypeUsername: String? by project
-  val sonatypePassword: String? by project
-
   repositories {
     create("myNexus") {
       nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
