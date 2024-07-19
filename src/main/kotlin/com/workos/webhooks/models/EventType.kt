@@ -79,5 +79,40 @@ enum class EventType(
   /**
    * Triggers when a group is removed from a directory.
    */
-  DirectoryGroupDeleted("dsync.group.deleted")
+  DirectoryGroupDeleted("dsync.group.deleted"),
+
+  /**
+   * Triggers when a user is required to verify their email.
+   */
+  EmailVerificationCreated("email_verification.created"),
+
+  /**
+   * Triggers when a user is invited to sign up or to join an organization.
+   */
+  InvitationCreated("invitation.created"),
+
+  /**
+   * Triggers when an organization membership is created.
+   */
+  OrganizationMembershipCreated("organization_membership.created"),
+
+  /**
+   * Triggers when a user initiates Magic Auth and an authentication code is created.
+   */
+  MagicAuthCreated("magic_auth.created"),
+
+  /**
+   * Triggers when an organization membership is deleted.
+   */
+  OrganizationMembershipDeleted("organization_membership.deleted"),
+
+  /**
+   * Triggers when an organization membership is updated.
+   */
+  OrganizationMembershipUpdated("organization_membership.updated"),
+
+  /**
+   * Triggers when a user requests to reset their password.
+   */
+  PasswordResetCreated("password_reset.created")
 }

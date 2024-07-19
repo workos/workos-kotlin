@@ -2,7 +2,7 @@ import java.io.FileOutputStream
 import java.util.Properties
 
 group = "com.workos"
-version = "3.1.0"
+version = "4.0.0"
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
@@ -39,6 +39,8 @@ dependencies {
   implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
   implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 
