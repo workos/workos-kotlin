@@ -33,14 +33,8 @@ jobs:
 
           cat << EOF > gradle.properties
           signingPassword=${NEXUS_SIGNING_PASSWORD}
-          EOF
-
-          cat << EOF > settings.xml
-          <server>
-            <id>s01.oss.sonatype.org</id>
-            <username>${MAVEN_USER_NAME}</username>
-            <password>${MAVEN_PASSWORD}</password>
-          </server>
+          ossrhToken=${MAVEN_USER_NAME}
+          ossrhTokenPassword=${MAVEN_PASSWORD}
           EOF
 
           ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
