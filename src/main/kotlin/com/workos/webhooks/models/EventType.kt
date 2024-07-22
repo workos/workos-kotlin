@@ -12,6 +12,46 @@ enum class EventType(
   val value: String
 ) {
   /**
+   * Triggers when a user successfully verifies their email.
+   */
+  AuthenticationEmailVerificationSucceeded("authentication.email_verification_succeeded"),
+  
+  /**
+   * Triggers when a user fails to authenticate via Magic Auth.
+   */
+  AuthenticationMagicAuthFailed("authentication.magic_auth_failed"),
+  
+  /**
+   * Triggers when a user successfully authenticates via Magic Auth.
+   */
+  AuthenticationMagicAuthSucceeded("authentication.magic_auth_succeeded"),
+  
+  /**
+   * Triggers when a user successfully authenticates with a multi-factor authentication code.
+   */
+  AuthenticationMfaSucceeded("authentication.mfa_succeeded"),
+  
+  /**
+   * Triggers when a user successfully authenticates via OAuth.
+   */
+  AuthenticationOauthSucceeded("authentication.oauth_succeeded"),
+  
+  /**
+   * Triggers when a user fails to authenticate with password credentials.
+   */
+  AuthenticationPasswordFailed("authentication.password_failed"),
+  
+  /**
+   * Triggers when a user successfully authenticates with password credentials.
+   */
+  AuthenticationPasswordSucceeded("authentication.password_succeeded"),
+  
+  /**
+   * Triggers when a user successfully authenticates with Single Sign-On.
+   */
+  AuthenticationSsoSucceeded("authentication.sso_succeeded"),
+  
+  /**
    * Triggers when a Connection's state changes to active.
    */
   ConnectionActivated("connection.activated"),
