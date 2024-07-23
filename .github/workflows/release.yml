@@ -24,17 +24,17 @@ jobs:
       - name: Publish
         env:
           MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           NEXUS_SIGNING_PASSWORD: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+          MAVEN_USER_NAME: ${{ secrets.MAVEN_USER_NAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
         run: |
           echo $MAVEN_SIGNING_KEY | base64 --decode > signing.key
 
           cat << EOF > gradle.properties
-          myNexusUsername=${NEXUS_USERNAME}
-          myNexusPassword=${NEXUS_PASSWORD}
           signingPassword=${NEXUS_SIGNING_PASSWORD}
+          myNexusUsername=${MAVEN_USER_NAME}
+          myNexusPassword=${MAVEN_PASSWORD}
           EOF
 
           ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
