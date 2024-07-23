@@ -33,7 +33,7 @@ jobs:
 
           cat << EOF > gradle.properties
           signingPassword=${NEXUS_SIGNING_PASSWORD}
-          myNexusUsername=${MAVEN_USERNAME}
+          myNexusUsername=${MAVEN_USER_NAME}
           myNexusPassword=${MAVEN_PASSWORD}
           EOF
 
