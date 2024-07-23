@@ -37,4 +37,4 @@ jobs:
           myNexusPassword=${MAVEN_PASSWORD}
           EOF
 
-          ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
+          ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease --warning-mode=all
