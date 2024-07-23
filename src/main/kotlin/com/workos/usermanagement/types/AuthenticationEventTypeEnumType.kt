@@ -26,13 +26,13 @@ enum class AuthenticationEventTypeEnumType(val type: String) {
    */
   @JsonProperty("oauth")
   OAuth("oauth"),
-  
+
   /**
    * Password
    */
   @JsonProperty("password")
   Password("password"),
-  
+
   /**
    * SSO
    */

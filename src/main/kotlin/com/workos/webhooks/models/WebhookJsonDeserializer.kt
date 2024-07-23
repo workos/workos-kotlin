@@ -11,6 +11,7 @@ import com.workos.directorysync.models.Directory
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import com.workos.sso.models.Connection
+import com.workos.usermanagement.models.AuthenticationEventData
 import com.workos.usermanagement.models.EmailVerificationEventData
 import com.workos.usermanagement.models.InvitationEventData
 import com.workos.usermanagement.models.MagicAuthEventData
@@ -39,6 +40,14 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
     val createdAt = mapper.readValue(rootNode?.get("created_at")?.traverse(), String::class.java)
 
     return when (eventType) {
+      EventType.AuthenticationEmailVerificationSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationMagicAuthFailed -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationMagicAuthSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationMfaSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationOauthSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationPasswordFailed -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationPasswordSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
+      EventType.AuthenticationSsoSucceeded -> AuthenticationEvent(id, eventType, deserializeData(data, AuthenticationEventData::class.java), createdAt)
       EventType.ConnectionActivated -> ConnectionActivatedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
       EventType.ConnectionDeactivated -> ConnectionDeactivatedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
       EventType.ConnectionDeleted -> ConnectionDeletedEvent(id, eventType, deserializeData(data, Connection::class.java), createdAt)
