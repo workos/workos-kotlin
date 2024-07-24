@@ -84,7 +84,7 @@ class DirectoryWebhookTests : TestBase() {
     assertEquals((webhook as DirectoryActivatedEvent).data.id, directoryId)
     assertEquals((webhook as DirectoryActivatedEvent).data.type, DirectoryType.Unknown)
   }
-  
+
   @Test
   fun constructDirectoryDeletedEvent() {
     val workos = createWorkOSClient()
