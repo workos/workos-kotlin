@@ -84,24 +84,7 @@ class DirectoryWebhookTests : TestBase() {
     assertEquals((webhook as DirectoryActivatedEvent).data.id, directoryId)
     assertEquals((webhook as DirectoryActivatedEvent).data.type, DirectoryType.Unknown)
   }
-
-  @Test
-  fun constructDirectoryDirectoryDeactivatedEvent() {
-    val workos = createWorkOSClient()
-    val webhookData = generateGroupWebhookEvent(EventType.DirectoryDeactivated)
-    val testData = WebhooksApiTest.prepareTest(webhookData)
-
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
-
-    assertTrue(webhook is DirectoryDeactivatedEvent)
-    assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as DirectoryDeactivatedEvent).data.id, directoryId)
-  }
-
+  
   @Test
   fun constructDirectoryDeletedEvent() {
     val workos = createWorkOSClient()

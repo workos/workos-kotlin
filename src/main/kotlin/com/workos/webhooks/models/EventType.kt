@@ -72,11 +72,6 @@ enum class EventType(
   DirectoryActivated("dsync.activated"),
 
   /**
-   * Triggers when a Directory's state changes to inactive.
-   */
-  DirectoryDeactivated("dsync.deactivated"),
-
-  /**
    * Triggers when a Directory is deleted.
    */
   DirectoryDeleted("dsync.deleted"),
