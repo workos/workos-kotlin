@@ -521,6 +521,7 @@ class UserManagementApiTest : TestBase() {
       workos.userManagement.authenticateWithRefreshToken(
         "client_id",
         "refresh_token",
+        null,
         AuthenticationAdditionalOptionsBuilder()
           .ipAddress("192.0.2.1")
           .userAgent("Mozilla/5.0")
