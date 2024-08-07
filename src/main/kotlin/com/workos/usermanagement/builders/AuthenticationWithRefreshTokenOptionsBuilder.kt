@@ -9,12 +9,14 @@ import com.workos.usermanagement.types.AuthenticationWithRefreshTokenOptions
  * @param clientId Identifies the application making the request to the WorkOS server.
  * @param clientSecret Authenticates the application making the request to the WorkOS server.
  * @param refreshToken The `refresh_token` received from a successful authentication response.
+ * @param organizationId The organization to issue the new `access_token` for.
  * @param options The authentication options passed to the authentication request.
  */
 class AuthenticationWithRefreshTokenOptionsBuilder(
   private val clientId: String,
   private val clientSecret: String,
   private val refreshToken: String,
+  private val organizationId: String? = null,
   private val options: AuthenticationAdditionalOptions? = null
 ) {
   /**
@@ -26,6 +28,7 @@ class AuthenticationWithRefreshTokenOptionsBuilder(
       clientSecret = this.clientSecret,
       grantType = "refresh_token",
       refreshToken = this.refreshToken,
+      organizationId = this.organizationId,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
       userAgent = this.options?.userAgent,
@@ -37,8 +40,8 @@ class AuthenticationWithRefreshTokenOptionsBuilder(
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, refreshToken: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithRefreshTokenOptionsBuilder {
-      return AuthenticationWithRefreshTokenOptionsBuilder(clientId, clientSecret, refreshToken, options)
+    fun create(clientId: String, clientSecret: String, refreshToken: String, organizationId: String? = null, options: AuthenticationAdditionalOptions? = null): AuthenticationWithRefreshTokenOptionsBuilder {
+      return AuthenticationWithRefreshTokenOptionsBuilder(clientId, clientSecret, refreshToken, organizationId, options)
     }
   }
 }

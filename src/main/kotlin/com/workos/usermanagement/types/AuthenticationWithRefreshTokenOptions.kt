@@ -30,6 +30,12 @@ class AuthenticationWithRefreshTokenOptions @JvmOverloads constructor(
   @JsonProperty("refresh_token")
   val refreshToken: String,
 
+  /**
+   * The organization to issue the new `access_token` for.
+   */
+  @JsonProperty("organization_id")
+  val organizationId: String? = null,
+
   @JsonProperty("invitation_token")
   override val invitationToken: String? = null,
 

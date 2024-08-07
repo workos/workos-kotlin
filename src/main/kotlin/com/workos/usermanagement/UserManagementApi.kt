@@ -170,6 +170,7 @@ class UserManagementApi(private val workos: WorkOS) {
   fun authenticateWithRefreshToken(
     clientId: String,
     refreshToken: String,
+    organizationId: String? = null,
     options: AuthenticationAdditionalOptions? = null
   ): RefreshAuthentication {
     return workos.post(
@@ -181,6 +182,7 @@ class UserManagementApi(private val workos: WorkOS) {
             clientId,
             workos.apiKey,
             refreshToken,
+            organizationId,
             options
           )
             .build()
