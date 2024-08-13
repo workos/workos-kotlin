@@ -73,6 +73,46 @@ open class TestBase {
     return stub
   }
 
+  fun stubResponseWithScenario(
+    url: String,
+    responseBody: String,
+    responseStatus: Int = 200,
+    params: Map<String, StringValuePattern> = emptyMap(),
+    requestBody: String? = null,
+    requestHeaders: Map<String, String>? = null,
+    scenarioName: String,
+    scenarioState: String,
+    nextScenarioState: String
+  ): StubMapping {
+    val mapping = any(urlPathEqualTo(url))
+      .inScenario(scenarioName)
+      .whenScenarioStateIs(scenarioState)
+      .withQueryParams(params)
+      .willReturn(
+        aResponse()
+          .withStatus(responseStatus)
+          .withBody(responseBody)
+          .withHeader("X-Request-ID", "request_id_value")
+      )
+      .willSetStateTo(nextScenarioState)
+
+    if (requestBody != null) {
+      mapping.withRequestBody(equalToJson(requestBody))
+    }
+
+    if (requestHeaders != null) {
+      for (header in requestHeaders.entries.iterator()) {
+        mapping.withHeader(header.key, equalTo(header.value))
+      }
+    }
+
+    val stub = stubFor(mapping)
+
+    stubs.add(stub)
+
+    return stub
+  }
+
   private fun deleteStub(stub: StubMapping) {
     removeStub(stub)
   }

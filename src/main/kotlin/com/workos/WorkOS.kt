@@ -16,6 +16,7 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.fga.FgaApi
 import com.workos.mfa.MfaApi
 import com.workos.organizations.OrganizationsApi
 import com.workos.passwordless.PasswordlessApi
@@ -24,8 +25,18 @@ import com.workos.sso.SsoApi
 import com.workos.usermanagement.UserManagementApi
 import com.workos.webhooks.WebhooksApi
 import org.apache.http.client.utils.URIBuilder
+import java.io.IOException
 import java.lang.IllegalArgumentException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.util.Properties
+import kotlin.random.Random
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+
+@OptIn(ExperimentalTime::class)
+val MINIMUM_SLEEP_TIME = Duration.milliseconds(500)
+val BACKOFF_MULTIPLER = 1.5
 
 /**
  * Global configuration class for interacting with the WorkOS API.
@@ -107,6 +118,12 @@ class WorkOS(
    */
   @JvmField
   val webhooks = WebhooksApi()
+
+  /**
+   * Module for interacting with the FGA API.
+   */
+  @JvmField
+  val fga = FgaApi(this)
 
   /**
    * The base URL for making API requests to.
@@ -234,6 +251,10 @@ class WorkOS(
   }
 
   private fun sendRequest(request: Request): String {
+    if (request.url.path.contains("fga")) {
+      return sendRequestWithRetry(request)
+    }
+
     val (_, response) = request.responseString()
 
     var payload = String(response.data)
@@ -247,6 +268,82 @@ class WorkOS(
     }
 
     return payload
+  }
+
+  @OptIn(ExperimentalTime::class)
+  private fun sendRequestWithRetry(request: Request): String {
+    var requestException: Exception? = null
+    var response: Response? = null
+    var retryAttempts = 0
+
+    while (true) {
+      requestException = null
+
+      try {
+        val (_, res) = request.responseString()
+        response = res
+      } catch (e: IOException) {
+        requestException = e
+      } catch (e: InterruptedException) {
+        requestException = e
+      }
+
+      if (!shouldRetryRequest(response, retryAttempts, requestException)) {
+        break
+      }
+
+      retryAttempts += 1
+
+      try {
+        Thread.sleep(getSleepTime(retryAttempts).inWholeMilliseconds)
+      } catch (e: InterruptedException) {
+        Thread.currentThread().interrupt()
+      }
+    }
+
+    if (requestException != null) {
+      throw requestException
+    }
+
+    var payload = if (response != null) String(response.data) else ""
+
+    if (payload.isEmpty()) {
+      payload = "{}"
+    }
+
+    if (response != null && response.statusCode >= 400) {
+      handleResponseError(response, payload)
+    }
+
+    return payload
+  }
+
+  private fun shouldRetryRequest(response: Response?, retryAttempts: Int, requestException: Exception?): Boolean {
+    if (retryAttempts >= 3) {
+      return false
+    }
+
+    if ((requestException != null) && (requestException.cause != null) && (requestException.cause is ConnectException || requestException.cause is SocketTimeoutException)) {
+      return true
+    }
+
+    if ((requestException != null) && (requestException.cause != null) && (requestException.cause is IOException)) {
+      return true
+    }
+
+    if (response != null && response.statusCode >= 500) {
+      return true
+    }
+
+    return false
+  }
+
+  @OptIn(ExperimentalTime::class)
+  private fun getSleepTime(retryAttempt: Int): Duration {
+    var sleepTime: Duration = Duration.nanoseconds(MINIMUM_SLEEP_TIME.inWholeNanoseconds * Math.pow(BACKOFF_MULTIPLER, (retryAttempt + 1).toDouble()))
+    val jitter = Random.nextDouble(0.5, 1.5)
+    sleepTime = Duration.nanoseconds(sleepTime.inWholeNanoseconds * jitter)
+    return sleepTime
   }
 
   private fun <Res : Any> sendRequest(request: Request, responseType: Class<Res>): Res {
