@@ -15,6 +15,8 @@ import com.workos.fga.builders.WriteWarrantOptionsBuilder
 import com.workos.fga.models.Resource
 import com.workos.fga.models.Subject
 import com.workos.fga.models.Warrant
+import com.workos.fga.types.CheckRequestOptions
+import com.workos.fga.types.QueryRequestOptions
 import com.workos.fga.types.WarrantCheckOptions
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
@@ -660,6 +662,53 @@ class FgaApiTest : TestBase() {
   }
 
   @Test
+  fun checkWithRequestOptionsShouldReturnValidCheckResponse() {
+    stubResponse(
+      "/fga/v1/check",
+      """{
+        "result": "authorized",
+        "is_implicit": false
+      }""",
+      requestBody =
+      """{
+        "checks": [
+          {
+            "resource_type": "role",
+            "resource_id": "admin",
+            "relation": "member",
+            "subject": {
+              "resource_type": "user",
+              "resource_id": "tony-stark"
+            },
+            "context": {
+              "role": "admin"
+            }
+          }
+        ]
+      }""",
+      requestHeaders = mapOf("Warrant-Token" to "some-token")
+    )
+
+    val options = CheckOptionsBuilder(
+      listOf(
+        WarrantCheckOptions(
+          "role",
+          "admin",
+          "member",
+          Subject("user", "tony-stark"),
+          mapOf("role" to "admin")
+        )
+      )
+    ).build()
+    val requestOptions = CheckRequestOptions("some-token")
+
+    val checkResponse = workos.fga.check(options, requestOptions)
+
+    assertEquals(true, checkResponse.Authorized())
+    assertEquals(false, checkResponse.isImplicit)
+  }
+
+  @Test
   fun checkWithDebugShouldReturnValidCheckResponse() {
     stubResponse(
       "/fga/v1/check",
@@ -848,6 +897,73 @@ class FgaApiTest : TestBase() {
     ).build()
 
     val checkResponses = workos.fga.checkBatch(options)
+
+    assertEquals(true, checkResponses[0].Authorized())
+    assertEquals(false, checkResponses[0].isImplicit)
+    assertEquals(true, checkResponses[1].Authorized())
+    assertEquals(true, checkResponses[1].isImplicit)
+  }
+
+  @Test
+  fun checkBatchWithRequestOptsShouldReturnValidCheckResponses() {
+    stubResponse(
+      "/fga/v1/check",
+      """[
+        {
+          "result": "authorized",
+          "is_implicit": false
+        },
+        {
+          "result": "authorized",
+          "is_implicit": true
+        }
+      ]""",
+      requestBody =
+      """{
+        "op": "batch",
+        "checks": [
+          {
+            "resource_type": "role",
+            "resource_id": "admin",
+            "relation": "member",
+            "subject": {
+              "resource_type": "user",
+              "resource_id": "tony-stark"
+            }
+          },
+          {
+            "resource_type": "tenant",
+            "resource_id": "stark-industries",
+            "relation": "member",
+            "subject": {
+              "resource_type": "user",
+              "resource_id": "tony-stark"
+            }
+          }
+        ]
+      }""",
+      requestHeaders = mapOf("Warrant-Token" to "some-token")
+    )
+
+    val options = CheckBatchOptionsBuilder(
+      listOf(
+        WarrantCheckOptions(
+          "role",
+          "admin",
+          "member",
+          Subject("user", "tony-stark")
+        ),
+        WarrantCheckOptions(
+          "tenant",
+          "stark-industries",
+          "member",
+          Subject("user", "tony-stark")
+        )
+      )
+    ).build()
+    val requestOptions = CheckRequestOptions("some-token")
+
+    val checkResponses = workos.fga.checkBatch(options, requestOptions)
 
     assertEquals(true, checkResponses[0].Authorized())
     assertEquals(false, checkResponses[0].isImplicit)
@@ -1076,6 +1192,59 @@ class FgaApiTest : TestBase() {
 
     val options = QueryOptionsBuilder("select role where user:tony-stark is member").build()
     val queryResponse = workos.fga.query(options)
+
+    assertEquals(1, queryResponse.data.size)
+    assertEquals("role", queryResponse.data[0].resourceType)
+    assertEquals("admin", queryResponse.data[0].resourceId)
+    assertEquals("member", queryResponse.data[0].relation)
+    assertEquals(Warrant("role", "admin", "member", Subject("user", "tony-stark")), queryResponse.data[0].warrant)
+    assertEquals(false, queryResponse.data[0].isImplicit)
+    assertNotNull(queryResponse.data[0].meta)
+    assertEquals("Admin role", queryResponse.data[0].meta?.get("description"))
+    assertNull(queryResponse.listMetadata.before)
+    assertNull(queryResponse.listMetadata.after)
+  }
+
+  @Test
+  fun queryWithRequestOptsShouldReturnValidQueryResponse() {
+    stubResponse(
+      "/fga/v1/query",
+      """{
+        "data": [
+          {
+            "resource_type": "role",
+            "resource_id": "admin",
+            "relation": "member",
+            "warrant": {
+              "resource_type": "role",
+              "resource_id": "admin",
+              "relation": "member",
+              "subject": {
+                "resource_type": "user",
+                "resource_id": "tony-stark"
+              }
+            },
+            "is_implicit": false,
+            "meta": {
+              "description": "Admin role"
+            }
+          }
+        ],
+        "list_metadata": {
+          "before": null,
+          "after": null
+        }
+      }""",
+      requestBody =
+      """{
+        "q": "select role where user:tony-stark is member"
+      }""",
+      requestHeaders = mapOf("Warrant-Token" to "my-token")
+    )
+
+    val options = QueryOptionsBuilder("select role where user:tony-stark is member").build()
+    val requestOptions = QueryRequestOptions("my-token")
+    val queryResponse = workos.fga.query(options, requestOptions)
 
     assertEquals(1, queryResponse.data.size)
     assertEquals("role", queryResponse.data[0].resourceType)
