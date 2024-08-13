@@ -1,6 +1,5 @@
 package com.workos
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.kittinunf.fuel.core.FuelManager

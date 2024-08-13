@@ -1,20 +1,28 @@
 package com.workos.test.fga
 
 import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
-import com.workos.WorkOS
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.models.ListMetadata
 import com.workos.common.models.Order
-import com.workos.fga.builders.*
+import com.workos.fga.builders.CheckBatchOptionsBuilder
+import com.workos.fga.builders.CheckOptionsBuilder
+import com.workos.fga.builders.CreateResourceOptionsBuilder
+import com.workos.fga.builders.ListResourcesOptionsBuilder
+import com.workos.fga.builders.ListWarrantsOptionsBuilder
+import com.workos.fga.builders.QueryOptionsBuilder
+import com.workos.fga.builders.UpdateResourceOptionsBuilder
+import com.workos.fga.builders.WriteWarrantOptionsBuilder
 import com.workos.fga.models.Resource
 import com.workos.fga.models.Subject
 import com.workos.fga.models.Warrant
-import com.workos.fga.types.DeleteResourceOptions
-import com.workos.fga.types.GetResourceOptions
 import com.workos.fga.types.WarrantCheckOptions
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class FgaApiTest : TestBase() {
   val workos = createWorkOSClient()
@@ -513,7 +521,7 @@ class FgaApiTest : TestBase() {
       """{
         "warrant_token": "new_token"
       }""",
-      requestBody=
+      requestBody =
       """{
         "op": "create",
         "resource_type": "role",
@@ -542,7 +550,7 @@ class FgaApiTest : TestBase() {
       """{
         "warrant_token": "new_token"
       }""",
-      requestBody=
+      requestBody =
       """{
         "op": "delete",
         "resource_type": "role",
@@ -571,7 +579,7 @@ class FgaApiTest : TestBase() {
       """{
         "warrant_token": "new_token"
       }""",
-      requestBody=
+      requestBody =
       """[
         {
           "op": "delete",
@@ -614,7 +622,7 @@ class FgaApiTest : TestBase() {
         "result": "authorized",
         "is_implicit": false
       }""",
-      requestBody=
+      requestBody =
       """{
         "checks": [
           {
@@ -709,7 +717,7 @@ class FgaApiTest : TestBase() {
           }
         }
       }""",
-      requestBody=
+      requestBody =
       """{
         "checks": [
           {
@@ -796,7 +804,7 @@ class FgaApiTest : TestBase() {
           "is_implicit": true
         }
       ]""",
-      requestBody=
+      requestBody =
       """{
         "op": "batch",
         "checks": [
@@ -825,16 +833,16 @@ class FgaApiTest : TestBase() {
     val options = CheckBatchOptionsBuilder(
       listOf(
         WarrantCheckOptions(
-            "role",
-            "admin",
-            "member",
-            Subject("user", "tony-stark")
+          "role",
+          "admin",
+          "member",
+          Subject("user", "tony-stark")
         ),
         WarrantCheckOptions(
-            "tenant",
-            "stark-industries",
-            "member",
-            Subject("user", "tony-stark")
+          "tenant",
+          "stark-industries",
+          "member",
+          Subject("user", "tony-stark")
         )
       )
     ).build()
@@ -929,7 +937,7 @@ class FgaApiTest : TestBase() {
           }
         }
       ]""",
-      requestBody=
+      requestBody =
       """{
         "op": "batch",
         "checks": [

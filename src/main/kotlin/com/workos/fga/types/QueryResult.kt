@@ -2,7 +2,6 @@ package com.workos.fga.types
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.common.models.Order
 import com.workos.fga.models.Warrant
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

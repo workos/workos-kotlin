@@ -2,8 +2,21 @@ package com.workos.fga
 
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
-import com.workos.fga.models.*
-import com.workos.fga.types.*
+import com.workos.fga.models.CheckResponse
+import com.workos.fga.models.QueryResponse
+import com.workos.fga.models.Resource
+import com.workos.fga.models.Resources
+import com.workos.fga.models.Warrants
+import com.workos.fga.models.WriteWarrantResponse
+import com.workos.fga.types.CheckBatchOptions
+import com.workos.fga.types.CheckOptions
+import com.workos.fga.types.CheckRequestOptions
+import com.workos.fga.types.CreateResourceOptions
+import com.workos.fga.types.ListResourcesOptions
+import com.workos.fga.types.ListWarrantsOptions
+import com.workos.fga.types.QueryOptions
+import com.workos.fga.types.UpdateResourceOptions
+import com.workos.fga.types.WriteWarrantOptions
 
 class FgaApi(private val workos: WorkOS) {
   /** Get an existing resource. */

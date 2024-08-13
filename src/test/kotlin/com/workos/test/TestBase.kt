@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wi
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
-import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.workos.WorkOS
 import org.junit.ClassRule
