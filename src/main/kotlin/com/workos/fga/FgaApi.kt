@@ -15,6 +15,7 @@ import com.workos.fga.types.CreateResourceOptions
 import com.workos.fga.types.ListResourcesOptions
 import com.workos.fga.types.ListWarrantsOptions
 import com.workos.fga.types.QueryOptions
+import com.workos.fga.types.QueryRequestOptions
 import com.workos.fga.types.UpdateResourceOptions
 import com.workos.fga.types.WriteWarrantOptions
 
@@ -114,7 +115,14 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Perform a query in the current environment */
-  fun query(options: QueryOptions): QueryResponse {
-    return workos.post("/fga/v1/query", QueryResponse::class.java, RequestConfig.builder().data(options).build())
+  fun query(options: QueryOptions, requestOptions: QueryRequestOptions? = null): QueryResponse {
+    val config = RequestConfig.builder()
+      .data(options)
+
+    if (requestOptions != null) {
+      config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
+    }
+
+    return workos.post("/fga/v1/query", QueryResponse::class.java, config.build())
   }
 }
