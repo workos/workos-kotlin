@@ -253,7 +253,6 @@ class WorkOS(
 
   private fun sendRequest(request: Request): String {
     if (request.url.path.contains("fga")) {
-      System.out.println("FGA: SENDING REQUEST WITH RETRY")
       return sendRequestWithRetry(request)
     }
 
