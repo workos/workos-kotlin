@@ -417,7 +417,7 @@ class FgaApiTest : TestBase() {
       nextScenarioState = "Success state"
     )
 
-    assertFailsWith<GenericServerException> {
+    assertDoesNotThrow() {
       workos.fga.deleteResource("user", "user_123")
     }
   }
