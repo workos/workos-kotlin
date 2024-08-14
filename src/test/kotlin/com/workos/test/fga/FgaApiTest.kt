@@ -7,6 +7,8 @@ import com.workos.common.models.Order
 import com.workos.fga.builders.CheckBatchOptionsBuilder
 import com.workos.fga.builders.CheckOptionsBuilder
 import com.workos.fga.builders.CreateResourceOptionsBuilder
+import com.workos.fga.builders.CreateWarrantOptionsBuilder
+import com.workos.fga.builders.DeleteWarrantOptionsBuilder
 import com.workos.fga.builders.ListResourcesOptionsBuilder
 import com.workos.fga.builders.ListWarrantsOptionsBuilder
 import com.workos.fga.builders.QueryOptionsBuilder
@@ -594,9 +596,29 @@ class FgaApiTest : TestBase() {
           }
         },
         {
+          "op": "delete",
+          "resource_type": "tenant",
+          "resource_id": "avengers",
+          "relation": "member",
+          "subject": {
+            "resource_type": "user",
+            "resource_id": "tony-stark"
+          }
+        },
+        {
           "op": "create",
           "resource_type": "role",
           "resource_id": "admin",
+          "relation": "member",
+          "subject": {
+            "resource_type": "user",
+            "resource_id": "tony-stark"
+          }
+        },
+        {
+          "op": "create",
+          "resource_type": "tenant",
+          "resource_id": "stark-industries",
           "relation": "member",
           "subject": {
             "resource_type": "user",
@@ -608,7 +630,9 @@ class FgaApiTest : TestBase() {
 
     val options = listOf(
       WriteWarrantOptionsBuilder("delete", "role", "editor", "member", Subject("user", "tony-stark")).build(),
-      WriteWarrantOptionsBuilder("create", "role", "admin", "member", Subject("user", "tony-stark")).build()
+      DeleteWarrantOptionsBuilder("tenant", "avengers", "member", Subject("user", "tony-stark")).build(),
+      WriteWarrantOptionsBuilder("create", "role", "admin", "member", Subject("user", "tony-stark")).build(),
+      CreateWarrantOptionsBuilder("tenant", "stark-industries", "member", Subject("user", "tony-stark")).build()
     )
 
     val warrantResponse = workos.fga.batchWriteWarrants(options)
