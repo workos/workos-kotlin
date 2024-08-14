@@ -14,6 +14,7 @@ import com.workos.fga.types.CheckRequestOptions
 import com.workos.fga.types.CreateResourceOptions
 import com.workos.fga.types.ListResourcesOptions
 import com.workos.fga.types.ListWarrantsOptions
+import com.workos.fga.types.ListWarrantsRequestOptions
 import com.workos.fga.types.QueryOptions
 import com.workos.fga.types.QueryRequestOptions
 import com.workos.fga.types.UpdateResourceOptions
@@ -61,14 +62,21 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Get a list of all existing warrants matching the criteria specified */
-  fun listWarrants(options: ListWarrantsOptions? = null): Warrants {
+  fun listWarrants(options: ListWarrantsOptions? = null, requestOptions: ListWarrantsRequestOptions? = null): Warrants {
     val params: Map<String, String> =
       RequestConfig.toMap(options ?: ListWarrantsOptions()) as Map<String, String>
+
+    val config = RequestConfig.builder()
+      .params(params)
+
+    if (requestOptions != null) {
+      config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
+    }
 
     return workos.get(
       "/fga/v1/warrants",
       Warrants::class.java,
-      RequestConfig.builder().params(params).build()
+      config.build()
     )
   }
 
