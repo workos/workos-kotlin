@@ -681,7 +681,7 @@ class FgaApiTest : TestBase() {
 
     val checkResponse = workos.fga.check(options)
 
-    assertEquals(true, checkResponse.Authorized())
+    assertEquals(true, checkResponse.authorized())
     assertEquals(false, checkResponse.isImplicit)
   }
 
@@ -728,7 +728,7 @@ class FgaApiTest : TestBase() {
 
     val checkResponse = workos.fga.check(options, requestOptions)
 
-    assertEquals(true, checkResponse.Authorized())
+    assertEquals(true, checkResponse.authorized())
     assertEquals(false, checkResponse.isImplicit)
   }
 
@@ -825,7 +825,7 @@ class FgaApiTest : TestBase() {
 
     val checkResponse = workos.fga.check(options)
 
-    assertEquals(true, checkResponse.Authorized())
+    assertEquals(true, checkResponse.authorized())
     assertEquals(true, checkResponse.isImplicit)
     assertNotNull(checkResponse.debugInfo)
     assertNotNull(checkResponse.debugInfo?.processingTime)
@@ -922,9 +922,9 @@ class FgaApiTest : TestBase() {
 
     val checkResponses = workos.fga.checkBatch(options)
 
-    assertEquals(true, checkResponses[0].Authorized())
+    assertEquals(true, checkResponses[0].authorized())
     assertEquals(false, checkResponses[0].isImplicit)
-    assertEquals(true, checkResponses[1].Authorized())
+    assertEquals(true, checkResponses[1].authorized())
     assertEquals(true, checkResponses[1].isImplicit)
   }
 
@@ -989,9 +989,9 @@ class FgaApiTest : TestBase() {
 
     val checkResponses = workos.fga.checkBatch(options, requestOptions)
 
-    assertEquals(true, checkResponses[0].Authorized())
+    assertEquals(true, checkResponses[0].authorized())
     assertEquals(false, checkResponses[0].isImplicit)
-    assertEquals(true, checkResponses[1].Authorized())
+    assertEquals(true, checkResponses[1].authorized())
     assertEquals(true, checkResponses[1].isImplicit)
   }
 
@@ -1122,7 +1122,7 @@ class FgaApiTest : TestBase() {
 
     val checkResponses = workos.fga.checkBatch(options)
 
-    assertEquals(true, checkResponses[0].Authorized())
+    assertEquals(true, checkResponses[0].authorized())
     assertEquals(true, checkResponses[0].isImplicit)
     assertNotNull(checkResponses[0].debugInfo)
     assertNotNull(checkResponses[0].debugInfo?.processingTime)
@@ -1161,7 +1161,7 @@ class FgaApiTest : TestBase() {
     assertEquals("matched", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.decision)
     assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.processingTime)
     assertNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.children)
-    assertEquals(true, checkResponses[1].Authorized())
+    assertEquals(true, checkResponses[1].authorized())
     assertEquals(false, checkResponses[1].isImplicit)
     assertNotNull(checkResponses[1].debugInfo)
     assertEquals(8006583, checkResponses[1].debugInfo?.processingTime)
