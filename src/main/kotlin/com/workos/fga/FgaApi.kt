@@ -20,6 +20,14 @@ import com.workos.fga.types.QueryRequestOptions
 import com.workos.fga.types.UpdateResourceOptions
 import com.workos.fga.types.WriteWarrantOptions
 
+const val CHECK_RESULT_AUTHORIZED = "authorized"
+const val CHECK_RESULT_NOT_AUTHORIZED = "not_authorized"
+const val CHECK_OP_ALL_OF = "all_of"
+const val CHECK_OP_ANY_OF = "any_of"
+const val CHECK_OP_BATCH = "batch"
+const val WARRANT_OP_CREATE = "create"
+const val WARRANT_OP_DELETE = "delete"
+
 class FgaApi(private val workos: WorkOS) {
   /** Get an existing resource. */
   fun getResource(resourceType: String, resourceId: String): Resource {

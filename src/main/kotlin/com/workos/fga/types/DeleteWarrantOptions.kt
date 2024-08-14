@@ -2,6 +2,7 @@ package com.workos.fga.types
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.fga.WARRANT_OP_DELETE
 import com.workos.fga.models.Subject
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,4 +36,4 @@ class DeleteWarrantOptions @JvmOverloads constructor(
    */
   @JsonProperty("policy")
   policy: String? = null,
-) : WriteWarrantOptions("delete", resourceType, resourceId, relation, subject, policy)
+) : WriteWarrantOptions(WARRANT_OP_DELETE, resourceType, resourceId, relation, subject, policy)

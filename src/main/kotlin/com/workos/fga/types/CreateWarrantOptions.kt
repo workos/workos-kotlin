@@ -2,6 +2,7 @@ package com.workos.fga.types
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.fga.WARRANT_OP_CREATE
 import com.workos.fga.models.Subject
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,4 +36,4 @@ class CreateWarrantOptions @JvmOverloads constructor(
    */
   @JsonProperty("policy")
   policy: String? = null,
-) : WriteWarrantOptions("create", resourceType, resourceId, relation, subject, policy)
+) : WriteWarrantOptions(WARRANT_OP_CREATE, resourceType, resourceId, relation, subject, policy)
