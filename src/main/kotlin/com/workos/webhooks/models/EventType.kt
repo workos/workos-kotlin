@@ -32,6 +32,11 @@ enum class EventType(
   AuthenticationMfaSucceeded("authentication.mfa_succeeded"),
 
   /**
+   * Triggers when a user fails to authenticate via OAuth.
+   */
+  AuthenticationOauthFailed("authentication.oauth_failed"),
+
+  /**
    * Triggers when a user successfully authenticates via OAuth.
    */
   AuthenticationOauthSucceeded("authentication.oauth_succeeded"),
@@ -45,6 +50,11 @@ enum class EventType(
    * Triggers when a user successfully authenticates with password credentials.
    */
   AuthenticationPasswordSucceeded("authentication.password_succeeded"),
+
+  /**
+   * Triggers when a user fails to authenticate with Single Sign-On.
+   */
+  AuthenticationSsoFailed("authentication.sso_failed"),
 
   /**
    * Triggers when a user successfully authenticates with Single Sign-On.
