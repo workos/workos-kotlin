@@ -126,6 +126,24 @@ class AuthenticationWebhookTests : TestBase() {
   }
 
   @Test
+  fun constructAuthenticationOauthFailedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationOauthFailed, "oauth")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+    assertEquals((webhook as AuthenticationEvent).data.email, email)
+  }
+
+  @Test
   fun constructAuthenticationOauthSucceededEvent() {
     val workos = createWorkOSClient()
     val webhookData = generateAuthenticationSucceededWebhookEvent(EventType.AuthenticationOauthSucceeded, "oauth")
@@ -165,6 +183,24 @@ class AuthenticationWebhookTests : TestBase() {
   fun constructAuthenticationPasswordSucceededEvent() {
     val workos = createWorkOSClient()
     val webhookData = generateAuthenticationSucceededWebhookEvent(EventType.AuthenticationPasswordSucceeded, "password")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+    assertEquals((webhook as AuthenticationEvent).data.email, email)
+  }
+
+  @Test
+  fun constructAuthenticationSsoFailedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationSsoFailed, "sso")
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
