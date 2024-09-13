@@ -142,7 +142,7 @@ class FgaApi(private val workos: WorkOS) {
         it.key
       }
     }
-    
+
     val config = RequestConfig.builder()
       .params(params)
 
