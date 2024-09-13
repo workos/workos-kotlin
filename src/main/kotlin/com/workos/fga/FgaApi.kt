@@ -132,13 +132,24 @@ class FgaApi(private val workos: WorkOS) {
 
   /** Perform a query in the current environment */
   fun query(options: QueryOptions, requestOptions: QueryRequestOptions? = null): QueryResponse {
+    var params: Map<String, String> =
+      RequestConfig.toMap(options) as Map<String, String>
+
+    params = params.mapKeys {
+      if (it.key == "query") {
+        "q"
+      } else {
+        it.key
+      }
+    }
+
     val config = RequestConfig.builder()
-      .data(options)
+      .params(params)
 
     if (requestOptions != null) {
       config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
     }
 
-    return workos.post("/fga/v1/query", QueryResponse::class.java, config.build())
+    return workos.get("/fga/v1/query", QueryResponse::class.java, config.build())
   }
 }

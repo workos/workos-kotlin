@@ -1,5 +1,6 @@
 package com.workos.test.fga
 
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.models.ListMetadata
@@ -1182,7 +1183,8 @@ class FgaApiTest : TestBase() {
   fun queryShouldReturnValidQueryResponse() {
     stubResponse(
       "/fga/v1/query",
-      """{
+      params = mapOf("q" to equalTo("select role where user:tony-stark is member")),
+      responseBody = """{
         "data": [
           {
             "resource_type": "role",
@@ -1208,10 +1210,6 @@ class FgaApiTest : TestBase() {
           "after": null
         }
       }""",
-      requestBody =
-      """{
-        "q": "select role where user:tony-stark is member"
-      }"""
     )
 
     val options = QueryOptionsBuilder("select role where user:tony-stark is member").build()
@@ -1232,8 +1230,9 @@ class FgaApiTest : TestBase() {
   @Test
   fun queryWithRequestOptsShouldReturnValidQueryResponse() {
     stubResponse(
-      "/fga/v1/query",
-      """{
+      url = "/fga/v1/query",
+      params = mapOf("q" to equalTo("select role where user:tony-stark is member")),
+      responseBody = """{
         "data": [
           {
             "resource_type": "role",
@@ -1258,10 +1257,6 @@ class FgaApiTest : TestBase() {
           "before": null,
           "after": null
         }
-      }""",
-      requestBody =
-      """{
-        "q": "select role where user:tony-stark is member"
       }""",
       requestHeaders = mapOf("Warrant-Token" to "my-token")
     )
