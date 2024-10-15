@@ -2,7 +2,6 @@ package com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.sso.models.ProfileRole
 
 /**
  * Represents a WorkoS Profile resource. This class is not meant to be
@@ -69,4 +68,3 @@ data class Profile
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>
 )
-
