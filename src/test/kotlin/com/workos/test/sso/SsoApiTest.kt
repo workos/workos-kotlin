@@ -293,7 +293,6 @@ class SsoApiTest : TestBase() {
     assertNull(profile.groups)
   }
 
-
   @Test
   fun getProfileShouldReturnPayload() {
     val workos = createWorkOSClient()
