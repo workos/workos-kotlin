@@ -2,6 +2,7 @@ package com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.sso.models.ProfileRole
 
 /**
  * Represents a WorkoS Profile resource. This class is not meant to be
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param email The user's email address.
  * @param firstName The user's first name.
  * @param lastName The user's last name.
+ * @param role The user's role based on group memberships.
  * @param groups The user's group memberships.
  * @param rawAttributes Object of key-value pairs containing relevant user data from the Identity Provider.
  */
@@ -56,6 +58,10 @@ data class Profile
   val lastName: String?,
 
   @JvmField
+  @JsonProperty("role")
+  val role: ProfileRole? = null,
+
+  @JvmField
   @JsonProperty("groups")
   val groups: List<String>?,
 
@@ -63,3 +69,4 @@ data class Profile
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>
 )
+
