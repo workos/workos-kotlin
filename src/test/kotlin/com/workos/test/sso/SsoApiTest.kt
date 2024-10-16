@@ -290,7 +290,7 @@ class SsoApiTest : TestBase() {
     val profileAndToken = workos.sso.getProfileAndToken("code", "clientId")
     val profile = profileAndToken.profile
 
-    assertNull(profile.groups)
+    assertNull(profile.role)
   }
 
   @Test
