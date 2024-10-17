@@ -2,7 +2,7 @@ import java.io.FileOutputStream
 import java.util.Properties
 
 group = "com.workos"
-version = "4.3.1"
+version = "4.4.0"
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
