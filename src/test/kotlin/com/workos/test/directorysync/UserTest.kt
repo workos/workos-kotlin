@@ -41,6 +41,7 @@ class UserTest : TestBase() {
           "raw_attributes": {}
         }],
         "state": "active",
+        "role":{"slug":"admin"},
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "custom_attributes": {

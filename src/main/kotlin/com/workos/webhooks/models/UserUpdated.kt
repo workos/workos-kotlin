@@ -2,6 +2,7 @@ package com.workos.webhooks.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.directorysync.models.DirectoryUserRole
 import com.workos.directorysync.models.Email
 import com.workos.directorysync.models.UserState
 
@@ -66,6 +67,10 @@ open class UserUpdated
   @JvmField
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any?>,
+
+  @JvmField
+  @JsonProperty("role")
+  val role: DirectoryUserRole,
 
   /**
    * Object containing the names and values of attributes and their previous values.

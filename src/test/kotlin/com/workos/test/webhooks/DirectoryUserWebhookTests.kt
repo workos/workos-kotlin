@@ -37,6 +37,7 @@ class DirectoryUserWebhookTests : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "$directoryId",
+        "role": { "slug": "member" },
         "raw_attributes": {
           "id": "105777651754615852813",
           "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/E5jQHrdS88NS4ACUhZ4m9CYVR30\"",
@@ -102,6 +103,7 @@ class DirectoryUserWebhookTests : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "$directoryId",
+        "role": { "slug": "admin" },
         "raw_attributes": {
           "id": "105777651754615852813",
           "etag": "\"nqbsbhvoIENh0WbZEZYWTG7mnk2phHz4rrCEo-rHT2k/E5jQHrdS88NS4ACUhZ4m9CYVR30\"",
@@ -140,6 +142,7 @@ class DirectoryUserWebhookTests : TestBase() {
         },
         "custom_attributes": {},
         "previous_attributes": {
+        "role": { "slug": "member" },
           "raw_attributes": {
             "emails": [
               {

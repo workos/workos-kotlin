@@ -38,6 +38,7 @@ class WebhooksApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
+        "role": { "slug": "member" },
         "custom_attributes": {},
         "raw_attributes": {
           "name": {
@@ -95,6 +96,7 @@ class WebhooksApiTest : TestBase() {
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "directory_id": "directory_01F9M7F68PZP8QXP8G7X5QRHS7",
+        "role": { "slug": "member" },
         "custom_attributes": {},
         "raw_attributes": {},
         "new_unknown_property": {},

@@ -312,6 +312,7 @@ class DirectorySyncApiTest : TestBase() {
           "raw_attributes": {}
         }],
         "state": "active",
+        "role":{"slug":"admin"},
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:08:33.155Z",
         "custom_attributes": {
@@ -528,6 +529,7 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "role":{"slug":"admin"},
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
@@ -559,6 +561,7 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "role":{"slug":"member"},
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
@@ -629,6 +632,7 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "role":{"slug":"admin"},
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
@@ -659,6 +663,7 @@ class DirectorySyncApiTest : TestBase() {
               "raw_attributes": {}
             }],
             "state": "active",
+            "role":{"slug":"member"},
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
             "custom_attributes": {
@@ -734,6 +739,7 @@ class DirectorySyncApiTest : TestBase() {
             "state": "active",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
+            "role":{"slug":"admin"},
             "custom_attributes": {
               "department": "Engineering"
             },
@@ -765,6 +771,7 @@ class DirectorySyncApiTest : TestBase() {
             "state": "active",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:08:33.155Z",
+            "role":{"slug":"member"},
             "custom_attributes": {
               "department": "Engineering"
             },
