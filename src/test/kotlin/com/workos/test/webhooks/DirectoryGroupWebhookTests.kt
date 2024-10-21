@@ -66,6 +66,7 @@ class DirectoryGroupWebhookTests : TestBase() {
           "first_name": "Michael",
           "job_title": "Software Engineer",
           "directory_id": "$directoryId",
+          "role": { "slug": "member" },
           "created_at": "2021-06-25T19:07:33.155Z",
           "updated_at": "2021-06-25T19:08:33.155Z",
           "raw_attributes": {
