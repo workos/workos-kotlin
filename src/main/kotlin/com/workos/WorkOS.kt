@@ -24,6 +24,7 @@ import com.workos.portal.PortalApi
 import com.workos.sso.SsoApi
 import com.workos.usermanagement.UserManagementApi
 import com.workos.webhooks.WebhooksApi
+import com.workos.widgets.WidgetsApi
 import org.apache.http.client.utils.URIBuilder
 import java.io.IOException
 import java.lang.IllegalArgumentException
@@ -118,6 +119,12 @@ class WorkOS(
    */
   @JvmField
   val webhooks = WebhooksApi()
+
+  /**
+   * Module for interacting with the Widgets API.
+   */
+  @JvmField
+  val widgets = WidgetsApi(this)
 
   /**
    * Module for interacting with the FGA API.
