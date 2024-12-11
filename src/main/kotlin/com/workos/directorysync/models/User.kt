@@ -79,7 +79,7 @@ open class User
 
   @JvmField
   @JsonProperty("role")
-  val role: DirectoryUserRole,
+  val role: DirectoryUserRole?,
 
   @JvmField
   @JsonProperty("custom_attributes")
