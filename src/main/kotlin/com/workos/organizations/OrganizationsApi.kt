@@ -10,7 +10,6 @@ import com.workos.common.models.Order
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 import com.workos.organizations.types.OrganizationDomainDataOptions
-import com.workos.roles.models.Role
 import com.workos.roles.models.RoleList
 
 /**
@@ -306,6 +305,6 @@ class OrganizationsApi(private val workos: WorkOS) {
    * Retrieve a list of roles for the given organization.
    */
   fun listOrganizationRoles(organizationId: String): RoleList {
-    return workos.get("/organizations/${organizationId}/roles", RoleList::class.java)
+    return workos.get("/organizations/$organizationId/roles", RoleList::class.java)
   }
 }

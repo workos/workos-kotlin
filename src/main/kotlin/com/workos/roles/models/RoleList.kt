@@ -1,7 +1,6 @@
 package com.workos.roles.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * A list of WorkOS [Role] resources. This class is not meant to be
