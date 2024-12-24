@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue
 /**
  * An enumeration of types of [Role]
  *
- * @param state The Role type string value.
+ * @param type The Role type string value.
  */
-enum class RoleType(@JsonValue val state: String) {
+enum class RoleType(@JsonValue val type: String) {
   Environment("EnvironmentRole"),
   Organization("OrganizationRole")
 }
