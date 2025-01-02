@@ -10,6 +10,7 @@ import com.workos.common.models.Order
 import com.workos.organizations.models.Organization
 import com.workos.organizations.models.OrganizationList
 import com.workos.organizations.types.OrganizationDomainDataOptions
+import com.workos.roles.models.RoleList
 
 /**
  * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
@@ -298,5 +299,12 @@ class OrganizationsApi(private val workos: WorkOS) {
       .build()
 
     return workos.put("/organizations/$id", Organization::class.java, config)
+  }
+
+  /**
+   * Retrieve a list of roles for the given organization.
+   */
+  fun listOrganizationRoles(organizationId: String): RoleList {
+    return workos.get("/organizations/$organizationId/roles", RoleList::class.java)
   }
 }

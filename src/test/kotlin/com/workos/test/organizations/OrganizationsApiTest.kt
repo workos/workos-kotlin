@@ -582,4 +582,56 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
+
+  @Test
+  fun listOrganizationRolesShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
+
+    stubResponse(
+      "/organizations/$organizationId/roles",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "role",
+            "id": "role_01EHQMYV6MBK39QC5PZXHY59C5",
+            "name": "Admin",
+            "slug": "admin",
+            "description": null,
+            "type": "EnvironmentRole",
+            "created_at": "2024-01-01T00:00:00.000Z",
+            "updated_at": "2024-01-01T00:00:00.000Z"
+          },
+          {
+            "object": "role",
+            "id": "role_01EHQMYV6MBK39QC5PZXHY59C3",
+            "name": "Member",
+            "slug": "member",
+            "description": null,
+            "type": "EnvironmentRole",
+            "created_at": "2024-01-01T00:00:00.000Z",
+            "updated_at": "2024-01-01T00:00:00.000Z"
+          },
+          {
+            "object": "role",
+            "id": "role_01EHQMYV6MBK39QC5PZXHY59C3",
+            "name": "OrganizationMember",
+            "slug": "org-member",
+            "description": null,
+            "type": "OrganizationRole",
+            "created_at": "2024-01-01T00:00:00.000Z",
+            "updated_at": "2024-01-01T00:00:00.000Z"
+          }
+        ]
+      }"""
+    )
+
+    val (roles) = workos.organizations.listOrganizationRoles(organizationId)
+
+    assertEquals("role_01EHQMYV6MBK39QC5PZXHY59C5", roles.get(0).id)
+    assertEquals("Admin", roles.get(0).name)
+    assertEquals("admin", roles.get(0).slug)
+  }
 }
