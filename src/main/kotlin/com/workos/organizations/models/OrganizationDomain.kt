@@ -2,6 +2,8 @@ package com.workos.organizations.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.organizations.types.OrganizationDomainState
+import com.workos.organizations.types.OrganizationDomainVerificationStrategy
 
 /**
  * An Organization Domain (also known as a User Email Domain) represents an Organization's domain.
@@ -23,5 +25,17 @@ data class OrganizationDomain
   val id: String,
 
   @JvmField
-  val domain: String
+  val domain: String,
+
+  @JvmField
+  @JsonProperty("state")
+  val state: OrganizationDomainState? = null,
+
+  @JvmField
+  @JsonProperty("verification_strategy")
+  val verificationStrategy: OrganizationDomainVerificationStrategy? = null,
+
+  @JvmField
+  @JsonProperty("verification_token")
+  val verificationToken: String? = null
 )
