@@ -67,7 +67,7 @@ class UserManagementApiTest : TestBase() {
         "User",
         true,
         "https://example.com/profile_picture.jpg",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z"
       ),
