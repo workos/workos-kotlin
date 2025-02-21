@@ -8,6 +8,8 @@ import com.workos.organizations.OrganizationsApi.CreateOrganizationRequestOption
 import com.workos.organizations.OrganizationsApi.UpdateOrganizationOptions
 import com.workos.organizations.types.OrganizationDomainDataOptions
 import com.workos.organizations.types.OrganizationDomainDataState
+import com.workos.organizations.types.OrganizationDomainState
+import com.workos.organizations.types.OrganizationDomainVerificationStrategy
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
@@ -260,7 +262,10 @@ class OrganizationsApiTest : TestBase() {
           {
             "domain": "example.com",
             "object": "organization_domain",
-            "id": "$organizationDomainId"
+            "id": "$organizationDomainId",
+            "state": "verified",
+            "verification_strategy": "dns",
+            "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
           }
         ]
       }"""
@@ -271,6 +276,9 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(organizationId, organization.id)
     assertEquals(organizationDomainName, organization.name)
     assertEquals(organizationDomainId, organization.domains[0].id)
+    assertEquals(OrganizationDomainState.Verified, organization.domains[0].state)
+    assertEquals(OrganizationDomainVerificationStrategy.Dns, organization.domains[0].verificationStrategy)
+    assertEquals("rqURsMUCuiaSggGyed8ZAnMk", organization.domains[0].verificationToken)
   }
 
   @Test
@@ -296,7 +304,10 @@ class OrganizationsApiTest : TestBase() {
               {
                 "domain": "example.com",
                 "object": "organization_domain",
-                "id": "$organizationDomainId"
+                "id": "$organizationDomainId",
+                "state": "verified",
+                "verification_strategy": "dns",
+                "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
               }
             ]
           }
@@ -313,6 +324,9 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(organizationId, organizations.get(0).id)
     assertEquals(organizationDomainName, organizations.get(0).name)
     assertEquals(organizationDomainId, organizations.get(0).domains[0].id)
+    assertEquals(OrganizationDomainState.Verified, organizations.get(0).domains[0].state)
+    assertEquals(OrganizationDomainVerificationStrategy.Dns, organizations.get(0).domains[0].verificationStrategy)
+    assertEquals("rqURsMUCuiaSggGyed8ZAnMk", organizations.get(0).domains[0].verificationToken)
   }
 
   @Test
@@ -339,7 +353,10 @@ class OrganizationsApiTest : TestBase() {
               {
                 "domain": "example.com",
                 "object": "organization_domain",
-                "id": "$organizationDomainId"
+                "id": "$organizationDomainId",
+                "state": "verified",
+                "verification_strategy": "dns",
+                "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
               }
             ]
           }
@@ -385,7 +402,10 @@ class OrganizationsApiTest : TestBase() {
               {
                 "domain": "example.com",
                 "object": "organization_domain",
-                "id": "$organizationDomainId"
+                "id": "$organizationDomainId",
+                "state": "verified",
+                "verification_strategy": "dns",
+                "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
               }
             ]
           }
