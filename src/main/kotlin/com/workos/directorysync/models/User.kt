@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param organizationId The identifier for the Organization in which the Directory resides.
  * @param id The unique identifier for the Directory User
  * @param idpId Unique identifier for the user, assigned by the Directory Provider. Different Directory Providers use different ID formats. One possible use case for idp_id is associating the Directory User with their SSO Profile.
+ * @param email The primary email of the user.
  * @param userName The username of the user.
  * @param firstName The first name of the user.
  * @param lastName The last name for the user.
@@ -44,6 +45,10 @@ open class User
   @JsonProperty("idp_id")
   open val idpId: String,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `username` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"username\"]")
+  )
   @JvmField
   @JsonProperty("username")
   open val userName: String?,
@@ -56,6 +61,10 @@ open class User
   @JsonProperty("last_name")
   open val lastName: String?,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `job_title` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"job_title\"]")
+  )
   @JvmField
   @JsonProperty("job_title")
   open val jobTitle: String?,
@@ -68,6 +77,10 @@ open class User
   @JsonProperty("updated_at")
   open val updatedAt: String,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `emails` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"emails\"]")
+  )
   @JvmField
   open val emails: List<Email>,
 
@@ -89,6 +102,7 @@ open class User
   @JsonProperty("raw_attributes")
   open val rawAttributes: Map<String, Any?>
 ) {
+  @Deprecated("Will be removed in a future major version.", ReplaceWith("email"))
   open fun primaryEmail(): String? {
     return emails.first { it.primary == true }.value
   }
