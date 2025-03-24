@@ -17,6 +17,7 @@ class UserTest : TestBase() {
         "idp_id": "2836",
         "directory_id": "$gsuiteDirectoryId",
         "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+        "email": "marcelina1@foo-corp.com",
         "emails": [{
           "primary": true,
           "type": "work",
