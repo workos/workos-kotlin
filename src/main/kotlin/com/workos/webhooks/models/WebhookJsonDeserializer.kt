@@ -71,6 +71,7 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.PasswordResetCreated -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
+      EventType.PasswordResetSucceeded -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
     }
   }
 
