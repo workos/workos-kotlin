@@ -46,4 +46,20 @@ class PasswordResetWebhookTests : TestBase() {
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as PasswordResetEvent).data.id, passwordResetId)
   }
+
+  fun constructPasswordResetSucceededEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateWebhookEvent(EventType.PasswordResetSucceeded)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is PasswordResetEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as PasswordResetEvent).data.id, passwordResetId)
+  }
 }
