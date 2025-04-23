@@ -175,7 +175,8 @@ class SsoApiTest : TestBase() {
           "role":{"slug":"admin"},
           "object": "profile",
           "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-          "raw_attributes": {"foo": "bar"}
+          "custom_attributes": {"license": "professional"},
+          "raw_attributes": {"foo": "bar", "license": "professional"}
         }
       }"""
     )
@@ -211,7 +212,8 @@ class SsoApiTest : TestBase() {
           "groups":["Admins", "Developers"],
           "object": "profile",
           "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-          "raw_attributes": {"foo": "bar", "groups":["Admins", "Developers"]}
+          "custom_attributes": {"license": "professional"},
+          "raw_attributes": {"foo": "bar", "groups":["Admins", "Developers"], "license": "professional"}
         }
       }"""
     )
@@ -247,7 +249,8 @@ class SsoApiTest : TestBase() {
           "role":{"slug":"admin"},
           "object": "profile",
           "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-          "raw_attributes": {"foo": "bar"}
+          "custom_attributes": {"license": "professional"},
+          "raw_attributes": {"foo": "bar", "license": "professional"}
         }
       }"""
     )
@@ -282,7 +285,8 @@ class SsoApiTest : TestBase() {
           "last_name": "Rundgren",
           "object": "profile",
           "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-          "raw_attributes": {"foo": "bar"}
+          "custom_attributes": {"license": "professional"},
+          "raw_attributes": {"foo": "bar", "license": "professional"}
         }
       }"""
     )
@@ -310,13 +314,15 @@ class SsoApiTest : TestBase() {
         "role":{"slug":"admin"},
         "object": "profile",
         "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
-        "raw_attributes": {"foo": "foo_value"}
+        "custom_attributes": {"license": "professional"},
+        "raw_attributes": {"foo": "foo_value", "license": "professional"}
       }"""
     )
 
     val profile = workos.sso.getProfile("accessToken")
 
     assertEquals("prof_01DMC79VCBZ0NY2099737PSVF2", profile.id)
+    assertEquals("professional", profile.customAttributes.get("license"))
     assertEquals("foo_value", profile.rawAttributes.get("foo"))
   }
 
