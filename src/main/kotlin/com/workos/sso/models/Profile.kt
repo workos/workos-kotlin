@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param lastName The user's last name.
  * @param role The user's role based on group memberships.
  * @param groups The user's group memberships.
+ * @param customAttributes Object of key-value pairs containing mapped data from the Identity Provider.
  * @param rawAttributes Object of key-value pairs containing relevant user data from the Identity Provider.
  */
 data class Profile
@@ -63,6 +64,10 @@ data class Profile
   @JvmField
   @JsonProperty("groups")
   val groups: List<String>?,
+
+  @JvmField
+  @JsonProperty("custom_attributes")
+  val customAttributes: Map<String, Any>,
 
   @JvmField
   @JsonProperty("raw_attributes")
