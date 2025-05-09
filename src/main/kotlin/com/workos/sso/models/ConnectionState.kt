@@ -1,4 +1,4 @@
-package com.workos.sso.models
+cpackage com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonValue
 
@@ -12,6 +12,10 @@ enum class ConnectionState(@JsonValue val state: String) {
    * The connection is active and able to authenticate users.
    */
   Active("active"),
+  /**
+   * The connection has been deleted or is in a deleting status.
+   */
+  Draft("deleting"),
 
   /**
    * The connection has been created and requires configuration to be activated.
