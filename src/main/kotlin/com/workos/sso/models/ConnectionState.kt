@@ -15,7 +15,7 @@ enum class ConnectionState(@JsonValue val state: String) {
   /**
    * The connection has been deleted or is in a deleting status.
    */
-  Draft("deleting"),
+  Deleting("deleting"),
 
   /**
    * The connection has been created and requires configuration to be activated.
