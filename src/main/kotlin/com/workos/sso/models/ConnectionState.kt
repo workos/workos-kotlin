@@ -1,4 +1,4 @@
-cpackage com.workos.sso.models
+package com.workos.sso.models
 
 import com.fasterxml.jackson.annotation.JsonValue
 
