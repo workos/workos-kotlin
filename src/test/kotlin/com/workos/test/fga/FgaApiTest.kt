@@ -17,6 +17,7 @@ import com.workos.fga.builders.UpdateResourceOptionsBuilder
 import com.workos.fga.builders.WriteWarrantOptionsBuilder
 import com.workos.fga.models.Resource
 import com.workos.fga.models.Subject
+import com.workos.fga.models.Warning
 import com.workos.fga.models.Warrant
 import com.workos.fga.types.CheckRequestOptions
 import com.workos.fga.types.QueryRequestOptions

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.JsonTypeName
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "code")
 @JsonSubTypes(
@@ -17,6 +18,7 @@ abstract class Warning @JsonCreator constructor(
     open val message: String
 )
 
+@JsonTypeName("missing_context_keys")
 data class MissingContextKeysWarning @JsonCreator constructor(
     @JsonProperty("code")
     override val code: String,

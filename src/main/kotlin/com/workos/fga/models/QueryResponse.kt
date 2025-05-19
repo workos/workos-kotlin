@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.common.models.ListMetadata
 import com.workos.fga.types.QueryResult
+import com.workos.fga.models.Warning
 
 data class QueryResponse
 @JsonCreator constructor(
