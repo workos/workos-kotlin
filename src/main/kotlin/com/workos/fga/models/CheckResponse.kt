@@ -15,7 +15,10 @@ data class CheckResponse @JsonCreator constructor(
   val isImplicit: Boolean,
 
   @JsonProperty("debug_info")
-  val debugInfo: DebugInfo? = null
+  val debugInfo: DebugInfo? = null,
+
+  @JsonProperty("warnings")
+  val warnings: List<Warning>? = null
 ) {
   fun authorized(): Boolean {
     return this.result == CHECK_RESULT_AUTHORIZED

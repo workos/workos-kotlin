@@ -28,6 +28,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 
 class FgaApiTest : TestBase() {
   val workos = createWorkOSClient()
@@ -1275,5 +1277,99 @@ class FgaApiTest : TestBase() {
     assertEquals("Admin role", queryResponse.data[0].meta?.get("description"))
     assertNull(queryResponse.listMetadata.before)
     assertNull(queryResponse.listMetadata.after)
+  }
+
+  @Test
+  fun checkResponseShouldDeserializeWarnings() {
+    stubResponse(
+      "/fga/v1/check",
+      """{
+        "result": "authorized",
+        "is_implicit": false,
+        "warnings": [
+          {
+            "code": "missing_context_keys",
+            "message": "Missing context keys",
+            "keys": ["key1", "key2"]
+          },
+          {
+            "code": "unknown_warning",
+            "message": "Some unknown warning"
+          }
+        ]
+      }"""
+    )
+
+    val options = CheckOptionsBuilder(
+      listOf(
+        WarrantCheckOptions(
+          "user",
+          "user_123",
+          "viewer",
+          Subject("user", "user_456")
+        )
+      )
+    ).build()
+
+    val response = workos.fga.check(options)
+    
+    assertNotNull(response.warnings)
+    assertEquals(2, response.warnings?.size)
+    
+    val missingKeysWarning = response.warnings?.first()
+    assertTrue(missingKeysWarning is MissingContextKeysWarning)
+    assertEquals("missing_context_keys", missingKeysWarning?.code)
+    assertEquals("Missing context keys", missingKeysWarning?.message)
+    assertEquals(listOf("key1", "key2"), (missingKeysWarning as MissingContextKeysWarning).keys)
+    
+    val baseWarning = response.warnings?.get(1)
+    assertTrue(baseWarning is Warning)
+    assertFalse(baseWarning is MissingContextKeysWarning)
+    assertEquals("unknown_warning", baseWarning?.code)
+    assertEquals("Some unknown warning", baseWarning?.message)
+  }
+
+  @Test
+  fun queryResponseShouldDeserializeWarnings() {
+    stubResponse(
+      "/fga/v1/query",
+      """{
+        "data": [],
+        "list_metadata": {
+          "limit": 10,
+          "before": null,
+          "after": null
+        },
+        "warnings": [
+          {
+            "code": "missing_context_keys",
+            "message": "Missing context keys",
+            "keys": ["key1", "key2"]
+          },
+          {
+            "code": "unknown_warning",
+            "message": "Some unknown warning"
+          }
+        ]
+      }"""
+    )
+
+    val options = QueryOptionsBuilder("user:user_123@viewer").build()
+    val response = workos.fga.query(options)
+    
+    assertNotNull(response.warnings)
+    assertEquals(2, response.warnings?.size)
+    
+    val missingKeysWarning = response.warnings?.first()
+    assertTrue(missingKeysWarning is MissingContextKeysWarning)
+    assertEquals("missing_context_keys", missingKeysWarning?.code)
+    assertEquals("Missing context keys", missingKeysWarning?.message)
+    assertEquals(listOf("key1", "key2"), (missingKeysWarning as MissingContextKeysWarning).keys)
+    
+    val baseWarning = response.warnings?.get(1)
+    assertTrue(baseWarning is Warning)
+    assertFalse(baseWarning is MissingContextKeysWarning)
+    assertEquals("unknown_warning", baseWarning?.code)
+    assertEquals("Some unknown warning", baseWarning?.message)
   }
 }

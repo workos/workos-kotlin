@@ -11,5 +11,8 @@ data class QueryResponse
   val data: List<QueryResult>,
 
   @JsonProperty("list_metadata")
-  val listMetadata: ListMetadata
+  val listMetadata: ListMetadata,
+
+  @JsonProperty("warnings")
+  val warnings: List<Warning>? = null
 )
