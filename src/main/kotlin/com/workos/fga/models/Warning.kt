@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 )
 abstract class Warning @JsonCreator constructor(
     @JsonProperty("code")
-    val code: String,
+    open val code: String,
 
     @JsonProperty("message")
-    val message: String
+    open val message: String
 )
 
 data class MissingContextKeysWarning @JsonCreator constructor(
