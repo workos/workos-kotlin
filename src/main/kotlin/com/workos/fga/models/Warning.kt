@@ -26,4 +26,4 @@ data class MissingContextKeysWarning @JsonCreator constructor(
 
     @JsonProperty("keys")
     val keys: List<String>
-) : Warning(code, message) 
+) : Warning(code, message)
