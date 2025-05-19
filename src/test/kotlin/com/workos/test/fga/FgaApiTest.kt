@@ -15,6 +15,7 @@ import com.workos.fga.builders.ListWarrantsOptionsBuilder
 import com.workos.fga.builders.QueryOptionsBuilder
 import com.workos.fga.builders.UpdateResourceOptionsBuilder
 import com.workos.fga.builders.WriteWarrantOptionsBuilder
+import com.workos.fga.models.MissingContextKeysWarning
 import com.workos.fga.models.Resource
 import com.workos.fga.models.Subject
 import com.workos.fga.models.Warning
@@ -27,10 +28,10 @@ import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.assertFalse
 
 class FgaApiTest : TestBase() {
   val workos = createWorkOSClient()
@@ -1313,21 +1314,21 @@ class FgaApiTest : TestBase() {
     ).build()
 
     val response = workos.fga.check(options)
-    
+
     assertNotNull(response.warnings)
     assertEquals(2, response.warnings?.size)
-    
+
     val missingKeysWarning = response.warnings?.first()
     assertTrue(missingKeysWarning is MissingContextKeysWarning)
-    assertEquals("missing_context_keys", missingKeysWarning?.code)
-    assertEquals("Missing context keys", missingKeysWarning?.message)
-    assertEquals(listOf("key1", "key2"), (missingKeysWarning as MissingContextKeysWarning).keys)
-    
+    assertEquals("missing_context_keys", missingKeysWarning.code)
+    assertEquals("Missing context keys", missingKeysWarning.message)
+    assertEquals(listOf("key1", "key2"), missingKeysWarning.keys)
+
     val baseWarning = response.warnings?.get(1)
     assertTrue(baseWarning is Warning)
     assertFalse(baseWarning is MissingContextKeysWarning)
-    assertEquals("unknown_warning", baseWarning?.code)
-    assertEquals("Some unknown warning", baseWarning?.message)
+    assertEquals("unknown_warning", baseWarning.code)
+    assertEquals("Some unknown warning", baseWarning.message)
   }
 
   @Test
@@ -1357,20 +1358,20 @@ class FgaApiTest : TestBase() {
 
     val options = QueryOptionsBuilder("user:user_123@viewer").build()
     val response = workos.fga.query(options)
-    
+
     assertNotNull(response.warnings)
     assertEquals(2, response.warnings?.size)
-    
+
     val missingKeysWarning = response.warnings?.first()
     assertTrue(missingKeysWarning is MissingContextKeysWarning)
-    assertEquals("missing_context_keys", missingKeysWarning?.code)
-    assertEquals("Missing context keys", missingKeysWarning?.message)
-    assertEquals(listOf("key1", "key2"), (missingKeysWarning as MissingContextKeysWarning).keys)
-    
+    assertEquals("missing_context_keys", missingKeysWarning.code)
+    assertEquals("Missing context keys", missingKeysWarning.message)
+    assertEquals(listOf("key1", "key2"), missingKeysWarning.keys)
+
     val baseWarning = response.warnings?.get(1)
     assertTrue(baseWarning is Warning)
     assertFalse(baseWarning is MissingContextKeysWarning)
-    assertEquals("unknown_warning", baseWarning?.code)
-    assertEquals("Some unknown warning", baseWarning?.message)
+    assertEquals("unknown_warning", baseWarning.code)
+    assertEquals("Some unknown warning", baseWarning.message)
   }
 }

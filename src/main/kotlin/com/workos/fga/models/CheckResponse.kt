@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.fga.CHECK_RESULT_AUTHORIZED
 import com.workos.fga.types.WarrantCheckOptions
-import com.workos.fga.models.Warning
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CheckResponse @JsonCreator constructor(
