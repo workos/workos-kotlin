@@ -5,6 +5,7 @@ import com.workos.usermanagement.types.PasswordHashTypeEnumType
 /**
  * Abstract builder for options when managing users.
  *
+ * @param email The email address of the user.
  * @param password The password to set for the user.
  * @param passwordHash The hashed password to set for the user. Mutually exclusive with password.
  * @param passwordHashType The algorithm originally used to hash the password, used when providing a password_hash.

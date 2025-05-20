@@ -7,6 +7,7 @@ import com.workos.usermanagement.types.UpdateUserOptions
  * Builder for options when updating a user.
  *
  * @param id The unique ID of the user.
+ * @param email The email address of the user.
  * @param firstName The first name of the user.
  * @param lastName The last name of the user.
  * @param emailVerified Whether the user’s email address was previously verified.
@@ -16,6 +17,7 @@ import com.workos.usermanagement.types.UpdateUserOptions
  */
 class UpdateUserOptionsBuilder @JvmOverloads constructor(
   val id: String,
+  var email: String? = null,
   override var firstName: String? = null,
   override var lastName: String? = null,
   override var emailVerified: Boolean? = null,
@@ -36,6 +38,7 @@ class UpdateUserOptionsBuilder @JvmOverloads constructor(
   override fun build(): UpdateUserOptions {
     return UpdateUserOptions(
       id = this.id,
+      email = this.email,
       firstName = this.firstName,
       lastName = this.lastName,
       emailVerified = this.emailVerified,
@@ -44,6 +47,11 @@ class UpdateUserOptionsBuilder @JvmOverloads constructor(
       passwordHashType = this.passwordHashType,
     )
   }
+
+  /**
+   * Email
+   */
+  fun email(value: String) = apply { email = value }
 
   /**
    * @suppress
