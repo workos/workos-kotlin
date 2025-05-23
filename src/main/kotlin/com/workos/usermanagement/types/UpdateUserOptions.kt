@@ -12,6 +12,12 @@ class UpdateUserOptions @JvmOverloads constructor(
   val id: String,
 
   /**
+   * The email address of the user.
+   */
+  @JsonProperty("email")
+  val email: String? = null,
+
+  /**
    * The first name of the user.
    */
   @JsonProperty("first_name")
