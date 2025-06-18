@@ -169,5 +169,20 @@ enum class EventType(
   /**
    * Triggers when a user successfully resets their password.
    */
-  PasswordResetSucceeded("password_reset.succeeded")
+  PasswordResetSucceeded("password_reset.succeeded"),
+
+  /**
+   * Triggers when a user is created.
+   */
+  UserCreated("user.created"),
+
+  /**
+   * Triggers when a user is updated.
+   */
+  UserUpdated("user.updated"),
+
+  /**
+   * Triggers when a user is deleted.
+   */
+  UserDeleted("user.deleted")
 }

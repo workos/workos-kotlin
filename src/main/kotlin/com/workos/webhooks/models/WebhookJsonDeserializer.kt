@@ -17,6 +17,7 @@ import com.workos.usermanagement.models.InvitationEventData
 import com.workos.usermanagement.models.MagicAuthEventData
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.usermanagement.models.PasswordResetEventData
+import com.workos.usermanagement.models.User as UserManagementUser
 
 /**
  * Custom JSON deserializer for [com.workos.webhooks.models.WebhookEvent] events.
@@ -72,6 +73,9 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.PasswordResetCreated -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
       EventType.PasswordResetSucceeded -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
+      EventType.UserCreated -> UserCreatedEvent(id, eventType, deserializeData(data, UserManagementUser::class.java), createdAt)
+      EventType.UserUpdated -> UserUpdatedEvent(id, eventType, deserializeData(data, UserManagementUser::class.java), createdAt)
+      EventType.UserDeleted -> UserDeletedEvent(id, eventType, deserializeData(data, UserManagementUser::class.java), createdAt)
     }
   }
 
