@@ -17,6 +17,7 @@ import java.lang.IllegalArgumentException
  * @param organizationId Used to initiate SSO for an organization. The value should be a WorkOS organization ID.
  * @param provider Name of the identity provider e.g. Authkit, GitHubOAuth, GoogleOAuth, or MicrosoftOAuth.
  * @param state User defined information to persist application data between redirects.
+ * @param providerScopes Additional OAuth scopes to request from the provider.
  */
 class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
   private val baseUrl: String,
@@ -28,7 +29,8 @@ class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
   private var screenHint: String? = null,
   private var organizationId: String? = null,
   private var provider: UserManagementProviderEnumType? = null,
-  private var state: String? = null
+  private var state: String? = null,
+  private var providerScopes: List<String>? = null
 ) {
   /**
    * Connection ID.
@@ -79,6 +81,15 @@ class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
   fun state(value: String) = apply { state = value }
 
   /**
+   * Additional OAuth scopes to request from the provider.
+   */
+  fun providerScopes(value: List<String>) = apply {
+    if (value.isNotEmpty()) {
+      providerScopes = value
+    }
+  }
+
+  /**
    * Generates the URL based on the given options.
    */
   fun build(): String {
@@ -103,6 +114,7 @@ class AuthorizationUrlOptionsBuilder @JvmOverloads constructor(
     if (organizationId != null) uriBuilder.addParameter("organization_id", organizationId)
     if (provider != null) uriBuilder.addParameter("provider", provider!!.type)
     if (state != null) uriBuilder.addParameter("state", state)
+    if (providerScopes != null) uriBuilder.addParameter("provider_scopes", providerScopes!!.joinToString(","))
 
     return uriBuilder.toString()
   }

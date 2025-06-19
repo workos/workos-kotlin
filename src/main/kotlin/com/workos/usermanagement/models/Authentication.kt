@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param accessToken A JWT containing information about the session.
  * @param refreshToken Exchange this token for a new access token.
  * @param impersonator An impersonation definition.
+ * @param oauthTokens OAuth tokens from third-party providers.
  */
 data class Authentication @JsonCreator constructor(
   @JsonProperty("user")
@@ -27,4 +28,7 @@ data class Authentication @JsonCreator constructor(
 
   @JsonProperty("impersonator")
   val impersonator: AuthenticationImpersonator? = null,
+
+  @JsonProperty("oauth_tokens")
+  val oauthTokens: OAuthTokens? = null,
 )

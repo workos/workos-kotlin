@@ -337,6 +337,38 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun getAuthorizationUrlShouldAcceptProviderScopes() {
+    val url =
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .provider(UserManagementProviderEnumType.GoogleOAuth)
+        .providerScopes(listOf("email", "profile", "read:user"))
+        .build()
+
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/user_management/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&provider=GoogleOAuth&provider_scopes=email%2Cprofile%2Cread%3Auser",
+      url
+    )
+  }
+
+  @Test
+  fun getAuthorizationUrlShouldValidateEmptyProviderScopes() {
+    val url =
+      workos
+        .userManagement
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .provider(UserManagementProviderEnumType.GoogleOAuth)
+        .providerScopes(emptyList())
+        .build()
+
+    assertEquals(
+      "http://localhost:${getWireMockPort()}/user_management/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&provider=GoogleOAuth",
+      url
+    )
+  }
+
+  @Test
   fun getAuthorizationUrlShouldValidateUrlParams() {
     assertThrows(IllegalArgumentException::class.java) {
       workos
@@ -410,6 +442,56 @@ class UserManagementApiTest : TestBase() {
       )
 
     assertEquals("test01@example.com", response.user?.email)
+  }
+
+  @Test
+  fun authenticateWithCodeShouldReturnAuthenticationResponseWithOAuthTokens() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/user_management/authenticate",
+      """{
+        "user": {
+          "object": "user",
+          "id": "user_123",
+          "email": "test01@example.com",
+          "first_name": "Test",
+          "last_name": "User",
+          "email_verified": true,
+          "profile_picture_url": null,
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z"
+        },
+        "organization_id": "org_456",
+        "access_token": "access_token",
+        "refresh_token": "refresh_token",
+        "oauth_tokens": {
+          "access_token": "provider_access_token",
+          "refresh_token": "provider_refresh_token",
+          "expires_at": 3600,
+          "scopes": ["email", "profile"]
+        }
+      }""",
+      requestBody =
+      """{
+        "client_id": "client_id",
+        "client_secret": "apiKey",
+        "grant_type": "authorization_code",
+        "code": "code_123"
+      }"""
+    )
+
+    val response =
+      workos.userManagement.authenticateWithCode(
+        "client_id",
+        "code_123"
+      )
+
+    assertEquals("test01@example.com", response.user?.email)
+    assertEquals("provider_access_token", response.oauthTokens?.accessToken)
+    assertEquals("provider_refresh_token", response.oauthTokens?.refreshToken)
+    assertEquals(3600, response.oauthTokens?.expiresAt)
+    assertEquals(listOf("email", "profile"), response.oauthTokens?.scopes)
   }
 
   @Test
