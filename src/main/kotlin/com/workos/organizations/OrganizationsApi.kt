@@ -24,8 +24,8 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
    * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
-   * @param externalId The external ID of the user.
-   * @param metadata Object containing metadata key/value pairs associated with the user.
+   * @param externalId The external ID of the organization.
+   * @param metadata Object containing metadata key/value pairs associated with the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
@@ -243,8 +243,8 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
    * @param stripeCustomerId The Stripe customer ID associated with this organization.
-   * @param externalId The external ID of the user.
-   * @param metadata Object containing metadata key/value pairs associated with the user.
+   * @param externalId The external ID of the organization.
+   * @param metadata Object containing metadata key/value pairs associated with the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class UpdateOrganizationOptions @JvmOverloads constructor(
