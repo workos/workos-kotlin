@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param lastSignInAt The timestamp when the user last signed in.
  * @param createdAt The timestamp when the user was created.
  * @param updatedAt The timestamp when the user was last updated.
+ * @param externalId The external ID of the user.
+ * @param metadata Object containing metadata key/value pairs associated with the user.
  */
 data class User @JsonCreator constructor(
   @JsonProperty("id")
@@ -42,5 +44,11 @@ data class User @JsonCreator constructor(
   val createdAt: String,
 
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+
+  @JsonProperty("external_id")
+  val externalId: String? = null,
+
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>,
 )

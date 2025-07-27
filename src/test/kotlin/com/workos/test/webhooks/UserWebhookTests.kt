@@ -28,7 +28,9 @@ class UserWebhookTests : TestBase() {
         "profile_picture_url": "https://example.com/profile.jpg",
         "last_sign_in_at": "2023-11-27T18:00:00.000Z",
         "created_at": "2023-11-27T19:07:33.155Z",
-        "updated_at": "2023-11-27T19:07:33.155Z"
+        "updated_at": "2023-11-27T19:07:33.155Z",
+        "external_id": null,
+        "metadata": {}
       },
       "created_at": "2023-11-27T19:07:33.155Z"
     }

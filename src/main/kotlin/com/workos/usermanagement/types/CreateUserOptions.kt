@@ -47,7 +47,19 @@ class CreateUserOptions @JvmOverloads constructor(
    * You should normally use the email verification flow to verify a user’s email address. However, if the user’s email was previously verified, or is being migrated from an existing user store, this can be set to true to mark it as already verified.
    */
   @JsonProperty("email_verified")
-  val emailVerified: Boolean? = null
+  val emailVerified: Boolean? = null,
+
+  /**
+   * The external ID of the user.
+   */
+  @JsonProperty("external_id")
+  val externalId: String? = null,
+
+  /**
+   * Object containing metadata key/value pairs associated with the user.
+   */
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>? = null
 ) {
   init {
     require(email.isNotBlank()) { "Email is required" }

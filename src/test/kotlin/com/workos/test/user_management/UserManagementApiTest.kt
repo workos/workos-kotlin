@@ -53,7 +53,11 @@ class UserManagementApiTest : TestBase() {
         "last_name": "User",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "external_id": "external_123",
+        "metadata": {
+          "language": "en"
+        }
       }"""
     )
 
@@ -69,7 +73,9 @@ class UserManagementApiTest : TestBase() {
         "https://example.com/profile_picture.jpg",
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        "external_123",
+        mapOf("language" to "en"),
       ),
       user
     )
@@ -87,7 +93,8 @@ class UserManagementApiTest : TestBase() {
             "email": "test01@example.com",
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
-            "updated_at": "2021-06-25T19:07:33.155Z"
+            "updated_at": "2021-06-25T19:07:33.155Z",
+            "metadata": {}
           }
         ],
         "list_metadata": {
@@ -109,7 +116,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        null,
+        emptyMap(),
       ),
       users.data[0]
     )
@@ -128,7 +137,8 @@ class UserManagementApiTest : TestBase() {
             "email": "test01@example.com",
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
-            "updated_at": "2021-06-25T19:07:33.155Z"
+            "updated_at": "2021-06-25T19:07:33.155Z",
+            "metadata": {}
           }
         ],
         "list_metadata": {
@@ -160,7 +170,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        null,
+        emptyMap(),
       ),
       users.data[0]
     )
@@ -181,7 +193,11 @@ class UserManagementApiTest : TestBase() {
         "last_name": "User",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "external_id": "external_123",
+        "metadata": {
+          "language": "en"
+        }
       }""",
       requestBody =
       """{
@@ -189,7 +205,11 @@ class UserManagementApiTest : TestBase() {
         "password": "password",
         "first_name": "Test",
         "last_name": "User",
-        "email_verified": true
+        "email_verified": true,
+        "external_id": "external_123",
+        "metadata": {
+          "language": "en"
+        }
       }"""
     )
 
@@ -199,6 +219,8 @@ class UserManagementApiTest : TestBase() {
         .firstName("Test")
         .lastName("User")
         .emailVerified(true)
+        .externalId("external_123")
+        .metadata(mapOf("language" to "en"))
         .build()
 
     val user = workos.userManagement.createUser(options)
@@ -213,7 +235,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        "external_123",
+        mapOf("language" to "en"),
       ),
       user
     )
@@ -233,7 +257,11 @@ class UserManagementApiTest : TestBase() {
         "last_name": "User",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "external_id": "external_123",
+        "metadata": {
+          "language": "en"
+        }
       }""",
       requestBody =
       """{
@@ -241,7 +269,11 @@ class UserManagementApiTest : TestBase() {
         "password": "password",
         "first_name": "Test",
         "last_name": "User",
-        "email_verified": true
+        "email_verified": true,
+        "external_id": "external_123",
+        "metadata": {
+          "language": "en"
+        }
       }"""
     )
 
@@ -251,6 +283,8 @@ class UserManagementApiTest : TestBase() {
         .firstName("Test")
         .lastName("User")
         .emailVerified(true)
+        .externalId("external_123")
+        .metadata(mapOf("language" to "en"))
         .build()
 
     val user = workos.userManagement.updateUser("user_123", options)
@@ -265,7 +299,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        "external_123",
+        mapOf("language" to "en"),
       ),
       user
     )
@@ -410,7 +446,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456",
         "access_token": "access_token",
@@ -460,7 +497,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456",
         "access_token": "access_token",
@@ -510,7 +548,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456",
         "access_token": "access_token",
@@ -558,9 +597,11 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
-        "organization_id": "org_456"
+        "organization_id": "org_456",
+        "metadata": {}
       }""",
       requestBody =
       """{
@@ -639,7 +680,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456"
       }""",
@@ -685,7 +727,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456"
       }""",
@@ -733,7 +776,8 @@ class UserManagementApiTest : TestBase() {
           "email_verified": true,
           "profile_picture_url": null,
           "created_at": "2021-06-25T19:07:33.155Z",
-          "updated_at": "2021-06-25T19:07:33.155Z"
+          "updated_at": "2021-06-25T19:07:33.155Z",
+          "metadata": {}
         },
         "organization_id": "org_456"
       }""",
@@ -1094,7 +1138,8 @@ class UserManagementApiTest : TestBase() {
         "last_name": "User",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "metadata": {}
       }""",
       requestBody =
       """{
@@ -1115,7 +1160,9 @@ class UserManagementApiTest : TestBase() {
         null,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        "2021-06-25T19:07:33.155Z",
+        null,
+        emptyMap()
       ),
       user
     )
