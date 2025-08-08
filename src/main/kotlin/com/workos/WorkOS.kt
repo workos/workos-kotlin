@@ -13,6 +13,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.http.BadRequestExceptionResponse
 import com.workos.common.http.GenericErrorResponse
+import com.workos.common.http.OAuthErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
@@ -359,12 +360,18 @@ class WorkOS(
   }
 
   private fun handleResponseError(response: Response, payload: String) {
-    val requestId = response.header("X-Request-ID").first()
+    val requestId = response.header("X-Request-ID").firstOrNull() ?: "unknown"
 
     when (val status = response.statusCode) {
       400 -> {
-        val responseData = mapper.readValue(payload, BadRequestExceptionResponse::class.java)
-        throw BadRequestException(responseData.message, responseData.code, responseData.errors, requestId)
+        val jsonNode = mapper.readTree(payload)
+        if (jsonNode.has("error") && (jsonNode.has("error_description") || !jsonNode.has("message"))) {
+          val oauthError = mapper.treeToValue(jsonNode, OAuthErrorResponse::class.java)
+          throw BadRequestException(oauthError.errorDescription, oauthError.error, null, requestId)
+        } else {
+          val responseData = mapper.treeToValue(jsonNode, BadRequestExceptionResponse::class.java)
+          throw BadRequestException(responseData.message, responseData.code, responseData.errors, requestId)
+        }
       }
 
       401 -> {
