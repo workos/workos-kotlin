@@ -75,7 +75,7 @@ class EventsApiTest : TestBase() {
     assertEquals("dsync.group.user_added", event.event)
     assertEquals("2023-06-09T18:12:01.837Z", event.createdAt)
 
-    assertTrue(event is DirectoryGroupMembershipEvent)
+    assertIs<DirectoryGroupMembershipEvent>(event)
     val membershipEvent = event as DirectoryGroupMembershipEvent
     assertEquals("directory_user_01E1X56GH84T3FB41SD6PZGDBX", membershipEvent.data.user.id)
     assertEquals("directory_group_01E1X5GPMMXF4T1DCERMVEEPVW", membershipEvent.data.group.id)
