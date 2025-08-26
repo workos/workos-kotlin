@@ -39,7 +39,7 @@ class EventsJsonDeserializer : JsonDeserializer<Event>() {
       eventType.startsWith("organization.") -> OrganizationEvent(id, eventType, createdAt, context, deserializeData(data, Organization::class.java))
       eventType.startsWith("connection.") -> ConnectionEvent(id, eventType, createdAt, context, deserializeData(data, Connection::class.java))
       eventType.startsWith("dsync.user.") -> DirectoryUserEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryUser::class.java))
-      eventType == "dsync.group.user_added" || eventType == "dsync.group.user_removed" -> DirectoryGroupMembershipEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryGroupMembershipData::class.java))
+      import com.workos.events.models.DirectoryGroupMembershipData
       eventType.startsWith("dsync.group.") -> DirectoryGroupEvent(id, eventType, createdAt, context, deserializeData(data, Group::class.java))
       eventType.startsWith("dsync.") -> DirectoryEvent(id, eventType, createdAt, context, deserializeData(data, Directory::class.java))
       eventType.startsWith("user.") -> UserEvent(id, eventType, createdAt, context, deserializeData(data, UmUser::class.java))
