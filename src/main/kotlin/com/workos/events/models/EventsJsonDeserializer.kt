@@ -7,12 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.workos.directorysync.models.Directory
-import com.workos.directorysync.models.Group
-import com.workos.organizations.models.Organization
 import com.workos.sso.models.Connection
 import com.workos.usermanagement.models.OrganizationMembership
-import com.workos.directorysync.models.User as DirectoryUser
 import com.workos.usermanagement.models.User as UmUser
 
 class EventsJsonDeserializer : JsonDeserializer<Event>() {
@@ -36,13 +32,22 @@ class EventsJsonDeserializer : JsonDeserializer<Event>() {
     val data = rootNode?.get("data")
 
     return when {
-      eventType.startsWith("organization.") -> OrganizationEvent(id, eventType, createdAt, context, deserializeData(data, Organization::class.java))
+      eventType.startsWith("authentication.") -> AuthenticationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.AuthenticationEventData::class.java))
+      eventType.startsWith("email_verification.") -> EmailVerificationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.EmailVerificationEventData::class.java))
+      eventType.startsWith("magic_auth.") -> MagicAuthEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.MagicAuthEventData::class.java))
+      eventType.startsWith("invitation.") -> InvitationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.InvitationEventData::class.java))
+      eventType.startsWith("password_reset.") -> PasswordResetEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.PasswordResetEventData::class.java))
+      eventType.startsWith("organization.") -> OrganizationEvent(id, eventType, createdAt, context, deserializeData(data, OrganizationEventData::class.java))
       eventType.startsWith("connection.") -> ConnectionEvent(id, eventType, createdAt, context, deserializeData(data, Connection::class.java))
-      eventType.startsWith("dsync.user.") -> DirectoryUserEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryUser::class.java))
-      eventType.startsWith("dsync.group.") -> DirectoryGroupEvent(id, eventType, createdAt, context, deserializeData(data, Group::class.java))
-      eventType.startsWith("dsync.") -> DirectoryEvent(id, eventType, createdAt, context, deserializeData(data, Directory::class.java))
+      eventType.startsWith("dsync.user.") -> DirectoryUserEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryUserMinimal::class.java))
+      eventType.startsWith("dsync.group.user_") -> DirectoryGroupMembershipEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryGroupMembershipData::class.java))
+      eventType.startsWith("dsync.group.") -> DirectoryGroupEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryGroupEventData::class.java))
+      eventType.startsWith("dsync.") -> DirectoryEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryEventData::class.java))
       eventType.startsWith("user.") -> UserEvent(id, eventType, createdAt, context, deserializeData(data, UmUser::class.java))
       eventType.startsWith("organization_membership.") -> OrganizationMembershipEvent(id, eventType, createdAt, context, deserializeData(data, OrganizationMembership::class.java))
+      eventType.startsWith("organization_domain.") -> OrganizationDomainEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.organizations.models.OrganizationDomain::class.java))
+      eventType.startsWith("role.") -> RoleEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.roles.models.Role::class.java))
+      eventType.startsWith("session.") -> SessionEvent(id, eventType, createdAt, context, deserializeData(data, SessionEventData::class.java))
       else -> UnknownEvent(id, eventType, createdAt, context, mapper.treeToValue(data, Any::class.java))
     }
   }
