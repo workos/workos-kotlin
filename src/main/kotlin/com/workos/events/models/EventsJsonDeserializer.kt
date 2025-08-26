@@ -14,7 +14,6 @@ import com.workos.sso.models.Connection
 import com.workos.usermanagement.models.OrganizationMembership
 import com.workos.directorysync.models.User as DirectoryUser
 import com.workos.usermanagement.models.User as UmUser
-import com.workos.events.models.DirectoryGroupMembershipData
 
 class EventsJsonDeserializer : JsonDeserializer<Event>() {
   private val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
