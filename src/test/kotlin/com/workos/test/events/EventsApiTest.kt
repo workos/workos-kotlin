@@ -7,6 +7,7 @@ import com.workos.events.models.DirectoryGroupMembershipEvent
 import com.workos.test.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class EventsApiTest : TestBase() {
