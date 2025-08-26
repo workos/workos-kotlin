@@ -16,6 +16,7 @@ import com.workos.common.http.GenericErrorResponse
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.UnprocessableEntityExceptionResponse
 import com.workos.directorysync.DirectorySyncApi
+import com.workos.events.EventsApi
 import com.workos.fga.FgaApi
 import com.workos.mfa.MfaApi
 import com.workos.organizations.OrganizationsApi
@@ -131,6 +132,12 @@ class WorkOS(
    */
   @JvmField
   val fga = FgaApi(this)
+
+  /**
+   * Module for interacting with the Events API.
+   */
+  @JvmField
+  val events = EventsApi(this)
 
   /**
    * The base URL for making API requests to.
