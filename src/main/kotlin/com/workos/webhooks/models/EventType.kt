@@ -137,9 +137,19 @@ enum class EventType(
   EmailVerificationCreated("email_verification.created"),
 
   /**
+   * Triggers when a user accepts an invitation.
+   */
+  InvitationAccepted("invitation.accepted"),
+
+  /**
    * Triggers when a user is invited to sign up or to join an organization.
    */
   InvitationCreated("invitation.created"),
+
+  /**
+   * Triggers when an invitation is revoked.
+   */
+  InvitationRevoked("invitation.revoked"),
 
   /**
    * Triggers when an organization membership is created.
