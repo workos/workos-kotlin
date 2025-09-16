@@ -1,5 +1,6 @@
 package com.workos.test.usermanagement
 
+import com.workos.common.exceptions.BadRequestException
 import com.workos.common.models.ListMetadata
 import com.workos.common.models.Order
 import com.workos.test.TestBase
@@ -492,6 +493,55 @@ class UserManagementApiTest : TestBase() {
     assertEquals("provider_refresh_token", response.oauthTokens?.refreshToken)
     assertEquals(3600, response.oauthTokens?.expiresAt)
     assertEquals(listOf("email", "profile"), response.oauthTokens?.scopes)
+  }
+
+  @Test
+  fun authenticateWithCodeShouldHandleOAuthErrorResponse() {
+    // Tests fix for issue #287: OAuth error responses have different format
+    stubResponse(
+      "/user_management/authenticate",
+      """{
+        "error": "invalid_grant",
+        "error_description": "The code 'INVALID_CODE' has expired or is invalid."
+      }""",
+      responseStatus = 400
+    )
+
+    val exception = assertThrows(BadRequestException::class.java) {
+      workos.userManagement.authenticateWithCode(
+        "client_123",
+        "INVALID_CODE",
+        null
+      )
+    }
+
+    // OAuth errors should map error_description to message and error to code
+    assertEquals("The code 'INVALID_CODE' has expired or is invalid.", exception.message)
+    assertEquals("invalid_grant", exception.code)
+    assertEquals(null, exception.errors)
+  }
+
+  @Test
+  fun authenticateWithCodeShouldHandleOAuthErrorWithoutDescription() {
+    // OAuth spec allows error_description to be optional
+    stubResponse(
+      "/user_management/authenticate",
+      """{
+        "error": "invalid_client"
+      }""",
+      responseStatus = 400
+    )
+
+    val exception = assertThrows(BadRequestException::class.java) {
+      workos.userManagement.authenticateWithCode(
+        "client_123",
+        "SOME_CODE",
+        null
+      )
+    }
+
+    assertEquals("invalid_client", exception.code)
+    assertEquals(null, exception.message)
   }
 
   @Test
