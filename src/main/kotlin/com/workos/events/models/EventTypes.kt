@@ -28,7 +28,6 @@ data class OrganizationEvent
   override val context: Map<String, Any>? = null,
   val data: OrganizationEventData
 ) : Event(id, event, createdAt, context)
-//
 
 data class ConnectionEvent
 @JsonCreator constructor(
