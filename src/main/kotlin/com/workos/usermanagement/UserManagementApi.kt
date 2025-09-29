@@ -27,6 +27,7 @@ import com.workos.usermanagement.models.OrganizationMemberships
 import com.workos.usermanagement.models.PasswordReset
 import com.workos.usermanagement.models.RefreshAuthentication
 import com.workos.usermanagement.models.User
+import com.workos.usermanagement.models.UserResponse
 import com.workos.usermanagement.models.Users
 import com.workos.usermanagement.types.AuthenticationAdditionalOptions
 import com.workos.usermanagement.types.CreateMagicAuthOptions
@@ -355,13 +356,15 @@ class UserManagementApi(private val workos: WorkOS) {
 
   /** Sets a new password using the `token` query parameter from the link that the user received. */
   fun resetPassword(token: String, newPassword: String): User {
-    return workos.post(
+    val userResponse = workos.post(
       "/user_management/password_reset/confirm",
-      User::class.java,
+      UserResponse::class.java,
       RequestConfig.builder()
         .data(ResetPasswordOptionsBuilder.create(token, newPassword).build())
         .build()
     )
+
+    return userResponse.user
   }
 
   /** Get the details of an existing organization membership. */
