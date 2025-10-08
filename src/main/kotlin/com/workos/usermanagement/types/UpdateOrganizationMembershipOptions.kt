@@ -12,10 +12,16 @@ class UpdateOrganizationMembershipOptions @JvmOverloads constructor(
   val id: String,
 
   /**
-   * The unique role identifier. Defaults to `member`.
+   * The unique slug of the role to grant to this membership.
    */
   @JsonProperty("role_slug")
-  val roleSlug: String
+  val roleSlug: String? = null,
+
+  /**
+   * The unique slugs of the roles to grant to this membership.
+   */
+  @JsonProperty("role_slugs")
+  val roleSlugs: List<String>? = null
 ) {
   init {
     require(id.isNotBlank()) { "Organization Membership ID is required" }

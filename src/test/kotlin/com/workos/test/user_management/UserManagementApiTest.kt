@@ -1183,6 +1183,9 @@ class UserManagementApiTest : TestBase() {
         "role": {
           "slug": "admin"
         },
+        "roles": [
+          { "slug": "admin" }
+        ],
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1197,6 +1200,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1219,6 +1223,9 @@ class UserManagementApiTest : TestBase() {
             "role": {
               "slug": "admin"
             },
+            "roles": [
+              { "slug": "admin" }
+            ],
             "status": "active",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1242,6 +1249,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1265,6 +1273,9 @@ class UserManagementApiTest : TestBase() {
             "role": {
               "slug": "admin"
             },
+            "roles": [
+              { "slug": "admin" }
+            ],
             "status": "active",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1301,6 +1312,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1322,6 +1334,9 @@ class UserManagementApiTest : TestBase() {
         "role": {
           "slug": "admin"
         },
+        "roles": [
+          { "slug": "admin" }
+        ],
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1345,6 +1360,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1365,6 +1381,9 @@ class UserManagementApiTest : TestBase() {
         "role": {
           "slug": "member"
         },
+        "roles": [
+          { "slug": "member" }
+        ],
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1384,6 +1403,99 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("member"),
+        listOf(OrganizationMembershipRole("member")),
+        OrganizationMembershipStatusEnumType.Active,
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z",
+      ),
+      organizationMembership
+    )
+  }
+
+  @Test
+  fun createOrganizationMembershipWithMultipleRolesShouldReturnValidOrganizationMembershipObject() {
+    stubResponse(
+      "/user_management/organization_memberships",
+      """{
+        "object": "organization_membership",
+        "id": "om_123",
+        "user_id": "user_456",
+        "organization_id": "org_789",
+        "role": {
+          "slug": "admin"
+        },
+        "roles": [
+          { "slug": "admin" },
+          { "slug": "editor" }
+        ],
+        "status": "active",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }""",
+      requestBody =
+      """{
+        "user_id": "user_456",
+        "organization_id": "org_789",
+        "role_slugs": ["admin", "editor"]
+      }"""
+    )
+
+    val options =
+      CreateOrganizationMembershipOptionsBuilder.create("user_456", "org_789", listOf("admin", "editor")).build()
+
+    val organizationMembership = workos.userManagement.createOrganizationMembership(options)
+
+    assertEquals(
+      OrganizationMembership(
+        "om_123",
+        "user_456",
+        "org_789",
+        OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin"), OrganizationMembershipRole("editor")),
+        OrganizationMembershipStatusEnumType.Active,
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z",
+      ),
+      organizationMembership
+    )
+  }
+
+  @Test
+  fun updateOrganizationMembershipWithMultipleRolesShouldReturnValidOrganizationMembershipObject() {
+    stubResponse(
+      "/user_management/organization_memberships/om_123",
+      """{
+        "object": "organization_membership",
+        "id": "om_123",
+        "user_id": "user_456",
+        "organization_id": "org_789",
+        "role": {
+          "slug": "viewer"
+        },
+        "roles": [
+          { "slug": "viewer" },
+          { "slug": "commenter" }
+        ],
+        "status": "active",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }""",
+      requestBody = """{
+        "id": "om_123",
+        "role_slugs": ["viewer", "commenter"]
+      }"""
+    )
+
+    val organizationMembership =
+      workos.userManagement.updateOrganizationMembership("om_123", listOf("viewer", "commenter"))
+
+    assertEquals(
+      OrganizationMembership(
+        "om_123",
+        "user_456",
+        "org_789",
+        OrganizationMembershipRole("viewer"),
+        listOf(OrganizationMembershipRole("viewer"), OrganizationMembershipRole("commenter")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1411,6 +1523,9 @@ class UserManagementApiTest : TestBase() {
         "role": {
           "slug": "admin"
         },
+        "roles": [
+          { "slug": "admin" }
+        ],
         "status": "inactive",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1425,6 +1540,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Inactive,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
@@ -1445,6 +1561,9 @@ class UserManagementApiTest : TestBase() {
         "role": {
           "slug": "admin"
         },
+        "roles": [
+          { "slug": "admin" }
+        ],
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1459,6 +1578,7 @@ class UserManagementApiTest : TestBase() {
         "user_456",
         "org_789",
         OrganizationMembershipRole("admin"),
+        listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
