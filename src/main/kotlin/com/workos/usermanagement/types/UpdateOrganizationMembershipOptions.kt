@@ -25,5 +25,6 @@ class UpdateOrganizationMembershipOptions @JvmOverloads constructor(
 ) {
   init {
     require(id.isNotBlank()) { "Organization Membership ID is required" }
+    require(roleSlug == null || roleSlugs == null) { "Cannot specify both roleSlug and roleSlugs" }
   }
 }

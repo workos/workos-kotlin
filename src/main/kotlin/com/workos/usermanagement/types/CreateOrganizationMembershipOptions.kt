@@ -32,5 +32,6 @@ class CreateOrganizationMembershipOptions @JvmOverloads constructor(
   init {
     require(userId.isNotBlank()) { "User ID is required" }
     require(organizationId.isNotBlank()) { "Organization ID is required" }
+    require(roleSlug == null || roleSlugs == null) { "Cannot specify both roleSlug and roleSlugs" }
   }
 }
