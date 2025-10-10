@@ -18,13 +18,20 @@ class CreateOrganizationMembershipOptions @JvmOverloads constructor(
   val organizationId: String,
 
   /**
-   * The unique role identifier. Defaults to `member`.
+   * The unique slug of the role to grant to this membership.
    */
   @JsonProperty("role_slug")
-  val roleSlug: String? = null
+  val roleSlug: String? = null,
+
+  /**
+   * The unique slugs of the roles to grant to this membership.
+   */
+  @JsonProperty("role_slugs")
+  val roleSlugs: List<String>? = null
 ) {
   init {
     require(userId.isNotBlank()) { "User ID is required" }
     require(organizationId.isNotBlank()) { "Organization ID is required" }
+    require(roleSlug == null || roleSlugs == null) { "Cannot specify both roleSlug and roleSlugs" }
   }
 }

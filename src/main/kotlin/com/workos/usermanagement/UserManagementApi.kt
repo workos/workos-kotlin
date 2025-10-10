@@ -408,6 +408,17 @@ class UserManagementApi(private val workos: WorkOS) {
     )
   }
 
+  /** Update the details of an existing organization membership with multiple roles. */
+  fun updateOrganizationMembership(id: String, roleSlugs: List<String>): OrganizationMembership {
+    return workos.put(
+      "/user_management/organization_memberships/$id",
+      OrganizationMembership::class.java,
+      RequestConfig.builder()
+        .data(UpdateOrganizationMembershipOptionsBuilder.create(id, roleSlugs).build())
+        .build()
+    )
+  }
+
   /** Deletes an existing organization membership. */
   fun deleteOrganizationMembership(id: String) {
     workos.delete("/user_management/organization_memberships/$id")
