@@ -1878,6 +1878,122 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun resendInvitationShouldReturnValidInvitation() {
+    stubResponse(
+      "/user_management/invitations/invitation_123/resend",
+      """{
+        "id": "invitation_123",
+        "email": "test01@example.com",
+        "state": "pending",
+        "accepted_at": null,
+        "revoked_at": null,
+        "expires_at": "2021-07-01T19:07:33.155Z",
+        "token": "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "accept_invitation_url": "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "inviter_user_id": "user_789",
+        "organization_id": "org_456",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val invitation = workos.userManagement.resendInvitation("invitation_123")
+
+    assertEquals(
+      Invitation(
+        "invitation_123",
+        "test01@example.com",
+        InvitationStateEnumType.Pending,
+        null,
+        null,
+        "2021-07-01T19:07:33.155Z",
+        "Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "https://your-app.com/invite?invitation_token=Z1uX3RbwcIl5fIGJJJCXXisdI",
+        "org_456",
+        "user_789",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      invitation
+    )
+  }
+
+  @Test
+  fun resendInvitationShouldHandleExpiredInvitation() {
+    stubResponse(
+      "/user_management/invitations/invitation_123/resend",
+      """{
+        "code": "invite_expired",
+        "message": "Invite has expired."
+      }""",
+      responseStatus = 400
+    )
+
+    val exception = assertThrows(BadRequestException::class.java) {
+      workos.userManagement.resendInvitation("invitation_123")
+    }
+
+    assertEquals("Invite has expired.", exception.message)
+    assertEquals("invite_expired", exception.code)
+  }
+
+  @Test
+  fun resendInvitationShouldHandleRevokedInvitation() {
+    stubResponse(
+      "/user_management/invitations/invitation_123/resend",
+      """{
+        "code": "invite_revoked",
+        "message": "Invite has been revoked."
+      }""",
+      responseStatus = 400
+    )
+
+    val exception = assertThrows(BadRequestException::class.java) {
+      workos.userManagement.resendInvitation("invitation_123")
+    }
+
+    assertEquals("Invite has been revoked.", exception.message)
+    assertEquals("invite_revoked", exception.code)
+  }
+
+  @Test
+  fun resendInvitationShouldHandleAcceptedInvitation() {
+    stubResponse(
+      "/user_management/invitations/invitation_123/resend",
+      """{
+        "code": "invite_accepted",
+        "message": "Invite has already been accepted."
+      }""",
+      responseStatus = 400
+    )
+
+    val exception = assertThrows(BadRequestException::class.java) {
+      workos.userManagement.resendInvitation("invitation_123")
+    }
+
+    assertEquals("Invite has already been accepted.", exception.message)
+    assertEquals("invite_accepted", exception.code)
+  }
+
+  @Test
+  fun resendInvitationShouldHandleNotFoundError() {
+    stubResponse(
+      "/user_management/invitations/invitation_invalid/resend",
+      """{
+        "message": "Invitation not found.",
+        "code": "not_found"
+      }""",
+      responseStatus = 404
+    )
+
+    val exception = assertThrows(com.workos.common.exceptions.NotFoundException::class.java) {
+      workos.userManagement.resendInvitation("invitation_invalid")
+    }
+
+    assertEquals("NotFoundException", exception.message)
+  }
+
+  @Test
   fun getLogoutUrlShouldReturnValidUrlResponse() {
     val url = workos.userManagement.getLogoutUrl("session_123")
 
