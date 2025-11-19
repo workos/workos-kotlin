@@ -476,6 +476,11 @@ class UserManagementApi(private val workos: WorkOS) {
     return workos.post("/user_management/invitations/$id/revoke", Invitation::class.java)
   }
 
+  /** Resends an existing invitation. */
+  fun resendInvitation(id: String): Invitation {
+    return workos.post("/user_management/invitations/$id/resend", Invitation::class.java)
+  }
+
   /** End a user's session. The user's browser should be redirected to this URL. */
   fun getLogoutUrl(sessionId: String, returnTo: String? = null): String {
     return URIBuilder(workos.baseUrl)
