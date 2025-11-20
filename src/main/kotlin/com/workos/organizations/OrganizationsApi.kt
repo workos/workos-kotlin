@@ -159,6 +159,13 @@ class OrganizationsApi(private val workos: WorkOS) {
   }
 
   /**
+   * Fetches a single organization by external ID.
+   */
+  fun getOrganizationByExternalId(externalId: String): Organization {
+    return workos.get("/organizations/external_id/$externalId", Organization::class.java)
+  }
+
+  /**
    * Parameters for [listOrganizations] method.
    * Use `ListOrganizationsOptions.builder()` to create a new builder instance.
    *

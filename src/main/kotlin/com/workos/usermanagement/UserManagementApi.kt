@@ -47,6 +47,11 @@ class UserManagementApi(private val workos: WorkOS) {
     return workos.get("/user_management/users/$userId", User::class.java)
   }
 
+  /** Get the details of an existing user by external ID. */
+  fun getUserByExternalId(externalId: String): User {
+    return workos.get("/user_management/users/external_id/$externalId", User::class.java)
+  }
+
   /** Get a list of all the existing users matching the criteria specified. */
   fun listUsers(options: ListUsersOptions? = null): Users {
     val params: Map<String, String> =

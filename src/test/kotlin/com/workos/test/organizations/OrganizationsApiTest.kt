@@ -282,6 +282,47 @@ class OrganizationsApiTest : TestBase() {
   }
 
   @Test
+  fun getOrganizationByExternalIdShouldReturnPayload() {
+    val workos = createWorkOSClient()
+
+    val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
+    val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+    val organizationDomainName = "Test Organization"
+    val externalId = "ext_123"
+
+    stubResponse(
+      url = "/organizations/external_id/$externalId",
+      responseBody = """{
+        "name": "$organizationDomainName",
+        "object": "organization",
+        "id": "$organizationId",
+        "allow_profiles_outside_organization": false,
+        "created_at": "2021-10-28T15:13:51.874Z",
+        "updated_at": "2021-10-28T15:14:03.032Z",
+        "domains": [
+          {
+            "domain": "example.com",
+            "object": "organization_domain",
+            "id": "$organizationDomainId",
+            "state": "verified",
+            "verification_strategy": "dns",
+            "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
+          }
+        ]
+      }"""
+    )
+
+    val organization = workos.organizations.getOrganizationByExternalId(externalId)
+
+    assertEquals(organizationId, organization.id)
+    assertEquals(organizationDomainName, organization.name)
+    assertEquals(organizationDomainId, organization.domains[0].id)
+    assertEquals(OrganizationDomainState.Verified, organization.domains[0].state)
+    assertEquals(OrganizationDomainVerificationStrategy.Dns, organization.domains[0].verificationStrategy)
+    assertEquals("rqURsMUCuiaSggGyed8ZAnMk", organization.domains[0].verificationToken)
+  }
+
+  @Test
   fun listOrganizationsShouldReturnPayload() {
     val workos = createWorkOSClient()
 

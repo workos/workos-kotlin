@@ -77,6 +77,42 @@ class UserManagementApiTest : TestBase() {
   }
 
   @Test
+  fun getUserByExternalIdShouldReturnValidUserObject() {
+    stubResponse(
+      "/user_management/users/external_id/ext_123",
+      """{
+        "object": "user",
+        "id": "user_123",
+        "email": "test01@example.com",
+        "email_verified": true,
+        "profile_picture_url": "https://example.com/profile_picture.jpg",
+        "first_name": "Test",
+        "last_name": "User",
+        "last_sign_in_at": "2021-06-25T19:07:33.155Z",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:07:33.155Z"
+      }"""
+    )
+
+    val user = workos.userManagement.getUserByExternalId("ext_123")
+
+    assertEquals(
+      User(
+        "user_123",
+        "test01@example.com",
+        "Test",
+        "User",
+        true,
+        "https://example.com/profile_picture.jpg",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
+      ),
+      user
+    )
+  }
+
+  @Test
   fun listUsersShouldReturnValidUsers() {
     stubResponse(
       "/user_management/users",
