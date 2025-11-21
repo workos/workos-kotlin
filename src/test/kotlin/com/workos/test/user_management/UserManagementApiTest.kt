@@ -52,6 +52,7 @@ class UserManagementApiTest : TestBase() {
         "profile_picture_url": "https://example.com/profile_picture.jpg",
         "first_name": "Test",
         "last_name": "User",
+        "external_id": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -66,6 +67,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         true,
         "https://example.com/profile_picture.jpg",
         "2021-06-25T19:07:33.155Z",
@@ -74,6 +76,7 @@ class UserManagementApiTest : TestBase() {
       ),
       user
     )
+    assertEquals(null, user.externalId)
   }
 
   @Test
@@ -88,6 +91,7 @@ class UserManagementApiTest : TestBase() {
         "profile_picture_url": "https://example.com/profile_picture.jpg",
         "first_name": "Test",
         "last_name": "User",
+        "external_id": "ext_123",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -102,6 +106,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        "ext_123",
         true,
         "https://example.com/profile_picture.jpg",
         "2021-06-25T19:07:33.155Z",
@@ -110,6 +115,7 @@ class UserManagementApiTest : TestBase() {
       ),
       user
     )
+    assertEquals("ext_123", user.externalId)
   }
 
   @Test
@@ -122,6 +128,7 @@ class UserManagementApiTest : TestBase() {
             "object": "user",
             "id": "user_123",
             "email": "test01@example.com",
+            "external_id": null,
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -140,6 +147,7 @@ class UserManagementApiTest : TestBase() {
       User(
         "user_123",
         "test01@example.com",
+        null,
         null,
         null,
         false,
@@ -163,6 +171,7 @@ class UserManagementApiTest : TestBase() {
             "object": "user",
             "id": "user_123",
             "email": "test01@example.com",
+            "external_id": null,
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -193,6 +202,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         null,
         null,
+        null,
         false,
         null,
         "2021-06-25T19:07:33.155Z",
@@ -216,6 +226,7 @@ class UserManagementApiTest : TestBase() {
         "profile_picture_url": null,
         "first_name": "Test",
         "last_name": "User",
+        "external_id": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -246,6 +257,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         true,
         null,
         "2021-06-25T19:07:33.155Z",
@@ -268,6 +280,7 @@ class UserManagementApiTest : TestBase() {
         "profile_picture_url": null,
         "first_name": "Test",
         "last_name": "User",
+        "external_id": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -298,6 +311,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         true,
         null,
         "2021-06-25T19:07:33.155Z",
@@ -1178,6 +1192,7 @@ class UserManagementApiTest : TestBase() {
         "profile_picture_url": null,
         "first_name": "Test",
         "last_name": "User",
+        "external_id": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1197,6 +1212,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         true,
         null,
         "2021-06-25T19:07:33.155Z",

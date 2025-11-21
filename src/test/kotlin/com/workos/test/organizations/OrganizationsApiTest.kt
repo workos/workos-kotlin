@@ -27,6 +27,7 @@ class OrganizationsApiTest : TestBase() {
         "name": "$organizationDomainName",
         "object": "organization",
         "id": "$organizationId",
+        "external_id": null,
         "allow_profiles_outside_organization": false,
         "created_at": "2021-10-28T15:13:51.874Z",
         "updated_at": "2021-10-28T15:14:03.032Z",
@@ -60,6 +61,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -97,6 +99,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -122,6 +125,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -166,6 +170,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -179,6 +184,7 @@ class OrganizationsApiTest : TestBase() {
         "name": "Organization Name",
         "object": "organization",
         "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+        "external_id": null,
         "allow_profiles_outside_organization": false,
         "created_at": "2021-10-28T15:13:51.874Z",
         "updated_at": "2021-10-28T15:14:03.032Z",
@@ -255,6 +261,7 @@ class OrganizationsApiTest : TestBase() {
         "name": "$organizationDomainName",
         "object": "organization",
         "id": "$organizationId",
+        "external_id": null,
         "allow_profiles_outside_organization": false,
         "created_at": "2021-10-28T15:13:51.874Z",
         "updated_at": "2021-10-28T15:14:03.032Z",
@@ -275,6 +282,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(organizationId, organization.id)
     assertEquals(organizationDomainName, organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(organizationDomainId, organization.domains[0].id)
     assertEquals(OrganizationDomainState.Verified, organization.domains[0].state)
     assertEquals(OrganizationDomainVerificationStrategy.Dns, organization.domains[0].verificationStrategy)
@@ -296,6 +304,7 @@ class OrganizationsApiTest : TestBase() {
         "name": "$organizationDomainName",
         "object": "organization",
         "id": "$organizationId",
+        "external_id": "$externalId",
         "allow_profiles_outside_organization": false,
         "created_at": "2021-10-28T15:13:51.874Z",
         "updated_at": "2021-10-28T15:14:03.032Z",
@@ -316,6 +325,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(organizationId, organization.id)
     assertEquals(organizationDomainName, organization.name)
+    assertEquals(externalId, organization.externalId)
     assertEquals(organizationDomainId, organization.domains[0].id)
     assertEquals(OrganizationDomainState.Verified, organization.domains[0].state)
     assertEquals(OrganizationDomainVerificationStrategy.Dns, organization.domains[0].verificationStrategy)
@@ -338,6 +348,7 @@ class OrganizationsApiTest : TestBase() {
             "name": "$organizationDomainName",
             "object": "organization",
             "id": "$organizationId",
+            "external_id": null,
             "allow_profiles_outside_organization": false,
             "created_at": "2021-10-28T15:13:51.874Z",
             "updated_at": "2021-10-28T15:14:03.032Z",
@@ -364,6 +375,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(organizationId, organizations.get(0).id)
     assertEquals(organizationDomainName, organizations.get(0).name)
+    assertEquals(null, organizations.get(0).externalId)
     assertEquals(organizationDomainId, organizations.get(0).domains[0].id)
     assertEquals(OrganizationDomainState.Verified, organizations.get(0).domains[0].state)
     assertEquals(OrganizationDomainVerificationStrategy.Dns, organizations.get(0).domains[0].verificationStrategy)
@@ -387,6 +399,7 @@ class OrganizationsApiTest : TestBase() {
             "name": "$organizationDomainName",
             "object": "organization",
             "id": "$organizationId",
+            "external_id": null,
             "allow_profiles_outside_organization": false,
             "created_at": "2021-10-28T15:13:51.874Z",
             "updated_at": "2021-10-28T15:14:03.032Z",
@@ -436,6 +449,7 @@ class OrganizationsApiTest : TestBase() {
             "name": "$organizationDomainName",
             "object": "organization",
             "id": "$organizationId",
+            "external_id": null,
             "allow_profiles_outside_organization": false,
             "created_at": "2021-10-28T15:13:51.874Z",
             "updated_at": "2021-10-28T15:14:03.032Z",
@@ -478,6 +492,7 @@ class OrganizationsApiTest : TestBase() {
         "name": "$organizationDomainName",
         "object": "organization",
         "id": "$organizationId",
+        "external_id": null,
         "allow_profiles_outside_organization": false,
         "created_at": "2021-10-28T15:13:51.874Z",
         "updated_at": "2021-10-28T15:14:03.032Z",
@@ -511,6 +526,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -548,6 +564,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -569,6 +586,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -614,6 +632,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 
@@ -641,6 +660,7 @@ class OrganizationsApiTest : TestBase() {
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
+    assertEquals(null, organization.externalId)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
   }
 

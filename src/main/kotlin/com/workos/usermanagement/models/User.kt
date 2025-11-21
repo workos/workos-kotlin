@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param email The email address of the user.
  * @param firstName The first name of the user.
  * @param lastName The last name of the user.
- * @param emailVerified Whether the user’s email has been verified.
+ * @param externalId The external ID of the user.
+ * @param emailVerified Whether the user's email has been verified.
  * @param profilePictureUrl A URL reference to an image representing the user.
  * @param lastSignInAt The timestamp when the user last signed in.
  * @param createdAt The timestamp when the user was created.
@@ -28,6 +29,9 @@ data class User @JsonCreator constructor(
 
   @JsonProperty("last_name")
   val lastName: String? = null,
+
+  @JsonProperty("external_id")
+  val externalId: String? = null,
 
   @JsonProperty("email_verified")
   val emailVerified: Boolean,
