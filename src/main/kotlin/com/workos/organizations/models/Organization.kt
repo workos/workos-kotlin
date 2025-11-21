@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param obj The unique object identifier type of the record.
  * @param id The unique identifier for the Organization.
  * @param name The name of the Organization.
+ * @param externalId The external ID of the Organization.
+ * @param metadata A JSON object containing additional information about the organization.
  * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
  * @param domains List of [OrganizationDomain]s.
  * @param createdAt The timestamp of when the Organization was created.
@@ -26,6 +28,14 @@ data class Organization
 
   @JvmField
   val name: String,
+
+  @JvmField
+  @JsonProperty("external_id")
+  val externalId: String? = null,
+
+  @JvmField
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>? = null,
 
   @JvmField
   @JsonProperty("allow_profiles_outside_organization")

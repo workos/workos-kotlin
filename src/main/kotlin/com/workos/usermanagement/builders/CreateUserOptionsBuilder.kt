@@ -12,7 +12,9 @@ import com.workos.usermanagement.types.PasswordHashTypeEnumType
  * @param passwordHashType The algorithm originally used to hash the password, used when providing a password_hash.
  * @param firstName The first name of the user.
  * @param lastName The last name of the user.
- * @param emailVerified Whether the user’s email address was previously verified.
+ * @param emailVerified Whether the user's email address was previously verified.
+ * @param externalId The external identifier of the user.
+ * @param metadata Object containing metadata key/value pairs associated with the user.
  */
 class CreateUserOptionsBuilder @JvmOverloads constructor(
   val email: String,
@@ -22,6 +24,8 @@ class CreateUserOptionsBuilder @JvmOverloads constructor(
   override var firstName: String? = null,
   override var lastName: String? = null,
   override var emailVerified: Boolean? = null,
+  var externalId: String? = null,
+  var metadata: Map<String, String>? = null
 ) : AbstractUserOptionsBuilder<CreateUserOptions>(
   password,
   passwordHash,
@@ -30,6 +34,16 @@ class CreateUserOptionsBuilder @JvmOverloads constructor(
   lastName,
   emailVerified
 ) {
+  /**
+   * Sets the external identifier of the user.
+   */
+  fun externalId(value: String) = apply { externalId = value }
+
+  /**
+   * Sets the metadata for the user.
+   */
+  fun metadata(value: Map<String, String>) = apply { metadata = value }
+
   /**
    * Generates the CreateUserOptions object.
    */
@@ -42,6 +56,8 @@ class CreateUserOptionsBuilder @JvmOverloads constructor(
       firstName = this.firstName,
       lastName = this.lastName,
       emailVerified = this.emailVerified,
+      externalId = this.externalId,
+      metadata = this.metadata
     )
   }
 
