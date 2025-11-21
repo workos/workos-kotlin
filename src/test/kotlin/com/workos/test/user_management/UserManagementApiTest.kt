@@ -53,6 +53,7 @@ class UserManagementApiTest : TestBase() {
         "first_name": "Test",
         "last_name": "User",
         "external_id": null,
+        "metadata": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -68,6 +69,7 @@ class UserManagementApiTest : TestBase() {
         "Test",
         "User",
         null,
+        null,
         true,
         "https://example.com/profile_picture.jpg",
         "2021-06-25T19:07:33.155Z",
@@ -77,6 +79,7 @@ class UserManagementApiTest : TestBase() {
       user
     )
     assertEquals(null, user.externalId)
+    assertEquals(null, user.metadata)
   }
 
   @Test
@@ -92,6 +95,7 @@ class UserManagementApiTest : TestBase() {
         "first_name": "Test",
         "last_name": "User",
         "external_id": "ext_123",
+        "metadata": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -107,6 +111,7 @@ class UserManagementApiTest : TestBase() {
         "Test",
         "User",
         "ext_123",
+        null,
         true,
         "https://example.com/profile_picture.jpg",
         "2021-06-25T19:07:33.155Z",
@@ -116,6 +121,7 @@ class UserManagementApiTest : TestBase() {
       user
     )
     assertEquals("ext_123", user.externalId)
+    assertEquals(null, user.metadata)
   }
 
   @Test
@@ -129,6 +135,7 @@ class UserManagementApiTest : TestBase() {
             "id": "user_123",
             "email": "test01@example.com",
             "external_id": null,
+            "metadata": null,
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -147,6 +154,7 @@ class UserManagementApiTest : TestBase() {
       User(
         "user_123",
         "test01@example.com",
+        null,
         null,
         null,
         null,
@@ -172,6 +180,7 @@ class UserManagementApiTest : TestBase() {
             "id": "user_123",
             "email": "test01@example.com",
             "external_id": null,
+            "metadata": null,
             "last_sign_in_at": "2021-06-25T19:07:33.155Z",
             "created_at": "2021-06-25T19:07:33.155Z",
             "updated_at": "2021-06-25T19:07:33.155Z"
@@ -203,6 +212,7 @@ class UserManagementApiTest : TestBase() {
         null,
         null,
         null,
+        null,
         false,
         null,
         "2021-06-25T19:07:33.155Z",
@@ -227,6 +237,7 @@ class UserManagementApiTest : TestBase() {
         "first_name": "Test",
         "last_name": "User",
         "external_id": null,
+        "metadata": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -258,6 +269,7 @@ class UserManagementApiTest : TestBase() {
         "Test",
         "User",
         null,
+        null,
         true,
         null,
         "2021-06-25T19:07:33.155Z",
@@ -281,6 +293,7 @@ class UserManagementApiTest : TestBase() {
         "first_name": "Test",
         "last_name": "User",
         "external_id": null,
+        "metadata": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -311,6 +324,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         null,
         true,
         null,
@@ -1193,6 +1207,7 @@ class UserManagementApiTest : TestBase() {
         "first_name": "Test",
         "last_name": "User",
         "external_id": null,
+        "metadata": null,
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z"
@@ -1212,6 +1227,7 @@ class UserManagementApiTest : TestBase() {
         "test01@example.com",
         "Test",
         "User",
+        null,
         null,
         true,
         null,
