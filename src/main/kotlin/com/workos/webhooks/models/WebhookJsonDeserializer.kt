@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.workos.directorysync.models.Directory
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
+import com.workos.organizations.models.Organization
 import com.workos.sso.models.Connection
 import com.workos.usermanagement.models.AuthenticationEventData
 import com.workos.usermanagement.models.EmailVerificationEventData
@@ -73,6 +74,9 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
+      EventType.OrganizationCreated -> OrganizationCreatedEvent(id, eventType, deserializeData(data, Organization::class.java), createdAt)
+      EventType.OrganizationUpdated -> OrganizationUpdatedEvent(id, eventType, deserializeData(data, Organization::class.java), createdAt)
+      EventType.OrganizationDeleted -> OrganizationDeletedEvent(id, eventType, deserializeData(data, Organization::class.java), createdAt)
       EventType.PasswordResetCreated -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
       EventType.PasswordResetSucceeded -> PasswordResetEvent(id, eventType, deserializeData(data, PasswordResetEventData::class.java), createdAt)
       EventType.UserCreated -> UserCreatedEvent(id, eventType, deserializeData(data, UserManagementUser::class.java), createdAt)
