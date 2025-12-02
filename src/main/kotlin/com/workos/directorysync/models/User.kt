@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param groups The groups that the user is a member of.
  * @param state The state of the user.
  * @param role The user's role based on group memberships.
+ * @param roles All user roles based on group memberships.
  * @param customAttributes An object containing the custom attribute mapping for the Directory Provider.
  * @param rawAttributes An object containing the data returned from the Directory Provider.
  */
@@ -93,6 +94,10 @@ open class User
   @JvmField
   @JsonProperty("role")
   val role: DirectoryUserRole?,
+
+  @JvmField
+  @JsonProperty("roles")
+  val roles: List<DirectoryUserRole>? = null,
 
   @JvmField
   @JsonProperty("custom_attributes")
