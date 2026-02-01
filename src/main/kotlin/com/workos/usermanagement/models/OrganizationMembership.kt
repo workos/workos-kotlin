@@ -14,9 +14,9 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * @param role The role in the organization membership (see [OrganizationMembershipRole]).
  * @param roles The roles in the organization membership for multiple roles support (see [OrganizationMembershipRole]).
  * @param status Whether the organization membership is active or pending (see enum values in [OrganizationMembershipStatusEnumType]).
- * @param idpAttributes Custom attributes from the identity provider.
  * @param createdAt The timestamp when the user was created.
  * @param updatedAt The timestamp when the user was last updated.
+ * @param idpAttributes Custom attributes from the identity provider.
  */
 data class OrganizationMembership @JsonCreator constructor(
   @JsonProperty("id")
@@ -37,12 +37,12 @@ data class OrganizationMembership @JsonCreator constructor(
   @JsonProperty("status")
   val status: OrganizationMembershipStatusEnumType,
 
-  @JsonProperty("idp_attributes")
-  val idpAttributes: Map<String, Any>? = null,
-
   @JsonProperty("created_at")
   val createdAt: String,
 
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+
+  @JsonProperty("idp_attributes")
+  val idpAttributes: Map<String, Any>? = null
 )
