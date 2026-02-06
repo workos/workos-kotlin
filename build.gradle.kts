@@ -50,7 +50,7 @@ dependencies {
 
   testImplementation("com.github.tomakehurst:wiremock:2.27.2")
 
-  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.9.20")
 
   api("org.apache.commons:commons-math3:3.6.1")
 }
