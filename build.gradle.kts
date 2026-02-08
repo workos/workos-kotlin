@@ -13,7 +13,7 @@ plugins {
 
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
-  id("org.jetbrains.dokka") version "1.5.30"
+  id("org.jetbrains.dokka") version "1.9.20"
 
   id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 
