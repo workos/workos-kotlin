@@ -9,7 +9,7 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.5.0"
+  id("org.jetbrains.kotlin.jvm") version "1.9.25"
 
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 
