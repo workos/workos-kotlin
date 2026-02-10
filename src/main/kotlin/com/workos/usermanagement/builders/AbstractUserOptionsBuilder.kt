@@ -12,6 +12,8 @@ import com.workos.usermanagement.types.PasswordHashTypeEnumType
  * @param firstName The first name of the user.
  * @param lastName The last name of the user.
  * @param emailVerified Whether the user’s email address was previously verified.
+ * @param externalId The external ID of the user.
+ * @param metadata Object containing metadata key/value pairs associated with the user.
  */
 abstract class AbstractUserOptionsBuilder<OptionsObject> @JvmOverloads constructor(
   open var password: String? = null,
@@ -20,6 +22,8 @@ abstract class AbstractUserOptionsBuilder<OptionsObject> @JvmOverloads construct
   open var firstName: String? = null,
   open var lastName: String? = null,
   open var emailVerified: Boolean? = null,
+  open var externalId: String? = null,
+  open var metadata: Map<String, String>? = null,
 ) {
   /**
    * Password
@@ -54,6 +58,16 @@ abstract class AbstractUserOptionsBuilder<OptionsObject> @JvmOverloads construct
    * existing user store, this can be set to true to mark it as already verified.
    */
   fun emailVerified(value: Boolean) = apply { emailVerified = value }
+
+  /**
+   * External ID
+   */
+  fun externalId(value: String) = apply { externalId = value }
+
+  /**
+   * Metadata
+   */
+  fun metadata(value: Map<String, String>) = apply { metadata = value }
 
   /**
    * Generates the options object.

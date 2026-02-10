@@ -24,6 +24,8 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
    * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
+   * @param externalId The external ID of the organization.
+   * @param metadata Object containing metadata key/value pairs associated with the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationOptions @JvmOverloads constructor(
@@ -36,7 +38,13 @@ class OrganizationsApi(private val workos: WorkOS) {
     val domainData: List<OrganizationDomainDataOptions>? = null,
 
     @Deprecated("Use domainData instead.")
-    val domains: List<String>? = null
+    val domains: List<String>? = null,
+
+    @JsonProperty("external_id")
+    val externalId: String? = null,
+
+    @JsonProperty("metadata")
+    val metadata: Map<String, String>? = null,
   ) {
     /**
      * Builder class for creating [CreateOrganizationOptions].
@@ -49,6 +57,10 @@ class OrganizationsApi(private val workos: WorkOS) {
       private var domainData: List<OrganizationDomainDataOptions>? = null
 
       private var domains: List<String>? = null
+
+      private var externalId: String? = null
+
+      private var metadata: Map<String, String>? = null
 
       /**
        * Sets the name of the organization.
@@ -73,10 +85,20 @@ class OrganizationsApi(private val workos: WorkOS) {
       fun domains(value: List<String>) = apply { domains = value }
 
       /**
+       * Sets the external ID for the organization.
+       */
+      fun externalId(value: String) = apply { externalId = value }
+
+      /**
+       * Sets the metadata for the organization.
+       */
+      fun metadata(value: Map<String, String>) = apply { metadata = value }
+
+      /**
        * Creates an instance of [CreateOrganizationOptions] with the given params.
        */
       fun build(): CreateOrganizationOptions {
-        return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+        return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains, externalId, metadata)
       }
     }
 
@@ -220,6 +242,9 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param allowProfilesOutsideOrganization Whether the Connections within this Organization should allow Profiles that do not have a domain that is present in the set of the Organization's User Email Domains.
    * @param domainData A list of data for the domains of the organization.
    * @param domains A list of domains for the organization.
+   * @param stripeCustomerId The Stripe customer ID associated with this organization.
+   * @param externalId The external ID of the organization.
+   * @param metadata Object containing metadata key/value pairs associated with the organization.
    */
   @JsonInclude(Include.NON_NULL)
   class UpdateOrganizationOptions @JvmOverloads constructor(
@@ -232,7 +257,16 @@ class OrganizationsApi(private val workos: WorkOS) {
     val domainData: List<OrganizationDomainDataOptions>? = null,
 
     @Deprecated("Use domainData instead.")
-    val domains: List<String>? = null
+    val domains: List<String>? = null,
+
+    @JsonProperty("stripe_customer_id")
+    val stripeCustomerId: String? = null,
+
+    @JsonProperty("external_id")
+    val externalId: String? = null,
+
+    @JsonProperty("metadata")
+    val metadata: Map<String, String>? = null,
   ) {
     /**
      * Builder class for [UpdateOrganizationOptions].
@@ -245,6 +279,12 @@ class OrganizationsApi(private val workos: WorkOS) {
       private var domainData: List<OrganizationDomainDataOptions>? = null
 
       private var domains: List<String>? = null
+
+      private var stripeCustomerId: String? = null
+
+      private var externalId: String? = null
+
+      private var metadata: Map<String, String>? = null
 
       /**
        * Sets the name of the organization.
@@ -269,10 +309,25 @@ class OrganizationsApi(private val workos: WorkOS) {
       fun domains(value: List<String>) = apply { domains = value }
 
       /**
+       * Sets the Stripe customer ID associated with this organization.
+       */
+      fun stripeCustomerId(value: String) = apply { stripeCustomerId = value }
+
+      /**
+       * Sets the external ID for the organization.
+       */
+      fun externalId(value: String) = apply { externalId = value }
+
+      /**
+       * Sets the metadata for the organization.
+       */
+      fun metadata(value: Map<String, String>) = apply { metadata = value }
+
+      /**
        * Creates an instance of [UpdateOrganizationOptions].
        */
       fun build(): UpdateOrganizationOptions {
-        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains, stripeCustomerId, externalId, metadata)
       }
     }
 

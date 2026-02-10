@@ -14,6 +14,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param domains List of [OrganizationDomain]s.
  * @param createdAt The timestamp of when the Organization was created.
  * @param updatedAt The timestamp of when the Organization was updated.
+ * @param stripeCustomerId The Stripe customer ID associated with this organization.
+ * @param externalId The external ID of the Organization.
+ * @param metadata Object containing metadata key/value pairs associated with the Organization.
  */
 data class Organization
 @JsonCreator constructor(
@@ -40,5 +43,14 @@ data class Organization
 
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+
+  @JsonProperty("stripe_customer_id")
+  val stripeCustomerId: String? = null,
+
+  @JsonProperty("external_id")
+  val externalId: String? = null,
+
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>? = null,
 )
