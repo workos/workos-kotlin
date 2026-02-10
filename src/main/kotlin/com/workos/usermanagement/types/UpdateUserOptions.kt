@@ -51,7 +51,19 @@ class UpdateUserOptions @JvmOverloads constructor(
    * The algorithm originally used to hash the password, used when providing a password_hash.
    */
   @JsonProperty("password_hash_type")
-  val passwordHashType: PasswordHashTypeEnumType? = null
+  val passwordHashType: PasswordHashTypeEnumType? = null,
+
+  /**
+   * The external identifier of the user.
+   */
+  @JsonProperty("external_id")
+  val externalId: String? = null,
+
+  /**
+   * Object containing metadata key/value pairs associated with the user.
+   */
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>? = null
 ) {
   init {
     require(id.isNotBlank()) { "User id is required" }
