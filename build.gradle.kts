@@ -46,7 +46,7 @@ dependencies {
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")
 
   testImplementation("com.github.tomakehurst:wiremock:2.27.2")
 
