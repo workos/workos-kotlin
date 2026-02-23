@@ -34,7 +34,7 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.1")
 
   implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
