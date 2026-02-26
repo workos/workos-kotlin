@@ -126,7 +126,7 @@ class AuthorizationApi(private val workos: WorkOS) {
       RequestConfig.toMap(options ?: ListRoleAssignmentsOptions()) as Map<String, String>
 
     return workos.get(
-      "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
       RoleAssignmentList::class.java,
       RequestConfig.builder().params(params).build()
     )
@@ -135,7 +135,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Assign a role to an organization membership. */
   fun assignRole(organizationMembershipId: String, options: AssignRoleOptions): RoleAssignment {
     return workos.post(
-      "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
       RoleAssignment::class.java,
       RequestConfig.builder().data(options).build()
     )
@@ -144,7 +144,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Remove a role from an organization membership. */
   fun removeRole(organizationMembershipId: String, options: RemoveRoleOptions) {
     workos.deleteWithBody(
-      "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
       RequestConfig.builder().data(options).build()
     )
   }
@@ -152,7 +152,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Remove a role assignment by ID. */
   fun removeRoleAssignment(organizationMembershipId: String, roleAssignmentId: String) {
     workos.delete(
-      "/authorization/organization_memberships/$organizationMembershipId/role_assignments/$roleAssignmentId"
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments/$roleAssignmentId"
     )
   }
 }
