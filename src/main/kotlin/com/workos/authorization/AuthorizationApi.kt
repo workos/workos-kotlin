@@ -11,7 +11,7 @@ import com.workos.common.http.RequestConfig
 class AuthorizationApi(private val workos: WorkOS) {
 
   companion object {
-    private const val RESOURCES_PATH = "/authorization/resources"
+    internal const val RESOURCES_PATH = "/authorization/resources"
   }
 
   /** Get a resource by internal ID. */

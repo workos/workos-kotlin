@@ -1,10 +1,12 @@
 package com.workos.test.authorization
 
+import com.workos.authorization.AuthorizationApi
 import com.workos.authorization.builders.CreateAuthorizationResourceOptionsBuilder
 import com.workos.authorization.builders.ListAuthorizationResourcesOptionsBuilder
 import com.workos.authorization.builders.UpdateAuthorizationResourceOptionsBuilder
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
