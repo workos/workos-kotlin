@@ -8,7 +8,7 @@ class ListAuthorizationResourcesOptionsBuilder @JvmOverloads constructor(
   private var resourceTypeSlug: String? = null,
   private var parentResourceId: String? = null,
   private var parentResourceTypeSlug: String? = null,
-  private var parentExternalId: String? = null,
+  private var parentResourceExternalId: String? = null,
   private var search: String? = null,
   private var limit: Int? = null,
   private var order: Order? = null,
@@ -23,7 +23,7 @@ class ListAuthorizationResourcesOptionsBuilder @JvmOverloads constructor(
 
   fun parentResourceTypeSlug(value: String) = apply { parentResourceTypeSlug = value }
 
-  fun parentExternalId(value: String) = apply { parentExternalId = value }
+  fun parentResourceExternalId(value: String) = apply { parentResourceExternalId = value }
 
   fun search(value: String) = apply { search = value }
 
@@ -41,7 +41,7 @@ class ListAuthorizationResourcesOptionsBuilder @JvmOverloads constructor(
       resourceTypeSlug = this.resourceTypeSlug,
       parentResourceId = this.parentResourceId,
       parentResourceTypeSlug = this.parentResourceTypeSlug,
-      parentExternalId = this.parentExternalId,
+      parentResourceExternalId = this.parentResourceExternalId,
       search = this.search,
       limit = this.limit,
       order = this.order,

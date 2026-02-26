@@ -4,8 +4,12 @@ import com.workos.authorization.builders.AssignRoleOptionsBuilder
 import com.workos.authorization.builders.CheckAuthorizationOptionsBuilder
 import com.workos.authorization.builders.CreateAuthorizationResourceOptionsBuilder
 import com.workos.authorization.builders.ListAuthorizationResourcesOptionsBuilder
+import com.workos.authorization.builders.ListMembershipsForResourceByExternalIdOptionsBuilder
+import com.workos.authorization.builders.ListMembershipsForResourceOptionsBuilder
+import com.workos.authorization.builders.ListResourcesForMembershipOptionsBuilder
 import com.workos.authorization.builders.RemoveRoleOptionsBuilder
 import com.workos.authorization.builders.UpdateAuthorizationResourceOptionsBuilder
+import com.workos.authorization.types.AssignmentFilter
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import kotlin.test.Test
@@ -508,5 +512,142 @@ class AuthorizationApiTest : TestBase() {
     )
 
     assertDoesNotThrow { workos.authorization.removeRoleAssignment("om_01H", "ra_01H") }
+  }
+
+  @Test
+  fun listResourcesForMembershipShouldReturnList() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/resources",
+      """{
+        "data": [
+          {
+            "object": "authorization_resource",
+            "id": "resource_01H",
+            "external_id": "my-doc-1",
+            "name": "My Document",
+            "resource_type_slug": "document",
+            "organization_id": "org_01H",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+          }
+        ],
+        "list_metadata": {
+          "after": "resource_01H",
+          "before": null
+        }
+      }"""
+    )
+
+    val options = ListResourcesForMembershipOptionsBuilder("document:read").build()
+    val resources = workos.authorization.listResourcesForMembership("om_01H", options)
+
+    assertEquals(1, resources.data.size)
+    assertEquals("resource_01H", resources.data[0].id)
+  }
+
+  @Test
+  fun listResourcesForMembershipWithParentFilterShouldReturnList() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/resources",
+      """{
+        "data": [],
+        "list_metadata": {
+          "after": null,
+          "before": null
+        }
+      }"""
+    )
+
+    val options = ListResourcesForMembershipOptionsBuilder("page:read")
+      .parentResourceId("resource_01H")
+      .resourceTypeSlug("page")
+      .build()
+    val resources = workos.authorization.listResourcesForMembership("om_01H", options)
+
+    assertNotNull(resources)
+    assertEquals(0, resources.data.size)
+  }
+
+  @Test
+  fun listMembershipsForResourceShouldReturnList() {
+    stubResponse(
+      "/authorization/resources/resource_01H/organization_memberships",
+      """{
+        "data": [
+          {
+            "object": "organization_membership",
+            "id": "om_01H",
+            "user_id": "user_01H",
+            "organization_id": "org_01H",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+          }
+        ],
+        "list_metadata": {
+          "after": "om_01H",
+          "before": null
+        }
+      }"""
+    )
+
+    val options = ListMembershipsForResourceOptionsBuilder("document:read").build()
+    val memberships = workos.authorization.listMembershipsForResource("resource_01H", options)
+
+    assertEquals(1, memberships.data.size)
+    assertEquals("om_01H", memberships.data[0].id)
+    assertEquals("user_01H", memberships.data[0].userId)
+  }
+
+  @Test
+  fun listMembershipsForResourceWithAssignmentFilterShouldReturnList() {
+    stubResponse(
+      "/authorization/resources/resource_01H/organization_memberships",
+      """{
+        "data": [],
+        "list_metadata": {
+          "after": null,
+          "before": null
+        }
+      }"""
+    )
+
+    val options = ListMembershipsForResourceOptionsBuilder("document:read")
+      .assignment(AssignmentFilter.Direct)
+      .build()
+    val memberships = workos.authorization.listMembershipsForResource("resource_01H", options)
+
+    assertNotNull(memberships)
+    assertEquals(0, memberships.data.size)
+  }
+
+  @Test
+  fun listMembershipsForResourceByExternalIdShouldReturnList() {
+    stubResponse(
+      "/authorization/organizations/org_01H/resources/document/my-doc-1/organization_memberships",
+      """{
+        "data": [
+          {
+            "object": "organization_membership",
+            "id": "om_01H",
+            "user_id": "user_01H",
+            "organization_id": "org_01H",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+          }
+        ],
+        "list_metadata": {
+          "after": "om_01H",
+          "before": null
+        }
+      }"""
+    )
+
+    val options = ListMembershipsForResourceByExternalIdOptionsBuilder("document:read").build()
+    val memberships = workos.authorization.listMembershipsForResourceByExternalId(
+      "org_01H", "document", "my-doc-1", options
+    )
+
+    assertEquals(1, memberships.data.size)
+    assertEquals("om_01H", memberships.data[0].id)
   }
 }

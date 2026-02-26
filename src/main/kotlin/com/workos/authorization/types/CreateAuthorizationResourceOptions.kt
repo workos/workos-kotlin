@@ -30,6 +30,8 @@ class CreateAuthorizationResourceOptions @JvmOverloads constructor(
   val parentResourceTypeSlug: String? = null
 ) {
   init {
+    require(organizationId.isNotBlank()) { "organizationId is required" }
+    require(resourceTypeSlug.isNotBlank()) { "resourceTypeSlug is required" }
     require(externalId.isNotBlank()) { "externalId is required" }
     require(name.isNotBlank()) { "name is required" }
     require(!(parentResourceId != null && parentResourceExternalId != null)) {
