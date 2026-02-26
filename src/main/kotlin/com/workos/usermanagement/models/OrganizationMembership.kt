@@ -44,5 +44,5 @@ data class OrganizationMembership @JsonCreator constructor(
   val updatedAt: String,
 
   @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, Any>? = null
+  val customAttributes: Map<String, Any> = emptyMap()
 )
