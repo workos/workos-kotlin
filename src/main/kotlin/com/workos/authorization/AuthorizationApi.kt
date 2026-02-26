@@ -14,6 +14,7 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   companion object {
     internal const val RESOURCES_PATH = "/authorization/resources"
+    internal const val ORGANIZATIONS_PATH = "/authorization/organizations"
     internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
   }
 
@@ -63,6 +64,43 @@ class AuthorizationApi(private val workos: WorkOS) {
       AuthorizationResourceList::class.java,
       RequestConfig.builder().params(params).build()
     )
+  }
+
+  /** Get a resource by external ID. */
+  fun getResourceByExternalId(organizationId: String, resourceTypeSlug: String, externalId: String): AuthorizationResource {
+    return workos.get(
+      "$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId",
+      AuthorizationResource::class.java
+    )
+  }
+
+  /** Update a resource by external ID. */
+  fun updateResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    options: UpdateAuthorizationResourceOptions
+  ): AuthorizationResource {
+    return workos.patch(
+      "$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId",
+      AuthorizationResource::class.java,
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /** Delete a resource by external ID. */
+  fun deleteResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    cascadeDelete: Boolean = false
+  ) {
+    val config = if (cascadeDelete) {
+      RequestConfig.builder().params(mapOf("cascade_delete" to "true")).build()
+    } else {
+      null
+    }
+    workos.delete("$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId", config)
   }
 
   /** Check authorization for an organization membership. */
