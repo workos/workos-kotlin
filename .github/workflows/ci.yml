@@ -15,7 +15,7 @@ jobs:
     name: Build Kotlin SDK
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Build
         run: |
           ./gradlew build
@@ -24,7 +24,7 @@ jobs:
     name: Test Kotlin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Test
         run: |
           ./gradlew test --info
