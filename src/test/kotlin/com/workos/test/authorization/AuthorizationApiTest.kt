@@ -1,6 +1,7 @@
 package com.workos.test.authorization
 
 import com.workos.authorization.AuthorizationApi
+import com.workos.authorization.builders.CheckAuthorizationOptionsBuilder
 import com.workos.authorization.builders.CreateAuthorizationResourceOptionsBuilder
 import com.workos.authorization.builders.ListAuthorizationResourcesOptionsBuilder
 import com.workos.authorization.builders.UpdateAuthorizationResourceOptionsBuilder
@@ -9,7 +10,9 @@ import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class AuthorizationApiTest : TestBase() {
   val workos = createWorkOSClient()
@@ -206,6 +209,7 @@ class AuthorizationApiTest : TestBase() {
       assertDoesNotThrow { workos.authorization.deleteResource("resource_01H", cascadeDelete = true) }
     }
   }
+
   @Nested
   inner class ListResources {
     @Test
@@ -262,6 +266,74 @@ class AuthorizationApiTest : TestBase() {
 
       assertNotNull(resources)
       assertEquals(0, resources.data.size)
+    }
+  }
+
+  @Nested
+  inner class Check {
+    @Test
+    fun checkWithResourceIdShouldReturnAuthorized() {
+      stubResponse(
+        "/authorization/organization_memberships/om_01H/check",
+        """{
+        "authorized": true
+      }""",
+        requestBody = """{
+        "permission_slug": "document:read",
+        "resource_id": "resource_01H"
+      }"""
+      )
+
+      val options = CheckAuthorizationOptionsBuilder("document:read")
+        .resourceId("resource_01H")
+        .build()
+      val result = workos.authorization.check("om_01H", options)
+
+      assertTrue(result.authorized)
+    }
+
+    @Test
+    fun checkWithExternalIdShouldReturnAuthorized() {
+      stubResponse(
+        "/authorization/organization_memberships/om_01H/check",
+        """{
+        "authorized": true
+      }""",
+        requestBody = """{
+        "permission_slug": "document:read",
+        "resource_external_id": "my-doc-1",
+        "resource_type_slug": "document"
+      }"""
+      )
+
+      val options = CheckAuthorizationOptionsBuilder("document:read")
+        .resourceExternalId("my-doc-1")
+        .resourceTypeSlug("document")
+        .build()
+      val result = workos.authorization.check("om_01H", options)
+
+      assertTrue(result.authorized)
+    }
+
+    @Test
+    fun checkShouldReturnUnauthorized() {
+      stubResponse(
+        "/authorization/organization_memberships/om_01H/check",
+        """{
+        "authorized": false
+      }""",
+        requestBody = """{
+        "permission_slug": "document:delete",
+        "resource_id": "resource_01H"
+      }"""
+      )
+
+      val options = CheckAuthorizationOptionsBuilder("document:delete")
+        .resourceId("resource_01H")
+        .build()
+      val result = workos.authorization.check("om_01H", options)
+
+      assertFalse(result.authorized)
     }
   }
 }
