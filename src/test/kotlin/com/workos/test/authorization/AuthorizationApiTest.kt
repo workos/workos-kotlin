@@ -420,4 +420,69 @@ class AuthorizationApiTest : TestBase() {
       }
     }
   }
+
+  @Test
+  fun checkWithResourceIdShouldReturnAuthorized() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/check",
+      """{
+        "authorized": true
+      }""",
+      requestBody = """{
+        "permission_slug": "document:read",
+        "resource_id": "resource_01H"
+      }"""
+    )
+
+    val options = CheckAuthorizationOptionsBuilder("document:read")
+      .resourceId("resource_01H")
+      .build()
+    val result = workos.authorization.check("om_01H", options)
+
+    assertTrue(result.authorized)
+  }
+
+  @Test
+  fun checkWithExternalIdShouldReturnAuthorized() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/check",
+      """{
+        "authorized": true
+      }""",
+      requestBody = """{
+        "permission_slug": "document:read",
+        "resource_external_id": "my-doc-1",
+        "resource_type_slug": "document"
+      }"""
+    )
+
+    val options = CheckAuthorizationOptionsBuilder("document:read")
+      .resourceExternalId("my-doc-1")
+      .resourceTypeSlug("document")
+      .build()
+    val result = workos.authorization.check("om_01H", options)
+
+    assertTrue(result.authorized)
+  }
+
+  @Test
+  fun checkShouldReturnUnauthorized() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/check",
+      """{
+        "authorized": false
+      }""",
+      requestBody = """{
+        "permission_slug": "document:delete",
+        "resource_id": "resource_01H"
+      }"""
+    )
+
+    val options = CheckAuthorizationOptionsBuilder("document:delete")
+      .resourceId("resource_01H")
+      .build()
+    val result = workos.authorization.check("om_01H", options)
+
+    assertFalse(result.authorized)
+  }
 }
