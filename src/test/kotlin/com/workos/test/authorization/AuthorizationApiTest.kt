@@ -542,7 +542,10 @@ class AuthorizationApiTest : TestBase() {
 
       assertDoesNotThrow { workos.authorization.removeRole("om_01H", options) }
     }
+  }
 
+  @Nested
+  inner class RemoveRoleAssignment {
     @Test
     fun removeRoleAssignmentShouldSucceed() {
       stubResponse(
