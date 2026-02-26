@@ -209,7 +209,14 @@ class AuthorizationApiTest : TestBase() {
       assertDoesNotThrow { workos.authorization.deleteResource("resource_01H", cascadeDelete = true) }
     }
   }
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a820c1 (formatting, breaking up paths to common strings, add inner classes for tests)
+>>>>>>> aa590f7 (formatting, breaking up paths to common strings, add inner classes for tests)
   @Nested
   inner class ListResources {
     @Test
@@ -337,76 +344,13 @@ class AuthorizationApiTest : TestBase() {
     }
   }
 
-  @Test
-  fun checkWithResourceIdShouldReturnAuthorized() {
-    stubResponse(
-      "/authorization/organization_memberships/om_01H/check",
-      """{
-        "authorized": true
-      }""",
-      requestBody = """{
-        "permission_slug": "document:read",
-        "resource_id": "resource_01H"
-      }"""
-    )
-
-    val options = CheckAuthorizationOptionsBuilder("document:read")
-      .resourceId("resource_01H")
-      .build()
-    val result = workos.authorization.check("om_01H", options)
-
-    assertTrue(result.authorized)
-  }
-
-  @Test
-  fun checkWithExternalIdShouldReturnAuthorized() {
-    stubResponse(
-      "/authorization/organization_memberships/om_01H/check",
-      """{
-        "authorized": true
-      }""",
-      requestBody = """{
-        "permission_slug": "document:read",
-        "resource_external_id": "my-doc-1",
-        "resource_type_slug": "document"
-      }"""
-    )
-
-    val options = CheckAuthorizationOptionsBuilder("document:read")
-      .resourceExternalId("my-doc-1")
-      .resourceTypeSlug("document")
-      .build()
-    val result = workos.authorization.check("om_01H", options)
-
-    assertTrue(result.authorized)
-  }
-
-  @Test
-  fun checkShouldReturnUnauthorized() {
-    stubResponse(
-      "/authorization/organization_memberships/om_01H/check",
-      """{
-        "authorized": false
-      }""",
-      requestBody = """{
-        "permission_slug": "document:delete",
-        "resource_id": "resource_01H"
-      }"""
-    )
-
-    val options = CheckAuthorizationOptionsBuilder("document:delete")
-      .resourceId("resource_01H")
-      .build()
-    val result = workos.authorization.check("om_01H", options)
-
-    assertFalse(result.authorized)
-  }
-
-  @Test
-  fun getResourceByExternalIdShouldReturnResource() {
-    stubResponse(
-      "/authorization/organizations/org_01H/resources/document/my-doc-1",
-      """{
+  @Nested
+  inner class GetResourceByExternalId {
+    @Test
+    fun getResourceByExternalIdShouldReturnResource() {
+      stubResponse(
+        "/authorization/organizations/org_01H/resources/document/my-doc-1",
+        """{
         "object": "authorization_resource",
         "id": "resource_01H",
         "external_id": "my-doc-1",
@@ -416,19 +360,22 @@ class AuthorizationApiTest : TestBase() {
         "created_at": "2024-01-01T00:00:00Z",
         "updated_at": "2024-01-01T00:00:00Z"
       }"""
-    )
+      )
 
-    val resource = workos.authorization.getResourceByExternalId("org_01H", "document", "my-doc-1")
+      val resource = workos.authorization.getResourceByExternalId("org_01H", "document", "my-doc-1")
 
-    assertEquals("resource_01H", resource.id)
-    assertEquals("my-doc-1", resource.externalId)
+      assertEquals("resource_01H", resource.id)
+      assertEquals("my-doc-1", resource.externalId)
+    }
   }
 
-  @Test
-  fun updateResourceByExternalIdShouldReturnResource() {
-    stubResponse(
-      "/authorization/organizations/org_01H/resources/document/my-doc-1",
-      """{
+  @Nested
+  inner class UpdateResourceByExternalId {
+    @Test
+    fun updateResourceByExternalIdShouldReturnResource() {
+      stubResponse(
+        "/authorization/organizations/org_01H/resources/document/my-doc-1",
+        """{
         "object": "authorization_resource",
         "id": "resource_01H",
         "external_id": "my-doc-1",
@@ -439,41 +386,45 @@ class AuthorizationApiTest : TestBase() {
         "created_at": "2024-01-01T00:00:00Z",
         "updated_at": "2024-01-02T00:00:00Z"
       }""",
-      requestBody = """{
+        requestBody = """{
         "name": "Updated Name",
         "description": "Updated description"
       }"""
-    )
+      )
 
-    val options = UpdateAuthorizationResourceOptionsBuilder()
-      .name("Updated Name")
-      .description("Updated description")
-      .build()
-    val resource = workos.authorization.updateResourceByExternalId("org_01H", "document", "my-doc-1", options)
+      val options = UpdateAuthorizationResourceOptionsBuilder()
+        .name("Updated Name")
+        .description("Updated description")
+        .build()
+      val resource = workos.authorization.updateResourceByExternalId("org_01H", "document", "my-doc-1", options)
 
-    assertEquals("Updated Name", resource.name)
-    assertEquals("Updated description", resource.description)
-  }
-
-  @Test
-  fun deleteResourceByExternalIdShouldSucceed() {
-    stubResponse("/authorization/organizations/org_01H/resources/document/my-doc-1", "")
-
-    assertDoesNotThrow {
-      workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1")
+      assertEquals("Updated Name", resource.name)
+      assertEquals("Updated description", resource.description)
     }
   }
 
-  @Test
-  fun deleteResourceByExternalIdWithCascadeShouldPassParam() {
-    stubResponse(
-      "/authorization/organizations/org_01H/resources/document/my-doc-1",
-      "",
-      params = mapOf("cascade_delete" to com.github.tomakehurst.wiremock.client.WireMock.equalTo("true"))
-    )
+  @Nested
+  inner class DeleteResourceByExternalId {
+    @Test
+    fun deleteResourceByExternalIdShouldSucceed() {
+      stubResponse("/authorization/organizations/org_01H/resources/document/my-doc-1", "")
 
-    assertDoesNotThrow {
-      workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1", cascadeDelete = true)
+      assertDoesNotThrow {
+        workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1")
+      }
+    }
+
+    @Test
+    fun deleteResourceByExternalIdWithCascadeShouldPassParam() {
+      stubResponse(
+        "/authorization/organizations/org_01H/resources/document/my-doc-1",
+        "",
+        params = mapOf("cascade_delete" to com.github.tomakehurst.wiremock.client.WireMock.equalTo("true"))
+      )
+
+      assertDoesNotThrow {
+        workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1", cascadeDelete = true)
+      }
     }
   }
 }

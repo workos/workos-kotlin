@@ -14,6 +14,10 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   companion object {
     internal const val RESOURCES_PATH = "/authorization/resources"
+<<<<<<< HEAD
+=======
+    internal const val ORGANIZATIONS_PATH = "/authorization/organizations"
+>>>>>>> 7a820c1 (formatting, breaking up paths to common strings, add inner classes for tests)
     internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
   }
 
@@ -68,7 +72,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Get a resource by external ID. */
   fun getResourceByExternalId(organizationId: String, resourceTypeSlug: String, externalId: String): AuthorizationResource {
     return workos.get(
-      "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+      "$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId",
       AuthorizationResource::class.java
     )
   }
@@ -81,7 +85,7 @@ class AuthorizationApi(private val workos: WorkOS) {
     options: UpdateAuthorizationResourceOptions
   ): AuthorizationResource {
     return workos.patch(
-      "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+      "$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId",
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
@@ -99,7 +103,7 @@ class AuthorizationApi(private val workos: WorkOS) {
     } else {
       null
     }
-    workos.delete("/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId", config)
+    workos.delete("$ORGANIZATIONS_PATH/$organizationId/resources/$resourceTypeSlug/$externalId", config)
   }
 
   /** Check authorization for an organization membership. */
