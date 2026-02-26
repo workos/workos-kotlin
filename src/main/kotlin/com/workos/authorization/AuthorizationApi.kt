@@ -21,6 +21,7 @@ class AuthorizationApi(private val workos: WorkOS) {
     internal const val RESOURCES_PATH = "/authorization/resources"
     internal const val ORGANIZATIONS_PATH = "/authorization/organizations"
     internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
+    internal const val ROLE_ASSIGNMENTS_SUFFIX = "/role_assignments"
   }
 
   /** Get a resource by internal ID. */
@@ -126,7 +127,7 @@ class AuthorizationApi(private val workos: WorkOS) {
       RequestConfig.toMap(options ?: ListRoleAssignmentsOptions()) as Map<String, String>
 
     return workos.get(
-      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
       RoleAssignmentList::class.java,
       RequestConfig.builder().params(params).build()
     )
@@ -135,7 +136,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Assign a role to an organization membership. */
   fun assignRole(organizationMembershipId: String, options: AssignRoleOptions): RoleAssignment {
     return workos.post(
-      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
       RoleAssignment::class.java,
       RequestConfig.builder().data(options).build()
     )
@@ -144,7 +145,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Remove a role from an organization membership. */
   fun removeRole(organizationMembershipId: String, options: RemoveRoleOptions) {
     workos.deleteWithBody(
-      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
       RequestConfig.builder().data(options).build()
     )
   }
@@ -152,7 +153,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Remove a role assignment by ID. */
   fun removeRoleAssignment(organizationMembershipId: String, roleAssignmentId: String) {
     workos.delete(
-      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/role_assignments/$roleAssignmentId"
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX/$roleAssignmentId"
     )
   }
 }
