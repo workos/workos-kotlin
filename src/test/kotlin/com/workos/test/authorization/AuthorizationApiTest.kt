@@ -209,14 +209,7 @@ class AuthorizationApiTest : TestBase() {
       assertDoesNotThrow { workos.authorization.deleteResource("resource_01H", cascadeDelete = true) }
     }
   }
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> 7a820c1 (formatting, breaking up paths to common strings, add inner classes for tests)
->>>>>>> aa590f7 (formatting, breaking up paths to common strings, add inner classes for tests)
   @Nested
   inner class ListResources {
     @Test

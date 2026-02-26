@@ -14,10 +14,7 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   companion object {
     internal const val RESOURCES_PATH = "/authorization/resources"
-<<<<<<< HEAD
-=======
     internal const val ORGANIZATIONS_PATH = "/authorization/organizations"
->>>>>>> 7a820c1 (formatting, breaking up paths to common strings, add inner classes for tests)
     internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
   }
 
