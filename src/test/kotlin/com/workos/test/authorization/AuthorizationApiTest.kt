@@ -209,6 +209,7 @@ class AuthorizationApiTest : TestBase() {
       assertDoesNotThrow { workos.authorization.deleteResource("resource_01H", cascadeDelete = true) }
     }
   }
+  
   @Nested
   inner class ListResources {
     @Test
@@ -268,7 +269,8 @@ class AuthorizationApiTest : TestBase() {
     }
   }
 
-  @Nested class Check {
+  @Nested
+  inner class Check {
     @Test
     fun checkWithResourceIdShouldReturnAuthorized() {
       stubResponse(
