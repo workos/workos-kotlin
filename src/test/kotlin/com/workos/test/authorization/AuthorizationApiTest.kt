@@ -17,6 +17,7 @@ class AuthorizationApiTest : TestBase() {
   @Nested
   inner class GetResource {
 
+    @Test
     fun getResourcePathShouldReturnCorrectPath() {
       assertEquals("/authorization/resources", AuthorizationApi.RESOURCES_PATH)
     }
