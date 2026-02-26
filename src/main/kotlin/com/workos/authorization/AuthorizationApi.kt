@@ -14,6 +14,7 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   companion object {
     internal const val RESOURCES_PATH = "/authorization/resources"
+    internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
   }
 
   /** Get a resource by internal ID. */
@@ -67,7 +68,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Check authorization for an organization membership. */
   fun check(organizationMembershipId: String, options: CheckAuthorizationOptions): AuthorizationCheckResult {
     return workos.post(
-      "/authorization/organization_memberships/$organizationMembershipId/check",
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/check",
       AuthorizationCheckResult::class.java,
       RequestConfig.builder().data(options).build()
     )
