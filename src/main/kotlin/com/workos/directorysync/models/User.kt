@@ -46,6 +46,9 @@ open class User
   @JsonProperty("idp_id")
   open val idpId: String,
 
+  @JvmField
+  open val email: String?,
+
   @Deprecated(
     "Will be removed in a future major version. Enable the `username` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
     ReplaceWith("customAttributes[\"username\"]")
