@@ -10,10 +10,14 @@ import com.workos.common.http.RequestConfig
 
 class AuthorizationApi(private val workos: WorkOS) {
 
+  companion object {
+    private const val RESOURCES_PATH = "/authorization/resources"
+  }
+
   /** Get a resource by internal ID. */
   fun getResource(resourceId: String): AuthorizationResource {
     return workos.get(
-      "/authorization/resources/$resourceId",
+      "$RESOURCES_PATH/$resourceId",
       AuthorizationResource::class.java
     )
   }
@@ -21,7 +25,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Create a new authorization resource. */
   fun createResource(options: CreateAuthorizationResourceOptions): AuthorizationResource {
     return workos.post(
-      "/authorization/resources",
+      RESOURCES_PATH,
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
@@ -30,7 +34,7 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** Update a resource by internal ID. */
   fun updateResource(resourceId: String, options: UpdateAuthorizationResourceOptions): AuthorizationResource {
     return workos.patch(
-      "/authorization/resources/$resourceId",
+      "$RESOURCES_PATH/$resourceId",
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
@@ -43,7 +47,7 @@ class AuthorizationApi(private val workos: WorkOS) {
     } else {
       null
     }
-    workos.delete("/authorization/resources/$resourceId", config)
+    workos.delete("$RESOURCES_PATH/$resourceId", config)
   }
 
   /** List authorization resources. */
@@ -52,7 +56,7 @@ class AuthorizationApi(private val workos: WorkOS) {
       RequestConfig.toMap(options ?: ListAuthorizationResourcesOptions()) as Map<String, String>
 
     return workos.get(
-      "/authorization/resources",
+      RESOURCES_PATH,
       AuthorizationResourceList::class.java,
       RequestConfig.builder().params(params).build()
     )
