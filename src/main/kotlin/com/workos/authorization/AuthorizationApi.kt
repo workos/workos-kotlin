@@ -1,8 +1,10 @@
 package com.workos.authorization
 
 import com.workos.WorkOS
+import com.workos.authorization.models.AuthorizationCheckResult
 import com.workos.authorization.models.AuthorizationResource
 import com.workos.authorization.models.AuthorizationResourceList
+import com.workos.authorization.types.CheckAuthorizationOptions
 import com.workos.authorization.types.CreateAuthorizationResourceOptions
 import com.workos.authorization.types.ListAuthorizationResourcesOptions
 import com.workos.authorization.types.UpdateAuthorizationResourceOptions
@@ -59,6 +61,15 @@ class AuthorizationApi(private val workos: WorkOS) {
       RESOURCES_PATH,
       AuthorizationResourceList::class.java,
       RequestConfig.builder().params(params).build()
+    )
+  }
+
+  /** Check authorization for an organization membership. */
+  fun check(organizationMembershipId: String, options: CheckAuthorizationOptions): AuthorizationCheckResult {
+    return workos.post(
+      "/authorization/organization_memberships/$organizationMembershipId/check",
+      AuthorizationCheckResult::class.java,
+      RequestConfig.builder().data(options).build()
     )
   }
 }
