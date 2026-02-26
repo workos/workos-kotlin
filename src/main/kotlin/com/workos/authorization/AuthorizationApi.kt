@@ -4,9 +4,14 @@ import com.workos.WorkOS
 import com.workos.authorization.models.AuthorizationCheckResult
 import com.workos.authorization.models.AuthorizationResource
 import com.workos.authorization.models.AuthorizationResourceList
+import com.workos.authorization.models.RoleAssignment
+import com.workos.authorization.models.RoleAssignmentList
+import com.workos.authorization.types.AssignRoleOptions
 import com.workos.authorization.types.CheckAuthorizationOptions
 import com.workos.authorization.types.CreateAuthorizationResourceOptions
 import com.workos.authorization.types.ListAuthorizationResourcesOptions
+import com.workos.authorization.types.ListRoleAssignmentsOptions
+import com.workos.authorization.types.RemoveRoleOptions
 import com.workos.authorization.types.UpdateAuthorizationResourceOptions
 import com.workos.common.http.RequestConfig
 
@@ -16,6 +21,7 @@ class AuthorizationApi(private val workos: WorkOS) {
     internal const val RESOURCES_PATH = "/authorization/resources"
     internal const val ORGANIZATIONS_PATH = "/authorization/organizations"
     internal const val ORGANIZATION_MEMBERSHIPS_PATH = "/authorization/organization_memberships"
+    internal const val ROLE_ASSIGNMENTS_SUFFIX = "/role_assignments"
   }
 
   /** Get a resource by internal ID. */
@@ -109,6 +115,45 @@ class AuthorizationApi(private val workos: WorkOS) {
       "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId/check",
       AuthorizationCheckResult::class.java,
       RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /** List role assignments for an organization membership. */
+  fun listRoleAssignments(
+    organizationMembershipId: String,
+    options: ListRoleAssignmentsOptions? = null
+  ): RoleAssignmentList {
+    val params: Map<String, String> =
+      RequestConfig.toMap(options ?: ListRoleAssignmentsOptions()) as Map<String, String>
+
+    return workos.get(
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
+      RoleAssignmentList::class.java,
+      RequestConfig.builder().params(params).build()
+    )
+  }
+
+  /** Assign a role to an organization membership. */
+  fun assignRole(organizationMembershipId: String, options: AssignRoleOptions): RoleAssignment {
+    return workos.post(
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
+      RoleAssignment::class.java,
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /** Remove a role from an organization membership. */
+  fun removeRole(organizationMembershipId: String, options: RemoveRoleOptions) {
+    workos.deleteWithBody(
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX",
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /** Remove a role assignment by ID. */
+  fun removeRoleAssignment(organizationMembershipId: String, roleAssignmentId: String) {
+    workos.delete(
+      "$ORGANIZATION_MEMBERSHIPS_PATH/$organizationMembershipId$ROLE_ASSIGNMENTS_SUFFIX/$roleAssignmentId"
     )
   }
 }
