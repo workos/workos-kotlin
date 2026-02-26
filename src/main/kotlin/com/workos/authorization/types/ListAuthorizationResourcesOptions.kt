@@ -18,8 +18,8 @@ class ListAuthorizationResourcesOptions @JvmOverloads constructor(
   @JsonProperty("parent_resource_type_slug")
   val parentResourceTypeSlug: String? = null,
 
-  @JsonProperty("parent_external_id")
-  val parentExternalId: String? = null,
+  @JsonProperty("parent_resource_external_id")
+  val parentResourceExternalId: String? = null,
 
   @JsonProperty("search")
   val search: String? = null,
@@ -35,4 +35,13 @@ class ListAuthorizationResourcesOptions @JvmOverloads constructor(
 
   @JsonProperty("after")
   val after: String? = null
-)
+) {
+  init {
+    require(!(parentResourceId != null && parentResourceExternalId != null)) {
+      "Cannot specify both parentResourceId and parentResourceExternalId"
+    }
+    require(!(parentResourceExternalId != null && parentResourceTypeSlug == null)) {
+      "parentResourceTypeSlug is required when parentResourceExternalId is specified"
+    }
+  }
+}

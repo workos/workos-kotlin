@@ -38,5 +38,8 @@ class ListResourcesForMembershipOptions @JvmOverloads constructor(
     require(!(parentResourceId != null && parentResourceExternalId != null)) {
       "Cannot specify both parentResourceId and parentResourceExternalId"
     }
+    require(!(parentResourceExternalId != null && parentResourceTypeSlug == null)) {
+      "parentResourceTypeSlug is required when parentResourceExternalId is specified"
+    }
   }
 }
