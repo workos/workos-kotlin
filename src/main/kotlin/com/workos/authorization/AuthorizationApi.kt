@@ -65,6 +65,43 @@ class AuthorizationApi(private val workos: WorkOS) {
     )
   }
 
+  /** Get a resource by external ID. */
+  fun getResourceByExternalId(organizationId: String, resourceTypeSlug: String, externalId: String): AuthorizationResource {
+    return workos.get(
+      "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+      AuthorizationResource::class.java
+    )
+  }
+
+  /** Update a resource by external ID. */
+  fun updateResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    options: UpdateAuthorizationResourceOptions
+  ): AuthorizationResource {
+    return workos.patch(
+      "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+      AuthorizationResource::class.java,
+      RequestConfig.builder().data(options).build()
+    )
+  }
+
+  /** Delete a resource by external ID. */
+  fun deleteResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    cascadeDelete: Boolean = false
+  ) {
+    val config = if (cascadeDelete) {
+      RequestConfig.builder().params(mapOf("cascade_delete" to "true")).build()
+    } else {
+      null
+    }
+    workos.delete("/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId", config)
+  }
+
   /** Check authorization for an organization membership. */
   fun check(organizationMembershipId: String, options: CheckAuthorizationOptions): AuthorizationCheckResult {
     return workos.post(
