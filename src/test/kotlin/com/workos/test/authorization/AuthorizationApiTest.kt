@@ -1,9 +1,14 @@
 package com.workos.test.authorization
 
+<<<<<<< HEAD
 import com.workos.authorization.AuthorizationApi
+=======
+import com.workos.authorization.builders.AssignRoleOptionsBuilder
+>>>>>>> e39c723 (Add role assignment methods)
 import com.workos.authorization.builders.CheckAuthorizationOptionsBuilder
 import com.workos.authorization.builders.CreateAuthorizationResourceOptionsBuilder
 import com.workos.authorization.builders.ListAuthorizationResourcesOptionsBuilder
+import com.workos.authorization.builders.RemoveRoleOptionsBuilder
 import com.workos.authorization.builders.UpdateAuthorizationResourceOptionsBuilder
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
@@ -484,5 +489,202 @@ class AuthorizationApiTest : TestBase() {
     val result = workos.authorization.check("om_01H", options)
 
     assertFalse(result.authorized)
+  }
+
+  @Test
+  fun getResourceByExternalIdShouldReturnResource() {
+    stubResponse(
+      "/authorization/organizations/org_01H/resources/document/my-doc-1",
+      """{
+        "object": "authorization_resource",
+        "id": "resource_01H",
+        "external_id": "my-doc-1",
+        "name": "My Document",
+        "resource_type_slug": "document",
+        "organization_id": "org_01H",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-01T00:00:00Z"
+      }"""
+    )
+
+    val resource = workos.authorization.getResourceByExternalId("org_01H", "document", "my-doc-1")
+
+    assertEquals("resource_01H", resource.id)
+    assertEquals("my-doc-1", resource.externalId)
+  }
+
+  @Test
+  fun updateResourceByExternalIdShouldReturnResource() {
+    stubResponse(
+      "/authorization/organizations/org_01H/resources/document/my-doc-1",
+      """{
+        "object": "authorization_resource",
+        "id": "resource_01H",
+        "external_id": "my-doc-1",
+        "name": "Updated Name",
+        "description": "Updated description",
+        "resource_type_slug": "document",
+        "organization_id": "org_01H",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-02T00:00:00Z"
+      }""",
+      requestBody = """{
+        "name": "Updated Name",
+        "description": "Updated description"
+      }"""
+    )
+
+    val options = UpdateAuthorizationResourceOptionsBuilder()
+      .name("Updated Name")
+      .description("Updated description")
+      .build()
+    val resource = workos.authorization.updateResourceByExternalId("org_01H", "document", "my-doc-1", options)
+
+    assertEquals("Updated Name", resource.name)
+    assertEquals("Updated description", resource.description)
+  }
+
+  @Test
+  fun deleteResourceByExternalIdShouldSucceed() {
+    stubResponse("/authorization/organizations/org_01H/resources/document/my-doc-1", "")
+
+    assertDoesNotThrow {
+      workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1")
+    }
+  }
+
+  @Test
+  fun deleteResourceByExternalIdWithCascadeShouldPassParam() {
+    stubResponse(
+      "/authorization/organizations/org_01H/resources/document/my-doc-1",
+      "",
+      params = mapOf("cascade_delete" to com.github.tomakehurst.wiremock.client.WireMock.equalTo("true"))
+    )
+
+    assertDoesNotThrow {
+      workos.authorization.deleteResourceByExternalId("org_01H", "document", "my-doc-1", cascadeDelete = true)
+    }
+  }
+
+  @Test
+  fun listRoleAssignmentsShouldReturnList() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/role_assignments",
+      """{
+        "data": [
+          {
+            "object": "role_assignment",
+            "id": "ra_01H",
+            "role": { "slug": "editor" },
+            "resource": {
+              "id": "resource_01H",
+              "external_id": "my-doc-1",
+              "resource_type_slug": "document"
+            },
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+          }
+        ],
+        "list_metadata": {
+          "after": "ra_01H",
+          "before": null
+        }
+      }"""
+    )
+
+    val assignments = workos.authorization.listRoleAssignments("om_01H")
+
+    assertEquals(1, assignments.data.size)
+    assertEquals("ra_01H", assignments.data[0].id)
+    assertEquals("editor", assignments.data[0].role.slug)
+    assertEquals("resource_01H", assignments.data[0].resource.id)
+  }
+
+  @Test
+  fun assignRoleWithResourceIdShouldReturnAssignment() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/role_assignments",
+      """{
+        "object": "role_assignment",
+        "id": "ra_01H",
+        "role": { "slug": "editor" },
+        "resource": {
+          "id": "resource_01H",
+          "external_id": "my-doc-1",
+          "resource_type_slug": "document"
+        },
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-01T00:00:00Z"
+      }""",
+      requestBody = """{
+        "role_slug": "editor",
+        "resource_id": "resource_01H"
+      }"""
+    )
+
+    val options = AssignRoleOptionsBuilder("editor")
+      .resourceId("resource_01H")
+      .build()
+    val assignment = workos.authorization.assignRole("om_01H", options)
+
+    assertEquals("ra_01H", assignment.id)
+    assertEquals("editor", assignment.role.slug)
+  }
+
+  @Test
+  fun assignRoleWithExternalIdShouldReturnAssignment() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/role_assignments",
+      """{
+        "object": "role_assignment",
+        "id": "ra_02H",
+        "role": { "slug": "viewer" },
+        "resource": {
+          "id": "resource_01H",
+          "external_id": "my-doc-1",
+          "resource_type_slug": "document"
+        },
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-01T00:00:00Z"
+      }""",
+      requestBody = """{
+        "role_slug": "viewer",
+        "resource_external_id": "my-doc-1",
+        "resource_type_slug": "document"
+      }"""
+    )
+
+    val options = AssignRoleOptionsBuilder("viewer")
+      .resourceExternalId("my-doc-1")
+      .resourceTypeSlug("document")
+      .build()
+    val assignment = workos.authorization.assignRole("om_01H", options)
+
+    assertEquals("ra_02H", assignment.id)
+    assertEquals("viewer", assignment.role.slug)
+  }
+
+  @Test
+  fun removeRoleShouldSucceed() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/role_assignments",
+      ""
+    )
+
+    val options = RemoveRoleOptionsBuilder("editor")
+      .resourceId("resource_01H")
+      .build()
+
+    assertDoesNotThrow { workos.authorization.removeRole("om_01H", options) }
+  }
+
+  @Test
+  fun removeRoleAssignmentShouldSucceed() {
+    stubResponse(
+      "/authorization/organization_memberships/om_01H/role_assignments/ra_01H",
+      ""
+    )
+
+    assertDoesNotThrow { workos.authorization.removeRoleAssignment("om_01H", "ra_01H") }
   }
 }
