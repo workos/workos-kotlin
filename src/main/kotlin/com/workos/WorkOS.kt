@@ -6,6 +6,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
 import com.workos.auditlogs.AuditLogsApi
+import com.workos.authorization.AuthorizationApi
 import com.workos.common.exceptions.BadRequestException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -129,6 +130,12 @@ class WorkOS(
   val widgets = WidgetsApi(this)
 
   /**
+   * Module for interacting with the Authorization API.
+   */
+  @JvmField
+  val authorization = AuthorizationApi(this)
+
+  /**
    * Module for interacting with the FGA API.
    */
   @JvmField
@@ -246,12 +253,44 @@ class WorkOS(
   }
 
   /**
+   * Performs a PATCH request with WorkOS configuration parameters.
+   */
+  fun <Res : Any> patch(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+    val uri = URIBuilder(baseUrl).setPath(path).build()
+
+    val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
+
+    val request = manager.patch(uri.toString()).body(body)
+
+    return sendRequest(buildRequest(request, config), responseType)
+  }
+
+  /**
    * Performs a DELETE request with WorkOS configuration parameters.
    */
   fun delete(path: String, config: RequestConfig? = null): String {
+    val uri = URIBuilder(baseUrl).setPath(path)
+
+    if (config?.params != null) {
+      for ((key, value) in config.params.entries) {
+        uri.addParameter(key, value)
+      }
+    }
+
+    val request = manager.delete(uri.build().toString())
+
+    return sendRequest(buildRequest(request, config))
+  }
+
+  /**
+   * Performs a DELETE request with a JSON body.
+   */
+  fun deleteWithBody(path: String, config: RequestConfig? = null): String {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
-    val request = manager.delete(uri.toString())
+    val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
+
+    val request = manager.delete(uri.toString()).body(body)
 
     return sendRequest(buildRequest(request, config))
   }
