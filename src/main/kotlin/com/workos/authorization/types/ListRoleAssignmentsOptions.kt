@@ -6,6 +6,9 @@ import com.workos.common.models.Order
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ListRoleAssignmentsOptions @JvmOverloads constructor(
+  @JsonProperty("organization_membership_id")
+  val organizationMembershipId: String,
+
   @JsonProperty("limit")
   val limit: Int? = null,
 
@@ -17,4 +20,8 @@ class ListRoleAssignmentsOptions @JvmOverloads constructor(
 
   @JsonProperty("after")
   val after: String? = null
-)
+) {
+  init {
+    require(organizationMembershipId.isNotBlank()) { "organizationMembershipId is required" }
+  }
+}

@@ -6,11 +6,14 @@ import com.workos.common.models.Order
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ListMembershipsForResourceOptions @JvmOverloads constructor(
+  @JsonProperty("resource_id")
+  val resourceId: String,
+
   @JsonProperty("permission_slug")
   val permissionSlug: String,
 
   @JsonProperty("assignment")
-  val assignment: AssignmentFilter? = null,
+  val assignment: Assignment? = null,
 
   @JsonProperty("limit")
   val limit: Int? = null,
@@ -25,6 +28,7 @@ class ListMembershipsForResourceOptions @JvmOverloads constructor(
   val after: String? = null
 ) {
   init {
+    require(resourceId.isNotBlank()) { "resourceId is required" }
     require(permissionSlug.isNotBlank()) { "permissionSlug is required" }
   }
 }

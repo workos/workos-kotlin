@@ -10,6 +10,7 @@ data class AuthorizationResource
   val obj: String = "authorization_resource",
 
   @JvmField
+  @JsonProperty("id")
   val id: String,
 
   @JvmField
@@ -17,9 +18,11 @@ data class AuthorizationResource
   val externalId: String,
 
   @JvmField
+  @JsonProperty("name")
   val name: String,
 
   @JvmField
+  @JsonProperty("description")
   val description: String? = null,
 
   @JvmField

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class RemoveRoleOptions @JvmOverloads constructor(
+  @JsonProperty("organization_membership_id")
+  val organizationMembershipId: String,
+
   @JsonProperty("role_slug")
   val roleSlug: String,
 
@@ -18,6 +21,7 @@ class RemoveRoleOptions @JvmOverloads constructor(
   val resourceTypeSlug: String? = null
 ) {
   init {
+    require(organizationMembershipId.isNotBlank()) { "organizationMembershipId is required" }
     require(roleSlug.isNotBlank()) { "roleSlug is required" }
     require(!(resourceId != null && resourceExternalId != null)) {
       "Cannot specify both resourceId and resourceExternalId"

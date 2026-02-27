@@ -2,6 +2,7 @@ package com.workos.authorization.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.models.BaseOrganizationMembership
 
 data class AuthorizationOrganizationMembership
 @JsonCreator constructor(
@@ -10,28 +11,27 @@ data class AuthorizationOrganizationMembership
   val obj: String = "organization_membership",
 
   @JvmField
-  val id: String,
+  @JsonProperty("id")
+  override val id: String,
 
   @JvmField
   @JsonProperty("user_id")
-  val userId: String,
+  override val userId: String,
 
   @JvmField
   @JsonProperty("organization_id")
-  val organizationId: String,
+  override val organizationId: String,
+
+  @JvmField
+  @JsonProperty("status")
+  val status: String,
 
   @JvmField
   @JsonProperty("created_at")
-  val createdAt: String,
+  override val createdAt: String,
 
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String,
+  override val updatedAt: String,
 
-  @JvmField
-  val status: String? = null,
-
-  @JvmField
-  @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, Any>? = null
-)
+) : BaseOrganizationMembership

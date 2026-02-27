@@ -2,10 +2,11 @@ package com.workos.usermanagement.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.models.BaseOrganizationMembership
 import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
 
 /**
- * An organization membership is a top-level resource that represents a [User]’s relationship
+ * An organization membership is a top-level resource that represents a [User]'s relationship
  * with an organization. A user may be a member of zero, one, or many organizations.
  *
  * @param id The unique ID of the organization membership.
@@ -19,13 +20,13 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  */
 data class OrganizationMembership @JsonCreator constructor(
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
 
   @JsonProperty("user_id")
-  val userId: String,
+  override val userId: String,
 
   @JsonProperty("organization_id")
-  val organizationId: String,
+  override val organizationId: String,
 
   @JsonProperty("role")
   val role: OrganizationMembershipRole? = null,
@@ -37,8 +38,8 @@ data class OrganizationMembership @JsonCreator constructor(
   val status: OrganizationMembershipStatusEnumType,
 
   @JsonProperty("created_at")
-  val createdAt: String,
+  override val createdAt: String,
 
   @JsonProperty("updated_at")
-  val updatedAt: String
-)
+  override val updatedAt: String
+) : BaseOrganizationMembership

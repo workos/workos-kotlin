@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AssignRoleOptions @JvmOverloads constructor(
+  @JsonProperty("organization_membership_id")
+  val organizationMembershipId: String,
+
   @JsonProperty("role_slug")
   val roleSlug: String,
 
