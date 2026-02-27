@@ -7,6 +7,7 @@ import com.workos.common.models.ListMetadata
 data class AuthorizationResourceList
 @JsonCreator constructor(
   @JvmField
+  @JsonProperty("data")
   val data: List<AuthorizationResource>,
 
   @JvmField

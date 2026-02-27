@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 class CheckAuthorizationOptions @JvmOverloads constructor(
   @JsonProperty("organization_membership_id")
   val organizationMembershipId: String,
-  
+
   @JsonProperty("permission_slug")
   val permissionSlug: String,
 

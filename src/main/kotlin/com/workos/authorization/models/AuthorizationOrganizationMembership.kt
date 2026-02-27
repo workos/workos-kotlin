@@ -23,6 +23,10 @@ data class AuthorizationOrganizationMembership
   override val organizationId: String,
 
   @JvmField
+  @JsonProperty("status")
+  val status: String,
+
+  @JvmField
   @JsonProperty("created_at")
   override val createdAt: String,
 
@@ -30,10 +34,4 @@ data class AuthorizationOrganizationMembership
   @JsonProperty("updated_at")
   override val updatedAt: String,
 
-  @JvmField
-  val status: String? = null,
-
-  @JvmField
-  @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, Any>? = null
 ) : BaseOrganizationMembership
