@@ -26,25 +26,3 @@ data class RoleAssignment
   @JsonProperty("updated_at")
   val updatedAt: String
 )
-
-// TODO move to separate file
-data class RoleAssignmentRole
-@JsonCreator constructor(
-  @JvmField
-  val slug: String
-)
-
-// TODO move to separate file
-data class RoleAssignmentResource
-@JsonCreator constructor(
-  @JvmField
-  val id: String,
-
-  @JvmField
-  @JsonProperty("external_id")
-  val externalId: String,
-
-  @JvmField
-  @JsonProperty("resource_type_slug")
-  val resourceTypeSlug: String
-)
