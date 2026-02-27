@@ -6,6 +6,9 @@ import com.workos.common.models.Order
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ListResourcesForMembershipOptions @JvmOverloads constructor(
+  @JsonProperty("organization_membership_id")
+  val organizationMembershipId: String,
+
   @JsonProperty("permission_slug")
   val permissionSlug: String,
 
@@ -17,9 +20,6 @@ class ListResourcesForMembershipOptions @JvmOverloads constructor(
 
   @JsonProperty("parent_resource_external_id")
   val parentResourceExternalId: String? = null,
-
-  @JsonProperty("resource_type_slug")
-  val resourceTypeSlug: String? = null,
 
   @JsonProperty("limit")
   val limit: Int? = null,
@@ -34,6 +34,7 @@ class ListResourcesForMembershipOptions @JvmOverloads constructor(
   val after: String? = null
 ) {
   init {
+    require(organizationMembershipId.isNotBlank()) { "organizationMembershipId is required" }
     require(permissionSlug.isNotBlank()) { "permissionSlug is required" }
     require(!(parentResourceId != null && parentResourceExternalId != null)) {
       "Cannot specify both parentResourceId and parentResourceExternalId"

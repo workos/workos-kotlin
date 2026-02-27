@@ -6,11 +6,20 @@ import com.workos.common.models.Order
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ListMembershipsForResourceByExternalIdOptions @JvmOverloads constructor(
+  @JsonProperty("organization_id")
+  val organizationId: String,
+
+  @JsonProperty("resource_type_slug")
+  val resourceTypeSlug: String,
+
+  @JsonProperty("external_id")
+  val externalId: String,
+
   @JsonProperty("permission_slug")
   val permissionSlug: String,
 
   @JsonProperty("assignment")
-  val assignment: AssignmentFilter? = null,
+  val assignment: Assignment? = null,
 
   @JsonProperty("limit")
   val limit: Int? = null,
@@ -25,6 +34,9 @@ class ListMembershipsForResourceByExternalIdOptions @JvmOverloads constructor(
   val after: String? = null
 ) {
   init {
+    require(organizationId.isNotBlank()) { "organizationId is required" }
+    require(resourceTypeSlug.isNotBlank()) { "resourceTypeSlug is required" }
+    require(externalId.isNotBlank()) { "externalId is required" }
     require(permissionSlug.isNotBlank()) { "permissionSlug is required" }
   }
 }

@@ -24,6 +24,7 @@ class ListAuthorizationResourcesOptions @JvmOverloads constructor(
   @JsonProperty("search")
   val search: String? = null,
 
+  // todo paginationOptions?
   @JsonProperty("limit")
   val limit: Int? = null,
 

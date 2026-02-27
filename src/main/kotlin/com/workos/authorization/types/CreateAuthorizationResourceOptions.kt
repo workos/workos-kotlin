@@ -5,12 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class CreateAuthorizationResourceOptions @JvmOverloads constructor(
-  @JsonProperty("organization_id")
-  val organizationId: String,
-
-  @JsonProperty("resource_type_slug")
-  val resourceTypeSlug: String,
-
   @JsonProperty("external_id")
   val externalId: String,
 
@@ -19,6 +13,12 @@ class CreateAuthorizationResourceOptions @JvmOverloads constructor(
 
   @JsonProperty("description")
   val description: String? = null,
+
+  @JsonProperty("resource_type_slug")
+  val resourceTypeSlug: String,
+
+  @JsonProperty("organization_id")
+  val organizationId: String,
 
   @JsonProperty("parent_resource_id")
   val parentResourceId: String? = null,

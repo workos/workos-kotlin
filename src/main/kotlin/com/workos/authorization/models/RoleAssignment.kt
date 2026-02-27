@@ -27,12 +27,14 @@ data class RoleAssignment
   val updatedAt: String
 )
 
+// TODO move to separate file
 data class RoleAssignmentRole
 @JsonCreator constructor(
   @JvmField
   val slug: String
 )
 
+// TODO move to separate file
 data class RoleAssignmentResource
 @JsonCreator constructor(
   @JvmField
