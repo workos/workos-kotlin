@@ -201,6 +201,40 @@ class DirectoryUserWebhookTests : TestBase() {
     assertEquals((webhook as DirectoryUserDeletedEvent).data.id, userId)
   }
 
+  private fun generateUserUpdatedWebhookEventWithoutRole(eventType: EventType): String {
+    return """
+    {
+      "id": "$webhookId",
+      "data": {
+        "id": "$userId",
+        "state": "active",
+        "emails": [
+          {
+            "value": "michael.hadley@foo-corp.com",
+            "primary": true
+          }
+        ],
+        "idp_id": "105777651754615852813",
+        "object": "directory_user",
+        "email": "michael.hadley@foo-corp.com",
+        "username": "michael.hadley@foo-corp.com",
+        "last_name": "Hadley",
+        "first_name": "Michael",
+        "job_title": "Software Engineer",
+        "created_at": "2021-06-25T19:07:33.155Z",
+        "updated_at": "2021-06-25T19:08:33.155Z",
+        "directory_id": "$directoryId",
+        "raw_attributes": {},
+        "custom_attributes": {},
+        "previous_attributes": {
+          "first_name": "Mike"
+        }
+      },
+      "event": "${eventType.value}",
+      "created_at": "2021-06-25T19:07:33.155Z"
+    }"""
+  }
+
   @Test
   @Suppress("UNCHECKED_CAST")
   fun constructDirectoryUserUpdatedEvent() {
@@ -222,5 +256,23 @@ class DirectoryUserWebhookTests : TestBase() {
     val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any?>
     assertEquals(previousRawAttributes["aliases"], null)
     assertEquals((previousRawAttributes["emails"] as List<Any>).size, 2)
+  }
+
+  @Test
+  fun constructDirectoryUserUpdatedEventWithNullRole() {
+    val workos = createWorkOSClient()
+    val webhookData = generateUserUpdatedWebhookEventWithoutRole(EventType.DirectoryUserUpdated)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    Assertions.assertTrue(webhook is DirectoryUserUpdatedEvent)
+    assertEquals((webhook as DirectoryUserUpdatedEvent).data.id, userId)
+    Assertions.assertNull(webhook.data.role)
+    assertEquals(webhook.data.email, "michael.hadley@foo-corp.com")
   }
 }

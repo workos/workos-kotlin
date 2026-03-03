@@ -35,6 +35,10 @@ open class UserUpdated
   @JvmField
   override val email: String?,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `username` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"username\"]")
+  )
   @JvmField
   @JsonProperty("username")
   override val userName: String?,
@@ -47,6 +51,10 @@ open class UserUpdated
   @JsonProperty("last_name")
   override val lastName: String?,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `job_title` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"job_title\"]")
+  )
   @JvmField
   @JsonProperty("job_title")
   override val jobTitle: String?,
@@ -59,6 +67,10 @@ open class UserUpdated
   @JsonProperty("updated_at")
   override val updatedAt: String,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `emails` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"emails\"]")
+  )
   @JvmField
   override val emails: List<Email>,
 
