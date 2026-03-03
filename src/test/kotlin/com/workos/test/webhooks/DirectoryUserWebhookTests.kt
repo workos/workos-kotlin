@@ -30,6 +30,7 @@ class DirectoryUserWebhookTests : TestBase() {
         ],
         "idp_id": "105777651754615852813",
         "object": "directory_user",
+        "email": "michael.hadley@foo-corp.com",
         "username": "michael.hadley@foo-corp.com",
         "last_name": "Hadley",
         "first_name": "Michael",
@@ -96,6 +97,7 @@ class DirectoryUserWebhookTests : TestBase() {
         ],
         "idp_id": "105777651754615852813",
         "object": "directory_user",
+        "email": "michael.hadley@foo-corp.com",
         "username": "michael.hadley@foo-corp.com",
         "last_name": "Hadley",
         "first_name": "Michael",
@@ -215,6 +217,8 @@ class DirectoryUserWebhookTests : TestBase() {
     Assertions.assertTrue(webhook is DirectoryUserUpdatedEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as DirectoryUserUpdatedEvent).data.id, userId)
+    assertEquals(webhook.data.email, "michael.hadley@foo-corp.com")
+    assertEquals(webhook.data.role?.slug, "admin")
     val previousRawAttributes = webhook.data.previousAttributes["raw_attributes"] as Map<String, Any?>
     assertEquals(previousRawAttributes["aliases"], null)
     assertEquals((previousRawAttributes["emails"] as List<Any>).size, 2)
