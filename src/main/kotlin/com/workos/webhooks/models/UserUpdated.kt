@@ -82,7 +82,7 @@ open class UserUpdated
 
   @JvmField
   @JsonProperty("role")
-  override val role: DirectoryUserRole? = null,
+  override val role: DirectoryUserRole,
 
   @JvmField
   @JsonProperty("roles")
@@ -104,5 +104,24 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any?>
-) : User(obj, id, directoryId, organizationId, idpId, email, userName, firstName, lastName,
-         jobTitle, createdAt, updatedAt, emails, groups, state, role, roles, customAttributes, rawAttributes)
+) : User(
+  obj,
+  id,
+  directoryId,
+  organizationId,
+  idpId,
+  email,
+  userName,
+  firstName,
+  lastName,
+  jobTitle,
+  createdAt,
+  updatedAt,
+  emails,
+  groups,
+  state,
+  role,
+  roles,
+  customAttributes,
+  rawAttributes
+)
