@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.DirectoryUserRole
 import com.workos.directorysync.models.Email
+import com.workos.directorysync.models.User
 import com.workos.directorysync.models.UserState
 
 /**
@@ -13,64 +14,83 @@ open class UserUpdated
 @JsonCreator constructor(
   @JvmField
   @JsonProperty("object")
-  val obj: String = "directory_user",
+  override val obj: String = "directory_user",
 
   @JvmField
-  val id: String,
+  override val id: String,
 
   @JvmField
   @JsonProperty("directory_id")
-  val directoryId: String,
+  override val directoryId: String,
 
   @JvmField
   @JsonProperty("organization_id")
-  val organizationId: String?,
+  override val organizationId: String?,
 
   @JvmField
   @JsonProperty("idp_id")
-  val idpId: String,
+  override val idpId: String,
 
   @JvmField
+  override val email: String?,
+
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `username` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"username\"]")
+  )
+  @JvmField
   @JsonProperty("username")
-  val userName: String?,
+  override val userName: String?,
 
   @JvmField
   @JsonProperty("first_name")
-  val firstName: String?,
+  override val firstName: String?,
 
   @JvmField
   @JsonProperty("last_name")
-  val lastName: String?,
+  override val lastName: String?,
 
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `job_title` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"job_title\"]")
+  )
   @JvmField
   @JsonProperty("job_title")
-  val jobTitle: String?,
-
-  @JvmField
-  @JsonProperty("updated_at")
-  val updatedAt: String,
+  override val jobTitle: String?,
 
   @JvmField
   @JsonProperty("created_at")
-  val createdAt: String,
+  override val createdAt: String,
 
   @JvmField
-  val emails: List<Email>,
+  @JsonProperty("updated_at")
+  override val updatedAt: String,
+
+  @Deprecated(
+    "Will be removed in a future major version. Enable the `emails` custom attribute in dashboard and pull from customAttributes instead. See https://workos.com/docs/directory-sync/attributes/custom-attributes/auto-mapped-attributes for details.",
+    ReplaceWith("customAttributes[\"emails\"]")
+  )
+  @JvmField
+  override val emails: List<Email>,
 
   @JvmField
-  val state: UserState,
-
-  @JvmField
-  @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, Any?>,
-
-  @JvmField
-  @JsonProperty("raw_attributes")
-  val rawAttributes: Map<String, Any?>,
+  override val state: UserState,
 
   @JvmField
   @JsonProperty("role")
-  val role: DirectoryUserRole,
+  override val role: DirectoryUserRole,
+
+  @JvmField
+  @JsonProperty("roles")
+  override val roles: List<DirectoryUserRole>? = null,
+
+  @JvmField
+  @JsonProperty("custom_attributes")
+  override val customAttributes: Map<String, Any?>,
+
+  @JvmField
+  @JsonProperty("raw_attributes")
+  override val rawAttributes: Map<String, Any?>,
 
   /**
    * Object containing the names and values of attributes and their previous values.
@@ -80,4 +100,24 @@ open class UserUpdated
   @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any?>
+) : User(
+  obj,
+  id,
+  directoryId,
+  organizationId,
+  idpId,
+  email,
+  userName,
+  firstName,
+  lastName,
+  jobTitle,
+  createdAt,
+  updatedAt,
+  emails,
+  null,
+  state,
+  role,
+  roles,
+  customAttributes,
+  rawAttributes
 )

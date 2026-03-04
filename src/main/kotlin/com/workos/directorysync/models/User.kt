@@ -96,11 +96,11 @@ open class User
 
   @JvmField
   @JsonProperty("role")
-  val role: DirectoryUserRole?,
+  open val role: DirectoryUserRole?,
 
   @JvmField
   @JsonProperty("roles")
-  val roles: List<DirectoryUserRole>? = null,
+  open val roles: List<DirectoryUserRole>? = null,
 
   @JvmField
   @JsonProperty("custom_attributes")
