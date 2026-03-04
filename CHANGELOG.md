@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.19.1](https://github.com/workos/workos-kotlin/compare/workos-v4.19.0...workos-v4.19.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* Make UserUpdated extend User for dsync.user.updated events ([#334](https://github.com/workos/workos-kotlin/issues/334)) ([7b1782f](https://github.com/workos/workos-kotlin/commit/7b1782f59b4fb0d3d5b58c7740f5c54252acfb01))
+
 ## [4.19.0](https://github.com/workos/workos-kotlin/compare/workos-v4.18.1...workos-v4.19.0) (2026-02-26)
 
 
