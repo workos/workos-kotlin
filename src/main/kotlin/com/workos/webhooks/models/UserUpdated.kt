@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.DirectoryUserRole
 import com.workos.directorysync.models.Email
-import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
 import com.workos.directorysync.models.UserState
 
@@ -75,9 +74,6 @@ open class UserUpdated
   override val emails: List<Email>,
 
   @JvmField
-  override val groups: List<Group>? = null,
-
-  @JvmField
   override val state: UserState,
 
   @JvmField
@@ -118,7 +114,7 @@ open class UserUpdated
   createdAt,
   updatedAt,
   emails,
-  groups,
+  null,
   state,
   role,
   roles,
