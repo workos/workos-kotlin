@@ -17,6 +17,7 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * @param createdAt The timestamp when the user was created.
  * @param updatedAt The timestamp when the user was last updated.
  * @param customAttributes Custom attributes from the identity provider.
+ * @param directoryManaged Whether the organization membership is managed by a directory sync connection.
  */
 data class OrganizationMembership @JsonCreator constructor(
   @JsonProperty("id")
@@ -44,5 +45,8 @@ data class OrganizationMembership @JsonCreator constructor(
   val updatedAt: String,
 
   @JsonProperty("custom_attributes")
-  val customAttributes: Map<String, Any> = emptyMap()
+  val customAttributes: Map<String, Any> = emptyMap(),
+
+  @JsonProperty("directory_managed")
+  val directoryManaged: Boolean = false
 )
