@@ -24,7 +24,8 @@ class OrganizationMembershipWebhookTests : TestBase() {
         "organization_id": "org_01EHWNCE74X7JSDV0X3SZ3KJNY",
         "status": "active",
         "created_at": "2023-11-27T19:07:33.155Z",
-        "updated_at": "2023-11-27T19:07:33.155Z"
+        "updated_at": "2023-11-27T19:07:33.155Z",
+        "directory_managed": false
       },
       "created_at": "2023-11-27T19:07:33.155Z"
     }

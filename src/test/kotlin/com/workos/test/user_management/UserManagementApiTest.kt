@@ -1188,7 +1188,8 @@ class UserManagementApiTest : TestBase() {
         ],
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "directory_managed": false
       }"""
     )
 
