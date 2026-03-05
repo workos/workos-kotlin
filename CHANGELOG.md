@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.20.0](https://github.com/workos/workos-kotlin/compare/workos-v4.19.1...workos-v4.20.0) (2026-03-05)
+
+
+### Features
+
+* **user-management:** add directoryManaged to OrganizationMembership ([#336](https://github.com/workos/workos-kotlin/issues/336)) ([b0ad0d3](https://github.com/workos/workos-kotlin/commit/b0ad0d3f8d7579733c9eea78393317618528037c))
+
 ## [4.19.1](https://github.com/workos/workos-kotlin/compare/workos-v4.19.0...workos-v4.19.1) (2026-03-04)
 
 
