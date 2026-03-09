@@ -172,6 +172,21 @@ enum class EventType(
   OrganizationMembershipUpdated("organization_membership.updated"),
 
   /**
+   * Triggers when an organization is created.
+   */
+  OrganizationCreated("organization.created"),
+
+  /**
+   * Triggers when an organization is updated.
+   */
+  OrganizationUpdated("organization.updated"),
+
+  /**
+   * Triggers when an organization is deleted.
+   */
+  OrganizationDeleted("organization.deleted"),
+
+  /**
    * Triggers when a user requests to reset their password.
    */
   PasswordResetCreated("password_reset.created"),
