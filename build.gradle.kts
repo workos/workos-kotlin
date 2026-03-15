@@ -9,11 +9,11 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.5.0"
+  id("org.jetbrains.kotlin.jvm") version "1.9.25"
 
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+  id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 
-  id("org.jetbrains.dokka") version "1.5.30"
+  id("org.jetbrains.dokka") version "1.9.20"
 
   id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 
@@ -34,23 +34,23 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.1")
 
-  implementation("org.apache.httpcomponents:httpclient:4.5.13")
+  implementation("org.apache.httpcomponents:httpclient:4.5.14")
 
   implementation("com.github.kittinunf.fuel:fuel:2.3.1")
 
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.25")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")
 
   testImplementation("com.github.tomakehurst:wiremock:2.27.2")
 
-  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.9.20")
 
   api("org.apache.commons:commons-math3:3.6.1")
 }
