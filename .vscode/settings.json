@@ -1,4 +1,10 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
