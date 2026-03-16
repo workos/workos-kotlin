@@ -13,7 +13,8 @@
       "matchManagers": [
         "github-actions"
       ],
-      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
+      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "groupName": "github-actions"
     },
     {
       "matchUpdateTypes": [
