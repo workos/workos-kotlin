@@ -26,5 +26,15 @@ enum class Intent(@JsonValue val value: String) {
   /**
    * Log Streams.
    */
-  LogStreams("log_streams")
+  LogStreams("log_streams"),
+
+  /**
+   * Domain Verification.
+   */
+  DomainVerification("domain_verification"),
+
+  /**
+   * Certificate Renewal.
+   */
+  CertificateRenewal("certificate_renewal")
 }
