@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.20.0](https://github.com/workos/workos-kotlin/compare/workos-v4.19.1...workos-v4.20.0) (2026-03-24)
+
+
+### Features
+
+* **user-management:** add directoryManaged to OrganizationMembership ([#336](https://github.com/workos/workos-kotlin/issues/336)) ([b0ad0d3](https://github.com/workos/workos-kotlin/commit/b0ad0d3f8d7579733c9eea78393317618528037c))
+
+
+### Bug Fixes
+
+* Add missing portal intents ([#345](https://github.com/workos/workos-kotlin/issues/345)) ([912e64d](https://github.com/workos/workos-kotlin/commit/912e64d25f98c49b0b3b725e7b2095fb557d9ce3))
+
 ## [4.19.1](https://github.com/workos/workos-kotlin/compare/workos-v4.19.0...workos-v4.19.1) (2026-03-04)
 
 
