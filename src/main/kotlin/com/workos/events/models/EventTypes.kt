@@ -229,6 +229,73 @@ data class DirectoryGroupMembershipEvent
   val data: DirectoryGroupMembershipData
 ) : Event(id, event, createdAt, context)
 
+data class FlagEvent
+@JsonCreator constructor(
+  override val id: String,
+  override val event: String,
+  override val createdAt: String,
+  override val context: Map<String, Any>? = null,
+  val data: FlagEventsApiData
+) : Event(id, event, createdAt, context)
+
+data class ApiKeyEvent
+@JsonCreator constructor(
+  override val id: String,
+  override val event: String,
+  override val createdAt: String,
+  override val context: Map<String, Any>? = null,
+  val data: ApiKeyEventsApiData
+) : Event(id, event, createdAt, context)
+
+data class OrganizationRoleEvent
+@JsonCreator constructor(
+  override val id: String,
+  override val event: String,
+  override val createdAt: String,
+  override val context: Map<String, Any>? = null,
+  val data: OrganizationRoleEventsApiData
+) : Event(id, event, createdAt, context)
+
+data class PermissionEvent
+@JsonCreator constructor(
+  override val id: String,
+  override val event: String,
+  override val createdAt: String,
+  override val context: Map<String, Any>? = null,
+  val data: PermissionEventsApiData
+) : Event(id, event, createdAt, context)
+
+data class FlagEventsApiData
+@JsonCreator constructor(
+  val id: String,
+  val slug: String,
+  val name: String,
+  val enabled: Boolean? = null,
+  @JsonProperty("default_value") val defaultValue: Boolean? = null
+)
+
+data class ApiKeyEventsApiData
+@JsonCreator constructor(
+  val id: String,
+  val name: String,
+  @JsonProperty("obfuscated_value") val obfuscatedValue: String? = null
+)
+
+data class OrganizationRoleEventsApiData
+@JsonCreator constructor(
+  val slug: String,
+  val name: String,
+  @JsonProperty("organization_id") val organizationId: String? = null,
+  val permissions: List<String> = emptyList()
+)
+
+data class PermissionEventsApiData
+@JsonCreator constructor(
+  val id: String,
+  val slug: String,
+  val name: String
+)
+
 data class UnknownEvent
 @JsonCreator constructor(
   override val id: String,

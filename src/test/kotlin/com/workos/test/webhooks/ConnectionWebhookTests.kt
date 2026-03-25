@@ -82,4 +82,75 @@ class ConnectionWebhookTests : TestBase() {
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as ConnectionDeletedEvent).data.id, connectionId)
   }
+
+  @Test
+  fun constructConnectionSamlCertificateRenewalRequiredEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = """
+    {
+      "id": "$webhookId",
+      "data": {
+        "connection": {
+          "id": "$connectionId",
+          "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
+        },
+        "certificate": {
+          "certificate_type": "ResponseSigning",
+          "expiry_date": "2025-06-01T00:00:00.000Z",
+          "is_expired": false
+        },
+        "days_until_expiry": 30
+      },
+      "event": "${EventType.ConnectionSamlCertificateRenewalRequired.value}",
+      "created_at": "2024-07-20T10:15:23.713Z"
+    }
+    """
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is ConnectionSamlCertificateRenewalRequiredEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as ConnectionSamlCertificateRenewalRequiredEvent).data.connection.id, connectionId)
+    assertEquals(webhook.data.daysUntilExpiry, 30)
+  }
+
+  @Test
+  fun constructConnectionSamlCertificateRenewedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = """
+    {
+      "id": "$webhookId",
+      "data": {
+        "connection": {
+          "id": "$connectionId",
+          "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
+        },
+        "certificate": {
+          "certificate_type": "ResponseSigning",
+          "expiry_date": "2026-06-01T00:00:00.000Z"
+        },
+        "renewed_at": "2025-05-01T10:00:00.000Z"
+      },
+      "event": "${EventType.ConnectionSamlCertificateRenewed.value}",
+      "created_at": "2024-07-20T10:15:23.713Z"
+    }
+    """
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is ConnectionSamlCertificateRenewedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as ConnectionSamlCertificateRenewedEvent).data.connection.id, connectionId)
+    assertEquals(webhook.data.renewedAt, "2025-05-01T10:00:00.000Z")
+  }
 }

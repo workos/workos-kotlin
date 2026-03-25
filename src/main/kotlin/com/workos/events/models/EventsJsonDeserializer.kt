@@ -48,6 +48,10 @@ class EventsJsonDeserializer : JsonDeserializer<Event>() {
       eventType.startsWith("organization_domain.") -> OrganizationDomainEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.organizations.models.OrganizationDomain::class.java))
       eventType.startsWith("role.") -> RoleEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.roles.models.Role::class.java))
       eventType.startsWith("session.") -> SessionEvent(id, eventType, createdAt, context, deserializeData(data, SessionEventData::class.java))
+      eventType.startsWith("flag.") -> FlagEvent(id, eventType, createdAt, context, deserializeData(data, FlagEventsApiData::class.java))
+      eventType.startsWith("api_key.") -> ApiKeyEvent(id, eventType, createdAt, context, deserializeData(data, ApiKeyEventsApiData::class.java))
+      eventType.startsWith("organization_role.") -> OrganizationRoleEvent(id, eventType, createdAt, context, deserializeData(data, OrganizationRoleEventsApiData::class.java))
+      eventType.startsWith("permission.") -> PermissionEvent(id, eventType, createdAt, context, deserializeData(data, PermissionEventsApiData::class.java))
       else -> UnknownEvent(id, eventType, createdAt, context, mapper.treeToValue(data, Any::class.java))
     }
   }

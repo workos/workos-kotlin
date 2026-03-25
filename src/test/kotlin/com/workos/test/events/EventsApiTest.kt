@@ -3,11 +3,15 @@ package com.workos.test.events
 import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
 import com.workos.common.models.Order
 import com.workos.events.EventsApi
+import com.workos.events.models.ApiKeyEvent
 import com.workos.events.models.DirectoryEvent
 import com.workos.events.models.DirectoryGroupEvent
 import com.workos.events.models.DirectoryGroupMembershipEvent
 import com.workos.events.models.DirectoryUserEvent
+import com.workos.events.models.FlagEvent
 import com.workos.events.models.OrganizationEvent
+import com.workos.events.models.OrganizationRoleEvent
+import com.workos.events.models.PermissionEvent
 import com.workos.test.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -258,5 +262,145 @@ class EventsApiTest : TestBase() {
     assertIs<DirectoryUserEvent>(event)
     assertEquals("dsync.user.created", event.event)
     assertEquals("directory_user_01E1X56GH84T3FB41SD6PZGDBX", (event as DirectoryUserEvent).data.id)
+  }
+
+  @Test
+  fun listEventsShouldReturnFlagEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "flag.created",
+            "data": {
+              "id": "flag_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+              "slug": "new-feature",
+              "name": "New Feature",
+              "enabled": true,
+              "default_value": false
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<FlagEvent>(event)
+    assertEquals("flag.created", event.event)
+    assertEquals("flag_01FKPWZWPHE9VN2QXJ7G1BZYP8", (event as FlagEvent).data.id)
+    assertEquals("new-feature", event.data.slug)
+    assertEquals("New Feature", event.data.name)
+  }
+
+  @Test
+  fun listEventsShouldReturnApiKeyEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "api_key.created",
+            "data": {
+              "id": "api_key_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+              "name": "Production API Key",
+              "obfuscated_value": "sk_live_****abcd"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<ApiKeyEvent>(event)
+    assertEquals("api_key.created", event.event)
+    assertEquals("api_key_01FKPWZWPHE9VN2QXJ7G1BZYP8", (event as ApiKeyEvent).data.id)
+    assertEquals("Production API Key", event.data.name)
+  }
+
+  @Test
+  fun listEventsShouldReturnOrganizationRoleEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "organization_role.created",
+            "data": {
+              "slug": "billing-admin",
+              "name": "Billing Admin",
+              "organization_id": "org_01EZTR6WYX1A0DSE2CYMGXQ24Y",
+              "permissions": ["billing:read", "billing:write"]
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<OrganizationRoleEvent>(event)
+    assertEquals("organization_role.created", event.event)
+    assertEquals("billing-admin", (event as OrganizationRoleEvent).data.slug)
+    assertEquals("Billing Admin", event.data.name)
+  }
+
+  @Test
+  fun listEventsShouldReturnPermissionEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "permission.created",
+            "data": {
+              "id": "perm_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+              "slug": "billing:read",
+              "name": "Billing Read"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<PermissionEvent>(event)
+    assertEquals("permission.created", event.event)
+    assertEquals("perm_01FKPWZWPHE9VN2QXJ7G1BZYP8", (event as PermissionEvent).data.id)
+    assertEquals("billing:read", event.data.slug)
   }
 }

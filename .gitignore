@@ -20,3 +20,6 @@ bin
 # Credentials
 gradle.properties
 signing.key
+
+# Ideation and docs 
+docs/
