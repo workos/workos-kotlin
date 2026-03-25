@@ -182,6 +182,31 @@ enum class EventType(
   PasswordResetSucceeded("password_reset.succeeded"),
 
   /**
+   * Triggers when an organization domain is created.
+   */
+  OrganizationDomainCreated("organization_domain.created"),
+
+  /**
+   * Triggers when an organization domain is updated.
+   */
+  OrganizationDomainUpdated("organization_domain.updated"),
+
+  /**
+   * Triggers when an organization domain is deleted.
+   */
+  OrganizationDomainDeleted("organization_domain.deleted"),
+
+  /**
+   * Triggers when an organization domain is verified.
+   */
+  OrganizationDomainVerified("organization_domain.verified"),
+
+  /**
+   * Triggers when an organization domain verification fails.
+   */
+  OrganizationDomainVerificationFailed("organization_domain.verification_failed"),
+
+  /**
    * Triggers when a user is created.
    */
   UserCreated("user.created"),

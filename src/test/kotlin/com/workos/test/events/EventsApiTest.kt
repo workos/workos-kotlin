@@ -7,6 +7,7 @@ import com.workos.events.models.DirectoryEvent
 import com.workos.events.models.DirectoryGroupEvent
 import com.workos.events.models.DirectoryGroupMembershipEvent
 import com.workos.events.models.DirectoryUserEvent
+import com.workos.events.models.OrganizationDomainEvent
 import com.workos.events.models.OrganizationEvent
 import com.workos.test.TestBase
 import kotlin.test.Test
@@ -258,5 +259,86 @@ class EventsApiTest : TestBase() {
     assertIs<DirectoryUserEvent>(event)
     assertEquals("dsync.user.created", event.event)
     assertEquals("directory_user_01E1X56GH84T3FB41SD6PZGDBX", (event as DirectoryUserEvent).data.id)
+  }
+
+  @Test
+  fun listEventsShouldReturnOrganizationDomainVerifiedEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "organization_domain.verified",
+            "data": {
+              "object": "organization_domain",
+              "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+              "domain": "example.com",
+              "state": "verified",
+              "verification_strategy": "dns",
+              "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": {
+          "after": null
+        }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<OrganizationDomainEvent>(event)
+    assertEquals("organization_domain.verified", event.event)
+    val domainEvent = event as OrganizationDomainEvent
+    assertEquals("org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8", domainEvent.data.id)
+    assertEquals("example.com", domainEvent.data.domain)
+    assertEquals("rqURsMUCuiaSggGyed8ZAnMk", domainEvent.data.verificationToken)
+  }
+
+  @Test
+  fun listEventsShouldReturnOrganizationDomainVerificationFailedEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "organization_domain.verification_failed",
+            "data": {
+              "object": "organization_domain",
+              "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+              "domain": "example.com",
+              "state": "failed",
+              "verification_strategy": "dns",
+              "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": {
+          "after": null
+        }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<OrganizationDomainEvent>(event)
+    assertEquals("organization_domain.verification_failed", event.event)
+    val domainEvent = event as OrganizationDomainEvent
+    assertEquals("org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8", domainEvent.data.id)
+    assertEquals("example.com", domainEvent.data.domain)
   }
 }

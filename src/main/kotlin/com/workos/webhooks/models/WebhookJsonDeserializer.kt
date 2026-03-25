@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.workos.directorysync.models.Directory
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
+import com.workos.organizations.models.OrganizationDomain
 import com.workos.sso.models.Connection
 import com.workos.usermanagement.models.AuthenticationEventData
 import com.workos.usermanagement.models.EmailVerificationEventData
@@ -70,6 +71,11 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.InvitationCreated -> InvitationEvent(id, eventType, deserializeData(data, InvitationEventData::class.java), createdAt)
       EventType.InvitationRevoked -> InvitationEvent(id, eventType, deserializeData(data, InvitationEventData::class.java), createdAt)
       EventType.MagicAuthCreated -> MagicAuthEvent(id, eventType, deserializeData(data, MagicAuthEventData::class.java), createdAt)
+      EventType.OrganizationDomainCreated -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainUpdated -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainDeleted -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainVerified -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainVerificationFailed -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
       EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipDeleted -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
       EventType.OrganizationMembershipUpdated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)
