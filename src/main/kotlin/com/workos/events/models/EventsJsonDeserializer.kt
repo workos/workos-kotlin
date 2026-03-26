@@ -32,12 +32,15 @@ class EventsJsonDeserializer : JsonDeserializer<Event>() {
     val data = rootNode?.get("data")
 
     return when {
+      eventType.startsWith("authentication.radar_risk_detected") -> RadarRiskDetectedEventsApiEvent(id, eventType, createdAt, context, deserializeData(data, RadarRiskDetectedEventsApiData::class.java))
       eventType.startsWith("authentication.") -> AuthenticationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.AuthenticationEventData::class.java))
       eventType.startsWith("email_verification.") -> EmailVerificationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.EmailVerificationEventData::class.java))
       eventType.startsWith("magic_auth.") -> MagicAuthEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.MagicAuthEventData::class.java))
       eventType.startsWith("invitation.") -> InvitationEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.InvitationEventData::class.java))
       eventType.startsWith("password_reset.") -> PasswordResetEvent(id, eventType, createdAt, context, deserializeData(data, com.workos.usermanagement.models.PasswordResetEventData::class.java))
       eventType.startsWith("organization.") -> OrganizationEvent(id, eventType, createdAt, context, deserializeData(data, OrganizationEventData::class.java))
+      eventType.startsWith("connection.saml_certificate_renewal_required") -> SamlCertificateRenewalRequiredEventsApiEvent(id, eventType, createdAt, context, deserializeData(data, SamlCertificateRenewalRequiredEventsApiData::class.java))
+      eventType.startsWith("connection.saml_certificate_renewed") -> SamlCertificateRenewedEventsApiEvent(id, eventType, createdAt, context, deserializeData(data, SamlCertificateRenewedEventsApiData::class.java))
       eventType.startsWith("connection.") -> ConnectionEvent(id, eventType, createdAt, context, deserializeData(data, Connection::class.java))
       eventType.startsWith("dsync.user.") -> DirectoryUserEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryUserMinimal::class.java))
       eventType.startsWith("dsync.group.user_") -> DirectoryGroupMembershipEvent(id, eventType, createdAt, context, deserializeData(data, DirectoryGroupMembershipData::class.java))

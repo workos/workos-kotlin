@@ -13,6 +13,9 @@ import com.workos.events.models.OrganizationDomainEvent
 import com.workos.events.models.OrganizationEvent
 import com.workos.events.models.OrganizationRoleEvent
 import com.workos.events.models.PermissionEvent
+import com.workos.events.models.RadarRiskDetectedEventsApiEvent
+import com.workos.events.models.SamlCertificateRenewalRequiredEventsApiEvent
+import com.workos.events.models.SamlCertificateRenewedEventsApiEvent
 import com.workos.test.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -484,5 +487,132 @@ class EventsApiTest : TestBase() {
     val domainEvent = event as OrganizationDomainEvent
     assertEquals("org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8", domainEvent.data.id)
     assertEquals("example.com", domainEvent.data.domain)
+  }
+
+  @Test
+  fun listEventsShouldReturnRadarRiskDetectedEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "authentication.radar_risk_detected",
+            "data": {
+              "auth_method": "password",
+              "action": "login",
+              "control": "block",
+              "blocklist_type": "ip",
+              "ip_address": "192.0.2.1",
+              "user_agent": "Mozilla/5.0",
+              "user_id": "user_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+              "email": "test@example.com"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<RadarRiskDetectedEventsApiEvent>(event)
+    assertEquals("authentication.radar_risk_detected", event.event)
+    val radarEvent = event as RadarRiskDetectedEventsApiEvent
+    assertEquals("password", radarEvent.data.authMethod)
+    assertEquals("login", radarEvent.data.action)
+    assertEquals("block", radarEvent.data.control)
+    assertEquals("user_01FKPWZWPHE9VN2QXJ7G1BZYP8", radarEvent.data.userId)
+    assertEquals("test@example.com", radarEvent.data.email)
+  }
+
+  @Test
+  fun listEventsShouldReturnSamlCertificateRenewalRequiredEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "connection.saml_certificate_renewal_required",
+            "data": {
+              "connection": {
+                "id": "conn_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+                "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
+              },
+              "certificate": {
+                "certificate_type": "ResponseSigning",
+                "expiry_date": "2025-06-01T00:00:00.000Z",
+                "is_expired": false
+              },
+              "days_until_expiry": 30
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<SamlCertificateRenewalRequiredEventsApiEvent>(event)
+    assertEquals("connection.saml_certificate_renewal_required", event.event)
+    val certEvent = event as SamlCertificateRenewalRequiredEventsApiEvent
+    assertEquals("conn_01FKPWZWPHE9VN2QXJ7G1BZYP8", certEvent.data.connection.id)
+    assertEquals("ResponseSigning", certEvent.data.certificate.certificateType)
+    assertEquals(30, certEvent.data.daysUntilExpiry)
+  }
+
+  @Test
+  fun listEventsShouldReturnSamlCertificateRenewedEvent() {
+    val workos = createWorkOSClient()
+
+    stubResponse(
+      "/events",
+      """{
+        "object": "list",
+        "data": [
+          {
+            "object": "event",
+            "id": "event_01H2GNQD5D7ZE06FDDS75NFPHY",
+            "event": "connection.saml_certificate_renewed",
+            "data": {
+              "connection": {
+                "id": "conn_01FKPWZWPHE9VN2QXJ7G1BZYP8",
+                "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8"
+              },
+              "certificate": {
+                "certificate_type": "ResponseSigning",
+                "expiry_date": "2026-06-01T00:00:00.000Z"
+              },
+              "renewed_at": "2025-05-01T10:00:00.000Z"
+            },
+            "created_at": "2023-06-09T18:12:01.837Z"
+          }
+        ],
+        "list_metadata": { "after": null }
+      }"""
+    )
+
+    val eventList = workos.events.listEvents()
+    assertEquals(1, eventList.data.size)
+    val event = eventList.data[0]
+    assertIs<SamlCertificateRenewedEventsApiEvent>(event)
+    assertEquals("connection.saml_certificate_renewed", event.event)
+    val certEvent = event as SamlCertificateRenewedEventsApiEvent
+    assertEquals("conn_01FKPWZWPHE9VN2QXJ7G1BZYP8", certEvent.data.connection.id)
+    assertEquals("2025-05-01T10:00:00.000Z", certEvent.data.renewedAt)
   }
 }
