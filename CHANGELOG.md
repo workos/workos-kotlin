@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.21.0](https://github.com/workos/workos-kotlin/compare/workos-v4.20.0...workos-v4.21.0) (2026-03-26)
+
+
+### Features
+
+* Add missing event models, types, and tests ([#347](https://github.com/workos/workos-kotlin/issues/347)) ([9f1ec27](https://github.com/workos/workos-kotlin/commit/9f1ec27f9f4f723a5af34de53d28c90e6311511c))
+
+
+### Bug Fixes
+
+* Add organization domain verification webhook events ([#346](https://github.com/workos/workos-kotlin/issues/346)) ([f92ac24](https://github.com/workos/workos-kotlin/commit/f92ac24dc63b5fe9501e9e58398db5dea98027ef))
+* use explicit JsonCreator.Mode.PROPERTIES for Jackson 2.21.0 compatibility ([#348](https://github.com/workos/workos-kotlin/issues/348)) ([52aed90](https://github.com/workos/workos-kotlin/commit/52aed907ee95a93ea61ba54698aaca153fc03580))
+
 ## [4.20.0](https://github.com/workos/workos-kotlin/compare/workos-v4.19.1...workos-v4.20.0) (2026-03-24)
 
 
