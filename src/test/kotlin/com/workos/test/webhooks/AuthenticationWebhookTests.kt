@@ -232,4 +232,140 @@ class AuthenticationWebhookTests : TestBase() {
     assertEquals((webhook as AuthenticationEvent).data.userId, userId)
     assertEquals((webhook as AuthenticationEvent).data.email, email)
   }
+
+  @Test
+  fun constructAuthenticationEmailVerificationFailedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationEmailVerificationFailed, "email_verification")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+  }
+
+  @Test
+  fun constructAuthenticationMfaFailedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationMfaFailed, "mfa")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+  }
+
+  @Test
+  fun constructAuthenticationPasskeyFailedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationPasskeyFailed, "passkey")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+  }
+
+  @Test
+  fun constructAuthenticationPasskeySucceededEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationSucceededWebhookEvent(EventType.AuthenticationPasskeySucceeded, "passkey")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as AuthenticationEvent).data.userId, userId)
+  }
+
+  @Test
+  fun constructAuthenticationSsoStartedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationSucceededWebhookEvent(EventType.AuthenticationSsoStarted, "sso")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+  }
+
+  @Test
+  fun constructAuthenticationSsoTimedOutEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateAuthenticationFailedWebhookEvent(EventType.AuthenticationSsoTimedOut, "sso")
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is AuthenticationEvent)
+    assertEquals(webhook.id, webhookId)
+  }
+
+  @Test
+  fun constructAuthenticationRadarRiskDetectedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = """
+    {
+      "id": "$webhookId",
+      "data": {
+        "auth_method": "password",
+        "action": "login",
+        "control": "block",
+        "blocklist_type": "ip",
+        "ip_address": "192.0.2.1",
+        "user_agent": "Mozilla/5.0",
+        "user_id": "$userId",
+        "email": "$email"
+      },
+      "event": "${EventType.AuthenticationRadarRiskDetected.value}",
+      "created_at": "2024-07-20T10:15:23.713Z"
+    }
+    """
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is RadarRiskDetectedEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as RadarRiskDetectedEvent).data.userId, userId)
+    assertEquals(webhook.data.email, email)
+    assertEquals(webhook.data.authMethod, "password")
+    assertEquals(webhook.data.action, "login")
+  }
 }

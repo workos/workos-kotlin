@@ -69,6 +69,23 @@ class InvitationWebhookTests : TestBase() {
   }
 
   @Test
+  fun constructInvitationResentEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateWebhookEvent(EventType.InvitationResent)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is InvitationEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as InvitationEvent).data.id, invitationId)
+  }
+
+  @Test
   fun constructInvitationRevokedEvent() {
     val workos = createWorkOSClient()
     val webhookData = generateWebhookEvent(EventType.InvitationRevoked)

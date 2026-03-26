@@ -34,6 +34,12 @@ enum class AuthenticationEventTypeEnumType(val type: String) {
   Password("password"),
 
   /**
+   * Passkey
+   */
+  @JsonProperty("passkey")
+  Passkey("passkey"),
+
+  /**
    * SSO
    */
   @JsonProperty("sso")

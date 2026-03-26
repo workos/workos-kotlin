@@ -12,6 +12,11 @@ enum class EventType(
   val value: String
 ) {
   /**
+   * Triggers when a user fails to verify their email.
+   */
+  AuthenticationEmailVerificationFailed("authentication.email_verification_failed"),
+
+  /**
    * Triggers when a user successfully verifies their email.
    */
   AuthenticationEmailVerificationSucceeded("authentication.email_verification_succeeded"),
@@ -25,6 +30,11 @@ enum class EventType(
    * Triggers when a user successfully authenticates via Magic Auth.
    */
   AuthenticationMagicAuthSucceeded("authentication.magic_auth_succeeded"),
+
+  /**
+   * Triggers when a user fails to authenticate with a multi-factor authentication code.
+   */
+  AuthenticationMfaFailed("authentication.mfa_failed"),
 
   /**
    * Triggers when a user successfully authenticates with a multi-factor authentication code.
@@ -42,6 +52,16 @@ enum class EventType(
   AuthenticationOauthSucceeded("authentication.oauth_succeeded"),
 
   /**
+   * Triggers when a user fails to authenticate with a passkey.
+   */
+  AuthenticationPasskeyFailed("authentication.passkey_failed"),
+
+  /**
+   * Triggers when a user successfully authenticates with a passkey.
+   */
+  AuthenticationPasskeySucceeded("authentication.passkey_succeeded"),
+
+  /**
    * Triggers when a user fails to authenticate with password credentials.
    */
   AuthenticationPasswordFailed("authentication.password_failed"),
@@ -52,14 +72,39 @@ enum class EventType(
   AuthenticationPasswordSucceeded("authentication.password_succeeded"),
 
   /**
+   * Triggers when Radar detects a risk during authentication.
+   */
+  AuthenticationRadarRiskDetected("authentication.radar_risk_detected"),
+
+  /**
    * Triggers when a user fails to authenticate with Single Sign-On.
    */
   AuthenticationSsoFailed("authentication.sso_failed"),
 
   /**
+   * Triggers when a user starts authenticating with Single Sign-On.
+   */
+  AuthenticationSsoStarted("authentication.sso_started"),
+
+  /**
    * Triggers when a user successfully authenticates with Single Sign-On.
    */
   AuthenticationSsoSucceeded("authentication.sso_succeeded"),
+
+  /**
+   * Triggers when a Single Sign-On authentication attempt times out.
+   */
+  AuthenticationSsoTimedOut("authentication.sso_timed_out"),
+
+  /**
+   * Triggers when an API key is created.
+   */
+  ApiKeyCreated("api_key.created"),
+
+  /**
+   * Triggers when an API key is revoked.
+   */
+  ApiKeyRevoked("api_key.revoked"),
 
   /**
    * Triggers when a Connection's state changes to active.
@@ -75,6 +120,16 @@ enum class EventType(
    * Triggers when a Connection is deleted.
    */
   ConnectionDeleted("connection.deleted"),
+
+  /**
+   * Triggers when a Connection's SAML certificate is approaching expiry.
+   */
+  ConnectionSamlCertificateRenewalRequired("connection.saml_certificate_renewal_required"),
+
+  /**
+   * Triggers when a Connection's SAML certificate has been renewed.
+   */
+  ConnectionSamlCertificateRenewed("connection.saml_certificate_renewed"),
 
   /**
    * Triggers when a Directory's state changes to active.
@@ -137,6 +192,26 @@ enum class EventType(
   EmailVerificationCreated("email_verification.created"),
 
   /**
+   * Triggers when a feature flag is created.
+   */
+  FlagCreated("flag.created"),
+
+  /**
+   * Triggers when a feature flag is deleted.
+   */
+  FlagDeleted("flag.deleted"),
+
+  /**
+   * Triggers when a feature flag's rule is updated.
+   */
+  FlagRuleUpdated("flag.rule_updated"),
+
+  /**
+   * Triggers when a feature flag is updated.
+   */
+  FlagUpdated("flag.updated"),
+
+  /**
    * Triggers when a user accepts an invitation.
    */
   InvitationAccepted("invitation.accepted"),
@@ -147,19 +222,64 @@ enum class EventType(
   InvitationCreated("invitation.created"),
 
   /**
+   * Triggers when an invitation is resent.
+   */
+  InvitationResent("invitation.resent"),
+
+  /**
    * Triggers when an invitation is revoked.
    */
   InvitationRevoked("invitation.revoked"),
 
   /**
-   * Triggers when an organization membership is created.
-   */
-  OrganizationMembershipCreated("organization_membership.created"),
-
-  /**
    * Triggers when a user initiates Magic Auth and an authentication code is created.
    */
   MagicAuthCreated("magic_auth.created"),
+
+  /**
+   * Triggers when an organization is created.
+   */
+  OrganizationCreated("organization.created"),
+
+  /**
+   * Triggers when an organization is deleted.
+   */
+  OrganizationDeleted("organization.deleted"),
+
+  /**
+   * Triggers when an organization is updated.
+   */
+  OrganizationUpdated("organization.updated"),
+
+  /**
+   * Triggers when an organization domain is created.
+   */
+  OrganizationDomainCreated("organization_domain.created"),
+
+  /**
+   * Triggers when an organization domain is deleted.
+   */
+  OrganizationDomainDeleted("organization_domain.deleted"),
+
+  /**
+   * Triggers when an organization domain is updated.
+   */
+  OrganizationDomainUpdated("organization_domain.updated"),
+
+  /**
+   * Triggers when an organization domain verification fails.
+   */
+  OrganizationDomainVerificationFailed("organization_domain.verification_failed"),
+
+  /**
+   * Triggers when an organization domain is verified.
+   */
+  OrganizationDomainVerified("organization_domain.verified"),
+
+  /**
+   * Triggers when an organization membership is created.
+   */
+  OrganizationMembershipCreated("organization_membership.created"),
 
   /**
    * Triggers when an organization membership is deleted.
@@ -172,6 +292,21 @@ enum class EventType(
   OrganizationMembershipUpdated("organization_membership.updated"),
 
   /**
+   * Triggers when an organization role is created.
+   */
+  OrganizationRoleCreated("organization_role.created"),
+
+  /**
+   * Triggers when an organization role is deleted.
+   */
+  OrganizationRoleDeleted("organization_role.deleted"),
+
+  /**
+   * Triggers when an organization role is updated.
+   */
+  OrganizationRoleUpdated("organization_role.updated"),
+
+  /**
    * Triggers when a user requests to reset their password.
    */
   PasswordResetCreated("password_reset.created"),
@@ -182,29 +317,44 @@ enum class EventType(
   PasswordResetSucceeded("password_reset.succeeded"),
 
   /**
-   * Triggers when an organization domain is created.
+   * Triggers when a permission is created.
    */
-  OrganizationDomainCreated("organization_domain.created"),
+  PermissionCreated("permission.created"),
 
   /**
-   * Triggers when an organization domain is updated.
+   * Triggers when a permission is deleted.
    */
-  OrganizationDomainUpdated("organization_domain.updated"),
+  PermissionDeleted("permission.deleted"),
 
   /**
-   * Triggers when an organization domain is deleted.
+   * Triggers when a permission is updated.
    */
-  OrganizationDomainDeleted("organization_domain.deleted"),
+  PermissionUpdated("permission.updated"),
 
   /**
-   * Triggers when an organization domain is verified.
+   * Triggers when a role is created.
    */
-  OrganizationDomainVerified("organization_domain.verified"),
+  RoleCreated("role.created"),
 
   /**
-   * Triggers when an organization domain verification fails.
+   * Triggers when a role is deleted.
    */
-  OrganizationDomainVerificationFailed("organization_domain.verification_failed"),
+  RoleDeleted("role.deleted"),
+
+  /**
+   * Triggers when a role is updated.
+   */
+  RoleUpdated("role.updated"),
+
+  /**
+   * Triggers when a session is created.
+   */
+  SessionCreated("session.created"),
+
+  /**
+   * Triggers when a session is revoked.
+   */
+  SessionRevoked("session.revoked"),
 
   /**
    * Triggers when a user is created.
