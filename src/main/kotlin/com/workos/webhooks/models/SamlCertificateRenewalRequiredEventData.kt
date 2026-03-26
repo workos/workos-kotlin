@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Data payload for the `connection.saml_certificate_renewal_required` webhook event.
  */
 data class SamlCertificateRenewalRequiredEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val connection: SamlCertificateConnection,
 
@@ -23,7 +23,7 @@ data class SamlCertificateRenewalRequiredEventData
  * Connection reference within a SAML certificate event.
  */
 data class SamlCertificateConnection
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val id: String,
 
@@ -36,7 +36,7 @@ data class SamlCertificateConnection
  * SAML certificate details within a certificate event.
  */
 data class SamlCertificateInfo
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("certificate_type")
   val certificateType: String,

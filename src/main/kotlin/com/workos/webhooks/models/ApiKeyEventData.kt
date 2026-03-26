@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Data payload for `api_key.*` webhook events.
  */
 data class ApiKeyEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "api_key",

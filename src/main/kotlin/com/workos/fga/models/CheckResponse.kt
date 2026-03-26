@@ -7,7 +7,7 @@ import com.workos.fga.CHECK_RESULT_AUTHORIZED
 import com.workos.fga.types.WarrantCheckOptions
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class CheckResponse @JsonCreator constructor(
+data class CheckResponse @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("result")
   val result: String,
 
@@ -25,7 +25,7 @@ data class CheckResponse @JsonCreator constructor(
   }
 }
 
-data class DebugInfo @JsonCreator constructor(
+data class DebugInfo @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("processing_time")
   val processingTime: Int,
 
@@ -33,7 +33,7 @@ data class DebugInfo @JsonCreator constructor(
   val decisionTree: DecisionTreeNode
 )
 
-data class DecisionTreeNode @JsonCreator constructor(
+data class DecisionTreeNode @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("check")
   val check: WarrantCheckOptions,
 

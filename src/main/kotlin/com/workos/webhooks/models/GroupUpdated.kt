@@ -8,7 +8,7 @@ import com.workos.directorysync.models.Group
  * @suppress
  */
 class GroupUpdated
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   override val obj: String = "directory_group",

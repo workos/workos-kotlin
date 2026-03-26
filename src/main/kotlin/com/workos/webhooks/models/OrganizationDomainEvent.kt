@@ -5,7 +5,7 @@ import com.workos.organizations.models.OrganizationDomain
 /**
  * Webhook Event for `organization_domain.*` events.
  */
-class OrganizationDomainWebhookEvent(
+class OrganizationDomainEvent(
   @JvmField
   override val id: String,
 

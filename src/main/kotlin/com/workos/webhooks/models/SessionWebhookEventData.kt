@@ -8,7 +8,7 @@ import com.workos.events.models.SessionImpersonator
  * Data payload for `session.*` webhook events.
  */
 data class SessionWebhookEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "session",

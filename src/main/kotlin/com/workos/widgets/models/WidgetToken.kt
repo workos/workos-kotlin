@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param token The generated widget token.
  */
 data class WidgetToken
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val token: String
 )

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
  */
 @JsonDeserialize(using = WebhookJsonDeserializer::class)
 abstract class WebhookEvent
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   open val id: String,
 

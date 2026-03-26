@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Data payload for the `connection.saml_certificate_renewed` webhook event.
  */
 data class SamlCertificateRenewedEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val connection: SamlCertificateConnection,
 

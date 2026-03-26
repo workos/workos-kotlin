@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @Deprecated("Please use `verifyChallenge` instead")
 data class VerifyFactorResponse
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("challenge")
   val challenge: Challenge,

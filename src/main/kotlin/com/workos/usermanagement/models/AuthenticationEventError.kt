@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param code The error code.
  * @param message The error message.
  */
-data class AuthenticationEventError @JsonCreator constructor(
+data class AuthenticationEventError @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("code")
   val issuer: String,
 

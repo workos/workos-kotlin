@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Data payload for the `authentication.radar_risk_detected` webhook event.
  */
 data class RadarRiskDetectedEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("auth_method")
   val authMethod: String,

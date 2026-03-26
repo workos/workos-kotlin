@@ -1,29 +1,31 @@
 package com.workos.test.webhooks
 
 import com.workos.test.TestBase
-import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
+import com.workos.webhooks.models.EventType
+import com.workos.webhooks.models.OrganizationDomainEvent
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class OrganizationDomainWebhookTests : TestBase() {
 
-  private val domainId = "org_domain_01FKPWZWPHE9VN2QXJ7G1BZYP8"
-  private val webhookId = "wh_01FMXKE185HQ2DQ84BH33HMF99"
+  private val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+  private val webhookId = "wh_01FMXJ2W7T9VY7EAHHMBF2K07Y"
 
-  private fun generateOrganizationDomainWebhookEvent(eventType: EventType): String {
+  private fun generateWebhookEvent(eventType: EventType, state: String = "verified"): String {
     return """
     {
       "id": "$webhookId",
+      "event": "${eventType.value}",
       "data": {
         "object": "organization_domain",
-        "id": "$domainId",
-        "domain": "foo-corp.com",
-        "organization_id": "org_01FKPWZWPHE9VN2QXJ7G1BZYP8",
-        "state": "verified"
+        "id": "$organizationDomainId",
+        "domain": "example.com",
+        "state": "$state",
+        "verification_strategy": "dns",
+        "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
       },
-      "event": "${eventType.value}",
-      "created_at": "2024-07-20T10:15:23.713Z"
+      "created_at": "2023-11-27T19:07:33.155Z"
     }
     """
   }
@@ -31,7 +33,7 @@ class OrganizationDomainWebhookTests : TestBase() {
   @Test
   fun constructOrganizationDomainCreatedEvent() {
     val workos = createWorkOSClient()
-    val webhookData = generateOrganizationDomainWebhookEvent(EventType.OrganizationDomainCreated)
+    val webhookData = generateWebhookEvent(EventType.OrganizationDomainCreated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
@@ -40,32 +42,16 @@ class OrganizationDomainWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationDomainWebhookEvent)
+    assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationDomainWebhookEvent).data.id, domainId)
-  }
-
-  @Test
-  fun constructOrganizationDomainDeletedEvent() {
-    val workos = createWorkOSClient()
-    val webhookData = generateOrganizationDomainWebhookEvent(EventType.OrganizationDomainDeleted)
-    val testData = WebhooksApiTest.prepareTest(webhookData)
-
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
-
-    assertTrue(webhook is OrganizationDomainWebhookEvent)
-    assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationDomainWebhookEvent).data.id, domainId)
+    assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.domain, "example.com")
   }
 
   @Test
   fun constructOrganizationDomainUpdatedEvent() {
     val workos = createWorkOSClient()
-    val webhookData = generateOrganizationDomainWebhookEvent(EventType.OrganizationDomainUpdated)
+    val webhookData = generateWebhookEvent(EventType.OrganizationDomainUpdated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
@@ -74,15 +60,32 @@ class OrganizationDomainWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationDomainWebhookEvent)
+    assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationDomainWebhookEvent).data.id, domainId)
+    assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+  }
+
+  @Test
+  fun constructOrganizationDomainDeletedEvent() {
+    val workos = createWorkOSClient()
+    val webhookData = generateWebhookEvent(EventType.OrganizationDomainDeleted)
+    val testData = WebhooksApiTest.prepareTest(webhookData)
+
+    val webhook = workos.webhooks.constructEvent(
+      webhookData,
+      testData["signature"] as String,
+      testData["secret"] as String
+    )
+
+    assertTrue(webhook is OrganizationDomainEvent)
+    assertEquals(webhook.id, webhookId)
+    assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
   }
 
   @Test
   fun constructOrganizationDomainVerifiedEvent() {
     val workos = createWorkOSClient()
-    val webhookData = generateOrganizationDomainWebhookEvent(EventType.OrganizationDomainVerified)
+    val webhookData = generateWebhookEvent(EventType.OrganizationDomainVerified)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
@@ -91,15 +94,17 @@ class OrganizationDomainWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationDomainWebhookEvent)
+    assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationDomainWebhookEvent).data.id, domainId)
+    assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.domain, "example.com")
+    assertEquals(webhook.data.verificationToken, "rqURsMUCuiaSggGyed8ZAnMk")
   }
 
   @Test
   fun constructOrganizationDomainVerificationFailedEvent() {
     val workos = createWorkOSClient()
-    val webhookData = generateOrganizationDomainWebhookEvent(EventType.OrganizationDomainVerificationFailed)
+    val webhookData = generateWebhookEvent(EventType.OrganizationDomainVerificationFailed, "failed")
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
     val webhook = workos.webhooks.constructEvent(
@@ -108,8 +113,8 @@ class OrganizationDomainWebhookTests : TestBase() {
       testData["secret"] as String
     )
 
-    assertTrue(webhook is OrganizationDomainWebhookEvent)
+    assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
-    assertEquals((webhook as OrganizationDomainWebhookEvent).data.id, domainId)
+    assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
   }
 }

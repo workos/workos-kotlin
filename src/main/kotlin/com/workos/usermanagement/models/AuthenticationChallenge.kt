@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the challenge will expire.
  * @param authenticationFactorId The unique ID of the authentication factor the challenge belongs to.
  */
-data class AuthenticationChallenge @JsonCreator constructor(
+data class AuthenticationChallenge @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

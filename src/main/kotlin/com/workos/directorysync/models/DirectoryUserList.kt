@@ -12,7 +12,7 @@ import com.workos.common.models.ListMetadata
  * @param listMetadata [com.workos.common.models.ListMetadata].
  */
 data class DirectoryUserList
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   var data: List<User>,
 

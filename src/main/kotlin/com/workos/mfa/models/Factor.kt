@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents a [Factor] and its json properties.
  */
 data class Factor
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "authentication_factor",

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Data payload for `permission.*` webhook events.
  */
 data class PermissionEventData
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "permission",

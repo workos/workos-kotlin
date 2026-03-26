@@ -111,11 +111,11 @@ class WebhookJsonDeserializer : JsonDeserializer<WebhookEvent>() {
       EventType.OrganizationUpdated -> OrganizationWebhookEvent(id, eventType, deserializeData(data, Organization::class.java), createdAt)
 
       // Organization Domain events
-      EventType.OrganizationDomainCreated -> OrganizationDomainWebhookEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
-      EventType.OrganizationDomainDeleted -> OrganizationDomainWebhookEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
-      EventType.OrganizationDomainUpdated -> OrganizationDomainWebhookEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
-      EventType.OrganizationDomainVerificationFailed -> OrganizationDomainWebhookEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
-      EventType.OrganizationDomainVerified -> OrganizationDomainWebhookEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainCreated -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainDeleted -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainUpdated -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainVerificationFailed -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
+      EventType.OrganizationDomainVerified -> OrganizationDomainEvent(id, eventType, deserializeData(data, OrganizationDomain::class.java), createdAt)
 
       // Organization Membership events
       EventType.OrganizationMembershipCreated -> OrganizationMembershipEvent(id, eventType, deserializeData(data, OrganizationMembership::class.java), createdAt)

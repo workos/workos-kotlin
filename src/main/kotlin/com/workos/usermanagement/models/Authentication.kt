@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param impersonator An impersonation definition.
  * @param oauthTokens OAuth tokens from third-party providers.
  */
-data class Authentication @JsonCreator constructor(
+data class Authentication @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("user")
   val user: User? = null,
 

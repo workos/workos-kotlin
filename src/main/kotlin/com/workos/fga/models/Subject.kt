@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param relation Specifies a relation required on the resource to be part of the subject group.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class Subject @JsonCreator constructor(
+data class Subject @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("resource_type")
   val resourceType: String,
 
