@@ -11,7 +11,7 @@ import com.workos.usermanagement.types.IdentityProviderEnumType
  * @param type The email address of the user.
  * @param provider The state of the invitation (see enum values in [IdentityProviderEnumType]).
  */
-data class Identity @JsonCreator constructor(
+data class Identity @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("idp_id")
   val idpId: String,
 

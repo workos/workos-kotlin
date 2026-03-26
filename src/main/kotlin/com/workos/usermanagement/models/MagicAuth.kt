@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp when the Magic Auth code was created.
  * @param updatedAt The timestamp when the Magic Auth code was last updated.
  */
-data class MagicAuth @JsonCreator constructor(
+data class MagicAuth @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

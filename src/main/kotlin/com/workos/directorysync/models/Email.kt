@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param value The email address.
  */
 data class Email
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val primary: Boolean?,
 

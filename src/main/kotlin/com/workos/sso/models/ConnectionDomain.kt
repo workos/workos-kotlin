@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param id Unique identifier for a Connection Domain.
  */
 data class ConnectionDomain
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "connection_domain",

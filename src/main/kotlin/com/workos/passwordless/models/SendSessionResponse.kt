@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  *
  * @param success Whether or not the passwordless session was sent successfully.
  */
-data class SendSessionResponse @JsonCreator constructor(
+data class SendSessionResponse @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val success: Boolean
 )

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp when the email verification code was created.
  * @param updatedAt The timestamp when the email verification code was last updated.
  */
-data class EmailVerification @JsonCreator constructor(
+data class EmailVerification @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

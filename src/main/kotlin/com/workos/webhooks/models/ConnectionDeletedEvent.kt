@@ -6,7 +6,7 @@ import com.workos.sso.models.Connection
 /**
  * Webhook Event for `connection.deleted`.
  */
-class ConnectionDeletedEvent @JsonCreator constructor(
+class ConnectionDeletedEvent @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   override val id: String,
 

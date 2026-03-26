@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * These endpoints return errors in the OAuth 2.0 standard format.
  */
 internal data class OAuthErrorResponse
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("error")
   val error: String? = null,
 

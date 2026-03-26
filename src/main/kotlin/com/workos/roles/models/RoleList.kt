@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param data A list of [Role].
  */
 data class RoleList
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val data: List<Role>,
 )

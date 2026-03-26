@@ -11,7 +11,7 @@ import com.workos.common.models.ListMetadata
  * @param listMetadata [com.workos.common.models.ListMetadata].
  */
 data class OrganizationMemberships
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("data")
   val data: List<OrganizationMembership>,
 

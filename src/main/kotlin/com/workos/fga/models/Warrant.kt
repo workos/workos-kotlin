@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param subject (see [Subject]) The resource with the specified `relation` to the resource provided by resourceType and resourceId.
  * @param policy A boolean expression that must evaluate to true for this warrant to apply. The expression can reference variables provided in the context attribute of access check requests.
  */
-data class Warrant @JsonCreator constructor(
+data class Warrant @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("resource_type")
   val resourceType: String,
 

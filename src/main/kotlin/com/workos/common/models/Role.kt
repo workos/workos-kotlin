@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  *
  * @param slug The unique role identifier.
  */
-data class Role @JsonCreator constructor(
+data class Role @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("slug")
   val slug: String
 )

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param updatedAt The timestamp of when the Directory was updated.
  */
 data class Directory
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "directory",

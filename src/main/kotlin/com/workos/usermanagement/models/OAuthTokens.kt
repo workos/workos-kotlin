@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the access token expires.
  * @param scopes The scopes granted to the access token.
  */
-data class OAuthTokens @JsonCreator constructor(
+data class OAuthTokens @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("access_token")
   val accessToken: String,
 

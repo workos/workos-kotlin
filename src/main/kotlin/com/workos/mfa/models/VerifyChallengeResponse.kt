@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents a [VerifyChallengeResponse] in both successfull and error responses.
  */
 data class VerifyChallengeResponse
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("challenge")
   val challenge: Challenge,

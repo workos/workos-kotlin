@@ -8,7 +8,7 @@ import com.workos.common.models.ListMetadata
  * A list of WorkOS [Event] resources.
  */
 data class EventList
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "list",

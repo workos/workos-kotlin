@@ -12,7 +12,7 @@ import com.workos.common.models.ListMetadata
  * @param listMetadata [com.workos.common.models.ListMetadata].
  */
 data class OrganizationList
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val data: List<Organization>,
 

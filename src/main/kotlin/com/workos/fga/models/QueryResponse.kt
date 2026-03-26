@@ -6,7 +6,7 @@ import com.workos.common.models.ListMetadata
 import com.workos.fga.types.QueryResult
 
 data class QueryResponse
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("data")
   val data: List<QueryResult>,
 

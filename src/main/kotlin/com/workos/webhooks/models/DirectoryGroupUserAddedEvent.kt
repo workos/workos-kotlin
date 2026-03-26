@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 /**
  * Webhook Event for `dsync.group.user_added`.
  */
-class DirectoryGroupUserAddedEvent @JsonCreator constructor(
+class DirectoryGroupUserAddedEvent @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   override val id: String,
 

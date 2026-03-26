@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the password reset token will expire.
  * @param createdAt The timestamp when the password reset token was created.
  */
-data class PasswordReset @JsonCreator constructor(
+data class PasswordReset @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

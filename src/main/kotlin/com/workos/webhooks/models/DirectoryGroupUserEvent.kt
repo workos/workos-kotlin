@@ -14,7 +14,7 @@ import com.workos.directorysync.models.User
  * @param user The modified [com.workos.directorysync.models.User].
  */
 data class DirectoryGroupUserEvent
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("directory_id")
   val directoryId: String,

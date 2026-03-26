@@ -16,7 +16,7 @@ import com.workos.usermanagement.types.AuthenticationEventTypeEnumType
  * @param userAgent The user agent of the authentication attempy, if available.
  * @param error Error details if the event is for a failed authentication attempt.
  */
-data class AuthenticationEventData @JsonCreator constructor(
+data class AuthenticationEventData @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("type")
   val type: AuthenticationEventTypeEnumType,
 

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonSubTypes(
   JsonSubTypes.Type(value = MissingContextKeysWarning::class, name = "missing_context_keys")
 )
-open class Warning @JsonCreator constructor(
+open class Warning @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("code")
   open val code: String,
 
@@ -24,7 +24,7 @@ open class Warning @JsonCreator constructor(
 )
 
 @JsonTypeName("missing_context_keys")
-data class MissingContextKeysWarning @JsonCreator constructor(
+data class MissingContextKeysWarning @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("code")
   override val code: String,
 

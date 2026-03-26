@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param email The email address of the WorkOS Dashboard user who is impersonating the user.
  * @param reason The justification the impersonator gave for impersonating the user.
  */
-data class AuthenticationImpersonator @JsonCreator constructor(
+data class AuthenticationImpersonator @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("email")
   val email: String,
 

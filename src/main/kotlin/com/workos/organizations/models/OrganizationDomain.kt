@@ -16,7 +16,7 @@ import com.workos.organizations.types.OrganizationDomainVerificationStrategy
  * @param domain Domain for the Organization Domain.
  */
 data class OrganizationDomain
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "organization_domain",

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param challenge The [AuthenticationChallenge] that is used to complete the authentication process.
  * @param factor The [AuthenticationFactor] that represents the additional authentication method used on top of the existing authentication strategy.
  */
-data class EnrolledAuthenticationFactor @JsonCreator constructor(
+data class EnrolledAuthenticationFactor @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("challenge")
   val challenge: AuthenticationChallenge,
 

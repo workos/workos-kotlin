@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents [Totp] and its json properties.
  */
 data class Totp
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
 
   @JvmField
   @JsonProperty("issuer")
