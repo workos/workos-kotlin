@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp when the user was created.
  * @param updatedAt The timestamp when the user was last updated.
  */
-data class User @JsonCreator constructor(
+data class User @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

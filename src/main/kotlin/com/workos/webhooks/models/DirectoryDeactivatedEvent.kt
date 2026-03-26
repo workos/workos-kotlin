@@ -6,7 +6,7 @@ import com.workos.directorysync.models.Directory
 /**
  * Webhook Event for `dsync.deactivated`.
  */
-class DirectoryDeactivatedEvent @JsonCreator constructor(
+class DirectoryDeactivatedEvent @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   override val id: String,
 

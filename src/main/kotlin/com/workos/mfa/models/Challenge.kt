@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Represents a [Challenge] and its json properties.
  */
 data class Challenge
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "authentication_challenge",

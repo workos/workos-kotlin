@@ -19,7 +19,7 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * @param customAttributes Custom attributes from the identity provider.
  * @param directoryManaged Whether the organization membership is managed by a directory sync connection.
  */
-data class OrganizationMembership @JsonCreator constructor(
+data class OrganizationMembership @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 

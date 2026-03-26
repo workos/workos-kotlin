@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param resourceId The unique ID of the resource.
  * @param meta A JSON object containing additional information about the resource.
  */
-data class Resource @JsonCreator constructor(
+data class Resource @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("resource_type")
   val resourceType: String,
 

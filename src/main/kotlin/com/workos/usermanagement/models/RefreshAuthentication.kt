@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param accessToken A JWT containing information about the session.
  * @param refreshToken Exchange this token for a new access token.
  */
-data class RefreshAuthentication @JsonCreator constructor(
+data class RefreshAuthentication @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("access_token")
   val accessToken: String,
 

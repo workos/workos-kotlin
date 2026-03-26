@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param link The generated URL for access to the Admin Portal.
  */
 data class Link
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val link: String
 )

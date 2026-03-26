@@ -7,7 +7,7 @@ import com.workos.sso.models.Connection
  * Webhook Event for `connection.activated`.
  */
 class ConnectionActivatedEvent
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   override val id: String,
 

@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param rawAttributes An object containing the data returned from the Directory Provider.
  */
 open class User
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   open val obj: String = "directory_user",

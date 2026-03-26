@@ -18,7 +18,7 @@ import java.util.Date
  * @param updatedAt The timestamp of when the AuditLogExport was updated.
  */
 data class AuditLogExport
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "audit_log_export",

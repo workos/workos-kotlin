@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param rawAttributes Object of key-value pairs containing relevant user data from the Identity Provider.
  */
 data class Profile
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "profile",

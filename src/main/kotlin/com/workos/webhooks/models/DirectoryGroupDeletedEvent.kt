@@ -6,7 +6,7 @@ import com.workos.directorysync.models.Group
 /**
  * Webhook Event for `dsync.group.deleted`.
  */
-class DirectoryGroupDeletedEvent @JsonCreator constructor(
+class DirectoryGroupDeletedEvent @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   override val id: String,
 

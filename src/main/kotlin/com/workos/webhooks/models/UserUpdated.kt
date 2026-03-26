@@ -11,7 +11,7 @@ import com.workos.directorysync.models.UserState
  * @suppress
  */
 open class UserUpdated
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   override val obj: String = "directory_user",

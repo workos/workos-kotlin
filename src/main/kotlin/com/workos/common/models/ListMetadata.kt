@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param before The `before` cursor to use for retrieving the previous page of data.
  */
 data class ListMetadata
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   val after: String?,
 

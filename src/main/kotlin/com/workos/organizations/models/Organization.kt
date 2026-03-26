@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param updatedAt The timestamp of when the Organization was updated.
  */
 data class Organization
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JvmField
   @JsonProperty("object")
   val obj: String = "organization",

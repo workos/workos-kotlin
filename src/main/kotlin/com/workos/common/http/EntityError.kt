@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
  * @param code The error code associated with the field.
  */
 data class EntityError
-@JsonCreator constructor(
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   val field: String? = null,
 
   val code: String? = null

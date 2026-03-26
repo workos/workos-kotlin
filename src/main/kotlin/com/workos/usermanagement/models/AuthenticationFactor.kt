@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param totp Time-based one-time password (see [AuthenticationTotp]).
  * @param userId The ID of the user.
  */
-data class AuthenticationFactor @JsonCreator constructor(
+data class AuthenticationFactor @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
   @JsonProperty("id")
   val id: String,
 
