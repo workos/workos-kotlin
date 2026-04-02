@@ -30,7 +30,7 @@ data class OrganizationDomain
 
   @JvmField
   @JsonProperty("organization_id")
-  val organizationId: String? = null,
+  val organizationId: String,
 
   @JvmField
   @JsonProperty("state")
