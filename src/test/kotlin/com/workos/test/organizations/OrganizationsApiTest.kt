@@ -34,7 +34,8 @@ class OrganizationsApiTest : TestBase() {
           {
             "domain": "example.com",
             "object": "organization_domain",
-            "id": "$organizationDomainId"
+            "id": "$organizationDomainId",
+            "organization_id": "$organizationId"
           }
         ]
       }""",
@@ -186,7 +187,8 @@ class OrganizationsApiTest : TestBase() {
           {
             "domain": "foo.com",
             "object": "organization_domain",
-            "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+            "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+            "organization_id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
           }
         ]
       }""",
@@ -263,6 +265,7 @@ class OrganizationsApiTest : TestBase() {
             "domain": "example.com",
             "object": "organization_domain",
             "id": "$organizationDomainId",
+            "organization_id": "$organizationId",
             "state": "verified",
             "verification_strategy": "dns",
             "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
@@ -305,6 +308,7 @@ class OrganizationsApiTest : TestBase() {
                 "domain": "example.com",
                 "object": "organization_domain",
                 "id": "$organizationDomainId",
+                "organization_id": "$organizationId",
                 "state": "verified",
                 "verification_strategy": "dns",
                 "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
@@ -354,6 +358,7 @@ class OrganizationsApiTest : TestBase() {
                 "domain": "example.com",
                 "object": "organization_domain",
                 "id": "$organizationDomainId",
+                "organization_id": "$organizationId",
                 "state": "verified",
                 "verification_strategy": "dns",
                 "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
@@ -403,6 +408,7 @@ class OrganizationsApiTest : TestBase() {
                 "domain": "example.com",
                 "object": "organization_domain",
                 "id": "$organizationDomainId",
+                "organization_id": "$organizationId",
                 "state": "verified",
                 "verification_strategy": "dns",
                 "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
@@ -444,7 +450,8 @@ class OrganizationsApiTest : TestBase() {
           {
             "domain": "example.com",
             "object": "organization_domain",
-            "id": "$organizationDomainId"
+            "id": "$organizationDomainId",
+            "organization_id": "$organizationId"
           }
         ]
       }""",
