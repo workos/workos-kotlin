@@ -14,6 +14,7 @@ import com.workos.organizations.types.OrganizationDomainVerificationStrategy
  * @param obj The unique object identifier type of the record.
  * @param id Unique identifier for the Organization Domain.
  * @param domain Domain for the Organization Domain.
+ * @param organizationId Identifier for the Organization Domain's Organization.
  */
 data class OrganizationDomain
 @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
@@ -26,6 +27,10 @@ data class OrganizationDomain
 
   @JvmField
   val domain: String,
+
+  @JvmField
+  @JsonProperty("organization_id")
+  val organizationId: String? = null,
 
   @JvmField
   @JsonProperty("state")

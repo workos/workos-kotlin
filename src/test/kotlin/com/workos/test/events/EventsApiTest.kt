@@ -424,6 +424,7 @@ class EventsApiTest : TestBase() {
             "data": {
               "object": "organization_domain",
               "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
               "domain": "example.com",
               "state": "verified",
               "verification_strategy": "dns",
@@ -445,6 +446,7 @@ class EventsApiTest : TestBase() {
     assertEquals("organization_domain.verified", event.event)
     val domainEvent = event as OrganizationDomainEvent
     assertEquals("org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8", domainEvent.data.id)
+    assertEquals("org_01FJYCNTB6VC4K5R8BTF86286Q", domainEvent.data.organizationId)
     assertEquals("example.com", domainEvent.data.domain)
     assertEquals("rqURsMUCuiaSggGyed8ZAnMk", domainEvent.data.verificationToken)
   }
@@ -465,6 +467,7 @@ class EventsApiTest : TestBase() {
             "data": {
               "object": "organization_domain",
               "id": "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8",
+              "organization_id": "org_01FJYCNTB6VC4K5R8BTF86286Q",
               "domain": "example.com",
               "state": "failed",
               "verification_strategy": "dns",
@@ -486,6 +489,7 @@ class EventsApiTest : TestBase() {
     assertEquals("organization_domain.verification_failed", event.event)
     val domainEvent = event as OrganizationDomainEvent
     assertEquals("org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8", domainEvent.data.id)
+    assertEquals("org_01FJYCNTB6VC4K5R8BTF86286Q", domainEvent.data.organizationId)
     assertEquals("example.com", domainEvent.data.domain)
   }
 
