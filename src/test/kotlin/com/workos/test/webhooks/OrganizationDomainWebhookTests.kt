@@ -10,6 +10,7 @@ import kotlin.test.assertEquals
 class OrganizationDomainWebhookTests : TestBase() {
 
   private val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
+  private val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
   private val webhookId = "wh_01FMXJ2W7T9VY7EAHHMBF2K07Y"
 
   private fun generateWebhookEvent(eventType: EventType, state: String = "verified"): String {
@@ -20,6 +21,7 @@ class OrganizationDomainWebhookTests : TestBase() {
       "data": {
         "object": "organization_domain",
         "id": "$organizationDomainId",
+        "organization_id": "$organizationId",
         "domain": "example.com",
         "state": "$state",
         "verification_strategy": "dns",
@@ -45,6 +47,7 @@ class OrganizationDomainWebhookTests : TestBase() {
     assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.organizationId, organizationId)
     assertEquals(webhook.data.domain, "example.com")
   }
 
@@ -63,6 +66,7 @@ class OrganizationDomainWebhookTests : TestBase() {
     assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.organizationId, organizationId)
   }
 
   @Test
@@ -80,6 +84,7 @@ class OrganizationDomainWebhookTests : TestBase() {
     assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.organizationId, organizationId)
   }
 
   @Test
@@ -97,6 +102,7 @@ class OrganizationDomainWebhookTests : TestBase() {
     assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.organizationId, organizationId)
     assertEquals(webhook.data.domain, "example.com")
     assertEquals(webhook.data.verificationToken, "rqURsMUCuiaSggGyed8ZAnMk")
   }
@@ -116,5 +122,6 @@ class OrganizationDomainWebhookTests : TestBase() {
     assertTrue(webhook is OrganizationDomainEvent)
     assertEquals(webhook.id, webhookId)
     assertEquals((webhook as OrganizationDomainEvent).data.id, organizationDomainId)
+    assertEquals(webhook.data.organizationId, organizationId)
   }
 }
