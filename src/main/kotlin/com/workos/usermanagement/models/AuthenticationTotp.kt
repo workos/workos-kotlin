@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param secret TOTP secret that can be manually entered into some authenticator apps in place of scanning a QR code.
  * @param uri The `otpauth` URI that is encoded by the provided `qr_code`.
  */
-data class AuthenticationTotp @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class AuthenticationTotp(
   @JsonProperty("issuer")
   val issuer: String? = null,
 
