@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.22.0](https://github.com/workos/workos-kotlin/compare/workos-v4.21.0...workos-v4.22.0) (2026-04-08)
+
+
+### Features
+
+* Add Authorization (FGA) API endpoints ([#353](https://github.com/workos/workos-kotlin/issues/353)) ([23fdabd](https://github.com/workos/workos-kotlin/commit/23fdabdd3e0af24b69e5c759ae863df77858ebee))
+* add organization_id to OrganizationDomain model ([#350](https://github.com/workos/workos-kotlin/issues/350)) ([a261a3e](https://github.com/workos/workos-kotlin/commit/a261a3efa6773bf3bcc27ebe3234b23b8fee841f))
+
+
+### Bug Fixes
+
+* remove @JsonCreator from all-default-param classes for Jackson 2.21.x compatibility ([#354](https://github.com/workos/workos-kotlin/issues/354)) ([118d1b3](https://github.com/workos/workos-kotlin/commit/118d1b382ef7a9e5f053f936814ec50c7374d68d))
+* serialize list query params as comma-separated lowercase values ([#355](https://github.com/workos/workos-kotlin/issues/355)) ([f62826c](https://github.com/workos/workos-kotlin/commit/f62826cf30d0d8863c23f2f1dedc858bde7c81c5))
+
 ## [4.21.0](https://github.com/workos/workos-kotlin/compare/workos-v4.20.0...workos-v4.21.0) (2026-03-26)
 
 
