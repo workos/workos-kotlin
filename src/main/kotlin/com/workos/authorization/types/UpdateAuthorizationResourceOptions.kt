@@ -19,4 +19,14 @@ class UpdateAuthorizationResourceOptions @JvmOverloads constructor(
 
   @JsonProperty("parent_resource_type_slug")
   val parentResourceTypeSlug: String? = null
-)
+) {
+  init {
+    require(
+      parentResourceId != null ||
+        (parentResourceExternalId != null && parentResourceTypeSlug != null) ||
+        (parentResourceId == null && parentResourceExternalId == null && parentResourceTypeSlug == null)
+    ) {
+      "Specify either parentResourceId or both parentResourceExternalId and parentResourceTypeSlug"
+    }
+  }
+}
