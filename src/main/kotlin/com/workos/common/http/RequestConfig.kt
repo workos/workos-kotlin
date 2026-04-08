@@ -45,7 +45,9 @@ class RequestConfig(
       if (value is Enum<*>) {
         try {
           return value.javaClass.getMethod("getType").invoke(value).toString()
-        } catch (_: NoSuchMethodException) {}
+        } catch (_: NoSuchMethodException) {
+        } catch (_: java.lang.reflect.InvocationTargetException) {
+        } catch (_: IllegalAccessException) {}
       }
       return value.toString()
     }
