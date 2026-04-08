@@ -19,7 +19,7 @@ class CheckAuthorizationOptions @JvmOverloads constructor(
 ) {
   init {
     require(permissionSlug.isNotBlank()) { "Permission slug is required" }
-    require(resourceId != null || (resourceExternalId != null && resourceTypeSlug != null) || (resourceId == null && resourceExternalId == null)) {
+    require(resourceId != null || (resourceExternalId != null && resourceTypeSlug != null) || (resourceId == null && resourceExternalId == null && resourceTypeSlug == null)) {
       "Specify either resourceId or both resourceExternalId and resourceTypeSlug"
     }
   }
