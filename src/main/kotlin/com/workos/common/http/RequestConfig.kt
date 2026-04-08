@@ -29,15 +29,27 @@ class RequestConfig(
         (obj::class as KClass<T>).memberProperties.associate { prop: KProperty1<T, *> ->
           prop.name.toSnakeCase() to
             prop.get(obj)?.let { value ->
-              if (value::class.isData) {
-                toMap(value)
-              } else {
-                value.toString()
+              when {
+                value::class.isData -> toMap(value)
+                value is List<*> -> value.filterNotNull().joinToString(",") { toParamValue(it) }
+                else -> toParamValue(value)
               }
             }
         }
 
       return params.filterValues { it != null }
+    }
+
+    /** Convert a value to its query parameter string representation. */
+    private fun toParamValue(value: Any): String {
+      if (value is Enum<*>) {
+        try {
+          return value.javaClass.getMethod("getType").invoke(value).toString()
+        } catch (_: NoSuchMethodException) {
+        } catch (_: java.lang.reflect.InvocationTargetException) {
+        } catch (_: IllegalAccessException) {}
+      }
+      return value.toString()
     }
 
     /** Convert camel case to snake case. */
