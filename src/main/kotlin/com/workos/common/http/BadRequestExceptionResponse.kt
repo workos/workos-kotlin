@@ -1,9 +1,6 @@
 package com.workos.common.http
 
-import com.fasterxml.jackson.annotation.JsonCreator
-
-internal data class BadRequestExceptionResponse
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+internal data class BadRequestExceptionResponse(
   val message: String? = null,
 
   val code: String? = null,

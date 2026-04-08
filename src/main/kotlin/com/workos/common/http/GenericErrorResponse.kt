@@ -1,10 +1,8 @@
 package com.workos.common.http
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class GenericErrorResponse
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+internal data class GenericErrorResponse(
   val error: String? = null,
 
   @JsonProperty("error_description")
