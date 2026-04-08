@@ -2,13 +2,13 @@ package com.workos.authorization
 
 import com.workos.WorkOS
 import com.workos.authorization.models.AuthorizationCheck
-import com.workos.authorization.models.AuthorizationOrganizationMembershipList
 import com.workos.authorization.models.AuthorizationPermission
 import com.workos.authorization.models.AuthorizationPermissionList
 import com.workos.authorization.models.AuthorizationResource
 import com.workos.authorization.models.AuthorizationResourceList
 import com.workos.authorization.models.AuthorizationRole
 import com.workos.authorization.models.AuthorizationRoleList
+import com.workos.authorization.models.OrganizationMembershipList
 import com.workos.authorization.models.RoleAssignment
 import com.workos.authorization.models.RoleAssignmentList
 import com.workos.authorization.types.AddRolePermissionOptions
@@ -19,9 +19,9 @@ import com.workos.authorization.types.CreateOrganizationRoleOptions
 import com.workos.authorization.types.CreatePermissionOptions
 import com.workos.authorization.types.CreateRoleOptions
 import com.workos.authorization.types.ListAuthorizationResourcesOptions
-import com.workos.authorization.types.ListMembershipResourcesOptions
+import com.workos.authorization.types.ListOrganizationMembershipsForResourceOptions
 import com.workos.authorization.types.ListPermissionsOptions
-import com.workos.authorization.types.ListResourceMembershipsOptions
+import com.workos.authorization.types.ListResourcesForOrganizationMembershipOptions
 import com.workos.authorization.types.ListRoleAssignmentsOptions
 import com.workos.authorization.types.RemoveRoleOptions
 import com.workos.authorization.types.SetRolePermissionsOptions
@@ -32,6 +32,10 @@ import com.workos.authorization.types.UpdateRoleOptions
 import com.workos.common.http.RequestConfig
 
 class AuthorizationApi(private val workos: WorkOS) {
+
+  private fun toStringParams(options: Any): Map<String, String> {
+    return RequestConfig.toMap(options).mapValues { it.value.toString() }
+  }
 
   // ── Access Checks ──────────────────────────────────────────────────────
 
@@ -45,49 +49,40 @@ class AuthorizationApi(private val workos: WorkOS) {
   }
 
   /** List resources where an organization membership has a specific permission. */
-  fun listMembershipResources(
+  fun listResourcesForOrganizationMembership(
     organizationMembershipId: String,
-    options: ListMembershipResourcesOptions
+    options: ListResourcesForOrganizationMembershipOptions
   ): AuthorizationResourceList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options) as Map<String, String>
-
     return workos.get(
       "/authorization/organization_memberships/$organizationMembershipId/resources",
       AuthorizationResourceList::class.java,
-      RequestConfig.builder().params(params).build()
+      RequestConfig.builder().params(toStringParams(options)).build()
     )
   }
 
   /** List organization memberships that have a specific permission on a resource. */
-  fun listResourceMemberships(
+  fun listOrganizationMembershipsForResource(
     resourceId: String,
-    options: ListResourceMembershipsOptions
-  ): AuthorizationOrganizationMembershipList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options) as Map<String, String>
-
+    options: ListOrganizationMembershipsForResourceOptions
+  ): OrganizationMembershipList {
     return workos.get(
       "/authorization/resources/$resourceId/organization_memberships",
-      AuthorizationOrganizationMembershipList::class.java,
-      RequestConfig.builder().params(params).build()
+      OrganizationMembershipList::class.java,
+      RequestConfig.builder().params(toStringParams(options)).build()
     )
   }
 
   /** List organization memberships for a resource identified by external ID. */
-  fun listResourceMembershipsByExternalId(
+  fun listOrganizationMembershipsForResourceByExternalId(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
-    options: ListResourceMembershipsOptions
-  ): AuthorizationOrganizationMembershipList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options) as Map<String, String>
-
+    options: ListOrganizationMembershipsForResourceOptions
+  ): OrganizationMembershipList {
     return workos.get(
       "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId/organization_memberships",
-      AuthorizationOrganizationMembershipList::class.java,
-      RequestConfig.builder().params(params).build()
+      OrganizationMembershipList::class.java,
+      RequestConfig.builder().params(toStringParams(options)).build()
     )
   }
 
@@ -99,13 +94,10 @@ class AuthorizationApi(private val workos: WorkOS) {
     organizationMembershipId: String,
     options: ListRoleAssignmentsOptions? = null
   ): RoleAssignmentList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options ?: ListRoleAssignmentsOptions()) as Map<String, String>
-
     return workos.get(
       "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
       RoleAssignmentList::class.java,
-      RequestConfig.builder().params(params).build()
+      RequestConfig.builder().params(toStringParams(options ?: ListRoleAssignmentsOptions())).build()
     )
   }
 
@@ -138,13 +130,10 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** List authorization resources. */
   @JvmOverloads
   fun listResources(options: ListAuthorizationResourcesOptions? = null): AuthorizationResourceList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options ?: ListAuthorizationResourcesOptions()) as Map<String, String>
-
     return workos.get(
       "/authorization/resources",
       AuthorizationResourceList::class.java,
-      RequestConfig.builder().params(params).build()
+      RequestConfig.builder().params(toStringParams(options ?: ListAuthorizationResourcesOptions())).build()
     )
   }
 
@@ -234,13 +223,10 @@ class AuthorizationApi(private val workos: WorkOS) {
   /** List all permissions. */
   @JvmOverloads
   fun listPermissions(options: ListPermissionsOptions? = null): AuthorizationPermissionList {
-    val params: Map<String, String> =
-      RequestConfig.toMap(options ?: ListPermissionsOptions()) as Map<String, String>
-
     return workos.get(
       "/authorization/permissions",
       AuthorizationPermissionList::class.java,
-      RequestConfig.builder().params(params).build()
+      RequestConfig.builder().params(toStringParams(options ?: ListPermissionsOptions())).build()
     )
   }
 
@@ -276,6 +262,8 @@ class AuthorizationApi(private val workos: WorkOS) {
   }
 
   // ── Environment Roles ──────────────────────────────────────────────────
+  // Note: The API does not support deleting environment roles or removing
+  // individual permissions from them, unlike organization roles.
 
   /** List environment roles. */
   fun listRoles(): AuthorizationRoleList {

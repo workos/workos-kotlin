@@ -7,8 +7,8 @@ import com.workos.authorization.types.CreateAuthorizationResourceOptions
 import com.workos.authorization.types.CreateOrganizationRoleOptions
 import com.workos.authorization.types.CreatePermissionOptions
 import com.workos.authorization.types.CreateRoleOptions
-import com.workos.authorization.types.ListMembershipResourcesOptions
-import com.workos.authorization.types.ListResourceMembershipsOptions
+import com.workos.authorization.types.ListOrganizationMembershipsForResourceOptions
+import com.workos.authorization.types.ListResourcesForOrganizationMembershipOptions
 import com.workos.authorization.types.RemoveRoleOptions
 import com.workos.authorization.types.SetRolePermissionsOptions
 import com.workos.authorization.types.UpdateAuthorizationResourceOptions
@@ -355,7 +355,7 @@ class AuthorizationApiTest : TestBase() {
   // ── Membership Resources ───────────────────────────────────────────────
 
   @Test
-  fun listMembershipResourcesShouldReturnList() {
+  fun listResourcesForOrganizationMembershipShouldReturnList() {
     stubResponse(
       url = "/authorization/organization_memberships/om_01HXYZ/resources",
       responseBody = """{
@@ -378,9 +378,9 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listMembershipResources(
+    val result = workos.authorization.listResourcesForOrganizationMembership(
       "om_01HXYZ",
-      ListMembershipResourcesOptions("documents:read")
+      ListResourcesForOrganizationMembershipOptions("documents:read")
     )
 
     assertEquals(1, result.data.size)
@@ -390,7 +390,7 @@ class AuthorizationApiTest : TestBase() {
   // ── Resource Memberships ───────────────────────────────────────────────
 
   @Test
-  fun listResourceMembershipsShouldReturnList() {
+  fun listOrganizationMembershipsForResourceShouldReturnList() {
     stubResponse(
       url = "/authorization/resources/authz_resource_01ABC/organization_memberships",
       responseBody = """{
@@ -413,19 +413,19 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listResourceMemberships(
+    val result = workos.authorization.listOrganizationMembershipsForResource(
       "authz_resource_01ABC",
-      ListResourceMembershipsOptions("documents:read")
+      ListOrganizationMembershipsForResourceOptions("documents:read")
     )
 
     assertEquals(1, result.data.size)
     assertEquals("om_01HXYZ", result.data[0].id)
     assertEquals("user_01EHQTV6MWP9P1F4ZXGXMC8ABB", result.data[0].userId)
-    assertEquals("active", result.data[0].status)
+    assertEquals("active", result.data[0].status.type)
   }
 
   @Test
-  fun listResourceMembershipsByExternalIdShouldReturnList() {
+  fun listOrganizationMembershipsForResourceByExternalIdShouldReturnList() {
     stubResponse(
       url = "/authorization/organizations/org_01ABC/resources/project/proj-456/organization_memberships",
       responseBody = """{
@@ -448,9 +448,9 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listResourceMembershipsByExternalId(
+    val result = workos.authorization.listOrganizationMembershipsForResourceByExternalId(
       "org_01ABC", "project", "proj-456",
-      ListResourceMembershipsOptions("documents:read")
+      ListOrganizationMembershipsForResourceOptions("documents:read")
     )
 
     assertEquals(1, result.data.size)

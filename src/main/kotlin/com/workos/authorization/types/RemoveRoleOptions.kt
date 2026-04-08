@@ -19,5 +19,8 @@ class RemoveRoleOptions @JvmOverloads constructor(
 ) {
   init {
     require(roleSlug.isNotBlank()) { "Role slug is required" }
+    require(resourceId != null || (resourceExternalId != null && resourceTypeSlug != null) || (resourceId == null && resourceExternalId == null)) {
+      "Specify either resourceId or both resourceExternalId and resourceTypeSlug"
+    }
   }
 }
