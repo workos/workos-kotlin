@@ -1,5 +1,6 @@
 package com.workos.test.usermanagement
 
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.workos.common.exceptions.BadRequestException
 import com.workos.common.models.ListMetadata
 import com.workos.common.models.Order
@@ -1263,8 +1264,17 @@ class UserManagementApiTest : TestBase() {
   @Test
   fun listOrganizationMembershipsShouldReturnValidOrganizationMembershipsWithPaginationAndFilters() {
     stubResponse(
-      "/user_management/organization_memberships",
-      """{
+      url = "/user_management/organization_memberships",
+      params = mapOf(
+        "user_id" to equalTo("id_456"),
+        "organization_id" to equalTo("org_789"),
+        "statuses" to equalTo("active,inactive"),
+        "order" to equalTo("desc"),
+        "limit" to equalTo("10"),
+        "after" to equalTo("someAfterId"),
+        "before" to equalTo("someBeforeId"),
+      ),
+      responseBody = """{
         "data": [
           {
             "object": "organization_membership",
