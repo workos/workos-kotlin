@@ -3,9 +3,11 @@ package com.workos
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
 import com.workos.auditlogs.AuditLogsApi
+import com.workos.authorization.AuthorizationApi
 import com.workos.common.exceptions.BadRequestException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -73,6 +75,12 @@ class WorkOS(
    */
   @JvmField
   val auditLogs = AuditLogsApi(this)
+
+  /**
+   * Module for interacting with the Authorization (FGA) API.
+   */
+  @JvmField
+  val authorization = AuthorizationApi(this)
 
   /**
    * Module for interacting with the Directory Sync API.
@@ -246,14 +254,46 @@ class WorkOS(
   }
 
   /**
+   * Performs a PATCH request with WorkOS configuration parameters.
+   */
+  fun <Res : Any> patch(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+    val uri = URIBuilder(baseUrl).setPath(path).build()
+
+    val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
+
+    val request = manager.request(Method.PATCH, uri.toString()).body(body)
+
+    return sendRequest(buildRequest(request, config), responseType)
+  }
+
+  /**
    * Performs a DELETE request with WorkOS configuration parameters.
    */
   fun delete(path: String, config: RequestConfig? = null): String {
-    val uri = URIBuilder(baseUrl).setPath(path).build()
+    val uri = URIBuilder(baseUrl).setPath(path)
 
-    val request = manager.delete(uri.toString())
+    if (config?.params != null) {
+      for ((key, value) in config.params.entries) {
+        uri.addParameter(key, value)
+      }
+    }
+
+    val request = manager.delete(uri.build().toString())
 
     return sendRequest(buildRequest(request, config))
+  }
+
+  /**
+   * Performs a DELETE request with a request body.
+   */
+  fun deleteWithBody(path: String, config: RequestConfig? = null) {
+    val uri = URIBuilder(baseUrl).setPath(path).build()
+
+    val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
+
+    val request = manager.delete(uri.toString()).body(body)
+
+    sendRequest(buildRequest(request, config))
   }
 
   private fun buildRequest(request: Request, config: RequestConfig? = null): Request {
