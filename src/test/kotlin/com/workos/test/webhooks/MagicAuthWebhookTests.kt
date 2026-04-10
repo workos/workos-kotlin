@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class MagicAuthWebhookTests : TestBase() {
-
   private val magicAuthId = "magic_auth_01EHWNC0FCBHZ3BJ7EGKYXK0E7"
   private val webhookId = "wh_01FMXJ2W7T9VY7EAHHMBF2K07Y"
 
-  private fun generateWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "event": "${eventType.value}",
@@ -29,7 +28,6 @@ class MagicAuthWebhookTests : TestBase() {
       "created_at": "2023-11-27T19:07:33.155Z"
     }
     """
-  }
 
   @Test
   fun constructMagicAuthCreatedEvent() {
@@ -37,11 +35,12 @@ class MagicAuthWebhookTests : TestBase() {
     val webhookData = generateWebhookEvent(EventType.MagicAuthCreated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is MagicAuthEvent)
     assertEquals(webhook.id, webhookId)

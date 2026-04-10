@@ -189,13 +189,14 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val resources = workos.fga.listResources(
-      ListResourcesOptionsBuilder()
-        .order(Order.Asc)
-        .search("user_456")
-        .limit(5)
-        .build()
-    )
+    val resources =
+      workos.fga.listResources(
+        ListResourcesOptionsBuilder()
+          .order(Order.Asc)
+          .search("user_456")
+          .limit(5)
+          .build()
+      )
 
     assertEquals(
       Resource("user", "user_456"),
@@ -295,7 +296,7 @@ class FgaApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "meta": {
           "description": "Some user"
         }
@@ -328,7 +329,7 @@ class FgaApiTest : TestBase() {
       }""",
       500,
       requestBody =
-      """{
+        """{
         "meta": {
           "description": "Some user"
         }
@@ -358,7 +359,7 @@ class FgaApiTest : TestBase() {
       }""",
       responseStatus = 500,
       requestBody =
-      """{
+        """{
         "meta": {
           "description": "Some user"
         }
@@ -377,7 +378,7 @@ class FgaApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "meta": {
           "description": "Some user"
         }
@@ -404,7 +405,7 @@ class FgaApiTest : TestBase() {
   fun deleteResourceShouldWorkAndReturnNothing() {
     stubResponse("/fga/v1/resources/user/user_123", "")
 
-    assertDoesNotThrow() { workos.fga.deleteResource("user", "user_123") }
+    assertDoesNotThrow { workos.fga.deleteResource("user", "user_123") }
   }
 
   @Test
@@ -434,7 +435,7 @@ class FgaApiTest : TestBase() {
       nextScenarioState = "Success state"
     )
 
-    assertDoesNotThrow() {
+    assertDoesNotThrow {
       workos.fga.deleteResource("user", "user_123")
     }
   }
@@ -499,16 +500,17 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = ListWarrantsOptionsBuilder()
-      .resourceType("role")
-      .resourceId("admin")
-      .relation("member")
-      .subjectType("user")
-      .subjectId("tony-stark")
-      .subjectRelation("member")
-      .limit(5)
-      .after("someAfterId")
-      .build()
+    val options =
+      ListWarrantsOptionsBuilder()
+        .resourceType("role")
+        .resourceId("admin")
+        .relation("member")
+        .subjectType("user")
+        .subjectId("tony-stark")
+        .subjectRelation("member")
+        .limit(5)
+        .after("someAfterId")
+        .build()
     val warrants = workos.fga.listWarrants(options)
 
     assertEquals(
@@ -531,7 +533,7 @@ class FgaApiTest : TestBase() {
         "warrant_token": "new_token"
       }""",
       requestBody =
-      """{
+        """{
         "op": "create",
         "resource_type": "role",
         "resource_id": "admin",
@@ -560,7 +562,7 @@ class FgaApiTest : TestBase() {
         "warrant_token": "new_token"
       }""",
       requestBody =
-      """{
+        """{
         "op": "delete",
         "resource_type": "role",
         "resource_id": "admin",
@@ -589,7 +591,7 @@ class FgaApiTest : TestBase() {
         "warrant_token": "new_token"
       }""",
       requestBody =
-      """[
+        """[
         {
           "op": "delete",
           "resource_type": "role",
@@ -633,12 +635,13 @@ class FgaApiTest : TestBase() {
       ]"""
     )
 
-    val options = listOf(
-      WriteWarrantOptionsBuilder("delete", "role", "editor", "member", Subject("user", "tony-stark")).build(),
-      DeleteWarrantOptionsBuilder("tenant", "avengers", "member", Subject("user", "tony-stark")).build(),
-      WriteWarrantOptionsBuilder("create", "role", "admin", "member", Subject("user", "tony-stark")).build(),
-      CreateWarrantOptionsBuilder("tenant", "stark-industries", "member", Subject("user", "tony-stark")).build()
-    )
+    val options =
+      listOf(
+        WriteWarrantOptionsBuilder("delete", "role", "editor", "member", Subject("user", "tony-stark")).build(),
+        DeleteWarrantOptionsBuilder("tenant", "avengers", "member", Subject("user", "tony-stark")).build(),
+        WriteWarrantOptionsBuilder("create", "role", "admin", "member", Subject("user", "tony-stark")).build(),
+        CreateWarrantOptionsBuilder("tenant", "stark-industries", "member", Subject("user", "tony-stark")).build()
+      )
 
     val warrantResponse = workos.fga.batchWriteWarrants(options)
 
@@ -654,7 +657,7 @@ class FgaApiTest : TestBase() {
         "is_implicit": false
       }""",
       requestBody =
-      """{
+        """{
         "checks": [
           {
             "resource_type": "role",
@@ -672,17 +675,18 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = CheckOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark"),
-          mapOf("role" to "admin")
+    val options =
+      CheckOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark"),
+            mapOf("role" to "admin")
+          )
         )
-      )
-    ).build()
+      ).build()
 
     val checkResponse = workos.fga.check(options)
 
@@ -699,7 +703,7 @@ class FgaApiTest : TestBase() {
         "is_implicit": false
       }""",
       requestBody =
-      """{
+        """{
         "checks": [
           {
             "resource_type": "role",
@@ -718,17 +722,18 @@ class FgaApiTest : TestBase() {
       requestHeaders = mapOf("Warrant-Token" to "some-token")
     )
 
-    val options = CheckOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark"),
-          mapOf("role" to "admin")
+    val options =
+      CheckOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark"),
+            mapOf("role" to "admin")
+          )
         )
-      )
-    ).build()
+      ).build()
     val requestOptions = CheckRequestOptions("some-token")
 
     val checkResponse = workos.fga.check(options, requestOptions)
@@ -796,7 +801,7 @@ class FgaApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "checks": [
           {
             "resource_type": "role",
@@ -815,18 +820,19 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = CheckOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark"),
-          mapOf("role" to "admin")
-        )
-      ),
-      true
-    ).build()
+    val options =
+      CheckOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark"),
+            mapOf("role" to "admin")
+          )
+        ),
+        true
+      ).build()
 
     val checkResponse = workos.fga.check(options)
 
@@ -836,36 +842,246 @@ class FgaApiTest : TestBase() {
     assertNotNull(checkResponse.debugInfo?.processingTime)
     assertNotNull(checkResponse.debugInfo?.decisionTree)
     assertNotNull(checkResponse.debugInfo?.decisionTree?.check)
-    assertEquals("role", checkResponse.debugInfo?.decisionTree?.check?.resourceType)
-    assertEquals("admin", checkResponse.debugInfo?.decisionTree?.check?.resourceId)
-    assertEquals("member", checkResponse.debugInfo?.decisionTree?.check?.relation)
-    assertEquals("user", checkResponse.debugInfo?.decisionTree?.check?.subject?.resourceType)
-    assertEquals("tony-stark", checkResponse.debugInfo?.decisionTree?.check?.subject?.resourceId)
+    assertEquals(
+      "role",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "admin",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "user",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "tony-stark",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
     assertEquals("matched", checkResponse.debugInfo?.decisionTree?.decision)
     assertNotNull(checkResponse.debugInfo?.decisionTree?.processingTime)
     assertNotNull(checkResponse.debugInfo?.decisionTree?.children)
-    assertEquals(1, checkResponse.debugInfo?.decisionTree?.children?.size)
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0))
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check)
-    assertEquals("role", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check?.resourceType)
-    assertEquals("admin", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check?.resourceId)
-    assertEquals("member", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check?.relation)
-    assertEquals("tenant", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check?.subject?.resourceType)
-    assertEquals("stark-industries", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.check?.subject?.resourceId)
-    assertEquals("matched", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.decision)
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.processingTime)
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children)
-    assertEquals(1, checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.size)
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0))
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check)
-    assertEquals("tenant", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.resourceType)
-    assertEquals("stark-industries", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.resourceId)
-    assertEquals("member", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.relation)
-    assertEquals("user", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.subject?.resourceType)
-    assertEquals("tony-stark", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.subject?.resourceId)
-    assertEquals("matched", checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.decision)
-    assertNotNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.processingTime)
-    assertNull(checkResponse.debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.children)
+    assertEquals(
+      1,
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.size
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+    )
+    assertEquals(
+      "role",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "admin",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "tenant",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "stark-industries",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertEquals(
+      "matched",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.decision
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.processingTime
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+    )
+    assertEquals(
+      1,
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.size
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+    )
+    assertEquals(
+      "tenant",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "stark-industries",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "user",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "tony-stark",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertEquals(
+      "matched",
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.decision
+    )
+    assertNotNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.processingTime
+    )
+    assertNull(
+      checkResponse.debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.children
+    )
   }
 
   @Test
@@ -883,7 +1099,7 @@ class FgaApiTest : TestBase() {
         }
       ]""",
       requestBody =
-      """{
+        """{
         "op": "batch",
         "checks": [
           {
@@ -908,22 +1124,23 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = CheckBatchOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark")
-        ),
-        WarrantCheckOptions(
-          "tenant",
-          "stark-industries",
-          "member",
-          Subject("user", "tony-stark")
+    val options =
+      CheckBatchOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark")
+          ),
+          WarrantCheckOptions(
+            "tenant",
+            "stark-industries",
+            "member",
+            Subject("user", "tony-stark")
+          )
         )
-      )
-    ).build()
+      ).build()
 
     val checkResponses = workos.fga.checkBatch(options)
 
@@ -948,7 +1165,7 @@ class FgaApiTest : TestBase() {
         }
       ]""",
       requestBody =
-      """{
+        """{
         "op": "batch",
         "checks": [
           {
@@ -974,22 +1191,23 @@ class FgaApiTest : TestBase() {
       requestHeaders = mapOf("Warrant-Token" to "some-token")
     )
 
-    val options = CheckBatchOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark")
-        ),
-        WarrantCheckOptions(
-          "tenant",
-          "stark-industries",
-          "member",
-          Subject("user", "tony-stark")
+    val options =
+      CheckBatchOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark")
+          ),
+          WarrantCheckOptions(
+            "tenant",
+            "stark-industries",
+            "member",
+            Subject("user", "tony-stark")
+          )
         )
-      )
-    ).build()
+      ).build()
     val requestOptions = CheckRequestOptions("some-token")
 
     val checkResponses = workos.fga.checkBatch(options, requestOptions)
@@ -1083,7 +1301,7 @@ class FgaApiTest : TestBase() {
         }
       ]""",
       requestBody =
-      """{
+        """{
         "op": "batch",
         "checks": [
           {
@@ -1108,22 +1326,23 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = CheckBatchOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "role",
-          "admin",
-          "member",
-          Subject("user", "tony-stark")
-        ),
-        WarrantCheckOptions(
-          "tenant",
-          "stark-industries",
-          "member",
-          Subject("user", "tony-stark")
+    val options =
+      CheckBatchOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "role",
+            "admin",
+            "member",
+            Subject("user", "tony-stark")
+          ),
+          WarrantCheckOptions(
+            "tenant",
+            "stark-industries",
+            "member",
+            Subject("user", "tony-stark")
+          )
         )
-      )
-    ).build()
+      ).build()
 
     val checkResponses = workos.fga.checkBatch(options)
 
@@ -1133,51 +1352,355 @@ class FgaApiTest : TestBase() {
     assertNotNull(checkResponses[0].debugInfo?.processingTime)
     assertNotNull(checkResponses[0].debugInfo?.decisionTree)
     assertNotNull(checkResponses[0].debugInfo?.decisionTree?.check)
-    assertEquals("role", checkResponses[0].debugInfo?.decisionTree?.check?.resourceType)
-    assertEquals("admin", checkResponses[0].debugInfo?.decisionTree?.check?.resourceId)
-    assertEquals("member", checkResponses[0].debugInfo?.decisionTree?.check?.relation)
-    assertEquals("user", checkResponses[0].debugInfo?.decisionTree?.check?.subject?.resourceType)
-    assertEquals("user1", checkResponses[0].debugInfo?.decisionTree?.check?.subject?.resourceId)
-    assertNull(checkResponses[0].debugInfo?.decisionTree?.check?.context)
+    assertEquals(
+      "role",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "admin",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "user",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "user1",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.context
+    )
     assertEquals("matched", checkResponses[0].debugInfo?.decisionTree?.decision)
     assertNotNull(checkResponses[0].debugInfo?.decisionTree?.processingTime)
     assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children)
-    assertEquals(1, checkResponses[0].debugInfo?.decisionTree?.children?.size)
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0))
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check)
-    assertEquals("role", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.resourceType)
-    assertEquals("admin", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.resourceId)
-    assertEquals("member", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.relation)
-    assertEquals("tenant", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.subject?.resourceType)
-    assertEquals("stark-industries", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.subject?.resourceId)
-    assertNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.check?.context)
-    assertEquals("matched", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.decision)
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.processingTime)
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children)
-    assertEquals(1, checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.size)
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0))
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check)
-    assertEquals("tenant", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.resourceType)
-    assertEquals("stark-industries", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.resourceId)
-    assertEquals("member", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.relation)
-    assertEquals("user", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.subject?.resourceType)
-    assertEquals("tony-stark", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.subject?.resourceId)
-    assertNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.check?.context)
-    assertEquals("matched", checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.decision)
-    assertNotNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.processingTime)
-    assertNull(checkResponses[0].debugInfo?.decisionTree?.children?.get(0)?.children?.get(0)?.children)
+    assertEquals(
+      1,
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.size
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+    )
+    assertEquals(
+      "role",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "admin",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "tenant",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "stark-industries",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.context
+    )
+    assertEquals(
+      "matched",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.decision
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.processingTime
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+    )
+    assertEquals(
+      1,
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.size
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+    )
+    assertEquals(
+      "tenant",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "stark-industries",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "user",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "tony-stark",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.check
+        ?.context
+    )
+    assertEquals(
+      "matched",
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.decision
+    )
+    assertNotNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.processingTime
+    )
+    assertNull(
+      checkResponses[0]
+        .debugInfo
+        ?.decisionTree
+        ?.children
+        ?.get(0)
+        ?.children
+        ?.get(0)
+        ?.children
+    )
     assertEquals(true, checkResponses[1].authorized())
     assertEquals(false, checkResponses[1].isImplicit)
     assertNotNull(checkResponses[1].debugInfo)
     assertEquals(8006583, checkResponses[1].debugInfo?.processingTime)
     assertNotNull(checkResponses[1].debugInfo?.decisionTree)
     assertNotNull(checkResponses[1].debugInfo?.decisionTree?.check)
-    assertEquals("tenant", checkResponses[1].debugInfo?.decisionTree?.check?.resourceType)
-    assertEquals("stark-industries", checkResponses[1].debugInfo?.decisionTree?.check?.resourceId)
-    assertEquals("member", checkResponses[1].debugInfo?.decisionTree?.check?.relation)
-    assertEquals("user", checkResponses[1].debugInfo?.decisionTree?.check?.subject?.resourceType)
-    assertEquals("tony-stark", checkResponses[1].debugInfo?.decisionTree?.check?.subject?.resourceId)
-    assertNull(checkResponses[1].debugInfo?.decisionTree?.check?.context)
+    assertEquals(
+      "tenant",
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceType
+    )
+    assertEquals(
+      "stark-industries",
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.resourceId
+    )
+    assertEquals(
+      "member",
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.relation
+    )
+    assertEquals(
+      "user",
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceType
+    )
+    assertEquals(
+      "tony-stark",
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.subject
+        ?.resourceId
+    )
+    assertNull(
+      checkResponses[1]
+        .debugInfo
+        ?.decisionTree
+        ?.check
+        ?.context
+    )
     assertEquals("matched", checkResponses[1].debugInfo?.decisionTree?.decision)
     assertEquals(6379750, checkResponses[1].debugInfo?.decisionTree?.processingTime)
     assertNull(checkResponses[1].debugInfo?.decisionTree?.children)
@@ -1213,7 +1736,7 @@ class FgaApiTest : TestBase() {
           "before": null,
           "after": null
         }
-      }""",
+      }"""
     )
 
     val options = QueryOptionsBuilder("select role where user:tony-stark is member").build()
@@ -1302,16 +1825,17 @@ class FgaApiTest : TestBase() {
       }"""
     )
 
-    val options = CheckOptionsBuilder(
-      listOf(
-        WarrantCheckOptions(
-          "user",
-          "user_123",
-          "viewer",
-          Subject("user", "user_456")
+    val options =
+      CheckOptionsBuilder(
+        listOf(
+          WarrantCheckOptions(
+            "user",
+            "user_123",
+            "viewer",
+            Subject("user", "user_456")
+          )
         )
-      )
-    ).build()
+      ).build()
 
     val response = workos.fga.check(options)
 

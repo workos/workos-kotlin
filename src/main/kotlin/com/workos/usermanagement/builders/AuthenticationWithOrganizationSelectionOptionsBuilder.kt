@@ -22,8 +22,8 @@ class AuthenticationWithOrganizationSelectionOptionsBuilder(
   /**
    * Generates the AuthenticationWithOrganizationSelectionOptions object.
    */
-  fun build(): AuthenticationWithOrganizationSelectionOptions {
-    return AuthenticationWithOrganizationSelectionOptions(
+  fun build(): AuthenticationWithOrganizationSelectionOptions =
+    AuthenticationWithOrganizationSelectionOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "urn:workos:oauth:grant-type:organization-selection",
@@ -31,17 +31,21 @@ class AuthenticationWithOrganizationSelectionOptionsBuilder(
       pendingAuthenticationToken = this.pendingAuthenticationToken,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, code: String, pendingAuthenticationToken: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithOrganizationSelectionOptionsBuilder {
-      return AuthenticationWithOrganizationSelectionOptionsBuilder(clientId, clientSecret, code, pendingAuthenticationToken, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      code: String,
+      pendingAuthenticationToken: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithOrganizationSelectionOptionsBuilder =
+      AuthenticationWithOrganizationSelectionOptionsBuilder(clientId, clientSecret, code, pendingAuthenticationToken, options)
   }
 }

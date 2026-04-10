@@ -15,19 +15,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Authentication(
   @JsonProperty("user")
   val user: User? = null,
-
   @JsonProperty("organization_id")
   val organizationId: String? = null,
-
   @JsonProperty("access_token")
   val accessToken: String? = null,
-
   @JsonProperty("refresh_token")
   val refreshToken: String? = null,
-
   @JsonProperty("impersonator")
   val impersonator: AuthenticationImpersonator? = null,
-
   @JsonProperty("oauth_tokens")
-  val oauthTokens: OAuthTokens? = null,
+  val oauthTokens: OAuthTokens? = null
 )

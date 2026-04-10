@@ -1,6 +1,5 @@
 package com.workos.webhooks.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.Group
 import com.workos.directorysync.models.User
@@ -13,15 +12,12 @@ import com.workos.directorysync.models.User
  * @param group The modified [com.workos.directorysync.models.Group].
  * @param user The modified [com.workos.directorysync.models.User].
  */
-data class DirectoryGroupUserEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryGroupUserEvent(
   @JvmField
   @JsonProperty("directory_id")
   val directoryId: String,
-
   @JvmField
   val user: User,
-
   @JvmField
   val group: Group
 )

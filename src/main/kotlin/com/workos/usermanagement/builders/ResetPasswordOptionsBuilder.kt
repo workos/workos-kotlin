@@ -10,25 +10,25 @@ import com.workos.usermanagement.types.ResetPasswordOptions
  */
 class ResetPasswordOptionsBuilder(
   private var token: String,
-  private var newPassword: String,
+  private var newPassword: String
 ) {
   /**
    * Generates the ResetPasswordOptions object.
    */
-  fun build(): ResetPasswordOptions {
-    return ResetPasswordOptions(
+  fun build(): ResetPasswordOptions =
+    ResetPasswordOptions(
       token = this.token,
       newPassword = this.newPassword
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(token: String, newPassword: String): ResetPasswordOptionsBuilder {
-      return ResetPasswordOptionsBuilder(token, newPassword)
-    }
+    fun create(
+      token: String,
+      newPassword: String
+    ): ResetPasswordOptionsBuilder = ResetPasswordOptionsBuilder(token, newPassword)
   }
 }

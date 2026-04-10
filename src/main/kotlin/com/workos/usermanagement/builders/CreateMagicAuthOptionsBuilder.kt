@@ -8,32 +8,31 @@ import com.workos.usermanagement.types.CreateMagicAuthOptions
  * @param email The email address of the user.
  * @param invitationToken The token of an invitation, if required.
  */
-class CreateMagicAuthOptionsBuilder @JvmOverloads constructor(
-  private var email: String,
-  private var invitationToken: String? = null,
-) {
-  /**
-   * Invitation Token
-   */
-  fun invitationToken(value: String) = apply { invitationToken = value }
+class CreateMagicAuthOptionsBuilder
+  @JvmOverloads
+  constructor(
+    private var email: String,
+    private var invitationToken: String? = null
+  ) {
+    /**
+     * Invitation Token
+     */
+    fun invitationToken(value: String) = apply { invitationToken = value }
 
-  /**
-   * Generates the CreateMagicAuthOptions object.
-   */
-  fun build(): CreateMagicAuthOptions {
-    return CreateMagicAuthOptions(
-      email = this.email,
-      invitationToken = this.invitationToken,
-    )
-  }
+    /**
+     * Generates the CreateMagicAuthOptions object.
+     */
+    fun build(): CreateMagicAuthOptions =
+      CreateMagicAuthOptions(
+        email = this.email,
+        invitationToken = this.invitationToken
+      )
 
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun create(email: String): CreateMagicAuthOptionsBuilder {
-      return CreateMagicAuthOptionsBuilder(email)
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun create(email: String): CreateMagicAuthOptionsBuilder = CreateMagicAuthOptionsBuilder(email)
     }
   }
-}

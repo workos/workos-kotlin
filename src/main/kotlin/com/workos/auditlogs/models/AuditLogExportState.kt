@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param state The AuditLogExport State string value.
  */
-enum class AuditLogExportState(@JsonValue val state: String) {
+enum class AuditLogExportState(
+  @JsonValue val state: String
+) {
   /**
    * The export is still being generated.
    */

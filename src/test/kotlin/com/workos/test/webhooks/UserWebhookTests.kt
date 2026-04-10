@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class UserWebhookTests : TestBase() {
-
   private val userId = "user_01HWZBQAY251RZ9BKB4RZW4D4A"
   private val webhookId = "wh_01FMXJ2W7T9VY7EAHHMBF2K07Y"
 
-  private fun generateWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "event": "${eventType.value}",
@@ -33,7 +32,6 @@ class UserWebhookTests : TestBase() {
       "created_at": "2023-11-27T19:07:33.155Z"
     }
     """
-  }
 
   @Test
   fun constructUserCreatedEvent() {
@@ -41,11 +39,12 @@ class UserWebhookTests : TestBase() {
     val webhookData = generateWebhookEvent(EventType.UserCreated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is UserCreatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -58,11 +57,12 @@ class UserWebhookTests : TestBase() {
     val webhookData = generateWebhookEvent(EventType.UserUpdated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is UserUpdatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -75,11 +75,12 @@ class UserWebhookTests : TestBase() {
     val webhookData = generateWebhookEvent(EventType.UserDeleted)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is UserDeletedEvent)
     assertEquals(webhook.id, webhookId)

@@ -8,6 +8,5 @@ package com.workos.common.http
  */
 data class EntityError(
   val field: String? = null,
-
   val code: String? = null
 )

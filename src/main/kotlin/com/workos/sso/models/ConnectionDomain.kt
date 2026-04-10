@@ -1,6 +1,5 @@
 package com.workos.sso.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -11,15 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param domain The Domain for a connection record.
  * @param id Unique identifier for a Connection Domain.
  */
-data class ConnectionDomain
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class ConnectionDomain(
   @JvmField
   @JsonProperty("object")
   val obj: String = "connection_domain",
-
   @JvmField
   val domain: String,
-
   @JvmField
   val id: String
 )

@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -16,31 +15,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp when the user was created.
  * @param updatedAt The timestamp when the user was last updated.
  */
-data class User @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class User(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("email")
   val email: String,
-
   @JsonProperty("first_name")
   val firstName: String? = null,
-
   @JsonProperty("last_name")
   val lastName: String? = null,
-
   @JsonProperty("email_verified")
   val emailVerified: Boolean,
-
   @JsonProperty("profile_picture_url")
   val profilePictureUrl: String? = null,
-
   @JsonProperty("last_sign_in_at")
   val lastSignInAt: String? = null,
-
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JsonProperty("updated_at")
   val updatedAt: String
 )

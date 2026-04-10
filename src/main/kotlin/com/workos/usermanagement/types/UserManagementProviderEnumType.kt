@@ -2,7 +2,9 @@ package com.workos.usermanagement.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum class UserManagementProviderEnumType(val type: String) {
+enum class UserManagementProviderEnumType(
+  val type: String
+) {
   /**
    * AuthKit
    */

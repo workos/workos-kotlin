@@ -1,15 +1,12 @@
 package com.workos.roles.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
-
 /**
  * A list of WorkOS [Role] resources. This class is not meant to be
  * instantiated directly.
  *
  * @param data A list of [Role].
  */
-data class RoleList
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class RoleList(
   @JvmField
-  val data: List<Role>,
+  val data: List<Role>
 )

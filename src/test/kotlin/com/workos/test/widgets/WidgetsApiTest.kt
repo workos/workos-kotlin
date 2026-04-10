@@ -25,16 +25,18 @@ class WidgetsApiTest : TestBase() {
   fun getTokenShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val token = prepareGetTokenTest(
-      """{
+    val token =
+      prepareGetTokenTest(
+        """{
         "organization_id": "organizationId",
         "user_id": "userId",
         "scopes": ["widgets:users-table:manage"]
       }"""
-    )
+      )
 
-    val options = GetTokenOptionsBuilder("organizationId", "userId", listOf(WidgetScope.UsersTableManagement))
-      .build()
+    val options =
+      GetTokenOptionsBuilder("organizationId", "userId", listOf(WidgetScope.UsersTableManagement))
+        .build()
 
     val response = workos.widgets.getToken(options)
 

@@ -13,65 +13,64 @@ import com.workos.fga.types.ListResourcesOptions
  * @param after Pagination cursor to receive records after a provided resource ID.
  * @param order Sort records in either ascending or descending order by created_at timestamp: "asc" or "desc".
  */
-class ListResourcesOptionsBuilder @JvmOverloads constructor(
-  private var resourceType: String? = null,
-  private var search: String? = null,
-  private var limit: Int? = null,
-  private var before: String? = null,
-  private var after: String? = null,
-  private var order: Order? = null,
-) {
-  /**
-   * Resource Type
-   */
-  fun resourceType(value: String) = apply { resourceType = value }
+class ListResourcesOptionsBuilder
+  @JvmOverloads
+  constructor(
+    private var resourceType: String? = null,
+    private var search: String? = null,
+    private var limit: Int? = null,
+    private var before: String? = null,
+    private var after: String? = null,
+    private var order: Order? = null
+  ) {
+    /**
+     * Resource Type
+     */
+    fun resourceType(value: String) = apply { resourceType = value }
 
-  /**
-   * Search
-   */
-  fun search(value: String) = apply { search = value }
+    /**
+     * Search
+     */
+    fun search(value: String) = apply { search = value }
 
-  /**
-   * Limit
-   */
-  fun limit(value: Int) = apply { limit = value }
+    /**
+     * Limit
+     */
+    fun limit(value: Int) = apply { limit = value }
 
-  /**
-   * Before
-   */
-  fun before(value: String) = apply { before = value }
+    /**
+     * Before
+     */
+    fun before(value: String) = apply { before = value }
 
-  /**
-   * After
-   */
-  fun after(value: String) = apply { after = value }
+    /**
+     * After
+     */
+    fun after(value: String) = apply { after = value }
 
-  /**
-   * Sorting Order
-   */
-  fun order(value: Order) = apply { order = value }
+    /**
+     * Sorting Order
+     */
+    fun order(value: Order) = apply { order = value }
 
-  /**
-   * Generates the ListResources options.
-   */
-  fun build(): ListResourcesOptions {
-    return ListResourcesOptions(
-      resourceType = this.resourceType,
-      search = this.search,
-      limit = this.limit,
-      before = this.before,
-      after = this.after,
-      order = this.order,
-    )
-  }
+    /**
+     * Generates the ListResources options.
+     */
+    fun build(): ListResourcesOptions =
+      ListResourcesOptions(
+        resourceType = this.resourceType,
+        search = this.search,
+        limit = this.limit,
+        before = this.before,
+        after = this.after,
+        order = this.order
+      )
 
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun create(): ListResourcesOptionsBuilder {
-      return ListResourcesOptionsBuilder()
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun create(): ListResourcesOptionsBuilder = ListResourcesOptionsBuilder()
     }
   }
-}

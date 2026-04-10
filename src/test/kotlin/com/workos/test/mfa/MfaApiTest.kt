@@ -85,7 +85,11 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.EnrollFactorOptions.builder().type("generic_otp").build()
+    val options =
+      MfaApi.EnrollFactorOptions
+        .builder()
+        .type("generic_otp")
+        .build()
 
     val factor = workos.mfa.enrollFactor(options)
 
@@ -120,11 +124,13 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.EnrollFactorOptions.builder()
-      .type("totp")
-      .issuer("WorkOS")
-      .user("some_user")
-      .build()
+    val options =
+      MfaApi.EnrollFactorOptions
+        .builder()
+        .type("totp")
+        .issuer("WorkOS")
+        .user("some_user")
+        .build()
 
     val factor = workos.mfa.enrollFactor(options)
 
@@ -155,10 +161,12 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.EnrollFactorOptions.builder()
-      .type("sms")
-      .phoneNumber("+15555555555")
-      .build()
+    val options =
+      MfaApi.EnrollFactorOptions
+        .builder()
+        .type("sms")
+        .phoneNumber("+15555555555")
+        .build()
 
     val factor = workos.mfa.enrollFactor(options)
 
@@ -184,9 +192,11 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.ChallengeFactorOptions.builder()
-      .authenticationFactorId("auth_factor_1234")
-      .build()
+    val options =
+      MfaApi.ChallengeFactorOptions
+        .builder()
+        .authenticationFactorId("auth_factor_1234")
+        .build()
 
     val challengeFactor = workos.mfa.challengeFactor(options)
 
@@ -210,10 +220,12 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.ChallengeFactorOptions.builder()
-      .authenticationFactorId("auth_factor_1234")
-      .smsTemplate("sms template here")
-      .build()
+    val options =
+      MfaApi.ChallengeFactorOptions
+        .builder()
+        .authenticationFactorId("auth_factor_1234")
+        .smsTemplate("sms template here")
+        .build()
 
     val challengeFactor = workos.mfa.challengeFactor(options)
 
@@ -240,10 +252,12 @@ class MfaApiTest : TestBase() {
       }"""
     )
 
-    val options = MfaApi.VerifyChallengeOptions.builder()
-      .authenticationChallengeId("auth_challenge_1234")
-      .code("12345")
-      .build()
+    val options =
+      MfaApi.VerifyChallengeOptions
+        .builder()
+        .authenticationChallengeId("auth_challenge_1234")
+        .code("12345")
+        .build()
 
     val verifyResponse = workos.mfa.verifyChallenge(options)
 
@@ -264,10 +278,12 @@ class MfaApiTest : TestBase() {
       responseStatus = 422
     )
 
-    val options = MfaApi.VerifyChallengeOptions.builder()
-      .authenticationChallengeId("auth_challenge_1234")
-      .code("12345")
-      .build()
+    val options =
+      MfaApi.VerifyChallengeOptions
+        .builder()
+        .authenticationChallengeId("auth_challenge_1234")
+        .code("12345")
+        .build()
 
     assertThrows(UnprocessableEntityException::class.java) {
       workos.mfa.verifyChallenge(options)

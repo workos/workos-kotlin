@@ -28,11 +28,14 @@ const val CHECK_OP_BATCH = "batch"
 const val WARRANT_OP_CREATE = "create"
 const val WARRANT_OP_DELETE = "delete"
 
-class FgaApi(private val workos: WorkOS) {
+class FgaApi(
+  private val workos: WorkOS
+) {
   /** Get an existing resource. */
-  fun getResource(resourceType: String, resourceId: String): Resource {
-    return workos.get("/fga/v1/resources/$resourceType/$resourceId", Resource::class.java)
-  }
+  fun getResource(
+    resourceType: String,
+    resourceId: String
+  ): Resource = workos.get("/fga/v1/resources/$resourceType/$resourceId", Resource::class.java)
 
   /** Get a list of all the existing resources matching the criteria specified */
   fun listResources(options: ListResourcesOptions? = null): Resources {
@@ -47,35 +50,45 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Create a new resource in the current environment. */
-  fun createResource(options: CreateResourceOptions): Resource {
-    return workos.post(
+  fun createResource(options: CreateResourceOptions): Resource =
+    workos.post(
       "/fga/v1/resources",
       Resource::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Update an existing resource. */
-  fun updateResource(resourceType: String, resourceId: String, options: UpdateResourceOptions): Resource {
-    return workos.put(
+  fun updateResource(
+    resourceType: String,
+    resourceId: String,
+    options: UpdateResourceOptions
+  ): Resource =
+    workos.put(
       "/fga/v1/resources/$resourceType/$resourceId",
       Resource::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Delete a resource in the current environment. */
-  fun deleteResource(resourceType: String, resourceId: String) {
+  fun deleteResource(
+    resourceType: String,
+    resourceId: String
+  ) {
     workos.delete("/fga/v1/resources/$resourceType/$resourceId")
   }
 
   /** Get a list of all existing warrants matching the criteria specified */
-  fun listWarrants(options: ListWarrantsOptions? = null, requestOptions: ListWarrantsRequestOptions? = null): Warrants {
+  fun listWarrants(
+    options: ListWarrantsOptions? = null,
+    requestOptions: ListWarrantsRequestOptions? = null
+  ): Warrants {
     val params: Map<String, String> =
       RequestConfig.toMap(options ?: ListWarrantsOptions()) as Map<String, String>
 
-    val config = RequestConfig.builder()
-      .params(params)
+    val config =
+      RequestConfig
+        .builder()
+        .params(params)
 
     if (requestOptions != null) {
       config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
@@ -89,27 +102,30 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Perform a warrant write (create/delete) in the current environment */
-  fun writeWarrant(options: WriteWarrantOptions): WriteWarrantResponse {
-    return workos.post(
+  fun writeWarrant(options: WriteWarrantOptions): WriteWarrantResponse =
+    workos.post(
       "/fga/v1/warrants",
       WriteWarrantResponse::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Performs multiple warrant writes in the current environment */
-  fun batchWriteWarrants(options: List<WriteWarrantOptions>): WriteWarrantResponse {
-    return workos.post(
+  fun batchWriteWarrants(options: List<WriteWarrantOptions>): WriteWarrantResponse =
+    workos.post(
       "/fga/v1/warrants",
       WriteWarrantResponse::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Perform a warrant check in the current environment */
-  fun check(options: CheckOptions, requestOptions: CheckRequestOptions? = null): CheckResponse {
-    val config = RequestConfig.builder()
-      .data(options)
+  fun check(
+    options: CheckOptions,
+    requestOptions: CheckRequestOptions? = null
+  ): CheckResponse {
+    val config =
+      RequestConfig
+        .builder()
+        .data(options)
 
     if (requestOptions != null) {
       config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
@@ -119,9 +135,14 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Perform a batch warrant check in the current environment */
-  fun checkBatch(options: CheckBatchOptions, requestOptions: CheckRequestOptions? = null): Array<CheckResponse> {
-    val config = RequestConfig.builder()
-      .data(options)
+  fun checkBatch(
+    options: CheckBatchOptions,
+    requestOptions: CheckRequestOptions? = null
+  ): Array<CheckResponse> {
+    val config =
+      RequestConfig
+        .builder()
+        .data(options)
 
     if (requestOptions != null) {
       config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))
@@ -131,20 +152,26 @@ class FgaApi(private val workos: WorkOS) {
   }
 
   /** Perform a query in the current environment */
-  fun query(options: QueryOptions, requestOptions: QueryRequestOptions? = null): QueryResponse {
+  fun query(
+    options: QueryOptions,
+    requestOptions: QueryRequestOptions? = null
+  ): QueryResponse {
     var params: Map<String, String> =
       RequestConfig.toMap(options) as Map<String, String>
 
-    params = params.mapKeys {
-      if (it.key == "query") {
-        "q"
-      } else {
-        it.key
+    params =
+      params.mapKeys {
+        if (it.key == "query") {
+          "q"
+        } else {
+          it.key
+        }
       }
-    }
 
-    val config = RequestConfig.builder()
-      .params(params)
+    val config =
+      RequestConfig
+        .builder()
+        .params(params)
 
     if (requestOptions != null) {
       config.headers(mapOf("Warrant-Token" to requestOptions.warrantToken))

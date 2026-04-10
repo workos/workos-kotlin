@@ -1,30 +1,23 @@
 package com.workos.mfa.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Represents [Totp] and its json properties.
  */
-data class Totp
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
-
+data class Totp(
   @JvmField
   @JsonProperty("issuer")
   val issuer: String,
-
   @JvmField
   @JsonProperty("user")
   val user: String,
-
   @JvmField
   @JsonProperty("qr_code")
   val qrCode: String?,
-
   @JvmField
   @JsonProperty("secret")
   val secret: String?,
-
   @JvmField
   @JsonProperty("uri")
   val uri: String?

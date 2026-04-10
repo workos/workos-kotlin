@@ -7,11 +7,14 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param state The Connection State string value.
  */
-enum class ConnectionState(@JsonValue val state: String) {
+enum class ConnectionState(
+  @JsonValue val state: String
+) {
   /**
    * The connection is active and able to authenticate users.
    */
   Active("active"),
+
   /**
    * The connection has been deleted or is in a deleting status.
    */
@@ -30,5 +33,5 @@ enum class ConnectionState(@JsonValue val state: String) {
   /**
    * The connection has been created and requires validation to be activated.
    */
-  Validating("validating"),
+  Validating("validating")
 }

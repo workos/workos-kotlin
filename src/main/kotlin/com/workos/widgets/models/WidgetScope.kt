@@ -7,9 +7,11 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param value The string value of the widgetscope.
  */
-enum class WidgetScope(@JsonValue val value: String) {
+enum class WidgetScope(
+  @JsonValue val value: String
+) {
   /**
    * Manage users via the users table widget.
    */
-  UsersTableManagement("widgets:users-table:manage"),
+  UsersTableManagement("widgets:users-table:manage")
 }

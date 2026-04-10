@@ -24,8 +24,8 @@ class AuthenticationWithTotpOptionsBuilder(
   /**
    * Generates the AuthenticationWithTotpOptions object.
    */
-  fun build(): AuthenticationWithTotpOptions {
-    return AuthenticationWithTotpOptions(
+  fun build(): AuthenticationWithTotpOptions =
+    AuthenticationWithTotpOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "urn:workos:oauth:grant-type:mfa-totp",
@@ -34,17 +34,22 @@ class AuthenticationWithTotpOptionsBuilder(
       pendingAuthenticationToken = this.pendingAuthenticationToken,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, code: String, authenticationChallengeId: String, pendingAuthenticationToken: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithTotpOptionsBuilder {
-      return AuthenticationWithTotpOptionsBuilder(clientId, clientSecret, code, authenticationChallengeId, pendingAuthenticationToken, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      code: String,
+      authenticationChallengeId: String,
+      pendingAuthenticationToken: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithTotpOptionsBuilder =
+      AuthenticationWithTotpOptionsBuilder(clientId, clientSecret, code, authenticationChallengeId, pendingAuthenticationToken, options)
   }
 }

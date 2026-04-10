@@ -19,9 +19,7 @@ class RequestConfig(
   /** @suppress */
   companion object {
     @JvmStatic
-    fun builder(): RequestConfigBuilder {
-      return RequestConfigBuilder()
-    }
+    fun builder(): RequestConfigBuilder = RequestConfigBuilder()
 
     /** Helper method for converting data into params. */
     infix fun <T : Any> toMap(obj: T): Map<String, Any?> {
@@ -44,10 +42,14 @@ class RequestConfig(
     private fun toParamValue(value: Any): String {
       if (value is Enum<*>) {
         try {
-          return value.javaClass.getMethod("getType").invoke(value).toString()
+          return value.javaClass
+            .getMethod("getType")
+            .invoke(value)
+            .toString()
         } catch (_: NoSuchMethodException) {
         } catch (_: java.lang.reflect.InvocationTargetException) {
-        } catch (_: IllegalAccessException) {}
+        } catch (_: IllegalAccessException) {
+        }
       }
       return value.toString()
     }
@@ -76,8 +78,6 @@ class RequestConfig(
     fun data(value: Any) = apply { data = value }
 
     /** Creates an instance of [RequestConfig] with the given params. */
-    fun build(): RequestConfig {
-      return RequestConfig(params, headers, data)
-    }
+    fun build(): RequestConfig = RequestConfig(params, headers, data)
   }
 }

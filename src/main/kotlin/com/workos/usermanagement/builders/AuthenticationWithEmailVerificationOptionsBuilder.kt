@@ -22,8 +22,8 @@ class AuthenticationWithEmailVerificationOptionsBuilder(
   /**
    * Generates the AuthenticationWithEmailVerificationOptions object.
    */
-  fun build(): AuthenticationWithEmailVerificationOptions {
-    return AuthenticationWithEmailVerificationOptions(
+  fun build(): AuthenticationWithEmailVerificationOptions =
+    AuthenticationWithEmailVerificationOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "urn:workos:oauth:grant-type:email-verification:code",
@@ -31,17 +31,21 @@ class AuthenticationWithEmailVerificationOptionsBuilder(
       pendingAuthenticationToken = this.pendingAuthenticationToken,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, code: String, pendingAuthenticationToken: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithEmailVerificationOptionsBuilder {
-      return AuthenticationWithEmailVerificationOptionsBuilder(clientId, clientSecret, code, pendingAuthenticationToken, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      code: String,
+      pendingAuthenticationToken: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithEmailVerificationOptionsBuilder =
+      AuthenticationWithEmailVerificationOptionsBuilder(clientId, clientSecret, code, pendingAuthenticationToken, options)
   }
 }

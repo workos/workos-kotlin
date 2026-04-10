@@ -1,19 +1,20 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.webhooks
 
 import com.workos.test.TestBase
-import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
+import com.workos.webhooks.models.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class SessionWebhookTests : TestBase() {
-
   private val sessionId = "session_01FKPWZWPHE9VN2QXJ7G1BZYP8"
   private val webhookId = "wh_01FMXKE185HQ2DQ84BH33HMF99"
   private val userId = "user_01FMXJ0YAP7JX3377YFV2XPCJE"
 
-  private fun generateSessionWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateSessionWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "data": {
@@ -30,7 +31,6 @@ class SessionWebhookTests : TestBase() {
       "created_at": "2024-07-20T10:15:23.713Z"
     }
     """
-  }
 
   @Test
   fun constructSessionCreatedEvent() {
@@ -38,11 +38,12 @@ class SessionWebhookTests : TestBase() {
     val webhookData = generateSessionWebhookEvent(EventType.SessionCreated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is SessionWebhookEvent)
     assertEquals(webhook.id, webhookId)
@@ -56,11 +57,12 @@ class SessionWebhookTests : TestBase() {
     val webhookData = generateSessionWebhookEvent(EventType.SessionRevoked)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is SessionWebhookEvent)
     assertEquals(webhook.id, webhookId)

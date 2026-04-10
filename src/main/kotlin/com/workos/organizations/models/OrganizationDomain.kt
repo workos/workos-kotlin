@@ -1,6 +1,5 @@
 package com.workos.organizations.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.organizations.types.OrganizationDomainState
 import com.workos.organizations.types.OrganizationDomainVerificationStrategy
@@ -16,30 +15,23 @@ import com.workos.organizations.types.OrganizationDomainVerificationStrategy
  * @param domain Domain for the Organization Domain.
  * @param organizationId Identifier for the Organization Domain's Organization.
  */
-data class OrganizationDomain
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationDomain(
   @JvmField
   @JsonProperty("object")
   val obj: String = "organization_domain",
-
   @JvmField
   val id: String,
-
   @JvmField
   val domain: String,
-
   @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
-
   @JvmField
   @JsonProperty("state")
   val state: OrganizationDomainState? = null,
-
   @JvmField
   @JsonProperty("verification_strategy")
   val verificationStrategy: OrganizationDomainVerificationStrategy? = null,
-
   @JvmField
   @JsonProperty("verification_token")
   val verificationToken: String? = null

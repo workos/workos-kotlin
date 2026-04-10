@@ -10,7 +10,9 @@ import com.workos.events.models.EventList
 /**
  * The EventsApi provides convenience methods for working with the WorkOS Events API.
  */
-class EventsApi(private val workos: WorkOS) {
+class EventsApi(
+  private val workos: WorkOS
+) {
   /**
    * Parameters for [listEvents].
    *
@@ -22,60 +24,62 @@ class EventsApi(private val workos: WorkOS) {
    * @param order See [com.workos.common.http.PaginationParams]
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  class ListEventsOptions @JvmOverloads constructor(
-    events: List<String>? = null,
-    organizationId: String? = null,
-    after: String? = null,
-    before: String? = null,
-    limit: Int? = null,
-    order: Order? = null
-  ) : PaginationParams(after, before, limit, order) {
-    init {
-      if (events != null && events.isNotEmpty()) set("events", events.joinToString(","))
-      if (organizationId != null) set("organization_id", organizationId)
-    }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): ListEventsOptionsBuilder {
-        return ListEventsOptionsBuilder()
+  class ListEventsOptions
+    @JvmOverloads
+    constructor(
+      events: List<String>? = null,
+      organizationId: String? = null,
+      after: String? = null,
+      before: String? = null,
+      limit: Int? = null,
+      order: Order? = null
+    ) : PaginationParams(after, before, limit, order) {
+      init {
+        if (events != null && events.isNotEmpty()) set("events", events.joinToString(","))
+        if (organizationId != null) set("organization_id", organizationId)
       }
-    }
-
-    /**
-     * Builder class for creating [ListEventsOptions].
-     */
-    class ListEventsOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListEventsOptions>(ListEventsOptions()) {
-      /**
-       * Sets the list of event types to filter on.
-       */
-      fun events(value: List<String>) = apply { this.params["events"] = value.joinToString(",") }
 
       /**
-       * Filters events by organization.
+       * @suppress
        */
-      fun organizationId(value: String) = apply { this.params["organization_id"] = value }
+      companion object {
+        @JvmStatic
+        fun builder(): ListEventsOptionsBuilder = ListEventsOptionsBuilder()
+      }
 
-      override fun build(): ListEventsOptions {
-        val options = ListEventsOptions()
-        for ((key, value) in this.params) {
-          options[key] = value
+      /**
+       * Builder class for creating [ListEventsOptions].
+       */
+      class ListEventsOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListEventsOptions>(ListEventsOptions()) {
+        /**
+         * Sets the list of event types to filter on.
+         */
+        fun events(value: List<String>) = apply { this.params["events"] = value.joinToString(",") }
+
+        /**
+         * Filters events by organization.
+         */
+        fun organizationId(value: String) = apply { this.params["organization_id"] = value }
+
+        override fun build(): ListEventsOptions {
+          val options = ListEventsOptions()
+          for ((key, value) in this.params) {
+            options[key] = value
+          }
+          return options
         }
-        return options
       }
     }
-  }
 
   /**
    * Retrieve a list of events.
    */
   fun listEvents(options: ListEventsOptions = ListEventsOptions()): EventList {
-    val config = RequestConfig.builder()
-      .params(options)
-      .build()
+    val config =
+      RequestConfig
+        .builder()
+        .params(options)
+        .build()
 
     return workos.get("/events", EventList::class.java, config)
   }

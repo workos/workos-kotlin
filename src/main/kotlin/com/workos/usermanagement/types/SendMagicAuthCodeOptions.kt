@@ -7,7 +7,7 @@ class SendMagicAuthCodeOptions(
    * The email address of the user.
    */
   @JsonProperty("email")
-  val email: String,
+  val email: String
 ) {
   init {
     require(email.isNotBlank()) { "Email is required" }

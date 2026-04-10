@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -12,19 +11,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the challenge will expire.
  * @param authenticationFactorId The unique ID of the authentication factor the challenge belongs to.
  */
-data class AuthenticationChallenge @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class AuthenticationChallenge(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JsonProperty("updated_at")
   val updatedAt: String,
-
   @JsonProperty("expires_at")
   val expiresAt: String? = null,
-
   @JsonProperty("authentication_factor_id")
   val authenticationFactorId: String
 )

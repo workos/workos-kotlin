@@ -1,6 +1,8 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.events
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.workos.common.models.Order
 import com.workos.events.EventsApi
 import com.workos.events.models.ApiKeyEvent
@@ -100,14 +102,15 @@ class EventsApiTest : TestBase() {
 
     stubResponse(
       url = "/events",
-      params = mapOf(
-        "events" to equalTo("dsync.group.user_added,dsync.group.user_removed"),
-        "organization_id" to equalTo("org_123"),
-        "after" to equalTo("after_cursor"),
-        "before" to equalTo("before_cursor"),
-        "limit" to equalTo("5"),
-        "order" to equalTo("asc")
-      ),
+      params =
+        mapOf(
+          "events" to equalTo("dsync.group.user_added,dsync.group.user_removed"),
+          "organization_id" to equalTo("org_123"),
+          "after" to equalTo("after_cursor"),
+          "before" to equalTo("before_cursor"),
+          "limit" to equalTo("5"),
+          "order" to equalTo("asc")
+        ),
       responseBody = """{
         "object": "list",
         "data": [],
@@ -115,14 +118,16 @@ class EventsApiTest : TestBase() {
       }"""
     )
 
-    val options = EventsApi.ListEventsOptions.builder()
-      .events(listOf("dsync.group.user_added", "dsync.group.user_removed"))
-      .organizationId("org_123")
-      .after("after_cursor")
-      .before("before_cursor")
-      .limit(5)
-      .order(Order.Asc)
-      .build()
+    val options =
+      EventsApi.ListEventsOptions
+        .builder()
+        .events(listOf("dsync.group.user_added", "dsync.group.user_removed"))
+        .organizationId("org_123")
+        .after("after_cursor")
+        .before("before_cursor")
+        .limit(5)
+        .order(Order.Asc)
+        .build()
 
     val eventList = workos.events.listEvents(options)
     assertEquals("list", eventList.obj)

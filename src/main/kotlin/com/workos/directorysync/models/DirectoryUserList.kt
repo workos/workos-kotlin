@@ -1,6 +1,5 @@
 package com.workos.directorysync.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.common.models.ListMetadata
 
@@ -11,11 +10,9 @@ import com.workos.common.models.ListMetadata
  * @param data A list of Directory [User]s.
  * @param listMetadata [com.workos.common.models.ListMetadata].
  */
-data class DirectoryUserList
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryUserList(
   @JvmField
   var data: List<User>,
-
   @JvmField
   @JsonProperty("list_metadata")
   var listMetadata: ListMetadata

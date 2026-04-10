@@ -1,6 +1,5 @@
 package com.workos.mfa.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -8,12 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 
 @Deprecated("Please use `verifyChallenge` instead")
-data class VerifyFactorResponse
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class VerifyFactorResponse(
   @JvmField
   @JsonProperty("challenge")
   val challenge: Challenge,
-
   @JvmField
   @JsonProperty("valid")
   val valid: Boolean

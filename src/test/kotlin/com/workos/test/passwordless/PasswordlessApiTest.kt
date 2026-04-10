@@ -13,7 +13,10 @@ import kotlin.test.assertEquals
 class PasswordlessApiTest : TestBase() {
   private val mapper = jacksonObjectMapper()
 
-  private fun prepareTest(email: String, requestBody: String): PasswordlessSession {
+  private fun prepareTest(
+    email: String,
+    requestBody: String
+  ): PasswordlessSession {
     val responseBody = """{
         "id": "passwordless_session_01EHDAK2BFGWCSZXP9HGZ3VK8C",
         "email": "$email",
@@ -44,10 +47,11 @@ class PasswordlessApiTest : TestBase() {
       }"""
     )
 
-    val createSessionOptions = PasswordlessApi.CreateSessionOptions
-      .builder()
-      .email(email)
-      .build()
+    val createSessionOptions =
+      PasswordlessApi.CreateSessionOptions
+        .builder()
+        .email(email)
+        .build()
 
     val session = workos.passwordless.createSession(createSessionOptions)
     assertEquals(session.email, email)
@@ -67,12 +71,13 @@ class PasswordlessApiTest : TestBase() {
       }"""
     )
 
-    val createSessionOptions = PasswordlessApi.CreateSessionOptions
-      .builder()
-      .email(email)
-      .redirectUri("http://www.google.com")
-      .type(SessionType.MagicLink)
-      .build()
+    val createSessionOptions =
+      PasswordlessApi.CreateSessionOptions
+        .builder()
+        .email(email)
+        .redirectUri("http://www.google.com")
+        .type(SessionType.MagicLink)
+        .build()
 
     val session = workos.passwordless.createSession(createSessionOptions)
     assertEquals(session.email, email)
@@ -95,14 +100,15 @@ class PasswordlessApiTest : TestBase() {
       }"""
     )
 
-    val createSessionOptions = PasswordlessApi.CreateSessionOptions(
-      email = email,
-      type = SessionType.MagicLink,
-      connection = "connectionId",
-      redirectUri = "/redirect/to",
-      expiresIn = 500,
-      state = "app state"
-    )
+    val createSessionOptions =
+      PasswordlessApi.CreateSessionOptions(
+        email = email,
+        type = SessionType.MagicLink,
+        connection = "connectionId",
+        redirectUri = "/redirect/to",
+        expiresIn = 500,
+        state = "app state"
+      )
 
     val session = workos.passwordless.createSession(createSessionOptions)
     assertEquals(session.email, email)

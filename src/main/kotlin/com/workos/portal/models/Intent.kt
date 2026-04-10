@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param value The string value of the Intent.
  */
-enum class Intent(@JsonValue val value: String) {
+enum class Intent(
+  @JsonValue val value: String
+) {
   /**
    * Single sign on.
    */

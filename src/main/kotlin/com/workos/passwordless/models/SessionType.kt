@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param state The Session Type string value.
  */
-enum class SessionType(@JsonValue val state: String) {
+enum class SessionType(
+  @JsonValue val state: String
+) {
   /**
    * Magic Link.
    */

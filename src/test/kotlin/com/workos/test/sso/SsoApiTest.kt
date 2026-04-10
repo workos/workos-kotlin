@@ -1,6 +1,8 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.sso
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.sso.SsoApi
 import com.workos.sso.models.ConnectionState
@@ -64,12 +66,14 @@ class SsoApiTest : TestBase() {
   fun getAuthorizationUrlShouldAcceptAdditionalParams() {
     val workos = createWorkOSClient()
 
-    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-      .connection("connection_value")
-      .domain("domain_value")
-      .provider("provider_value")
-      .state("state_value")
-      .build()
+    val url =
+      workos.sso
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .connection("connection_value")
+        .domain("domain_value")
+        .provider("provider_value")
+        .state("state_value")
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&connection=connection_value&domain=domain_value&provider=provider_value&state=state_value",
@@ -81,10 +85,12 @@ class SsoApiTest : TestBase() {
   fun getAuthorizationUrlShouldAcceptOrganizationParam() {
     val workos = createWorkOSClient()
 
-    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-      .organization("organization_id")
-      .state("state_value")
-      .build()
+    val url =
+      workos.sso
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .organization("organization_id")
+        .state("state_value")
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&organization=organization_id&state=state_value",
@@ -96,10 +102,12 @@ class SsoApiTest : TestBase() {
   fun getAuthorizationUrlShouldAcceptDomainHintParam() {
     val workos = createWorkOSClient()
 
-    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-      .organization("organization_id")
-      .domainHint("workos.com")
-      .build()
+    val url =
+      workos.sso
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .organization("organization_id")
+        .domainHint("workos.com")
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&domain_hint=workos.com&organization=organization_id",
@@ -111,10 +119,12 @@ class SsoApiTest : TestBase() {
   fun getAuthorizationUrlShouldAcceptLoginHintParam() {
     val workos = createWorkOSClient()
 
-    val url = workos.sso.getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
-      .organization("organization_id")
-      .loginHint("foo@workos.com")
-      .build()
+    val url =
+      workos.sso
+        .getAuthorizationUrl("client_id", "http://localhost:8080/redirect")
+        .organization("organization_id")
+        .loginHint("foo@workos.com")
+        .build()
 
     assertEquals(
       "http://localhost:${getWireMockPort()}/sso/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fredirect&response_type=code&login_hint=foo%40workos.com&organization=organization_id",
@@ -390,10 +400,12 @@ class SsoApiTest : TestBase() {
       }"""
     )
 
-    val options = SsoApi.ListConnectionsOptions.builder()
-      .after("someAfterId")
-      .before("someBeforeId")
-      .build()
+    val options =
+      SsoApi.ListConnectionsOptions
+        .builder()
+        .after("someAfterId")
+        .before("someBeforeId")
+        .build()
 
     val (connections) = workos.sso.listConnections(options)
 
@@ -407,11 +419,12 @@ class SsoApiTest : TestBase() {
 
     stubResponse(
       url = "/connections",
-      params = mapOf(
-        "connection_type" to equalTo("GoogleSAML"),
-        "domain" to equalTo("domain.com"),
-        "organization_id" to equalTo("org_123")
-      ),
+      params =
+        mapOf(
+          "connection_type" to equalTo("GoogleSAML"),
+          "domain" to equalTo("domain.com"),
+          "organization_id" to equalTo("org_123")
+        ),
       responseBody = """{
         "data": [
           {
@@ -433,11 +446,13 @@ class SsoApiTest : TestBase() {
       }"""
     )
 
-    val options = SsoApi.ListConnectionsOptions.builder()
-      .connectionType("GoogleSAML")
-      .domain("domain.com")
-      .organizationId("org_123")
-      .build()
+    val options =
+      SsoApi.ListConnectionsOptions
+        .builder()
+        .connectionType("GoogleSAML")
+        .domain("domain.com")
+        .organizationId("org_123")
+        .build()
 
     val (connections) = workos.sso.listConnections(options)
 

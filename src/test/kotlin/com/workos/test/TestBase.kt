@@ -1,6 +1,8 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
@@ -35,9 +37,7 @@ open class TestBase {
     return workos
   }
 
-  fun getWireMockPort(): Int {
-    return wireMockRule.port()
-  }
+  fun getWireMockPort(): Int = wireMockRule.port()
 
   fun stubResponse(
     url: String,
@@ -47,14 +47,15 @@ open class TestBase {
     requestBody: String? = null,
     requestHeaders: Map<String, String>? = null
   ): StubMapping {
-    val mapping = any(urlPathEqualTo(url))
-      .withQueryParams(params)
-      .willReturn(
-        aResponse()
-          .withStatus(responseStatus)
-          .withBody(responseBody)
-          .withHeader("X-Request-ID", "request_id_value")
-      )
+    val mapping =
+      any(urlPathEqualTo(url))
+        .withQueryParams(params)
+        .willReturn(
+          aResponse()
+            .withStatus(responseStatus)
+            .withBody(responseBody)
+            .withHeader("X-Request-ID", "request_id_value")
+        )
 
     if (requestBody != null) {
       mapping.withRequestBody(equalToJson(requestBody))
@@ -84,17 +85,17 @@ open class TestBase {
     scenarioState: String,
     nextScenarioState: String
   ): StubMapping {
-    val mapping = any(urlPathEqualTo(url))
-      .inScenario(scenarioName)
-      .whenScenarioStateIs(scenarioState)
-      .withQueryParams(params)
-      .willReturn(
-        aResponse()
-          .withStatus(responseStatus)
-          .withBody(responseBody)
-          .withHeader("X-Request-ID", "request_id_value")
-      )
-      .willSetStateTo(nextScenarioState)
+    val mapping =
+      any(urlPathEqualTo(url))
+        .inScenario(scenarioName)
+        .whenScenarioStateIs(scenarioState)
+        .withQueryParams(params)
+        .willReturn(
+          aResponse()
+            .withStatus(responseStatus)
+            .withBody(responseBody)
+            .withHeader("X-Request-ID", "request_id_value")
+        ).willSetStateTo(nextScenarioState)
 
     if (requestBody != null) {
       mapping.withRequestBody(equalToJson(requestBody))

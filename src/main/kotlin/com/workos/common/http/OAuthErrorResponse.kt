@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 internal data class OAuthErrorResponse(
   @JsonProperty("error")
   val error: String? = null,
-
   @JsonProperty("error_description")
   val errorDescription: String? = null
 )

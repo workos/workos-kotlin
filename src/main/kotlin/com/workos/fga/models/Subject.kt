@@ -1,6 +1,5 @@
 package com.workos.fga.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -12,13 +11,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param relation Specifies a relation required on the resource to be part of the subject group.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class Subject @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Subject(
   @JsonProperty("resource_type")
   val resourceType: String,
-
   @JsonProperty("resource_id")
   val resourceId: String,
-
   @JsonProperty("relation")
-  val relation: String? = null,
+  val relation: String? = null
 )

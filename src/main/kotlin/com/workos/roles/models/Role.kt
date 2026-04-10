@@ -1,6 +1,5 @@
 package com.workos.roles.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -16,31 +15,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp of when the Role was created.
  * @param updatedAt The timestamp of when the Role was updated.
  */
-data class Role
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Role(
   @JvmField
   @JsonProperty("object")
   val obj: String = "role",
-
   @JvmField
   val id: String,
-
   @JvmField
   val name: String,
-
   @JvmField
   val slug: String,
-
   @JvmField
   val description: String? = null,
-
   @JvmField
   val type: RoleType,
-
   @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String

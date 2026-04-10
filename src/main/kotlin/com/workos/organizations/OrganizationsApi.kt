@@ -15,7 +15,9 @@ import com.workos.roles.models.RoleList
 /**
  * The OrganizationsApi provides convenience methods for working with WorkOS Organizations.
  */
-class OrganizationsApi(private val workos: WorkOS) {
+class OrganizationsApi(
+  private val workos: WorkOS
+) {
   /**
    * Parameters for [createOrganization].
    * Use `CreateOrganizationOptions.builder()` to create a new builder instance.
@@ -26,70 +28,65 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
-  class CreateOrganizationOptions @JvmOverloads constructor(
-    val name: String? = null,
-
-    @JsonProperty("allow_profiles_outside_organization")
-    val allowProfilesOutsideOrganization: Boolean? = null,
-
-    @JsonProperty("domain_data")
-    val domainData: List<OrganizationDomainDataOptions>? = null,
-
-    @Deprecated("Use domainData instead.")
-    val domains: List<String>? = null
-  ) {
-    /**
-     * Builder class for creating [CreateOrganizationOptions].
-     */
-    class CreateOrganizationOptionsBuilder {
-      private var name: String? = null
-
-      private var allowProfilesOutsideOrganization: Boolean? = null
-
-      private var domainData: List<OrganizationDomainDataOptions>? = null
-
-      private var domains: List<String>? = null
-
-      /**
-       * Sets the name of the organization.
-       */
-      fun name(value: String) = apply { name = value }
-
-      /**
-       * Sets whether profiles with unmatched domains can exist within the organization.
-       */
-      @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
-      fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
-
-      /**
-       * Sets the list of domain data for the organization.
-       */
-      fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
-
-      /**
-       * Sets the list of domains for the organization.
-       */
+  class CreateOrganizationOptions
+    @JvmOverloads
+    constructor(
+      val name: String? = null,
+      @JsonProperty("allow_profiles_outside_organization")
+      val allowProfilesOutsideOrganization: Boolean? = null,
+      @JsonProperty("domain_data")
+      val domainData: List<OrganizationDomainDataOptions>? = null,
       @Deprecated("Use domainData instead.")
-      fun domains(value: List<String>) = apply { domains = value }
+      val domains: List<String>? = null
+    ) {
+      /**
+       * Builder class for creating [CreateOrganizationOptions].
+       */
+      class CreateOrganizationOptionsBuilder {
+        private var name: String? = null
+
+        private var allowProfilesOutsideOrganization: Boolean? = null
+
+        private var domainData: List<OrganizationDomainDataOptions>? = null
+
+        private var domains: List<String>? = null
+
+        /**
+         * Sets the name of the organization.
+         */
+        fun name(value: String) = apply { name = value }
+
+        /**
+         * Sets whether profiles with unmatched domains can exist within the organization.
+         */
+        @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
+        fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
+
+        /**
+         * Sets the list of domain data for the organization.
+         */
+        fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
+
+        /**
+         * Sets the list of domains for the organization.
+         */
+        @Deprecated("Use domainData instead.")
+        fun domains(value: List<String>) = apply { domains = value }
+
+        /**
+         * Creates an instance of [CreateOrganizationOptions] with the given params.
+         */
+        fun build(): CreateOrganizationOptions = CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+      }
 
       /**
-       * Creates an instance of [CreateOrganizationOptions] with the given params.
+       * @suppress
        */
-      fun build(): CreateOrganizationOptions {
-        return CreateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+      companion object {
+        @JvmStatic
+        fun builder(): CreateOrganizationOptionsBuilder = CreateOrganizationOptionsBuilder()
       }
     }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): CreateOrganizationOptionsBuilder {
-        return CreateOrganizationOptionsBuilder()
-      }
-    }
-  }
 
   @JsonInclude(Include.NON_NULL)
   class CreateOrganizationRequestOptions constructor(
@@ -109,9 +106,7 @@ class OrganizationsApi(private val workos: WorkOS) {
       /**
        * Creates a [CreateOrganizationRequestOptions] with the given builder parameters.
        */
-      fun build(): CreateOrganizationRequestOptions {
-        return CreateOrganizationRequestOptions(idempotencyKey)
-      }
+      fun build(): CreateOrganizationRequestOptions = CreateOrganizationRequestOptions(idempotencyKey)
     }
 
     /**
@@ -119,9 +114,7 @@ class OrganizationsApi(private val workos: WorkOS) {
      */
     companion object {
       @JvmStatic
-      fun builder(): CreateOrganizationRequestOptionsBuilder {
-        return CreateOrganizationRequestOptionsBuilder()
-      }
+      fun builder(): CreateOrganizationRequestOptionsBuilder = CreateOrganizationRequestOptionsBuilder()
     }
   }
 
@@ -132,10 +125,12 @@ class OrganizationsApi(private val workos: WorkOS) {
   @JvmOverloads
   fun createOrganization(
     options: CreateOrganizationOptions = CreateOrganizationOptions(),
-    requestOptions: CreateOrganizationRequestOptions ? = null
+    requestOptions: CreateOrganizationRequestOptions? = null
   ): Organization {
-    val config = RequestConfig.builder()
-      .data(options)
+    val config =
+      RequestConfig
+        .builder()
+        .data(options)
 
     if (requestOptions != null) {
       config.headers(mapOf("Idempotency-Key" to requestOptions.idempotencyKey))
@@ -154,9 +149,7 @@ class OrganizationsApi(private val workos: WorkOS) {
   /**
    * Fetches a single organization by id.
    */
-  fun getOrganization(id: String): Organization {
-    return workos.get("/organizations/$id", Organization::class.java)
-  }
+  fun getOrganization(id: String): Organization = workos.get("/organizations/$id", Organization::class.java)
 
   /**
    * Parameters for [listOrganizations] method.
@@ -168,46 +161,49 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param limit @see [com.workos.common.http.PaginationParams]
    * @param order @see [com.workos.common.http.PaginationParams]
    */
-  class ListOrganizationsOptions @JvmOverloads constructor(
-    domains: List<String>? = null,
-    after: String? = null,
-    before: String? = null,
-    limit: Int? = null,
-    order: Order? = null
-  ) : PaginationParams(after, before, limit, order) {
-    init {
-      if (domains != null) set("domains", domains.joinToString(","))
-    }
+  class ListOrganizationsOptions
+    @JvmOverloads
+    constructor(
+      domains: List<String>? = null,
+      after: String? = null,
+      before: String? = null,
+      limit: Int? = null,
+      order: Order? = null
+    ) : PaginationParams(after, before, limit, order) {
+      init {
+        if (domains != null) set("domains", domains.joinToString(","))
+      }
 
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): ListOrganizationsOptionsBuilder {
-        return ListOrganizationsOptionsBuilder()
+      /**
+       * @suppress
+       */
+      companion object {
+        @JvmStatic
+        fun builder(): ListOrganizationsOptionsBuilder = ListOrganizationsOptionsBuilder()
+      }
+
+      /**
+       * Builder class for creating [ListOrganizationsOptions]
+       */
+      class ListOrganizationsOptionsBuilder :
+        PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
+        /**
+         * Sets the list of domains to filter on.
+         */
+        fun domains(value: List<String>) = apply { this.params["domains"] = value.joinToString(",") }
       }
     }
-
-    /**
-     * Builder class for creating [ListOrganizationsOptions]
-     */
-    class ListOrganizationsOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListOrganizationsOptions>(ListOrganizationsOptions()) {
-      /**
-       * Sets the list of domains to filter on.
-       */
-      fun domains(value: List<String>) = apply { this.params["domains"] = value.joinToString(",") }
-    }
-  }
 
   /**
    * Retrieve a list of organizations that have connections configured
    * within your WorkOS dashboard.
    */
   fun listOrganizations(options: ListOrganizationsOptions = ListOrganizationsOptions()): OrganizationList {
-    val config = RequestConfig.builder()
-      .params(options)
-      .build()
+    val config =
+      RequestConfig
+        .builder()
+        .params(options)
+        .build()
 
     return workos.get("/organizations", OrganizationList::class.java, config)
   }
@@ -222,70 +218,65 @@ class OrganizationsApi(private val workos: WorkOS) {
    * @param domains A list of domains for the organization.
    */
   @JsonInclude(Include.NON_NULL)
-  class UpdateOrganizationOptions @JvmOverloads constructor(
-    val name: String? = null,
-
-    @JsonProperty("allow_profiles_outside_organization")
-    val allowProfilesOutsideOrganization: Boolean? = null,
-
-    @JsonProperty("domain_data")
-    val domainData: List<OrganizationDomainDataOptions>? = null,
-
-    @Deprecated("Use domainData instead.")
-    val domains: List<String>? = null
-  ) {
-    /**
-     * Builder class for [UpdateOrganizationOptions].
-     */
-    class UpdateOrganizationOptionsBuilder {
-      private var name: String? = null
-
-      private var allowProfilesOutsideOrganization: Boolean? = null
-
-      private var domainData: List<OrganizationDomainDataOptions>? = null
-
-      private var domains: List<String>? = null
-
-      /**
-       * Sets the name of the organization.
-       */
-      fun name(value: String) = apply { name = value }
-
-      /**
-       * Sets whether profiles with unmatched domains can exist within the organization.
-       */
-      @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
-      fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
-
-      /**
-       * Sets the list of domain data for the organization.
-       */
-      fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
-
-      /**
-       * Sets the list of domains for the organization.
-       */
+  class UpdateOrganizationOptions
+    @JvmOverloads
+    constructor(
+      val name: String? = null,
+      @JsonProperty("allow_profiles_outside_organization")
+      val allowProfilesOutsideOrganization: Boolean? = null,
+      @JsonProperty("domain_data")
+      val domainData: List<OrganizationDomainDataOptions>? = null,
       @Deprecated("Use domainData instead.")
-      fun domains(value: List<String>) = apply { domains = value }
+      val domains: List<String>? = null
+    ) {
+      /**
+       * Builder class for [UpdateOrganizationOptions].
+       */
+      class UpdateOrganizationOptionsBuilder {
+        private var name: String? = null
+
+        private var allowProfilesOutsideOrganization: Boolean? = null
+
+        private var domainData: List<OrganizationDomainDataOptions>? = null
+
+        private var domains: List<String>? = null
+
+        /**
+         * Sets the name of the organization.
+         */
+        fun name(value: String) = apply { name = value }
+
+        /**
+         * Sets whether profiles with unmatched domains can exist within the organization.
+         */
+        @Deprecated("If you need to allow sign-ins from any email domain, contact support@workos.com.")
+        fun allowProfilesOutsideOrganization(value: Boolean) = apply { allowProfilesOutsideOrganization = value }
+
+        /**
+         * Sets the list of domain data for the organization.
+         */
+        fun domainData(value: List<OrganizationDomainDataOptions>) = apply { domainData = value }
+
+        /**
+         * Sets the list of domains for the organization.
+         */
+        @Deprecated("Use domainData instead.")
+        fun domains(value: List<String>) = apply { domains = value }
+
+        /**
+         * Creates an instance of [UpdateOrganizationOptions].
+         */
+        fun build(): UpdateOrganizationOptions = UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+      }
 
       /**
-       * Creates an instance of [UpdateOrganizationOptions].
+       * @suppress
        */
-      fun build(): UpdateOrganizationOptions {
-        return UpdateOrganizationOptions(name, allowProfilesOutsideOrganization, domainData, domains)
+      companion object {
+        @JvmStatic
+        fun builder(): UpdateOrganizationOptionsBuilder = UpdateOrganizationOptionsBuilder()
       }
     }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): UpdateOrganizationOptionsBuilder {
-        return UpdateOrganizationOptionsBuilder()
-      }
-    }
-  }
 
   /**
    * Updates a single organization.
@@ -294,9 +285,11 @@ class OrganizationsApi(private val workos: WorkOS) {
     id: String,
     options: UpdateOrganizationOptions = UpdateOrganizationOptions()
   ): Organization {
-    val config = RequestConfig.builder()
-      .data(options)
-      .build()
+    val config =
+      RequestConfig
+        .builder()
+        .data(options)
+        .build()
 
     return workos.put("/organizations/$id", Organization::class.java, config)
   }
@@ -304,7 +297,5 @@ class OrganizationsApi(private val workos: WorkOS) {
   /**
    * Retrieve a list of roles for the given organization.
    */
-  fun listOrganizationRoles(organizationId: String): RoleList {
-    return workos.get("/organizations/$organizationId/roles", RoleList::class.java)
-  }
+  fun listOrganizationRoles(organizationId: String): RoleList = workos.get("/organizations/$organizationId/roles", RoleList::class.java)
 }

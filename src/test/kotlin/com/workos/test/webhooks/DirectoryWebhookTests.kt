@@ -1,20 +1,21 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.webhooks
 
 import com.workos.directorysync.models.DirectoryType
 import com.workos.test.TestBase
-import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
+import com.workos.webhooks.models.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.assertEquals
 
 class DirectoryWebhookTests : TestBase() {
-
   private val directoryId = "directory_01FMXJ1RRC9C7B4AR001TBBBHR"
 
   private val webhookId = "wh_01FMXJ2W7T9VY7EAHHMBF2K07Y"
 
-  private fun generateGroupWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateGroupWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "data": {
@@ -31,7 +32,6 @@ class DirectoryWebhookTests : TestBase() {
       "created_at": "2021-11-20T10:15:50.695Z"
     }
     """
-  }
 
   @Test
   fun constructDirectoryActivatedEvent() {
@@ -39,11 +39,12 @@ class DirectoryWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.DirectoryActivated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is DirectoryActivatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -73,11 +74,12 @@ class DirectoryWebhookTests : TestBase() {
       """
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is DirectoryActivatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -91,11 +93,12 @@ class DirectoryWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.DirectoryDeactivated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is DirectoryDeactivatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -108,11 +111,12 @@ class DirectoryWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.DirectoryDeleted)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is DirectoryDeletedEvent)
     assertEquals(webhook.id, webhookId)

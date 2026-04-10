@@ -42,13 +42,15 @@ class AuditLogsTest : TestBase() {
       }"""
     )
 
-    val options = AuditLogsApi.CreateAuditLogEventOptions.builder()
-      .action("user.signed_in")
-      .occurredAt(Date(1220227200))
-      .actor("user_123", "user")
-      .target("team_123", "team")
-      .context("0.0.0.0")
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogEventOptions
+        .builder()
+        .action("user.signed_in")
+        .occurredAt(Date(1220227200))
+        .actor("user_123", "user")
+        .target("team_123", "team")
+        .context("0.0.0.0")
+        .build()
 
     workos.auditLogs.createEvent("org_123", options)
   }
@@ -102,34 +104,33 @@ class AuditLogsTest : TestBase() {
       }"""
     )
 
-    val options = AuditLogsApi.CreateAuditLogEventOptions.builder()
-      .action("user.signed_in")
-      .occurredAt(Date(1220227200))
-      .actor(
-        "user_123",
-        "user",
-        "User",
-        mapOf(
-          "role" to "admin"
-        )
-      )
-      .target(
-        "team_123",
-        "team",
-        "Team",
-        mapOf(
-          "foo" to "foo",
-          "bar" to "bar"
-        )
-      )
-      .target("team_abc", "team", "Another Team")
-      .context("0.0.0.0", "User Agent")
-      .metadata(
-        mapOf(
-          "client" to "web"
-        )
-      )
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogEventOptions
+        .builder()
+        .action("user.signed_in")
+        .occurredAt(Date(1220227200))
+        .actor(
+          "user_123",
+          "user",
+          "User",
+          mapOf(
+            "role" to "admin"
+          )
+        ).target(
+          "team_123",
+          "team",
+          "Team",
+          mapOf(
+            "foo" to "foo",
+            "bar" to "bar"
+          )
+        ).target("team_abc", "team", "Another Team")
+        .context("0.0.0.0", "User Agent")
+        .metadata(
+          mapOf(
+            "client" to "web"
+          )
+        ).build()
 
     workos.auditLogs.createEvent("org_123", options)
   }
@@ -167,17 +168,21 @@ class AuditLogsTest : TestBase() {
       requestHeaders = mapOf("Idempotency-Key" to "some-idempotency-key-value")
     )
 
-    val event = AuditLogsApi.CreateAuditLogEventOptions.builder()
-      .action("user.signed_in")
-      .occurredAt(Date(1220227200))
-      .actor("user_123", "user")
-      .target("team_123", "team")
-      .context("0.0.0.0")
-      .build()
+    val event =
+      AuditLogsApi.CreateAuditLogEventOptions
+        .builder()
+        .action("user.signed_in")
+        .occurredAt(Date(1220227200))
+        .actor("user_123", "user")
+        .target("team_123", "team")
+        .context("0.0.0.0")
+        .build()
 
-    val requestOptions = AuditLogsApi.CreateAuditLogEventRequestOptions.builder()
-      .idempotencyKey("some-idempotency-key-value")
-      .build()
+    val requestOptions =
+      AuditLogsApi.CreateAuditLogEventRequestOptions
+        .builder()
+        .idempotencyKey("some-idempotency-key-value")
+        .build()
 
     workos.auditLogs.createEvent("org_123", event, requestOptions)
   }
@@ -231,13 +236,15 @@ class AuditLogsTest : TestBase() {
       responseStatus = 400
     )
 
-    val options = AuditLogsApi.CreateAuditLogEventOptions.builder()
-      .action("user.signed_in")
-      .occurredAt(Date(1220227200))
-      .actor("user_123", "user")
-      .target("team_123", "team")
-      .context("0.0.0.0")
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogEventOptions
+        .builder()
+        .action("user.signed_in")
+        .occurredAt(Date(1220227200))
+        .actor("user_123", "user")
+        .target("team_123", "team")
+        .context("0.0.0.0")
+        .build()
 
     assertThrows(BadRequestException::class.java) {
       workos.auditLogs.createEvent("org_123", options)
@@ -273,11 +280,13 @@ class AuditLogsTest : TestBase() {
       }"""
     )
 
-    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
-      .organizationId("org_123")
-      .rangeStart(Date(1658087930686))
-      .rangeEnd(Date(1663444730686))
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogExportOptions
+        .builder()
+        .organizationId("org_123")
+        .rangeStart(Date(1658087930686))
+        .rangeEnd(Date(1663444730686))
+        .build()
 
     val export = workos.auditLogs.createExport(options)
 
@@ -314,16 +323,18 @@ class AuditLogsTest : TestBase() {
       }"""
     )
 
-    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
-      .organizationId("org_123")
-      .rangeStart(Date(1658087930686))
-      .rangeEnd(Date(1663444730686))
-      .actions(listOf("foo", "bar"))
-      .actors(listOf("foo", "bar"))
-      .actorNames(listOf("foo", "bar"))
-      .actorIds(listOf("user_foo", "user_bar"))
-      .targets(listOf("foo", "bar"))
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogExportOptions
+        .builder()
+        .organizationId("org_123")
+        .rangeStart(Date(1658087930686))
+        .rangeEnd(Date(1663444730686))
+        .actions(listOf("foo", "bar"))
+        .actors(listOf("foo", "bar"))
+        .actorNames(listOf("foo", "bar"))
+        .actorIds(listOf("user_foo", "user_bar"))
+        .targets(listOf("foo", "bar"))
+        .build()
 
     val export = workos.auditLogs.createExport(options)
 
@@ -353,11 +364,13 @@ class AuditLogsTest : TestBase() {
       responseStatus = 400
     )
 
-    val options = AuditLogsApi.CreateAuditLogExportOptions.builder()
-      .organizationId("org_123")
-      .rangeStart(Date(1658087930686))
-      .rangeEnd(Date(1663444730686))
-      .build()
+    val options =
+      AuditLogsApi.CreateAuditLogExportOptions
+        .builder()
+        .organizationId("org_123")
+        .rangeStart(Date(1658087930686))
+        .rangeEnd(Date(1663444730686))
+        .build()
 
     assertThrows(BadRequestException::class.java) {
       workos.auditLogs.createExport(options)

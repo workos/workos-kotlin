@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
 
@@ -19,34 +18,25 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * @param customAttributes Custom attributes from the identity provider.
  * @param directoryManaged Whether the organization membership is managed by a directory sync connection.
  */
-data class OrganizationMembership @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationMembership(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("user_id")
   val userId: String,
-
   @JsonProperty("organization_id")
   val organizationId: String,
-
   @JsonProperty("role")
   val role: OrganizationMembershipRole? = null,
-
   @JsonProperty("roles")
   val roles: List<OrganizationMembershipRole>? = null,
-
   @JsonProperty("status")
   val status: OrganizationMembershipStatusEnumType,
-
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JsonProperty("updated_at")
   val updatedAt: String,
-
   @JsonProperty("custom_attributes")
   val customAttributes: Map<String, Any> = emptyMap(),
-
   @JsonProperty("directory_managed")
   val directoryManaged: Boolean = false
 )

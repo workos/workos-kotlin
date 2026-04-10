@@ -2,7 +2,9 @@ package com.workos.usermanagement.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum class PasswordHashTypeEnumType(val type: String) {
+enum class PasswordHashTypeEnumType(
+  val type: String
+) {
   /**
    * Bcrypt
    */
@@ -19,5 +21,5 @@ enum class PasswordHashTypeEnumType(val type: String) {
    * Ssha
    */
   @JsonProperty("ssha")
-  Ssha("ssha"),
+  Ssha("ssha")
 }

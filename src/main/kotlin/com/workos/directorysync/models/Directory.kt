@@ -1,6 +1,5 @@
 package com.workos.directorysync.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -18,39 +17,29 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp of when the Directory was created.
  * @param updatedAt The timestamp of when the Directory was updated.
  */
-data class Directory
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Directory(
   @JvmField
   @JsonProperty("object")
   val obj: String = "directory",
-
   @JvmField
   val id: String,
-
   @JvmField
   val name: String,
-
   @JvmField
   val domain: String?,
-
   @JvmField
   @JsonProperty("external_key")
   val externalKey: String?,
-
   @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
-
   @JvmField
   val state: DirectoryState,
-
   @JvmField
   val type: DirectoryType,
-
   @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String
