@@ -5,8 +5,8 @@ import com.workos.webhooks.models.EventType
 import com.workos.webhooks.models.UserCreatedEvent
 import com.workos.webhooks.models.UserDeletedEvent
 import com.workos.webhooks.models.UserUpdatedEvent
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class UserWebhookTests : TestBase() {

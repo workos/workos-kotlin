@@ -4,8 +4,8 @@ package com.workos.test.webhooks
 
 import com.workos.test.TestBase
 import com.workos.webhooks.models.*
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrganizationWebhookTests : TestBase() {

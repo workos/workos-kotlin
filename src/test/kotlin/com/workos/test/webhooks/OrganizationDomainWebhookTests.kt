@@ -3,8 +3,8 @@ package com.workos.test.webhooks
 import com.workos.test.TestBase
 import com.workos.webhooks.models.EventType
 import com.workos.webhooks.models.OrganizationDomainEvent
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrganizationDomainWebhookTests : TestBase() {

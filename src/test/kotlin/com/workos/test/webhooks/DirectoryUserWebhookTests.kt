@@ -5,8 +5,8 @@ import com.workos.webhooks.models.DirectoryUserCreatedEvent
 import com.workos.webhooks.models.DirectoryUserDeletedEvent
 import com.workos.webhooks.models.DirectoryUserUpdatedEvent
 import com.workos.webhooks.models.EventType
-import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DirectoryUserWebhookTests : TestBase() {

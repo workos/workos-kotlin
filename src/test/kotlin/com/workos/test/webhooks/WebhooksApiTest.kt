@@ -3,13 +3,13 @@ package com.workos.test.webhooks
 import com.workos.directorysync.models.User
 import com.workos.test.TestBase
 import org.apache.commons.codec.binary.Hex
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.security.SignatureException
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WebhooksApiTest : TestBase() {

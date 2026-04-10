@@ -44,21 +44,17 @@ dependencies {
 
   implementation(kotlin("reflect"))
 
-  testImplementation(platform("org.junit:junit-bom:5.14.3"))
+  testImplementation(platform("org.junit:junit-bom:6.0.3"))
 
-  testImplementation(kotlin("test-junit"))
-
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(kotlin("test-junit5"))
 
   testImplementation("org.junit.jupiter:junit-jupiter-api")
 
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
-  testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
-
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-  testImplementation("com.github.tomakehurst:wiremock:2.27.2")
+  testImplementation("org.wiremock:wiremock:3.13.2")
 
   api("org.apache.commons:commons-math3:3.6.1")
 }

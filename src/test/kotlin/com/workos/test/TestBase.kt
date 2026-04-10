@@ -4,20 +4,25 @@ package com.workos.test
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.workos.WorkOS
-import org.junit.ClassRule
+import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.AfterTest
 
 open class TestBase {
   val stubs = mutableListOf<StubMapping>()
 
   companion object {
-    @ClassRule
+    @RegisterExtension
     @JvmField
-    val wireMockRule = WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort())
+    val wireMockRule =
+      WireMockExtension
+        .newInstance()
+        .options(wireMockConfig().dynamicPort().dynamicHttpsPort())
+        .configureStaticDsl(true)
+        .build()
   }
 
   @AfterTest
@@ -37,7 +42,7 @@ open class TestBase {
     return workos
   }
 
-  fun getWireMockPort(): Int = wireMockRule.port()
+  fun getWireMockPort(): Int = wireMockRule.port
 
   fun stubResponse(
     url: String,
