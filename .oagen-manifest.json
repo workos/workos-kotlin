@@ -1,8 +1,9 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-13T20:30:08.422Z",
+  "generatedAt": "2026-04-13T23:48:06.315Z",
   "files": [
+    "smoke-manifest.json",
     "src/main/kotlin/com/workos/WorkOS.Generated.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
     "src/main/kotlin/com/workos/apikeys/ApiKeys.kt",

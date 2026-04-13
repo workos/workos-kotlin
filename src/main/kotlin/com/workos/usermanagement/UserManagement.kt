@@ -685,7 +685,7 @@ class UserManagement(
   fun getIdentities(
     id: String,
     requestOptions: RequestOptions? = null
-  ): UserIdentitiesGetItem {
+  ): List<UserIdentitiesGetItem> {
     val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
@@ -694,7 +694,8 @@ class UserManagement(
         queryParams = params,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, UserIdentitiesGetItem::class.java)
+    val responseType = object : TypeReference<List<UserIdentitiesGetItem>>() {}
+    return workos.baseClient.request(config, responseType)
   }
 
   /** List sessions */
@@ -956,7 +957,7 @@ class UserManagement(
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (statuses != null) statuses.forEach { params += "statuses" to it.toString() }
+      if (statuses != null) params += "statuses" to statuses.joinToString(",") { it.value }
       if (userId != null) params += "user_id" to userId.toString()
       val effectiveAfter = afterCursor ?: after
       if (effectiveAfter != null) params += "after" to effectiveAfter

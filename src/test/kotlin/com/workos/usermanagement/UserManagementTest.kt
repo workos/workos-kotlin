@@ -479,7 +479,7 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"idp_id\": \"sample\", \"type\": \"OAuth\", \"provider\": \"AppleOAuth\"}")
+            .withBody("[{\"idp_id\": \"sample\", \"type\": \"OAuth\", \"provider\": \"AppleOAuth\"}]")
         )
     )
     val result = api().getIdentities("sample-arg")

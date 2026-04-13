@@ -101,7 +101,7 @@ class SSOTest : TestBase() {
             )
         )
     )
-    val result = api().getProfileAndToken("sample-arg")
+    val result = api().getProfileAndToken("sample-arg", "sample-arg")
     assertNotNull(result)
   }
 

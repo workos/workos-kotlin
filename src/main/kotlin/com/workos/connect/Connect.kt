@@ -197,7 +197,7 @@ class Connect(
   fun listApplicationClientSecrets(
     id: String,
     requestOptions: RequestOptions? = null
-  ): ApplicationCredentialsListItem {
+  ): List<ApplicationCredentialsListItem> {
     val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
@@ -206,7 +206,8 @@ class Connect(
         queryParams = params,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, ApplicationCredentialsListItem::class.java)
+    val responseType = object : TypeReference<List<ApplicationCredentialsListItem>>() {}
+    return workos.baseClient.request(config, responseType)
   }
 
   /** Create a new client secret for a Connect Application */

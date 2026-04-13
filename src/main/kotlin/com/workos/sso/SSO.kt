@@ -125,11 +125,13 @@ class SSO(
   @JvmOverloads
   fun getProfileAndToken(
     code: String,
+    bodyCode: String,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse {
     val params = mutableListOf<Pair<String, String>>()
     params += "code" to code.toString()
     val body = linkedMapOf<String, Any?>()
+    body["code"] = bodyCode
     body["grant_type"] = "authorization_code"
     body["client_id"] = workos.clientId
     body["client_secret"] = workos.apiKey

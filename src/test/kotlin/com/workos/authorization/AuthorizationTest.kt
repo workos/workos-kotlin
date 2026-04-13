@@ -171,7 +171,7 @@ class AuthorizationTest : TestBase() {
             )
         )
     )
-    val result = api().createRolePermission("sample-arg", "sample-arg")
+    val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
   }
 
@@ -421,7 +421,7 @@ class AuthorizationTest : TestBase() {
             )
         )
     )
-    val result = api().addEnvironmentRolePermission("sample-arg")
+    val result = api().addEnvironmentRolePermission("sample-arg", "sample-arg")
     assertNotNull(result)
   }
 

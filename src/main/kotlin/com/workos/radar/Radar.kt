@@ -100,11 +100,14 @@ class Radar(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
+    body["entry"] = entry
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/radar/lists/$type/$action",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

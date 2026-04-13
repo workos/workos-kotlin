@@ -32,7 +32,7 @@ class Events(
       if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
-      if (events != null) events.forEach { params += "events" to it.toString() }
+      if (events != null) params += "events" to events.joinToString(",") { it.toString() }
       if (rangeStart != null) params += "range_start" to rangeStart.toString()
       if (rangeEnd != null) params += "range_end" to rangeEnd.toString()
       if (organizationId != null) params += "organization_id" to organizationId.toString()

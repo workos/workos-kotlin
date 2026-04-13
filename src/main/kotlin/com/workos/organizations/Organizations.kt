@@ -32,7 +32,7 @@ class Organizations(
       if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
-      if (domains != null) domains.forEach { params += "domains" to it.toString() }
+      if (domains != null) params += "domains" to domains.joinToString(",") { it.toString() }
       if (search != null) params += "search" to search.toString()
       val effectiveAfter = afterCursor ?: after
       if (effectiveAfter != null) params += "after" to effectiveAfter

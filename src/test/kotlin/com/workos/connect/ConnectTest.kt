@@ -115,8 +115,8 @@ class ConnectTest : TestBase() {
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
             .withBody(
-              "{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+              "[{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}]"
             )
         )
     )
