@@ -154,6 +154,7 @@ open class BaseClient(
         val status = resp.code
         val bodyString = resp.body?.string().orEmpty()
         val requestId = resp.header("X-Request-Id") ?: resp.header("X-Request-ID")
+        val retryAfterHeader = resp.header("Retry-After")
 
         if (status in 200..299) {
           return status to bodyString
@@ -161,7 +162,7 @@ open class BaseClient(
 
         val delay = retryPolicy.nextDelay(attempt, outcome, maxRetries)
         if (delay == null) {
-          throw translateHttpFailure(status, requestId, bodyString, request.url.toString())
+          throw translateHttpFailure(status, requestId, bodyString, request.url.toString(), retryAfterHeader)
         }
         sleep(delay)
       }
@@ -253,7 +254,8 @@ open class BaseClient(
     status: Int,
     requestId: String?,
     body: String,
-    url: String
+    url: String,
+    retryAfterHeader: String? = null
   ): WorkOSException {
     val (code, message, errors) = parseApiError(body)
     return when (status) {
@@ -261,12 +263,27 @@ open class BaseClient(
       401 -> UnauthorizedException(requestId, code, message, body)
       404 -> NotFoundException(requestId, code, message, url, body)
       422 -> UnprocessableEntityException(requestId, code, message, errors, body)
-      429 -> {
-        val retryAfter = null // headers are already gone; body doesn't carry it
-        RateLimitException(requestId, code, message, retryAfter, body)
-      }
+      429 -> RateLimitException(requestId, code, message, parseRetryAfterSeconds(retryAfterHeader), body)
       in 500..599 -> GenericServerException(status, requestId, code, message, body)
       else -> GenericException(status, requestId, code, message, body)
+    }
+  }
+
+  /**
+   * Parse a `Retry-After` response header into a whole-second value. HTTP
+   * allows either a delta-seconds integer or an HTTP-date; we return `null`
+   * for anything we cannot safely parse so callers can fall back to their
+   * own retry policy.
+   */
+  private fun parseRetryAfterSeconds(header: String?): Long? {
+    if (header.isNullOrBlank()) return null
+    header.trim().toLongOrNull()?.let { return it }
+    return try {
+      val httpDate = java.time.ZonedDateTime.parse(header.trim(), java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME)
+      val delta = java.time.Duration.between(java.time.ZonedDateTime.now(httpDate.zone), httpDate).seconds
+      if (delta < 0) 0L else delta
+    } catch (_: java.time.format.DateTimeParseException) {
+      null
     }
   }
 
