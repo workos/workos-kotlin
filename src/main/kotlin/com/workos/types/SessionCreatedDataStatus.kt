@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** SessionCreatedDataStatus enum. */
+/** Enumeration of valid SessionCreatedDataStatus values returned or accepted by the API. */
 enum class SessionCreatedDataStatus(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Active("active"),
   Expired("expired"),

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DataIntegrationsListResponseDataOwnership enum. */
+/** Enumeration of valid DataIntegrationsListResponseDataOwnership values returned or accepted by the API. */
 enum class DataIntegrationsListResponseDataOwnership(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   UserlandUser("userland_user"),
   Organization("organization")

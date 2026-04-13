@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** OrganizationDomainUpdatedDataState enum. */
+/** Enumeration of valid OrganizationDomainUpdatedDataState values returned or accepted by the API. */
 enum class OrganizationDomainUpdatedDataState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Failed("failed"),
   LegacyVerified("legacy_verified"),

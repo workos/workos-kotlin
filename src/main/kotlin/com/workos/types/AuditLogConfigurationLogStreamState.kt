@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuditLogConfigurationLogStreamState enum. */
+/** Enumeration of valid AuditLogConfigurationLogStreamState values returned or accepted by the API. */
 enum class AuditLogConfigurationLogStreamState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Active("active"),
   Inactive("inactive"),

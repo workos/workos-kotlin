@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** CreateUserPasswordHashType enum. */
+/** Enumeration of valid CreateUserPasswordHashType values returned or accepted by the API. */
 enum class CreateUserPasswordHashType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Bcrypt("bcrypt"),
   FirebaseScrypt("firebase-scrypt"),

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UserManagementAuthenticationScreenHint enum. */
+/** Enumeration of valid UserManagementAuthenticationScreenHint values returned or accepted by the API. */
 enum class UserManagementAuthenticationScreenHint(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   SignUp("sign-up"),
   SignIn("sign-in")

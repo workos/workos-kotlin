@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ConnectionDeactivatedDataStatus enum. */
+/** Enumeration of valid ConnectionDeactivatedDataStatus values returned or accepted by the API. */
 enum class ConnectionDeactivatedDataStatus(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Linked("linked"),
   Unlinked("unlinked")

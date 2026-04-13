@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** FlagDeletedContextActorSource enum. */
+/** Enumeration of valid FlagDeletedContextActorSource values returned or accepted by the API. */
 enum class FlagDeletedContextActorSource(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Api("api"),
   Dashboard("dashboard"),

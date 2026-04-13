@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** RadarStandaloneAssessRequestAuthMethod enum. */
+/** Enumeration of valid RadarStandaloneAssessRequestAuthMethod values returned or accepted by the API. */
 enum class RadarStandaloneAssessRequestAuthMethod(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Password("Password"),
   Passkey("Passkey"),

@@ -17,7 +17,18 @@ import com.workos.types.UserManagementUsersFeatureFlagsOrder
 class FeatureFlags(
   internal val workos: WorkOS
 ) {
-  /** List feature flags */
+  /**
+   * List feature flags
+   *
+   * Get a list of all of your existing feature flags matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun list(
     before: String? = null,
@@ -44,100 +55,140 @@ class FeatureFlags(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Get a feature flag */
+  /**
+   * Get a feature flag
+   *
+   * Get the details of an existing feature flag by its slug.
+   *
+   * @param slug A unique key to reference the Feature Flag.
+   *
+   * @return the Flag
+   */
   @JvmOverloads
   fun get(
     slug: String,
     requestOptions: RequestOptions? = null
   ): Flag {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/feature-flags/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Flag::class.java)
   }
 
-  /** Disable a feature flag */
+  /**
+   * Disable a feature flag
+   *
+   * Disables a feature flag in the current environment.
+   *
+   * @param slug A unique key to reference the Feature Flag.
+   *
+   * @return the FeatureFlag
+   */
   @JvmOverloads
   fun disable(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/$slug/disable",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
   }
 
-  /** Enable a feature flag */
+  /**
+   * Enable a feature flag
+   *
+   * Enables a feature flag in the current environment.
+   *
+   * @param slug A unique key to reference the Feature Flag.
+   *
+   * @return the FeatureFlag
+   */
   @JvmOverloads
   fun enable(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/$slug/enable",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
   }
 
-  /** Add a feature flag target */
+  /**
+   * Add a feature flag target
+   *
+   * Enables a feature flag for a specific target in the current environment. Currently, supported targets include users and organizations.
+   *
+   * @param slug The unique slug identifier of the feature flag.
+   * @param resourceId The resource ID in format "user_<id>" or "org_<id>".
+   */
   @JvmOverloads
   fun addFlagTarget(
     slug: String,
     resourceId: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/feature-flags/$slug/targets/$resourceId",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Remove a feature flag target */
+  /**
+   * Remove a feature flag target
+   *
+   * Removes a target from the feature flag's target list in the current environment. Currently, supported targets include users and organizations.
+   *
+   * @param slug The unique slug identifier of the feature flag.
+   * @param resourceId The resource ID in format "user_<id>" or "org_<id>".
+   */
   @JvmOverloads
   fun removeFlagTarget(
     slug: String,
     resourceId: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/feature-flags/$slug/targets/$resourceId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** List enabled feature flags for an organization */
+  /**
+   * List enabled feature flags for an organization
+   *
+   * Get a list of all enabled feature flags for an organization.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listOrganizationFeatureFlags(
     organizationId: String,
@@ -165,7 +216,19 @@ class FeatureFlags(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List enabled feature flags for a user */
+  /**
+   * List enabled feature flags for a user
+   *
+   * Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
+   *
+   * @param userId The ID of the user.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listUserFeatureFlags(
     userId: String,

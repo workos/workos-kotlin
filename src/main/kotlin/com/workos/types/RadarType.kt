@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** RadarType enum. */
+/** Enumeration of valid RadarType values returned or accepted by the API. */
 enum class RadarType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   IpAddress("ip_address"),
   Domain("domain"),

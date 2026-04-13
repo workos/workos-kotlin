@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UpdateWebhookEndpointStatus enum. */
+/** Enumeration of valid UpdateWebhookEndpointStatus values returned or accepted by the API. */
 enum class UpdateWebhookEndpointStatus(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Enabled("enabled"),
   Disabled("disabled")

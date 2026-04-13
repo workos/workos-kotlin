@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** EventContextActorSource enum. */
+/** Enumeration of valid EventContextActorSource values returned or accepted by the API. */
 enum class EventContextActorSource(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Api("api"),
   Dashboard("dashboard"),

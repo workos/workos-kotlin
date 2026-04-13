@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** SSOProvider enum. */
+/** Enumeration of valid SSOProvider values returned or accepted by the API. */
 enum class SSOProvider(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AppleOAuth("AppleOAuth"),
   GitHubOAuth("GitHubOAuth"),

@@ -13,6 +13,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class PipesTest : TestBase() {
@@ -64,6 +65,12 @@ class PipesTest : TestBase() {
     )
     val result = api().getUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteUserConnectedAccount")
+  fun `deleteUserConnectedAccount returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

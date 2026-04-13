@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** OrganizationDomainDeletedDataVerificationStrategy enum. */
+/** Enumeration of valid OrganizationDomainDeletedDataVerificationStrategy values returned or accepted by the API. */
 enum class OrganizationDomainDeletedDataVerificationStrategy(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Dns("dns"),
   Manual("manual")

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** RoleType enum. */
+/** Enumeration of valid RoleType values returned or accepted by the API. */
 enum class RoleType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   EnvironmentRole("EnvironmentRole"),
   OrganizationRole("OrganizationRole")

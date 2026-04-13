@@ -16,44 +16,66 @@ import com.workos.types.OrganizationsApiKeysOrder
 class ApiKeys(
   internal val workos: WorkOS
 ) {
-  /** Validate API key */
+  /**
+   * Validate API key
+   *
+   * Validate an API key value and return the API key object if valid.
+   *
+   * @param value The value for an API key.
+   *
+   * @return the ApiKeyValidationResponse
+   */
   @JvmOverloads
   fun createValidation(
     value: String,
     requestOptions: RequestOptions? = null
   ): ApiKeyValidationResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["value"] = value
     val config =
       RequestConfig(
         method = "POST",
         path = "/api_keys/validations",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, ApiKeyValidationResponse::class.java)
   }
 
-  /** Delete an API key */
+  /**
+   * Delete an API key
+   *
+   * Permanently deletes an API key. This action cannot be undone. Once deleted, any requests using this API key will fail authentication.
+   *
+   * @param id The unique ID of the API key.
+   */
   @JvmOverloads
   fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/api_keys/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** List API keys for an organization */
+  /**
+   * List API keys for an organization
+   *
+   * Get a list of all API keys for an organization.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listOrganizationApiKeys(
     organizationId: String,
@@ -81,7 +103,17 @@ class ApiKeys(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create an API key for an organization */
+  /**
+   * Create an API key for an organization
+   *
+   * Create a new API key for an organization.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param name The name for the API key.
+   * @param permissions The permission slugs to assign to the API key.
+   *
+   * @return the ApiKeyWithValue
+   */
   @JvmOverloads
   fun createOrganizationApiKey(
     organizationId: String,
@@ -89,7 +121,6 @@ class ApiKeys(
     permissions: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ApiKeyWithValue {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["name"] = name
     if (permissions != null) body["permissions"] = permissions
@@ -97,7 +128,6 @@ class ApiKeys(
       RequestConfig(
         method = "POST",
         path = "/organizations/$organizationId/api_keys",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

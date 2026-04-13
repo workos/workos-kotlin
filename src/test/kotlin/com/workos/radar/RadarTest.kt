@@ -14,6 +14,7 @@ import com.workos.types.RadarStandaloneAssessRequestAction
 import com.workos.types.RadarStandaloneAssessRequestAuthMethod
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class RadarTest : TestBase() {
@@ -42,6 +43,12 @@ class RadarTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for updateAttempt")
+  fun `updateAttempt returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `addListEntry returns a typed response`() {
     wireMockRule.stubFor(
       post(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
@@ -54,6 +61,12 @@ class RadarTest : TestBase() {
     )
     val result = api().addListEntry("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for removeListEntry")
+  fun `removeListEntry returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

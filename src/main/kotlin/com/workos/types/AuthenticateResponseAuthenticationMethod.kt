@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuthenticateResponseAuthenticationMethod enum. */
+/** Enumeration of valid AuthenticateResponseAuthenticationMethod values returned or accepted by the API. */
 enum class AuthenticateResponseAuthenticationMethod(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   SSO("SSO"),
   Password("Password"),

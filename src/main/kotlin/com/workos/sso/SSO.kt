@@ -18,7 +18,22 @@ import com.workos.types.ConnectionsOrder
 class SSO(
   internal val workos: WorkOS
 ) {
-  /** List Connections */
+  /**
+   * List Connections
+   *
+   * Get a list of all of your existing connections matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   * @param connectionType Filter Connections by their type.
+   * @param domain Filter Connections by their associated domain.
+   * @param organizationId Filter Connections by their associated organization.
+   * @param search Searchable text to match against Connection names.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listConnections(
     before: String? = null,
@@ -53,75 +68,104 @@ class SSO(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Get a Connection */
+  /**
+   * Get a Connection
+   *
+   * Get the details of an existing connection.
+   *
+   * @param id Unique identifier for the Connection.
+   *
+   * @return the Connection
+   */
   @JvmOverloads
   fun getConnection(
     id: String,
     requestOptions: RequestOptions? = null
   ): Connection {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/connections/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Connection::class.java)
   }
 
-  /** Delete a Connection */
+  /**
+   * Delete a Connection
+   *
+   * Permanently deletes an existing connection. It cannot be undone.
+   *
+   * @param id Unique identifier for the Connection.
+   */
   @JvmOverloads
   fun deleteConnection(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/connections/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Logout Authorize */
+  /**
+   * Logout Authorize
+   *
+   * You should call this endpoint from your server to generate a logout token which is required for the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint.
+   *
+   * @param profileId The unique ID of the profile to log out.
+   *
+   * @return the SSOLogoutAuthorizeResponse
+   */
   @JvmOverloads
   fun authorizeLogout(
     profileId: String,
     requestOptions: RequestOptions? = null
   ): SSOLogoutAuthorizeResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["profile_id"] = profileId
     val config =
       RequestConfig(
         method = "POST",
         path = "/sso/logout/authorize",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SSOLogoutAuthorizeResponse::class.java)
   }
 
-  /** Get a User Profile */
+  /**
+   * Get a User Profile
+   *
+   * Exchange an access token for a user's [Profile](https://workos.com/docs/reference/sso/profile). Because this profile is returned in the [Get a Profile and Token endpoint](https://workos.com/docs/reference/sso/profile/get-profile-and-token) your application usually does not need to call this endpoint. It is available for any authentication flows that require an additional endpoint to retrieve a user's profile.
+   *
+   * @return the Profile
+   */
   @JvmOverloads
   fun getProfile(requestOptions: RequestOptions? = null): Profile {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/sso/profile",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Profile::class.java)
   }
 
-  /** Get a Profile and Token */
+  /**
+   * Get a Profile and Token
+   *
+   * Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
+   *
+   * @param code The authorization code received from the authorization callback.
+   * @param bodyCode The authorization code received from the authorization callback.
+   *
+   * @return the SSOTokenResponse
+   */
   @JvmOverloads
   fun getProfileAndToken(
     code: String,

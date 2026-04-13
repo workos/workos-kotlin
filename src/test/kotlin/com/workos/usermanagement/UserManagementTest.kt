@@ -14,6 +14,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class UserManagementTest : TestBase() {
@@ -210,6 +211,12 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for revokeSession")
+  fun `revokeSession returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `createCorsOrigin returns a typed response`() {
     wireMockRule.stubFor(
       post(urlPathMatching("/user_management/cors_origins"))
@@ -392,6 +399,12 @@ class UserManagementTest : TestBase() {
     )
     val result = api().update("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for delete")
+  fun `delete returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test
@@ -762,6 +775,12 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for deleteOrganizationMembership")
+  fun `deleteOrganizationMembership returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `deactivateOrganizationMembership returns a typed response`() {
     wireMockRule.stubFor(
       put(urlPathMatching("/user_management/organization_memberships/sample-arg/deactivate"))
@@ -830,6 +849,12 @@ class UserManagementTest : TestBase() {
     )
     val result = api().listAuthorizedApplications("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteAuthorizedApplication")
+  fun `deleteAuthorizedApplication returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** InvitationState enum. */
+/** Enumeration of valid InvitationState values returned or accepted by the API. */
 enum class InvitationState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Pending("pending"),
   Accepted("accepted"),

@@ -43,18 +43,24 @@ import com.workos.types.UserManagementUsersOrder
 class UserManagement(
   internal val workos: WorkOS
 ) {
-  /** Get JWKS */
+  /**
+   * Get JWKS
+   *
+   * Returns the JSON Web Key Set (JWKS) containing the public keys used for verifying access tokens.
+   *
+   * @param clientId Identifies the application making the request to the WorkOS server. You can obtain your client ID from the [API Keys](https://dashboard.workos.com/api-keys) page in the dashboard.
+   *
+   * @return the JwksResponse
+   */
   @JvmOverloads
   fun getJwks(
     clientId: String,
     requestOptions: RequestOptions? = null
   ): JwksResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/sso/jwks/$clientId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, JwksResponse::class.java)
@@ -301,34 +307,46 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** Get device authorization URL */
+  /**
+   * Get device authorization URL
+   *
+   * Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
+   *
+   * @param clientId The WorkOS client ID for your application.
+   *
+   * @return the DeviceAuthorizationResponse
+   */
   @JvmOverloads
   fun createDevice(
     clientId: String,
     requestOptions: RequestOptions? = null
   ): DeviceAuthorizationResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["client_id"] = clientId
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/authorize/device",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DeviceAuthorizationResponse::class.java)
   }
 
-  /** Revoke Session */
+  /**
+   * Revoke Session
+   *
+   * Revoke a [user session](https://workos.com/docs/reference/authkit/session).
+   *
+   * @param sessionId The ID of the session to revoke. This can be extracted from the `sid` claim of the access token.
+   * @param returnTo The URL to redirect the user to after session revocation.
+   */
   @JvmOverloads
   fun revokeSession(
     sessionId: String,
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["session_id"] = sessionId
     if (returnTo != null) body["return_to"] = returnTo
@@ -336,78 +354,103 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/sessions/revoke",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Create a CORS origin */
+  /**
+   * Create a CORS origin
+   *
+   * Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
+   *
+   * @param origin The origin URL to allow for CORS requests.
+   *
+   * @return the CorsOriginResponse
+   */
   @JvmOverloads
   fun createCorsOrigin(
     origin: String,
     requestOptions: RequestOptions? = null
   ): CorsOriginResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["origin"] = origin
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/cors_origins",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, CorsOriginResponse::class.java)
   }
 
-  /** Get an email verification code */
+  /**
+   * Get an email verification code
+   *
+   * Get the details of an existing email verification code that can be used to send an email to a user for verification.
+   *
+   * @param id The ID of the email verification code.
+   *
+   * @return the EmailVerification
+   */
   @JvmOverloads
   fun getEmailVerification(
     id: String,
     requestOptions: RequestOptions? = null
   ): EmailVerification {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/email_verification/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, EmailVerification::class.java)
   }
 
-  /** Create a password reset token */
+  /**
+   * Create a password reset token
+   *
+   * Creates a one-time token that can be used to reset a user's password.
+   *
+   * @param email The email address of the user requesting a password reset.
+   *
+   * @return the PasswordReset
+   */
   @JvmOverloads
   fun resetPassword(
     email: String,
     requestOptions: RequestOptions? = null
   ): PasswordReset {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["email"] = email
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/password_reset",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, PasswordReset::class.java)
   }
 
-  /** Reset the password */
+  /**
+   * Reset the password
+   *
+   * Sets a new password using the `token` query parameter from the link that the user received. Successfully resetting the password will verify a user's email, if it hasn't been verified yet.
+   *
+   * @param token The password reset token.
+   * @param newPassword The new password to set for the user.
+   *
+   * @return the ResetPasswordResponse
+   */
   @JvmOverloads
   fun confirmPasswordReset(
     token: String,
     newPassword: String,
     requestOptions: RequestOptions? = null
   ): ResetPasswordResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["token"] = token
     body["new_password"] = newPassword
@@ -415,31 +458,50 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/password_reset/confirm",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, ResetPasswordResponse::class.java)
   }
 
-  /** Get a password reset token */
+  /**
+   * Get a password reset token
+   *
+   * Get the details of an existing password reset token that can be used to reset a user's password.
+   *
+   * @param id The ID of the password reset token.
+   *
+   * @return the PasswordReset
+   */
   @JvmOverloads
   fun getPasswordReset(
     id: String,
     requestOptions: RequestOptions? = null
   ): PasswordReset {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/password_reset/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, PasswordReset::class.java)
   }
 
-  /** List users */
+  /**
+   * List users
+   *
+   * Get a list of all of your existing users matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param organization **Deprecated.** Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
+   * @param organizationId Filter users by the organization they are a member of.
+   * @param email Filter users by their email address.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun list(
     before: String? = null,
@@ -472,7 +534,23 @@ class UserManagement(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create a user */
+  /**
+   * Create a user
+   *
+   * Create a new user in the current environment.
+   *
+   * @param email The email address of the user.
+   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+   * @param passwordHash The hashed password to set for the user. Mutually exclusive with `password`.
+   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`.
+   * @param firstName The first name of the user.
+   * @param lastName The last name of the user.
+   * @param emailVerified Whether the user's email has been verified.
+   * @param metadata Object containing metadata key/value pairs associated with the user.
+   * @param externalId The external ID of the user.
+   *
+   * @return the User
+   */
   @JvmOverloads
   fun create(
     email: String,
@@ -486,7 +564,6 @@ class UserManagement(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["email"] = email
     if (password != null) body["password"] = password
@@ -501,48 +578,77 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/users",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
   }
 
-  /** Get a user by external ID */
+  /**
+   * Get a user by external ID
+   *
+   * Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
+   *
+   * @param externalId The external ID of the user.
+   *
+   * @return the User
+   */
   @JvmOverloads
   fun getByExternalId(
     externalId: String,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/users/external_id/$externalId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
   }
 
-  /** Get a user */
+  /**
+   * Get a user
+   *
+   * Get the details of an existing user.
+   *
+   * @param id The unique ID of the user.
+   *
+   * @return the User
+   */
   @JvmOverloads
   fun get(
     id: String,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/users/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
   }
 
-  /** Update a user */
+  /**
+   * Update a user
+   *
+   * Updates properties of a user. The omitted properties will be left unchanged.
+   *
+   * @param id The unique ID of the user.
+   * @param email The email address of the user.
+   * @param firstName The first name of the user.
+   * @param lastName The last name of the user.
+   * @param emailVerified Whether the user's email has been verified.
+   * @param password The password to set for the user.
+   * @param passwordHash The hashed password to set for the user. Mutually exclusive with `password`.
+   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`.
+   * @param metadata Object containing metadata key/value pairs associated with the user.
+   * @param externalId The external ID of the user.
+   * @param locale The user's preferred locale.
+   *
+   * @return the User
+   */
   @JvmOverloads
   fun update(
     id: String,
@@ -558,7 +664,6 @@ class UserManagement(
     locale: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (email != null) body["email"] = email
     if (firstName != null) body["first_name"] = firstName
@@ -574,131 +679,179 @@ class UserManagement(
       RequestConfig(
         method = "PUT",
         path = "/user_management/users/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
   }
 
-  /** Delete a user */
+  /**
+   * Delete a user
+   *
+   * Permanently deletes a user in the current environment. It cannot be undone.
+   *
+   * @param id The unique ID of the user.
+   */
   @JvmOverloads
   fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/user_management/users/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Confirm email change */
+  /**
+   * Confirm email change
+   *
+   * Confirms an email change using the one-time code received by the user.
+   *
+   * @param id The unique ID of the user.
+   * @param code The one-time code used to confirm the email change.
+   *
+   * @return the EmailChangeConfirmation
+   */
   @JvmOverloads
   fun confirmEmailChange(
     id: String,
     code: String,
     requestOptions: RequestOptions? = null
   ): EmailChangeConfirmation {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["code"] = code
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$id/email_change/confirm",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, EmailChangeConfirmation::class.java)
   }
 
-  /** Send email change code */
+  /**
+   * Send email change code
+   *
+   * Sends an email that contains a one-time code used to change a user's email address.
+   *
+   * @param id The unique ID of the user.
+   * @param newEmail The new email address to change to.
+   *
+   * @return the EmailChange
+   */
   @JvmOverloads
   fun sendEmailChange(
     id: String,
     newEmail: String,
     requestOptions: RequestOptions? = null
   ): EmailChange {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["new_email"] = newEmail
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$id/email_change/send",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, EmailChange::class.java)
   }
 
-  /** Verify email */
+  /**
+   * Verify email
+   *
+   * Verifies an email address using the one-time code received by the user.
+   *
+   * @param id The ID of the user.
+   * @param code The one-time email verification code.
+   *
+   * @return the VerifyEmailResponse
+   */
   @JvmOverloads
   fun verifyEmail(
     id: String,
     code: String,
     requestOptions: RequestOptions? = null
   ): VerifyEmailResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["code"] = code
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$id/email_verification/confirm",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, VerifyEmailResponse::class.java)
   }
 
-  /** Send verification email */
+  /**
+   * Send verification email
+   *
+   * Sends an email that contains a one-time code used to verify a user’s email address.
+   *
+   * @param id The ID of the user.
+   *
+   * @return the SendVerificationEmailResponse
+   */
   @JvmOverloads
   fun sendVerificationEmail(
     id: String,
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$id/email_verification/send",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SendVerificationEmailResponse::class.java)
   }
 
-  /** Get user identities */
+  /**
+   * Get user identities
+   *
+   * Get a list of identities associated with the user. A user can have multiple associated identities after going through [identity linking](https://workos.com/docs/authkit/identity-linking). Currently only OAuth identities are supported. More provider types may be added in the future.
+   *
+   * @param id The unique ID of the user.
+   *
+   * @return the list of UserIdentitiesGetItem
+   */
   @JvmOverloads
   fun getIdentities(
     id: String,
     requestOptions: RequestOptions? = null
   ): List<UserIdentitiesGetItem> {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/users/$id/identities",
-        queryParams = params,
         requestOptions = requestOptions
       )
     val responseType = object : TypeReference<List<UserIdentitiesGetItem>>() {}
     return workos.baseClient.request(config, responseType)
   }
 
-  /** List sessions */
+  /**
+   * List sessions
+   *
+   * Get a list of all active sessions for a specific user.
+   *
+   * @param id The ID of the user.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listSessions(
     id: String,
@@ -726,7 +879,20 @@ class UserManagement(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List invitations */
+  /**
+   * List invitations
+   *
+   * Get a list of all of invitations matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
+   * @param email The email address of the recipient.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listInvitations(
     before: String? = null,
@@ -757,7 +923,20 @@ class UserManagement(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Send an invitation */
+  /**
+   * Send an invitation
+   *
+   * Sends an invitation email to the recipient.
+   *
+   * @param email The email address of the recipient.
+   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
+   * @param roleSlug The [role](https://workos.com/docs/authkit/roles) that the recipient will receive when they join the organization in the invitation.
+   * @param expiresInDays How many days the invitations will be valid for. Must be between 1 and 30 days. Defaults to 7 days if not specified.
+   * @param inviterUserId The ID of the [user](https://workos.com/docs/reference/authkit/user) who invites the recipient. The invitation email will mention the name of this user.
+   * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   *
+   * @return the UserInvite
+   */
   @JvmOverloads
   fun sendInvitation(
     email: String,
@@ -768,7 +947,6 @@ class UserManagement(
     locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["email"] = email
     if (organizationId != null) body["organization_id"] = organizationId
@@ -780,134 +958,178 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
   }
 
-  /** Find an invitation by token */
+  /**
+   * Find an invitation by token
+   *
+   * Retrieve an existing invitation using the token.
+   *
+   * @param token The token used to accept the invitation.
+   *
+   * @return the UserInvite
+   */
   @JvmOverloads
   fun findInvitationByToken(
     token: String,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/invitations/by_token/$token",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
   }
 
-  /** Get an invitation */
+  /**
+   * Get an invitation
+   *
+   * Get the details of an existing invitation.
+   *
+   * @param id The unique ID of the invitation.
+   *
+   * @return the UserInvite
+   */
   @JvmOverloads
   fun getInvitation(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/invitations/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
   }
 
-  /** Accept an invitation */
+  /**
+   * Accept an invitation
+   *
+   * Accepts an invitation and, if linked to an organization, activates the user's membership in that organization.
+   *
+   * @param id The unique ID of the invitation.
+   *
+   * @return the Invitation
+   */
   @JvmOverloads
   fun acceptInvitation(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/$id/accept",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
   }
 
-  /** Resend an invitation */
+  /**
+   * Resend an invitation
+   *
+   * Resends an invitation email to the recipient. The invitation must be in a pending state.
+   *
+   * @param id The unique ID of the invitation.
+   * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   *
+   * @return the UserInvite
+   */
   @JvmOverloads
   fun resendInvitation(
     id: String,
     locale: ResendUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (locale != null) body["locale"] = locale
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/$id/resend",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
   }
 
-  /** Revoke an invitation */
+  /**
+   * Revoke an invitation
+   *
+   * Revokes an existing invitation.
+   *
+   * @param id The unique ID of the invitation.
+   *
+   * @return the Invitation
+   */
   @JvmOverloads
   fun revokeInvitation(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/$id/revoke",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
   }
 
-  /** Update JWT template */
+  /**
+   * Update JWT template
+   *
+   * Update the JWT template for the current environment.
+   *
+   * @param content The JWT template content as a Liquid template string.
+   *
+   * @return the JWTTemplateResponse
+   */
   @JvmOverloads
   fun updateJWTTemplate(
     content: String,
     requestOptions: RequestOptions? = null
   ): JWTTemplateResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["content"] = content
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/jwt_template",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, JWTTemplateResponse::class.java)
   }
 
-  /** Create a Magic Auth code */
+  /**
+   * Create a Magic Auth code
+   *
+   * Creates a one-time authentication code that can be sent to the user's email address. The code expires in 10 minutes. To verify the code, [authenticate the user with Magic Auth](https://workos.com/docs/reference/authkit/authentication/magic-auth).
+   *
+   * @param email The email address to send the magic code to.
+   * @param invitationToken The invitation token to associate with this magic code.
+   *
+   * @return the MagicAuth
+   */
   @JvmOverloads
   fun createMagicAuth(
     email: String,
     invitationToken: String? = null,
     requestOptions: RequestOptions? = null
   ): MagicAuth {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["email"] = email
     if (invitationToken != null) body["invitation_token"] = invitationToken
@@ -915,31 +1137,50 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/magic_auth",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, MagicAuth::class.java)
   }
 
-  /** Get Magic Auth code details */
+  /**
+   * Get Magic Auth code details
+   *
+   * Get the details of an existing [Magic Auth](https://workos.com/docs/reference/authkit/magic-auth) code that can be used to send an email to a user for authentication.
+   *
+   * @param id The unique ID of the Magic Auth code.
+   *
+   * @return the MagicAuth
+   */
   @JvmOverloads
   fun getMagicAuth(
     id: String,
     requestOptions: RequestOptions? = null
   ): MagicAuth {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/magic_auth/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, MagicAuth::class.java)
   }
 
-  /** List organization memberships */
+  /**
+   * List organization memberships
+   *
+   * Get a list of all organization memberships matching the criteria specified. At least one of `user_id` or `organization_id` must be provided. By default only active memberships are returned. Use the `statuses` parameter to filter by other statuses.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+   * @param statuses Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
+   * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listOrganizationMemberships(
     before: String? = null,
@@ -972,7 +1213,20 @@ class UserManagement(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create an organization membership */
+  /**
+   * Create an organization membership
+   *
+   * Creates a new `active` organization membership for the given organization and user.
+   *
+   * Calling this API with an organization and user that match an `inactive` organization membership will activate the membership with the specified role(s).
+   *
+   * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
+   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+   * @param roleSlug A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
+   * @param roleSlugs An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
+   *
+   * @return the OrganizationMembership
+   */
   @JvmOverloads
   fun createOrganizationMembership(
     userId: String,
@@ -981,7 +1235,6 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["user_id"] = userId
     body["organization_id"] = organizationId
@@ -991,31 +1244,46 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/organization_memberships",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationMembership::class.java)
   }
 
-  /** Get an organization membership */
+  /**
+   * Get an organization membership
+   *
+   * Get the details of an existing organization membership.
+   *
+   * @param id The unique ID of the organization membership.
+   *
+   * @return the UserOrganizationMembership
+   */
   @JvmOverloads
   fun getOrganizationMembership(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/organization_memberships/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
   }
 
-  /** Update an organization membership */
+  /**
+   * Update an organization membership
+   *
+   * Update the details of an existing organization membership.
+   *
+   * @param id The unique ID of the organization membership.
+   * @param roleSlug A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
+   * @param roleSlugs An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
+   *
+   * @return the UserOrganizationMembership
+   */
   @JvmOverloads
   fun updateOrganizationMembership(
     id: String,
@@ -1023,7 +1291,6 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (roleSlug != null) body["role_slug"] = roleSlug
     if (roleSlugs != null) body["role_slugs"] = roleSlugs
@@ -1031,89 +1298,132 @@ class UserManagement(
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
   }
 
-  /** Delete an organization membership */
+  /**
+   * Delete an organization membership
+   *
+   * Permanently deletes an existing organization membership. It cannot be undone.
+   *
+   * @param id The unique ID of the organization membership.
+   */
   @JvmOverloads
   fun deleteOrganizationMembership(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/user_management/organization_memberships/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Deactivate an organization membership */
+  /**
+   * Deactivate an organization membership
+   *
+   * Deactivates an `active` organization membership. Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful deactivation.
+   *
+   * - Deactivating an `inactive` membership is a no-op and does not emit an event.
+   * - Deactivating a `pending` membership returns an error. This membership should be [deleted](https://workos.com/docs/reference/authkit/organization-membership/delete) instead.
+   *
+   * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
+   *
+   * @param id The unique ID of the organization membership.
+   *
+   * @return the OrganizationMembership
+   */
   @JvmOverloads
   fun deactivateOrganizationMembership(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id/deactivate",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationMembership::class.java)
   }
 
-  /** Reactivate an organization membership */
+  /**
+   * Reactivate an organization membership
+   *
+   * Reactivates an `inactive` organization membership, retaining the pre-existing role(s). Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful reactivation.
+   *
+   * - Reactivating an `active` membership is a no-op and does not emit an event.
+   * - Reactivating a `pending` membership returns an error. The user needs to [accept the invitation](https://workos.com/docs/authkit/invitations) instead.
+   *
+   * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
+   *
+   * @param id The unique ID of the organization membership.
+   *
+   * @return the UserOrganizationMembership
+   */
   @JvmOverloads
   fun reactivateOrganizationMembership(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id/reactivate",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
   }
 
-  /** Create a redirect URI */
+  /**
+   * Create a redirect URI
+   *
+   * Creates a new redirect URI for an environment.
+   *
+   * @param uri The redirect URI to create.
+   *
+   * @return the RedirectUri
+   */
   @JvmOverloads
   fun createRedirectUri(
     uri: String,
     requestOptions: RequestOptions? = null
   ): RedirectUri {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["uri"] = uri
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/redirect_uris",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RedirectUri::class.java)
   }
 
-  /** List authorized applications */
+  /**
+   * List authorized applications
+   *
+   * Get a list of all Connect applications that the user has authorized.
+   *
+   * @param userId The ID of the user.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listAuthorizedApplications(
     userId: String,
@@ -1141,19 +1451,24 @@ class UserManagement(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Delete an authorized application */
+  /**
+   * Delete an authorized application
+   *
+   * Delete an existing Authorized Connect Application.
+   *
+   * @param userId The ID of the user.
+   * @param applicationId The ID or client ID of the application.
+   */
   @JvmOverloads
   fun deleteAuthorizedApplication(
     userId: String,
     applicationId: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/user_management/users/$userId/authorized_applications/$applicationId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

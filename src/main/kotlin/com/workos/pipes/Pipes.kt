@@ -14,7 +14,18 @@ import com.workos.models.DataIntegrationsListResponse
 class Pipes(
   internal val workos: WorkOS
 ) {
-  /** Get authorization URL */
+  /**
+   * Get authorization URL
+   *
+   * Generates an OAuth authorization URL to initiate the connection flow for a user. Redirect the user to the returned URL to begin the OAuth flow with the third-party provider.
+   *
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param userId The ID of the user to authorize.
+   * @param organizationId An organization ID to scope the authorization to a specific organization.
+   * @param returnTo The URL to redirect the user to after authorization.
+   *
+   * @return the DataIntegrationAuthorizeUrlResponse
+   */
   @JvmOverloads
   fun authorizeDataIntegration(
     slug: String,
@@ -23,7 +34,6 @@ class Pipes(
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["user_id"] = userId
     if (organizationId != null) body["organization_id"] = organizationId
@@ -32,14 +42,23 @@ class Pipes(
       RequestConfig(
         method = "POST",
         path = "/data-integrations/$slug/authorize",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DataIntegrationAuthorizeUrlResponse::class.java)
   }
 
-  /** Get an access token for a connected account */
+  /**
+   * Get an access token for a connected account
+   *
+   * Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
+   *
+   * @param slug The identifier of the integration.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   *
+   * @return the DataIntegrationAccessTokenResponse
+   */
   @JvmOverloads
   fun createDataIntegrationToken(
     slug: String,
@@ -47,7 +66,6 @@ class Pipes(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["user_id"] = userId
     if (organizationId != null) body["organization_id"] = organizationId
@@ -55,14 +73,23 @@ class Pipes(
       RequestConfig(
         method = "POST",
         path = "/data-integrations/$slug/token",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DataIntegrationAccessTokenResponse::class.java)
   }
 
-  /** Get a connected account */
+  /**
+   * Get a connected account
+   *
+   * Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
+   *
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   *
+   * @return the ConnectedAccount
+   */
   @JvmOverloads
   fun getUserConnectedAccount(
     userId: String,
@@ -82,7 +109,15 @@ class Pipes(
     return workos.baseClient.request(config, ConnectedAccount::class.java)
   }
 
-  /** Delete a connected account */
+  /**
+   * Delete a connected account
+   *
+   * Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
+   *
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   */
   @JvmOverloads
   fun deleteUserConnectedAccount(
     userId: String,
@@ -102,7 +137,16 @@ class Pipes(
     workos.baseClient.requestVoid(config)
   }
 
-  /** List providers */
+  /**
+   * List providers
+   *
+   * Retrieves a list of available providers and the user's connection status for each. Returns all providers configured for your environment, along with the user's [connected account](https://workos.com/docs/reference/pipes/connected-account) information where applicable.
+   *
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier to list providers and connected accounts for.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to filter connections for a specific organization.
+   *
+   * @return the DataIntegrationsListResponse
+   */
   @JvmOverloads
   fun listUserDataProviders(
     userId: String,

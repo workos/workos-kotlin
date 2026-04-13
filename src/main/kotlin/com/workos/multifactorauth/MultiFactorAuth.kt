@@ -19,28 +19,47 @@ import com.workos.types.UserManagementMultiFactorAuthenticationOrder
 class MultiFactorAuth(
   internal val workos: WorkOS
 ) {
-  /** Verify Challenge */
+  /**
+   * Verify Challenge
+   *
+   * Verifies an Authentication Challenge.
+   *
+   * @param id The unique ID of the Authentication Challenge.
+   * @param code The one-time code to verify.
+   *
+   * @return the AuthenticationChallengeVerifyResponse
+   */
   @JvmOverloads
   fun verifyChallenge(
     id: String,
     code: String,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallengeVerifyResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["code"] = code
     val config =
       RequestConfig(
         method = "POST",
         path = "/auth/challenges/$id/verify",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticationChallengeVerifyResponse::class.java)
   }
 
-  /** Enroll Factor */
+  /**
+   * Enroll Factor
+   *
+   * Enrolls an Authentication Factor to be used as an additional factor of authentication. The returned ID should be used to create an authentication Challenge.
+   *
+   * @param type The type of factor to enroll.
+   * @param phoneNumber Required when type is 'sms'.
+   * @param totpIssuer Required when type is 'totp'.
+   * @param totpUser Required when type is 'totp'.
+   * @param userId The ID of the user to associate the factor with.
+   *
+   * @return the AuthenticationFactorEnrolled
+   */
   @JvmOverloads
   fun enrollFactor(
     type: AuthenticationFactorsCreateRequestType,
@@ -50,7 +69,6 @@ class MultiFactorAuth(
     userId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationFactorEnrolled {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["type"] = type
     if (phoneNumber != null) body["phone_number"] = phoneNumber
@@ -61,69 +79,97 @@ class MultiFactorAuth(
       RequestConfig(
         method = "POST",
         path = "/auth/factors/enroll",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticationFactorEnrolled::class.java)
   }
 
-  /** Get Factor */
+  /**
+   * Get Factor
+   *
+   * Gets an Authentication Factor.
+   *
+   * @param id The unique ID of the Factor.
+   *
+   * @return the AuthenticationFactor
+   */
   @JvmOverloads
   fun getFactor(
     id: String,
     requestOptions: RequestOptions? = null
   ): AuthenticationFactor {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/auth/factors/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticationFactor::class.java)
   }
 
-  /** Delete Factor */
+  /**
+   * Delete Factor
+   *
+   * Permanently deletes an Authentication Factor. It cannot be undone.
+   *
+   * @param id The unique ID of the Factor.
+   */
   @JvmOverloads
   fun deleteFactor(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/auth/factors/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Challenge Factor */
+  /**
+   * Challenge Factor
+   *
+   * Creates a Challenge for an Authentication Factor.
+   *
+   * @param id The unique ID of the Authentication Factor to be challenged.
+   * @param smsTemplate A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+   *
+   * @return the AuthenticationChallenge
+   */
   @JvmOverloads
   fun challengeFactor(
     id: String,
     smsTemplate: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallenge {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (smsTemplate != null) body["sms_template"] = smsTemplate
     val config =
       RequestConfig(
         method = "POST",
         path = "/auth/factors/$id/challenge",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticationChallenge::class.java)
   }
 
-  /** List authentication factors */
+  /**
+   * List authentication factors
+   *
+   * Lists the [authentication factors](https://workos.com/docs/reference/authkit/mfa/authentication-factor) for a user.
+   *
+   * @param userlandUserId The ID of the [user](https://workos.com/docs/reference/authkit/user).
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listUserAuthFactors(
     userlandUserId: String,
@@ -151,7 +197,19 @@ class MultiFactorAuth(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Enroll an authentication factor */
+  /**
+   * Enroll an authentication factor
+   *
+   * Enrolls a user in a new [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor).
+   *
+   * @param userlandUserId The ID of the [user](https://workos.com/docs/reference/authkit/user).
+   * @param type The type of the factor to enroll.
+   * @param totpIssuer Your application or company name displayed in the user's authenticator app.
+   * @param totpUser The user's account name displayed in their authenticator app.
+   * @param totpSecret The Base32-encoded shared secret for TOTP factors. This can be provided when creating the auth factor, otherwise it will be generated. The algorithm used to derive TOTP codes is SHA-1, the code length is 6 digits, and the timestep is 30 seconds – the secret must be compatible with these parameters.
+   *
+   * @return the UserAuthenticationFactorEnrollResponse
+   */
   @JvmOverloads
   fun createUserAuthFactor(
     userlandUserId: String,
@@ -161,7 +219,6 @@ class MultiFactorAuth(
     totpSecret: String? = null,
     requestOptions: RequestOptions? = null
   ): UserAuthenticationFactorEnrollResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["type"] = type
     if (totpIssuer != null) body["totp_issuer"] = totpIssuer
@@ -171,7 +228,6 @@ class MultiFactorAuth(
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$userlandUserId/auth_factors",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

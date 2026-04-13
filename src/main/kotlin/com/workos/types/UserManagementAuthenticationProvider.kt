@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UserManagementAuthenticationProvider enum. */
+/** Enumeration of valid UserManagementAuthenticationProvider values returned or accepted by the API. */
 enum class UserManagementAuthenticationProvider(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Authkit("authkit"),
   AppleOAuth("AppleOAuth"),

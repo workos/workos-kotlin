@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuthorizationAssignment enum. */
+/** Enumeration of valid AuthorizationAssignment values returned or accepted by the API. */
 enum class AuthorizationAssignment(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Direct("direct"),
   Indirect("indirect")

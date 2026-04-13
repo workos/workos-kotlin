@@ -14,6 +14,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class ConnectTest : TestBase() {
@@ -107,6 +108,12 @@ class ConnectTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for deleteApplication")
+  fun `deleteApplication returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `listApplicationClientSecrets returns a typed response`() {
     wireMockRule.stubFor(
       get(urlPathMatching("/connect/applications/sample-arg/client_secrets"))
@@ -140,6 +147,12 @@ class ConnectTest : TestBase() {
     )
     val result = api().createApplicationClientSecret("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteClientSecret")
+  fun `deleteClientSecret returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

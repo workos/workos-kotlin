@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ApplicationsOrder enum. */
+/** Enumeration of valid ApplicationsOrder values returned or accepted by the API. */
 enum class ApplicationsOrder(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Normal("normal"),
   Desc("desc"),

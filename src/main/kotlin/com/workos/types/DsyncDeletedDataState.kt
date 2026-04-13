@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DsyncDeletedDataState enum. */
+/** Enumeration of valid DsyncDeletedDataState values returned or accepted by the API. */
 enum class DsyncDeletedDataState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Active("active"),
   Validating("validating"),

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ConnectionActivatedDataConnectionType enum. */
+/** Enumeration of valid ConnectionActivatedDataConnectionType values returned or accepted by the API. */
 enum class ConnectionActivatedDataConnectionType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Adfssaml("ADFSSAML"),
   AdpOidc("AdpOidc"),

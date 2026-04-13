@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UserManagementMultiFactorAuthenticationOrder enum. */
+/** Enumeration of valid UserManagementMultiFactorAuthenticationOrder values returned or accepted by the API. */
 enum class UserManagementMultiFactorAuthenticationOrder(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Normal("normal"),
   Desc("desc"),

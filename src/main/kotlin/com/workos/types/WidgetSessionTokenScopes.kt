@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** WidgetSessionTokenScopes enum. */
+/** Enumeration of valid WidgetSessionTokenScopes values returned or accepted by the API. */
 enum class WidgetSessionTokenScopes(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   WidgetsUsersTableManage("widgets:users-table:manage"),
   WidgetsDomainVerificationManage("widgets:domain-verification:manage"),

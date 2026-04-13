@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuditLogConfigurationLogStreamType enum. */
+/** Enumeration of valid AuditLogConfigurationLogStreamType values returned or accepted by the API. */
 enum class AuditLogConfigurationLogStreamType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AzureSentinel("AzureSentinel"),
   Datadog("Datadog"),

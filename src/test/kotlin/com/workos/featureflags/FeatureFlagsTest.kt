@@ -13,6 +13,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class FeatureFlagsTest : TestBase() {
@@ -88,6 +89,18 @@ class FeatureFlagsTest : TestBase() {
     )
     val result = api().enable("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for addFlagTarget")
+  fun `addFlagTarget returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for removeFlagTarget")
+  fun `removeFlagTarget returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** VaultDekReadDataActorSource enum. */
+/** Enumeration of valid VaultDekReadDataActorSource values returned or accepted by the API. */
 enum class VaultDekReadDataActorSource(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Api("api"),
   Dashboard("dashboard")

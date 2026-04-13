@@ -14,6 +14,7 @@ import com.workos.test.TestBase
 import com.workos.types.AuthenticationFactorsCreateRequestType
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class MultiFactorAuthTest : TestBase() {
@@ -71,6 +72,12 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().getFactor("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteFactor")
+  fun `deleteFactor returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

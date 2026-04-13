@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DirectoryUserState enum. */
+/** Enumeration of valid DirectoryUserState values returned or accepted by the API. */
 enum class DirectoryUserState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Active("active"),
   Suspended("suspended"),

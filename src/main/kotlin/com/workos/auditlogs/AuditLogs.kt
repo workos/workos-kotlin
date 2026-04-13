@@ -21,45 +21,69 @@ import com.workos.types.AuditLogsOrder
 class AuditLogs(
   internal val workos: WorkOS
 ) {
-  /** Get Retention */
+  /**
+   * Get Retention
+   *
+   * Get the configured event retention period for the given Organization.
+   *
+   * @param id Unique identifier of the Organization.
+   *
+   * @return the AuditLogsRetentionJson
+   */
   @JvmOverloads
   fun getAuditLogsRetention(
     id: String,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetentionJson {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/$id/audit_logs_retention",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
   }
 
-  /** Set Retention */
+  /**
+   * Set Retention
+   *
+   * Set the event retention period for the given Organization.
+   *
+   * @param id Unique identifier of the Organization.
+   * @param retentionPeriodInDays The number of days Audit Log events will be retained. Valid values are `30` and `365`.
+   *
+   * @return the AuditLogsRetentionJson
+   */
   @JvmOverloads
   fun updateAuditLogsRetention(
     id: String,
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetentionJson {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["retention_period_in_days"] = retentionPeriodInDays
     val config =
       RequestConfig(
         method = "PUT",
         path = "/organizations/$id/audit_logs_retention",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
   }
 
-  /** List Actions */
+  /**
+   * List Actions
+   *
+   * Get a list of all Audit Log actions in the current environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listActions(
     before: String? = null,
@@ -86,7 +110,19 @@ class AuditLogs(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List Schemas */
+  /**
+   * List Schemas
+   *
+   * Get a list of all schemas for the Audit Logs action identified by `:name`.
+   *
+   * @param actionName The name of the Audit Log action.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listActionSchemas(
     actionName: String,
@@ -114,7 +150,18 @@ class AuditLogs(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create Schema */
+  /**
+   * Create Schema
+   *
+   * Creates a new Audit Log schema used to validate the payload of incoming Audit Log Events. If the `action` does not exist, it will also be created.
+   *
+   * @param actionName The name of the Audit Log action.
+   * @param targets The list of targets for the schema.
+   * @param actor The metadata schema for the actor.
+   * @param metadata Optional JSON schema for event metadata.
+   *
+   * @return the AuditLogSchemaJson
+   */
   @JvmOverloads
   fun createSchema(
     actionName: String,
@@ -123,7 +170,6 @@ class AuditLogs(
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogSchemaJson {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["targets"] = targets
     if (actor != null) body["actor"] = actor
@@ -132,21 +178,34 @@ class AuditLogs(
       RequestConfig(
         method = "POST",
         path = "/audit_logs/actions/$actionName/schemas",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogSchemaJson::class.java)
   }
 
-  /** Create Event */
+  /**
+   * Create Event
+   *
+   * Create an Audit Log Event.
+   *
+   * This API supports idempotency which guarantees that performing the same operation multiple times will have the same result as if the operation were performed only once. This is handy in situations where you may need to retry a request due to a failure or prevent accidental duplicate requests from creating more than one resource.
+   *
+   * To achieve idempotency, you can add `Idempotency-Key` request header to a Create Event request with a unique string as the value. Each subsequent request matching this unique string will return the same response. We suggest using [v4 UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) for idempotency keys to avoid collisions.
+   *
+   * Idempotency keys expire after 24 hours. The API will generate a new response if you submit a request with an expired key.
+   *
+   * @param organizationId The unique ID of the Organization.
+   * @param event The audit log event to create.
+   *
+   * @return the AuditLogEventCreateResponse
+   */
   @JvmOverloads
   fun createEvent(
     organizationId: String,
     event: AuditLogEvent,
     requestOptions: RequestOptions? = null
   ): AuditLogEventCreateResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["organization_id"] = organizationId
     body["event"] = event
@@ -154,14 +213,28 @@ class AuditLogs(
       RequestConfig(
         method = "POST",
         path = "/audit_logs/events",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogEventCreateResponse::class.java)
   }
 
-  /** Create Export */
+  /**
+   * Create Export
+   *
+   * Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
+   *
+   * @param organizationId The unique ID of the Organization.
+   * @param rangeStart ISO-8601 value for start of the export range.
+   * @param rangeEnd ISO-8601 value for end of the export range.
+   * @param actions List of actions to filter against.
+   * @param actors **Deprecated.** Deprecated. Use `actor_names` instead.
+   * @param actorNames List of actor names to filter against.
+   * @param actorIds List of actor IDs to filter against.
+   * @param targets List of target types to filter against.
+   *
+   * @return the AuditLogExportJson
+   */
   @JvmOverloads
   fun createExport(
     organizationId: String,
@@ -174,7 +247,6 @@ class AuditLogs(
     targets: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogExportJson {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["organization_id"] = organizationId
     body["range_start"] = rangeStart
@@ -188,25 +260,30 @@ class AuditLogs(
       RequestConfig(
         method = "POST",
         path = "/audit_logs/exports",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogExportJson::class.java)
   }
 
-  /** Get Export */
+  /**
+   * Get Export
+   *
+   * Get an Audit Log Export. The URL will expire after 10 minutes. If the export is needed again at a later time, refetching the export will regenerate the URL.
+   *
+   * @param auditLogExportId The unique ID of the Audit Log Export.
+   *
+   * @return the AuditLogExportJson
+   */
   @JvmOverloads
   fun getExport(
     auditLogExportId: String,
     requestOptions: RequestOptions? = null
   ): AuditLogExportJson {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/audit_logs/exports/$auditLogExportId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogExportJson::class.java)

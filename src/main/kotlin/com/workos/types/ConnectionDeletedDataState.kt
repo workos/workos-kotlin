@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ConnectionDeletedDataState enum. */
+/** Enumeration of valid ConnectionDeletedDataState values returned or accepted by the API. */
 enum class ConnectionDeletedDataState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Draft("draft"),
   Active("active"),

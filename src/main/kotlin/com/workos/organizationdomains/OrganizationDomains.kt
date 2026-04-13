@@ -12,14 +12,22 @@ import com.workos.models.OrganizationDomainStandAlone
 class OrganizationDomains(
   internal val workos: WorkOS
 ) {
-  /** Create an Organization Domain */
+  /**
+   * Create an Organization Domain
+   *
+   * Creates a new Organization Domain.
+   *
+   * @param domain The domain to add to the organization.
+   * @param organizationId The ID of the organization to add the domain to.
+   *
+   * @return the OrganizationDomain
+   */
   @JvmOverloads
   fun create(
     domain: String,
     organizationId: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomain {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["domain"] = domain
     body["organization_id"] = organizationId
@@ -27,60 +35,75 @@ class OrganizationDomains(
       RequestConfig(
         method = "POST",
         path = "/organization_domains",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationDomain::class.java)
   }
 
-  /** Get an Organization Domain */
+  /**
+   * Get an Organization Domain
+   *
+   * Get the details of an existing organization domain.
+   *
+   * @param id Unique identifier of the organization domain.
+   *
+   * @return the OrganizationDomainStandAlone
+   */
   @JvmOverloads
   fun get(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomainStandAlone {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/organization_domains/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)
   }
 
-  /** Delete an Organization Domain */
+  /**
+   * Delete an Organization Domain
+   *
+   * Permanently deletes an organization domain. It cannot be undone.
+   *
+   * @param id Unique identifier of the organization domain.
+   */
   @JvmOverloads
   fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/organization_domains/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Verify an Organization Domain */
+  /**
+   * Verify an Organization Domain
+   *
+   * Initiates verification process for an Organization Domain.
+   *
+   * @param id Unique identifier of the organization domain.
+   *
+   * @return the OrganizationDomainStandAlone
+   */
   @JvmOverloads
   fun verify(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomainStandAlone {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/organization_domains/$id/verify",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

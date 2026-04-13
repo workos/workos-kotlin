@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UpdateWebhookEndpointEvents enum. */
+/** Enumeration of valid UpdateWebhookEndpointEvents values returned or accepted by the API. */
 enum class UpdateWebhookEndpointEvents(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AuthenticationEmailVerificationSucceeded("authentication.email_verification_succeeded"),
   AuthenticationMagicAuthFailed("authentication.magic_auth_failed"),

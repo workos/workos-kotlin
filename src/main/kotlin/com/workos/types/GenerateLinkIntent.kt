@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** GenerateLinkIntent enum. */
+/** Enumeration of valid GenerateLinkIntent values returned or accepted by the API. */
 enum class GenerateLinkIntent(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   SSO("sso"),
   Dsync("dsync"),

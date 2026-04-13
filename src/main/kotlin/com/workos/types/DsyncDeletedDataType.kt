@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DsyncDeletedDataType enum. */
+/** Enumeration of valid DsyncDeletedDataType values returned or accepted by the API. */
 enum class DsyncDeletedDataType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AzureSCIMV20("azure scim v2.0"),
   Bamboohr("bamboohr"),

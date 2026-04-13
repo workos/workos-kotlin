@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DsyncActivatedDataType enum. */
+/** Enumeration of valid DsyncActivatedDataType values returned or accepted by the API. */
 enum class DsyncActivatedDataType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AzureSCIMV20("azure scim v2.0"),
   Bamboohr("bamboohr"),

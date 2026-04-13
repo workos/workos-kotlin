@@ -15,6 +15,7 @@ import com.workos.test.TestBase
 import com.workos.types.CreateWebhookEndpointEvents
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class WebhooksTest : TestBase() {
@@ -71,6 +72,12 @@ class WebhooksTest : TestBase() {
     )
     val result = api().updateEndpoint("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteEndpoint")
+  fun `deleteEndpoint returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

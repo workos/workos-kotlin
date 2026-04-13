@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuditLogExportJsonState enum. */
+/** Enumeration of valid AuditLogExportJsonState values returned or accepted by the API. */
 enum class AuditLogExportJsonState(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Pending("pending"),
   Ready("ready"),

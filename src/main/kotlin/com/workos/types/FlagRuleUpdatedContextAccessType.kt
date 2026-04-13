@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** FlagRuleUpdatedContextAccessType enum. */
+/** Enumeration of valid FlagRuleUpdatedContextAccessType values returned or accepted by the API. */
 enum class FlagRuleUpdatedContextAccessType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   None("none"),
   Some("some"),

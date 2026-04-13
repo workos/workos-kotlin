@@ -23,7 +23,19 @@ import com.workos.types.PermissionsOrder
 class Authorization(
   internal val workos: WorkOS
 ) {
-  /** Check authorization */
+  /**
+   * Check authorization
+   *
+   * Check if an organization membership has a specific permission on a resource. Supports identification by resource_id OR by resource_external_id + resource_type_slug.
+   *
+   * @param organizationMembershipId The ID of the organization membership to check.
+   * @param permissionSlug The slug of the permission to check.
+   * @param resourceId The ID of the resource.
+   * @param resourceExternalId The external ID of the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   *
+   * @return the AuthorizationCheck
+   */
   @JvmOverloads
   fun check(
     organizationMembershipId: String,
@@ -33,7 +45,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationCheck {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["permission_slug"] = permissionSlug
     if (resourceId != null) body["resource_id"] = resourceId
@@ -43,14 +54,31 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/check",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationCheck::class.java)
   }
 
-  /** List resources for organization membership */
+  /**
+   * List resources for organization membership
+   *
+   * Returns all child resources of a parent resource where the organization membership has a specific permission. This is useful for resource discovery—answering "What projects can this user access in this workspace?"
+   *
+   * You must provide either `parent_resource_id` or both `parent_resource_external_id` and `parent_resource_type_slug` to identify the parent resource.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param permissionSlug The permission slug to filter by. Only child resources where the organization membership has this permission are returned.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param parentResourceId The WorkOS ID of the parent resource. Provide this or both `parent_resource_external_id` and `parent_resource_type_slug`, but not both.
+   * @param parentResourceTypeSlug The slug of the parent resource type. Must be provided together with `parent_resource_external_id`.
+   * @param parentResourceExternalId The application-specific external identifier of the parent resource. Must be provided together with `parent_resource_type_slug`.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listOrganizationMembershipResources(
     organizationMembershipId: String,
@@ -86,7 +114,19 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List role assignments */
+  /**
+   * List role assignments
+   *
+   * List all role assignments for an organization membership. This returns all roles that have been assigned to the user on resources, including organization-level and sub-resource roles.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listOrganizationMembershipRoleAssignments(
     organizationMembershipId: String,
@@ -114,7 +154,19 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Assign a role */
+  /**
+   * Assign a role
+   *
+   * Assign a role to an organization membership on a specific resource.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param roleSlug The slug of the role to assign.
+   * @param resourceId The ID of the resource. Use either this or `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource. Requires `resource_type_slug`.
+   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`.
+   *
+   * @return the RoleAssignment
+   */
   @JvmOverloads
   fun assignRole(
     organizationMembershipId: String,
@@ -124,7 +176,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): RoleAssignment {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["role_slug"] = roleSlug
     if (resourceId != null) body["resource_id"] = resourceId
@@ -134,14 +185,23 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RoleAssignment::class.java)
   }
 
-  /** Remove a role assignment */
+  /**
+   * Remove a role assignment
+   *
+   * Remove a role assignment by role slug and resource.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param roleSlug The slug of the role to remove.
+   * @param resourceId The ID of the resource. Use either this or `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource. Requires `resource_type_slug`.
+   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`.
+   */
   @JvmOverloads
   fun removeRole(
     organizationMembershipId: String,
@@ -151,7 +211,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["role_slug"] = roleSlug
     if (resourceId != null) body["resource_id"] = resourceId
@@ -161,49 +220,71 @@ class Authorization(
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Remove a role assignment by ID */
+  /**
+   * Remove a role assignment by ID
+   *
+   * Remove a role assignment using its ID.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param roleAssignmentId The ID of the role assignment to remove.
+   */
   @JvmOverloads
   fun deleteOrganizationMembershipRoleAssignment(
     organizationMembershipId: String,
     roleAssignmentId: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments/$roleAssignmentId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** List organization roles */
+  /**
+   * List organization roles
+   *
+   * Get a list of all roles that apply to an organization. This includes both environment roles and organization-specific roles, returned in priority order.
+   *
+   * @param organizationId The ID of the organization.
+   *
+   * @return the RoleList
+   */
   @JvmOverloads
   fun listOrganizationRoles(
     organizationId: String,
     requestOptions: RequestOptions? = null
   ): RoleList {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/organizations/$organizationId/roles",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RoleList::class.java)
   }
 
-  /** Create a custom organization role */
+  /**
+   * Create a custom organization role
+   *
+   * Create a new custom organization role. When slug is omitted, it is auto-generated from the role name.
+   *
+   * @param organizationId The ID of the organization.
+   * @param name A descriptive name for the role.
+   * @param slug A unique identifier for the role within the organization. When provided, must begin with 'org-' and contain only lowercase letters, numbers, hyphens, and underscores. When omitted, a slug is auto-generated from the role name and a random suffix.
+   * @param description An optional description of the role's purpose.
+   * @param resourceTypeSlug The slug of the resource type the role is scoped to.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun createOrganizationRole(
     organizationId: String,
@@ -213,7 +294,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["name"] = name
     if (slug != null) body["slug"] = slug
@@ -223,32 +303,49 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/organizations/$organizationId/roles",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Get an organization role */
+  /**
+   * Get an organization role
+   *
+   * Retrieve a role that applies to an organization by its slug. This can return either an environment role or an organization-specific role.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun getOrganizationRole(
     organizationId: String,
     slug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/organizations/$organizationId/roles/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Update an organization role */
+  /**
+   * Update an organization role
+   *
+   * Update an existing custom organization role. Only the fields provided in the request body will be updated.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   * @param name A descriptive name for the role.
+   * @param description An optional description of the role's purpose.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun updateOrganizationRole(
     organizationId: String,
@@ -257,7 +354,6 @@ class Authorization(
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (description != null) body["description"] = description
@@ -265,32 +361,46 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/organizations/$organizationId/roles/$slug",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Delete a custom organization role */
+  /**
+   * Delete a custom organization role
+   *
+   * Delete an existing custom organization role.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   */
   @JvmOverloads
   fun deleteOrganizationRole(
     organizationId: String,
     slug: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organizations/$organizationId/roles/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Add a permission to an organization role */
+  /**
+   * Add a permission to an organization role
+   *
+   * Add a single permission to an organization role. If the permission is already assigned to the role, this operation has no effect.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   * @param bodySlug The slug of the permission to add to the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun createRolePermission(
     organizationId: String,
@@ -298,21 +408,29 @@ class Authorization(
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["slug"] = bodySlug
     val config =
       RequestConfig(
         method = "POST",
         path = "/authorization/organizations/$organizationId/roles/$slug/permissions",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Set permissions for a role */
+  /**
+   * Set permissions for a role
+   *
+   * Replace all permissions on a role with the provided list.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   * @param permissions The permission slugs to assign to the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun updateRolePermissions(
     organizationId: String,
@@ -320,21 +438,27 @@ class Authorization(
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["permissions"] = permissions
     val config =
       RequestConfig(
         method = "PUT",
         path = "/authorization/organizations/$organizationId/roles/$slug/permissions",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Remove a permission from an organization role */
+  /**
+   * Remove a permission from an organization role
+   *
+   * Remove a single permission from an organization role by its slug.
+   *
+   * @param organizationId The ID of the organization.
+   * @param slug The slug of the role.
+   * @param permissionSlug The slug of the permission to remove.
+   */
   @JvmOverloads
   fun deleteRolePermission(
     organizationId: String,
@@ -342,18 +466,26 @@ class Authorization(
     permissionSlug: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organizations/$organizationId/roles/$slug/permissions/$permissionSlug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Get a resource by external ID */
+  /**
+   * Get a resource by external ID
+   *
+   * Retrieve the details of an authorization resource by its external ID, organization, and resource type. This is useful when you only have the external ID from your system and need to fetch the full resource details.
+   *
+   * @param organizationId The ID of the organization that owns the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   *
+   * @return the AuthorizationResource
+   */
   @JvmOverloads
   fun getOrganizationResource(
     organizationId: String,
@@ -361,18 +493,31 @@ class Authorization(
     externalId: String,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
 
-  /** Update a resource by external ID */
+  /**
+   * Update a resource by external ID
+   *
+   * Update an existing authorization resource using its external ID.
+   *
+   * @param organizationId The ID of the organization that owns the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   * @param name A display name for the resource.
+   * @param description An optional description of the resource.
+   * @param parentResourceId The ID of the parent resource.
+   * @param parentResourceExternalId The external ID of the parent resource.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   *
+   * @return the AuthorizationResource
+   */
   @JvmOverloads
   fun updateOrganizationResource(
     organizationId: String,
@@ -385,7 +530,6 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (description != null) body["description"] = description
@@ -396,14 +540,22 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
 
-  /** Delete an authorization resource by external ID */
+  /**
+   * Delete an authorization resource by external ID
+   *
+   * Delete an authorization resource by organization, resource type, and external ID. This also deletes all descendant resources.
+   *
+   * @param organizationId The ID of the organization that owns the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   * @param cascadeDelete If true, deletes all descendant resources and role assignments. If not set and the resource has children or assignments, the request will fail.
+   */
   @JvmOverloads
   fun deleteOrganizationResource(
     organizationId: String,
@@ -424,7 +576,23 @@ class Authorization(
     workos.baseClient.requestVoid(config)
   }
 
-  /** List memberships for a resource by external ID */
+  /**
+   * List memberships for a resource by external ID
+   *
+   * Returns all organization memberships that have a specific permission on a resource, using the resource's external ID. This is useful for answering "Who can access this resource?" when you only have the external ID.
+   *
+   * @param organizationId The ID of the organization that owns the resource.
+   * @param resourceTypeSlug The slug of the resource type this resource belongs to.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   * @param permissionSlug The permission slug to filter by. Only users with this permission on the resource are returned.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param assignment Filter by assignment type. Use "direct" for direct assignments only, or "indirect" to include inherited assignments.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listResourceOrganizationMemberships(
     organizationId: String,
@@ -458,7 +626,24 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List resources */
+  /**
+   * List resources
+   *
+   * Get a paginated list of authorization resources.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param organizationId Filter resources by organization ID.
+   * @param resourceTypeSlug Filter resources by resource type slug.
+   * @param parentResourceId Filter resources by parent resource ID.
+   * @param parentResourceTypeSlug Filter resources by parent resource type slug.
+   * @param parentExternalId Filter resources by parent external ID.
+   * @param search Search resources by name.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listResources(
     before: String? = null,
@@ -497,7 +682,22 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create an authorization resource */
+  /**
+   * Create an authorization resource
+   *
+   * Create a new authorization resource.
+   *
+   * @param externalId An external identifier for the resource.
+   * @param name A display name for the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param organizationId The ID of the organization this resource belongs to.
+   * @param description An optional description of the resource.
+   * @param parentResourceId The ID of the parent resource.
+   * @param parentResourceExternalId The external ID of the parent resource.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   *
+   * @return the AuthorizationResource
+   */
   @JvmOverloads
   fun createResource(
     externalId: String,
@@ -510,7 +710,6 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["external_id"] = externalId
     body["name"] = name
@@ -524,31 +723,49 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/resources",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
 
-  /** Get a resource */
+  /**
+   * Get a resource
+   *
+   * Retrieve the details of an authorization resource by its ID.
+   *
+   * @param resourceId The ID of the authorization resource.
+   *
+   * @return the AuthorizationResource
+   */
   @JvmOverloads
   fun getResource(
     resourceId: String,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/resources/$resourceId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
 
-  /** Update a resource */
+  /**
+   * Update a resource
+   *
+   * Update an existing authorization resource.
+   *
+   * @param resourceId The ID of the authorization resource.
+   * @param name A display name for the resource.
+   * @param description An optional description of the resource.
+   * @param parentResourceId The ID of the parent resource.
+   * @param parentResourceExternalId The external ID of the parent resource.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   *
+   * @return the AuthorizationResource
+   */
   @JvmOverloads
   fun updateResource(
     resourceId: String,
@@ -559,7 +776,6 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (description != null) body["description"] = description
@@ -570,14 +786,20 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/resources/$resourceId",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
 
-  /** Delete an authorization resource */
+  /**
+   * Delete an authorization resource
+   *
+   * Delete an authorization resource and all its descendants.
+   *
+   * @param resourceId The ID of the authorization resource.
+   * @param cascadeDelete If true, deletes all descendant resources and role assignments. If not set and the resource has children or assignments, the request will fail.
+   */
   @JvmOverloads
   fun deleteResource(
     resourceId: String,
@@ -596,7 +818,21 @@ class Authorization(
     workos.baseClient.requestVoid(config)
   }
 
-  /** List organization memberships for resource */
+  /**
+   * List organization memberships for resource
+   *
+   * Returns all organization memberships that have a specific permission on a resource instance. This is useful for answering "Who can access this resource?".
+   *
+   * @param resourceId The ID of the authorization resource.
+   * @param permissionSlug The permission slug to filter by. Only users with this permission on the resource are returned.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param assignment Filter by assignment type. Use `direct` for direct assignments only, or `indirect` to include inherited assignments.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listMembershipsForResource(
     resourceId: String,
@@ -628,21 +864,36 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** List environment roles */
+  /**
+   * List environment roles
+   *
+   * List all environment roles in priority order.
+   *
+   * @return the RoleList
+   */
   @JvmOverloads
   fun listEnvironmentRoles(requestOptions: RequestOptions? = null): RoleList {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/roles",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RoleList::class.java)
   }
 
-  /** Create an environment role */
+  /**
+   * Create an environment role
+   *
+   * Create a new environment role.
+   *
+   * @param slug A unique slug for the role.
+   * @param name A descriptive name for the role.
+   * @param description An optional description of the role.
+   * @param resourceTypeSlug The slug of the resource type the role is scoped to.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun createEnvironmentRole(
     slug: String,
@@ -651,7 +902,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["slug"] = slug
     body["name"] = name
@@ -661,31 +911,46 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/roles",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Get an environment role */
+  /**
+   * Get an environment role
+   *
+   * Get an environment role by its slug.
+   *
+   * @param slug The slug of the environment role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun getEnvironmentRole(
     slug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/roles/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Update an environment role */
+  /**
+   * Update an environment role
+   *
+   * Update an existing environment role.
+   *
+   * @param slug The slug of the environment role.
+   * @param name A descriptive name for the role.
+   * @param description An optional description of the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun updateEnvironmentRole(
     slug: String,
@@ -693,7 +958,6 @@ class Authorization(
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (description != null) body["description"] = description
@@ -701,56 +965,80 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/roles/$slug",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Add a permission to an environment role */
+  /**
+   * Add a permission to an environment role
+   *
+   * Add a single permission to an environment role. If the permission is already assigned to the role, this operation has no effect.
+   *
+   * @param slug The slug of the environment role.
+   * @param bodySlug The slug of the permission to add to the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun addEnvironmentRolePermission(
     slug: String,
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["slug"] = bodySlug
     val config =
       RequestConfig(
         method = "POST",
         path = "/authorization/roles/$slug/permissions",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** Set permissions for an environment role */
+  /**
+   * Set permissions for an environment role
+   *
+   * Replace all permissions on an environment role with the provided list.
+   *
+   * @param slug The slug of the environment role.
+   * @param permissions The permission slugs to assign to the role.
+   *
+   * @return the Role
+   */
   @JvmOverloads
   fun setEnvironmentRolePermissions(
     slug: String,
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["permissions"] = permissions
     val config =
       RequestConfig(
         method = "PUT",
         path = "/authorization/roles/$slug/permissions",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
   }
 
-  /** List permissions */
+  /**
+   * List permissions
+   *
+   * Get a list of all permissions in your WorkOS environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listPermissions(
     before: String? = null,
@@ -777,7 +1065,18 @@ class Authorization(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create a permission */
+  /**
+   * Create a permission
+   *
+   * Create a new permission in your WorkOS environment. The permission can then be assigned to environment roles and organization roles.
+   *
+   * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   * @param name A descriptive name for the Permission.
+   * @param description An optional description of the Permission.
+   * @param resourceTypeSlug The slug of the resource type this permission is scoped to.
+   *
+   * @return the Permission
+   */
   @JvmOverloads
   fun createPermission(
     slug: String,
@@ -786,7 +1085,6 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Permission {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["slug"] = slug
     body["name"] = name
@@ -796,31 +1094,46 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/permissions",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Permission::class.java)
   }
 
-  /** Get a permission */
+  /**
+   * Get a permission
+   *
+   * Retrieve a permission by its unique slug.
+   *
+   * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   *
+   * @return the AuthorizationPermission
+   */
   @JvmOverloads
   fun getPermission(
     slug: String,
     requestOptions: RequestOptions? = null
   ): AuthorizationPermission {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/authorization/permissions/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationPermission::class.java)
   }
 
-  /** Update a permission */
+  /**
+   * Update a permission
+   *
+   * Update an existing permission. Only the fields provided in the request body will be updated.
+   *
+   * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   * @param name A descriptive name for the Permission.
+   * @param description An optional description of the Permission.
+   *
+   * @return the AuthorizationPermission
+   */
   @JvmOverloads
   fun updatePermission(
     slug: String,
@@ -828,7 +1141,6 @@ class Authorization(
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationPermission {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (description != null) body["description"] = description
@@ -836,25 +1148,28 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/permissions/$slug",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationPermission::class.java)
   }
 
-  /** Delete a permission */
+  /**
+   * Delete a permission
+   *
+   * Delete an existing permission. System permissions cannot be deleted.
+   *
+   * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   */
   @JvmOverloads
   fun deletePermission(
     slug: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/permissions/$slug",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

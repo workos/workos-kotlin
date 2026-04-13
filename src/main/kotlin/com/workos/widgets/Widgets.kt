@@ -12,7 +12,17 @@ import com.workos.types.WidgetSessionTokenScopes
 class Widgets(
   internal val workos: WorkOS
 ) {
-  /** Generate a widget token */
+  /**
+   * Generate a widget token
+   *
+   * Generate a widget token scoped to an organization and user with the specified scopes.
+   *
+   * @param organizationId The ID of the organization to scope the widget session to.
+   * @param userId The ID of the user to issue the widget session token for.
+   * @param scopes The scopes to grant the widget session.
+   *
+   * @return the WidgetSessionTokenResponse
+   */
   @JvmOverloads
   fun createToken(
     organizationId: String,
@@ -20,7 +30,6 @@ class Widgets(
     scopes: List<WidgetSessionTokenScopes>? = null,
     requestOptions: RequestOptions? = null
   ): WidgetSessionTokenResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["organization_id"] = organizationId
     if (userId != null) body["user_id"] = userId
@@ -29,7 +38,6 @@ class Widgets(
       RequestConfig(
         method = "POST",
         path = "/widgets/token",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

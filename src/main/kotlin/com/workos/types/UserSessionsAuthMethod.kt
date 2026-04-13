@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UserSessionsAuthMethod enum. */
+/** Enumeration of valid UserSessionsAuthMethod values returned or accepted by the API. */
 enum class UserSessionsAuthMethod(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   CrossAppAuth("cross_app_auth"),
   ExternalAuth("external_auth"),

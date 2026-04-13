@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ProfileConnectionType enum. */
+/** Enumeration of valid ProfileConnectionType values returned or accepted by the API. */
 enum class ProfileConnectionType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Pending("Pending"),
   Adfssaml("ADFSSAML"),

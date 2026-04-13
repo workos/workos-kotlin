@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** RadarStandaloneResponseVerdict enum. */
+/** Enumeration of valid RadarStandaloneResponseVerdict values returned or accepted by the API. */
 enum class RadarStandaloneResponseVerdict(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Allow("allow"),
   Block("block"),

@@ -18,7 +18,21 @@ import com.workos.types.DirectoryUsersOrder
 class DirectorySync(
   internal val workos: WorkOS
 ) {
-  /** List Directories */
+  /**
+   * List Directories
+   *
+   * Get a list of all of your existing directories matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   * @param organizationId Filter Directories by their associated organization.
+   * @param search Searchable text to match against Directory names.
+   * @param domain **Deprecated.** Filter Directories by their associated domain.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun list(
     before: String? = null,
@@ -51,41 +65,64 @@ class DirectorySync(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Get a Directory */
+  /**
+   * Get a Directory
+   *
+   * Get the details of an existing directory.
+   *
+   * @param id Unique identifier for the Directory.
+   *
+   * @return the Directory
+   */
   @JvmOverloads
   fun get(
     id: String,
     requestOptions: RequestOptions? = null
   ): Directory {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/directories/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Directory::class.java)
   }
 
-  /** Delete a Directory */
+  /**
+   * Delete a Directory
+   *
+   * Permanently deletes an existing directory. It cannot be undone.
+   *
+   * @param id Unique identifier for the Directory.
+   */
   @JvmOverloads
   fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/directories/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** List Directory Groups */
+  /**
+   * List Directory Groups
+   *
+   * Get a list of all of existing directory groups matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+   * @param user Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listGroups(
     before: String? = null,
@@ -116,24 +153,43 @@ class DirectorySync(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Get a Directory Group */
+  /**
+   * Get a Directory Group
+   *
+   * Get the details of an existing Directory Group.
+   *
+   * @param id Unique identifier for the Directory Group.
+   *
+   * @return the DirectoryGroup
+   */
   @JvmOverloads
   fun getGroup(
     id: String,
     requestOptions: RequestOptions? = null
   ): DirectoryGroup {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/directory_groups/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DirectoryGroup::class.java)
   }
 
-  /** List Directory Users */
+  /**
+   * List Directory Users
+   *
+   * Get a list of all of existing Directory Users matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+   * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listUsers(
     before: String? = null,
@@ -164,18 +220,24 @@ class DirectorySync(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Get a Directory User */
+  /**
+   * Get a Directory User
+   *
+   * Get the details of an existing Directory User.
+   *
+   * @param id Unique identifier for the Directory User.
+   *
+   * @return the DirectoryUserWithGroups
+   */
   @JvmOverloads
   fun getUser(
     id: String,
     requestOptions: RequestOptions? = null
   ): DirectoryUserWithGroups {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/directory_users/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DirectoryUserWithGroups::class.java)

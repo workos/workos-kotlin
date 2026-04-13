@@ -14,7 +14,21 @@ import com.workos.types.RadarStandaloneAssessRequestAuthMethod
 class Radar(
   internal val workos: WorkOS
 ) {
-  /** Create an attempt */
+  /**
+   * Create an attempt
+   *
+   * Assess a request for risk using the Radar engine and receive a verdict.
+   *
+   * @param ipAddress The IP address of the request to assess.
+   * @param userAgent The user agent string of the request to assess.
+   * @param email The email address of the user making the request.
+   * @param authMethod The authentication method being used.
+   * @param action The action being performed.
+   * @param deviceFingerprint An optional device fingerprint for the request.
+   * @param botScore An optional bot detection score for the request.
+   *
+   * @return the RadarStandaloneResponse
+   */
   @JvmOverloads
   fun createAttempt(
     ipAddress: String,
@@ -26,7 +40,6 @@ class Radar(
     botScore: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["ip_address"] = ipAddress
     body["user_agent"] = userAgent
@@ -39,14 +52,21 @@ class Radar(
       RequestConfig(
         method = "POST",
         path = "/radar/attempts",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RadarStandaloneResponse::class.java)
   }
 
-  /** Update a Radar attempt */
+  /**
+   * Update a Radar attempt
+   *
+   * You may optionally inform Radar that an authentication attempt or challenge was successful using this endpoint. Some Radar controls depend on tracking recent successful attempts, such as impossible travel.
+   *
+   * @param id The unique identifier of the Radar attempt to update.
+   * @param challengeStatus Set to `"success"` to mark the challenge as completed.
+   * @param attemptStatus Set to `"success"` to mark the authentication attempt as successful.
+   */
   @JvmOverloads
   fun updateAttempt(
     id: String,
@@ -54,7 +74,6 @@ class Radar(
     attemptStatus: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (challengeStatus != null) body["challenge_status"] = challengeStatus
     if (attemptStatus != null) body["attempt_status"] = attemptStatus
@@ -62,14 +81,23 @@ class Radar(
       RequestConfig(
         method = "PUT",
         path = "/radar/attempts/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Add an entry to a Radar list */
+  /**
+   * Add an entry to a Radar list
+   *
+   * Add an entry to a Radar list.
+   *
+   * @param type The type of the Radar list (e.g. ip_address, domain, email).
+   * @param action The list action indicating whether to add the entry to the allow or block list.
+   * @param entry The value to add to the list. Must match the format of the list type (e.g. a valid IP address for `ip_address`, a valid email for `email`).
+   *
+   * @return the RadarListEntryAlreadyPresentResponse
+   */
   @JvmOverloads
   fun addListEntry(
     type: String,
@@ -77,21 +105,27 @@ class Radar(
     entry: String,
     requestOptions: RequestOptions? = null
   ): RadarListEntryAlreadyPresentResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["entry"] = entry
     val config =
       RequestConfig(
         method = "POST",
         path = "/radar/lists/$type/$action",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RadarListEntryAlreadyPresentResponse::class.java)
   }
 
-  /** Remove an entry from a Radar list */
+  /**
+   * Remove an entry from a Radar list
+   *
+   * Remove an entry from a Radar list.
+   *
+   * @param type The type of the Radar list (e.g. ip_address, domain, email).
+   * @param action The list action indicating whether to remove the entry from the allow or block list.
+   * @param entry The value to remove from the list. Must match an existing entry.
+   */
   @JvmOverloads
   fun removeListEntry(
     type: String,
@@ -99,14 +133,12 @@ class Radar(
     entry: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["entry"] = entry
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/radar/lists/$type/$action",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

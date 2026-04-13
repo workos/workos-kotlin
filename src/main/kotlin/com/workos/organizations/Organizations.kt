@@ -16,7 +16,20 @@ import com.workos.types.OrganizationsOrder
 class Organizations(
   internal val workos: WorkOS
 ) {
-  /** List Organizations */
+  /**
+   * List Organizations
+   *
+   * Get a list of all of your existing organizations matching the criteria specified.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param domains The domains of an Organization. Any Organization with a matching domain will be returned.
+   * @param search Searchable text for an Organization. Matches against the organization name.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun list(
     before: String? = null,
@@ -47,7 +60,20 @@ class Organizations(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create an Organization */
+  /**
+   * Create an Organization
+   *
+   * Creates a new organization in the current environment.
+   *
+   * @param name The name of the organization.
+   * @param allowProfilesOutsideOrganization Whether the organization allows profiles from outside the organization to sign in.
+   * @param domains The domains associated with the organization. Deprecated in favor of `domain_data`.
+   * @param domainData The domains associated with the organization, including verification state.
+   * @param metadata Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
+   * @param externalId An external identifier for the Organization.
+   *
+   * @return the Organization
+   */
   @JvmOverloads
   fun create(
     name: String,
@@ -58,7 +84,6 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["name"] = name
     if (allowProfilesOutsideOrganization != null) body["allow_profiles_outside_organization"] = allowProfilesOutsideOrganization
@@ -70,48 +95,74 @@ class Organizations(
       RequestConfig(
         method = "POST",
         path = "/organizations",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
   }
 
-  /** Get an Organization by External ID */
+  /**
+   * Get an Organization by External ID
+   *
+   * Get the details of an existing organization by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
+   *
+   * @param externalId The external ID of the Organization.
+   *
+   * @return the Organization
+   */
   @JvmOverloads
   fun getByExternalId(
     externalId: String,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/external_id/$externalId",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
   }
 
-  /** Get an Organization */
+  /**
+   * Get an Organization
+   *
+   * Get the details of an existing organization.
+   *
+   * @param id Unique identifier of the Organization.
+   *
+   * @return the Organization
+   */
   @JvmOverloads
   fun get(
     id: String,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
   }
 
-  /** Update an Organization */
+  /**
+   * Update an Organization
+   *
+   * Updates an organization in the current environment.
+   *
+   * @param id Unique identifier of the Organization.
+   * @param name The name of the organization.
+   * @param allowProfilesOutsideOrganization Whether the organization allows profiles from outside the organization to sign in.
+   * @param domains **Deprecated.** The domains associated with the organization. Deprecated in favor of `domain_data`.
+   * @param domainData The domains associated with the organization, including verification state.
+   * @param stripeCustomerId The Stripe customer ID associated with the organization.
+   * @param metadata Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
+   * @param externalId An external identifier for the Organization.
+   *
+   * @return the Organization
+   */
   @JvmOverloads
   fun update(
     id: String,
@@ -124,7 +175,6 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (name != null) body["name"] = name
     if (allowProfilesOutsideOrganization != null) body["allow_profiles_outside_organization"] = allowProfilesOutsideOrganization
@@ -137,42 +187,51 @@ class Organizations(
       RequestConfig(
         method = "PUT",
         path = "/organizations/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
   }
 
-  /** Delete an Organization */
+  /**
+   * Delete an Organization
+   *
+   * Permanently deletes an organization in the current environment. It cannot be undone.
+   *
+   * @param id Unique identifier of the Organization.
+   */
   @JvmOverloads
   fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/organizations/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
   }
 
-  /** Get Audit Log Configuration */
+  /**
+   * Get Audit Log Configuration
+   *
+   * Get the unified view of audit log trail and stream configuration for an organization.
+   *
+   * @param id Unique identifier of the Organization.
+   *
+   * @return the AuditLogConfiguration
+   */
   @JvmOverloads
   fun getAuditLogConfiguration(
     id: String,
     requestOptions: RequestOptions? = null
   ): AuditLogConfiguration {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/$id/audit_log_configuration",
-        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogConfiguration::class.java)

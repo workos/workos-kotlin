@@ -13,6 +13,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class OrganizationDomainsTest : TestBase() {
@@ -52,6 +53,12 @@ class OrganizationDomainsTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for delete")
+  fun `delete returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test

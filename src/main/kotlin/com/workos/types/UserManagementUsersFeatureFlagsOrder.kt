@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UserManagementUsersFeatureFlagsOrder enum. */
+/** Enumeration of valid UserManagementUsersFeatureFlagsOrder values returned or accepted by the API. */
 enum class UserManagementUsersFeatureFlagsOrder(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Normal("normal"),
   Desc("desc"),

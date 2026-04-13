@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** OrganizationDomainVerificationFailedDataReason enum. */
+/** Enumeration of valid OrganizationDomainVerificationFailedDataReason values returned or accepted by the API. */
 enum class OrganizationDomainVerificationFailedDataReason(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   DomainVerificationPeriodExpired("domain_verification_period_expired"),
   DomainVerifiedByOtherOrganization("domain_verified_by_other_organization")

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-13T23:48:06.315Z",
+  "generatedAt": "2026-04-13T23:54:27.463Z",
   "files": [
     "smoke-manifest.json",
     "src/main/kotlin/com/workos/WorkOS.Generated.kt",

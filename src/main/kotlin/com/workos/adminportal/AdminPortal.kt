@@ -13,7 +13,20 @@ import com.workos.types.GenerateLinkIntent
 class AdminPortal(
   internal val workos: WorkOS
 ) {
-  /** Generate a Portal Link */
+  /**
+   * Generate a Portal Link
+   *
+   * Generate a Portal Link scoped to an Organization.
+   *
+   * @param organization An [Organization](https://workos.com/docs/reference/organization) identifier.
+   * @param returnUrl The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
+   * @param successUrl The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
+   * @param intent The intent of the Admin Portal.
+   * @param intentOptions Options to configure the Admin Portal based on the intent.
+   * @param adminEmails The email addresses of the IT admins to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
+   *
+   * @return the PortalLinkResponse
+   */
   @JvmOverloads
   fun generateLink(
     organization: String,
@@ -24,7 +37,6 @@ class AdminPortal(
     adminEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["organization"] = organization
     if (returnUrl != null) body["return_url"] = returnUrl
@@ -36,7 +48,6 @@ class AdminPortal(
       RequestConfig(
         method = "POST",
         path = "/portal/generate_link",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

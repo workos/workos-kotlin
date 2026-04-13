@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** UpdateUserPasswordHashType enum. */
+/** Enumeration of valid UpdateUserPasswordHashType values returned or accepted by the API. */
 enum class UpdateUserPasswordHashType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Bcrypt("bcrypt"),
   FirebaseScrypt("firebase-scrypt"),

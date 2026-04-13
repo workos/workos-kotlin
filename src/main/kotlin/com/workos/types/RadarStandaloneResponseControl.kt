@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** RadarStandaloneResponseControl enum. */
+/** Enumeration of valid RadarStandaloneResponseControl values returned or accepted by the API. */
 enum class RadarStandaloneResponseControl(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   BotDetection("bot_detection"),
   BruteForceAttack("brute_force_attack"),

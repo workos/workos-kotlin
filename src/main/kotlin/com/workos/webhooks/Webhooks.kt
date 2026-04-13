@@ -17,7 +17,18 @@ import com.workos.types.WebhooksOrder
 class Webhooks(
   internal val workos: WorkOS
 ) {
-  /** List Webhook Endpoints */
+  /**
+   * List Webhook Endpoints
+   *
+   * Get a list of all of your existing webhook endpoints.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
   @JvmOverloads
   fun listEndpoints(
     before: String? = null,
@@ -44,14 +55,22 @@ class Webhooks(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** Create a Webhook Endpoint */
+  /**
+   * Create a Webhook Endpoint
+   *
+   * Create a new webhook endpoint to receive event notifications.
+   *
+   * @param endpointUrl The HTTPS URL where webhooks will be sent.
+   * @param events The events that the Webhook Endpoint is subscribed to.
+   *
+   * @return the WebhookEndpointJson
+   */
   @JvmOverloads
   fun createEndpoint(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     body["endpoint_url"] = endpointUrl
     body["events"] = events
@@ -59,14 +78,24 @@ class Webhooks(
       RequestConfig(
         method = "POST",
         path = "/webhook_endpoints",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, WebhookEndpointJson::class.java)
   }
 
-  /** Update a Webhook Endpoint */
+  /**
+   * Update a Webhook Endpoint
+   *
+   * Update the properties of an existing webhook endpoint.
+   *
+   * @param id Unique identifier of the Webhook Endpoint.
+   * @param endpointUrl The HTTPS URL where webhooks will be sent.
+   * @param status Whether the Webhook Endpoint is enabled or disabled.
+   * @param events The events that the Webhook Endpoint is subscribed to.
+   *
+   * @return the WebhookEndpointJson
+   */
   @JvmOverloads
   fun updateEndpoint(
     id: String,
@@ -75,7 +104,6 @@ class Webhooks(
     events: List<UpdateWebhookEndpointEvents>? = null,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val params = mutableListOf<Pair<String, String>>()
     val body = linkedMapOf<String, Any?>()
     if (endpointUrl != null) body["endpoint_url"] = endpointUrl
     if (status != null) body["status"] = status
@@ -84,25 +112,28 @@ class Webhooks(
       RequestConfig(
         method = "PATCH",
         path = "/webhook_endpoints/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, WebhookEndpointJson::class.java)
   }
 
-  /** Delete a Webhook Endpoint */
+  /**
+   * Delete a Webhook Endpoint
+   *
+   * Delete an existing webhook endpoint.
+   *
+   * @param id Unique identifier of the Webhook Endpoint.
+   */
   @JvmOverloads
   fun deleteEndpoint(
     id: String,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/webhook_endpoints/$id",
-        queryParams = params,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

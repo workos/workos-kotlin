@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** AuditLogsOrder enum. */
+/** Enumeration of valid AuditLogsOrder values returned or accepted by the API. */
 enum class AuditLogsOrder(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Normal("normal"),
   Desc("desc"),

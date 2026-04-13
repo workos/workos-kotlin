@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** ResendUserInviteOptionsLocale enum. */
+/** Enumeration of valid ResendUserInviteOptionsLocale values returned or accepted by the API. */
 enum class ResendUserInviteOptionsLocale(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   Af("af"),
   Am("am"),

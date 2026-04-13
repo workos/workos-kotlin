@@ -2,12 +2,14 @@
 
 package com.workos.types
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** DirectoryType enum. */
+/** Enumeration of valid DirectoryType values returned or accepted by the API. */
 enum class DirectoryType(
   @JsonValue val value: String
 ) {
+  @JsonEnumDefaultValue
   Unknown("unknown"),
   AzureSCIMV20("azure scim v2.0"),
   Bamboohr("bamboohr"),

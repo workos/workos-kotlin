@@ -15,6 +15,7 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class AuthorizationTest : TestBase() {
@@ -82,6 +83,18 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().assignRole("sample-arg", "sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for removeRole")
+  fun `removeRole returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteOrganizationMembershipRoleAssignment")
+  fun `deleteOrganizationMembershipRoleAssignment returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test
@@ -157,6 +170,12 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for deleteOrganizationRole")
+  fun `deleteOrganizationRole returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `createRolePermission returns a typed response`() {
     wireMockRule.stubFor(
       post(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
@@ -195,6 +214,12 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  @Disabled("generator: could not synthesize required arguments for deleteRolePermission")
+  fun `deleteRolePermission returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
+  }
+
+  @Test
   fun `getOrganizationResource returns a typed response`() {
     wireMockRule.stubFor(
       get(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg"))
@@ -230,6 +255,12 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteOrganizationResource")
+  fun `deleteOrganizationResource returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test
@@ -317,6 +348,12 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateResource("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deleteResource")
+  fun `deleteResource returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test
@@ -514,6 +551,12 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updatePermission("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  @Disabled("generator: could not synthesize required arguments for deletePermission")
+  fun `deletePermission returns a typed response`() {
+    // Intentionally empty: the generator could not synthesize required arguments.
   }
 
   @Test
