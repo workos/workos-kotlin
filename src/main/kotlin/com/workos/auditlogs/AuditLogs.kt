@@ -19,7 +19,7 @@ import com.workos.types.AuditLogsOrder
 
 /** API accessor for AuditLogs. */
 class AuditLogs(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Get Retention */
   @JvmOverloads

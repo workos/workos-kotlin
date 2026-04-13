@@ -3,7 +3,6 @@
 package com.workos.authorization
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.patch
 import com.github.tomakehurst.wiremock.client.WireMock.post
@@ -74,7 +73,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"role_assignment\", \"id\": \"sample\", \"role\": {\"slug\": \"sample\"}, \"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"role_assignment\", \"id\": \"sample\", \"role\": {\"slug\": \"sample\"}, \"resource\": {\"id\": " +
+                "\"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().assignRole("sample-arg", "sample-arg")
@@ -104,7 +107,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createOrganizationRole("sample-arg", "sample-arg")
@@ -119,7 +126,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getOrganizationRole("sample-arg", "sample-arg")
@@ -134,7 +145,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateOrganizationRole("sample-arg", "sample-arg")
@@ -149,7 +164,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createRolePermission("sample-arg", "sample-arg")
@@ -164,7 +183,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateRolePermissions("sample-arg", "sample-arg", emptyList<String>())
@@ -179,7 +202,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", \"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getOrganizationResource("sample-arg", "sample-arg", "sample-arg")
@@ -194,7 +221,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", \"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateOrganizationResource("sample-arg", "sample-arg", "sample-arg")
@@ -239,7 +270,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", \"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createResource("sample-arg", "sample-arg", "sample-arg", "sample-arg")
@@ -254,7 +289,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", \"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getResource("sample-arg")
@@ -269,7 +308,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", \"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateResource("sample-arg")
@@ -314,7 +357,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createEnvironmentRole("sample-arg", "sample-arg")
@@ -329,7 +376,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getEnvironmentRole("sample-arg")
@@ -344,7 +395,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateEnvironmentRole("sample-arg")
@@ -359,7 +414,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().addEnvironmentRolePermission("sample-arg")
@@ -374,7 +433,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": \"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().setEnvironmentRolePermissions("sample-arg", emptyList<String>())
@@ -404,7 +467,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createPermission("sample-arg", "sample-arg")
@@ -419,7 +486,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getPermission("sample-arg")
@@ -434,7 +505,11 @@ class AuthorizationTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updatePermission("sample-arg")

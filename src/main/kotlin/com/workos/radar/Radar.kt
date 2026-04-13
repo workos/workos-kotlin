@@ -12,7 +12,7 @@ import com.workos.types.RadarStandaloneAssessRequestAuthMethod
 
 /** API accessor for Radar. */
 class Radar(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Create an attempt */
   @JvmOverloads

@@ -3,7 +3,6 @@
 package com.workos.usermanagement
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.put
@@ -43,7 +42,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithPassword("sample-arg", "sample-arg")
@@ -58,7 +62,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithCode("sample-arg")
@@ -73,7 +82,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithRefreshToken("sample-arg")
@@ -88,7 +102,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithMagicAuth("sample-arg", "sample-arg")
@@ -103,7 +122,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithEmailVerification("sample-arg")
@@ -118,7 +142,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithTotp("sample-arg", "sample-arg", "sample-arg")
@@ -133,7 +162,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithOrganizationSelection("sample-arg", "sample-arg")
@@ -148,7 +182,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"access_token\": \"sample\", \"refresh_token\": \"sample\"}"
+            )
         )
     )
     val result = api().authenticateWithDeviceCode("sample-arg")
@@ -178,7 +217,10 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"cors_origin\", \"id\": \"sample\", \"origin\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"cors_origin\", \"id\": \"sample\", \"origin\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createCorsOrigin("sample-arg")
@@ -193,7 +235,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"email_verification\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"email_verification\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", " +
+                "\"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"code\": \"sample\"}"
+            )
         )
     )
     val result = api().getEmailVerification("sample-arg")
@@ -208,7 +254,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", \"password_reset_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", " +
+                "\"password_reset_url\": \"sample\"}"
+            )
         )
     )
     val result = api().resetPassword("sample-arg")
@@ -223,7 +273,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
+            )
         )
     )
     val result = api().confirmPasswordReset("sample-arg", "sample-arg")
@@ -238,7 +292,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", \"password_reset_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", " +
+                "\"password_reset_url\": \"sample\"}"
+            )
         )
     )
     val result = api().getPasswordReset("sample-arg")
@@ -268,7 +326,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+                "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().create("sample-arg")
@@ -283,7 +345,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+                "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getByExternalId("sample-arg")
@@ -298,7 +364,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+                "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().get("sample-arg")
@@ -313,7 +383,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+                "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().update("sample-arg")
@@ -328,7 +402,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"email_change_confirmation\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+            .withBody(
+              "{\"object\": \"email_change_confirmation\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, " +
+                "\"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": " +
+                "null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
+            )
         )
     )
     val result = api().confirmEmailChange("sample-arg", "sample-arg")
@@ -343,7 +421,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"email_change\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"new_email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"email_change\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, " +
+                "\"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": " +
+                "null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, " +
+                "\"new_email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().sendEmailChange("sample-arg", "sample-arg")
@@ -358,7 +441,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
+            )
         )
     )
     val result = api().verifyEmail("sample-arg", "sample-arg")
@@ -373,7 +460,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+            .withBody(
+              "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, " +
+                "\"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, " +
+                "\"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
+            )
         )
     )
     val result = api().sendVerificationEmail("sample-arg")
@@ -433,7 +524,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().sendInvitation("sample-arg")
@@ -448,7 +544,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().findInvitationByToken("sample-arg")
@@ -463,7 +564,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().getInvitation("sample-arg")
@@ -478,7 +584,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().acceptInvitation("sample-arg")
@@ -493,7 +604,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().resendInvitation("sample-arg")
@@ -508,7 +624,12 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
+                "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
+                "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
+            )
         )
     )
     val result = api().revokeInvitation("sample-arg")
@@ -538,7 +659,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": " +
+                "\"sample\"}"
+            )
         )
     )
     val result = api().createMagicAuth("sample-arg")
@@ -553,7 +678,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": " +
+                "\"sample\"}"
+            )
         )
     )
     val result = api().getMagicAuth("sample-arg")
@@ -583,7 +712,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+            .withBody(
+              "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+            )
         )
     )
     val result = api().createOrganizationMembership("sample-arg", "sample-arg")
@@ -598,7 +731,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+            .withBody(
+              "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+            )
         )
     )
     val result = api().getOrganizationMembership("sample-arg")
@@ -613,7 +750,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+            .withBody(
+              "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+            )
         )
     )
     val result = api().updateOrganizationMembership("sample-arg")
@@ -628,7 +769,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+            .withBody(
+              "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+            )
         )
     )
     val result = api().deactivateOrganizationMembership("sample-arg")
@@ -643,7 +788,11 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+            .withBody(
+              "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+            )
         )
     )
     val result = api().reactivateOrganizationMembership("sample-arg")
@@ -658,7 +807,10 @@ class UserManagementTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"redirect_uri\", \"id\": \"sample\", \"uri\": \"sample\", \"default\": false, \"created_at\": \"sample\", \"updated_at\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"redirect_uri\", \"id\": \"sample\", \"uri\": \"sample\", \"default\": false, \"created_at\": \"sample\", " +
+                "\"updated_at\": \"sample\"}"
+            )
         )
     )
     val result = api().createRedirectUri("sample-arg")

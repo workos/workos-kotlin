@@ -3,7 +3,6 @@
 package com.workos.organizationdomains
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -27,7 +26,10 @@ class OrganizationDomainsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().create("sample-arg", "sample-arg")
@@ -42,7 +44,10 @@ class OrganizationDomainsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().get("sample-arg")
@@ -57,7 +62,10 @@ class OrganizationDomainsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().verify("sample-arg")

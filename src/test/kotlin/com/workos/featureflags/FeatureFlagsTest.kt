@@ -3,9 +3,7 @@
 package com.workos.featureflags
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -43,7 +41,11 @@ class FeatureFlagsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().get("sample-arg")
@@ -58,7 +60,11 @@ class FeatureFlagsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().disable("sample-arg")
@@ -73,7 +79,11 @@ class FeatureFlagsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().enable("sample-arg")

@@ -14,7 +14,7 @@ import com.workos.types.OrganizationsApiKeysOrder
 
 /** API accessor for ApiKeys. */
 class ApiKeys(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Validate API key */
   @JvmOverloads

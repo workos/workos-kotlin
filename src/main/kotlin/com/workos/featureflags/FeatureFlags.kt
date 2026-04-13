@@ -15,7 +15,7 @@ import com.workos.types.UserManagementUsersFeatureFlagsOrder
 
 /** API accessor for FeatureFlags. */
 class FeatureFlags(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List feature flags */
   @JvmOverloads

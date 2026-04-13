@@ -3,7 +3,6 @@
 package com.workos.webhooks
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.patch
 import com.github.tomakehurst.wiremock.client.WireMock.post
@@ -44,7 +43,11 @@ class WebhooksTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", " +
+                "\"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createEndpoint("sample-arg", emptyList<CreateWebhookEndpointEvents>())
@@ -59,7 +62,11 @@ class WebhooksTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", " +
+                "\"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateEndpoint("sample-arg")

@@ -3,9 +3,7 @@
 package com.workos.radar
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.post
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -32,7 +30,14 @@ class RadarTest : TestBase() {
             .withBody("{\"verdict\": \"allow\", \"reason\": \"sample\", \"attempt_id\": \"sample\"}")
         )
     )
-    val result = api().createAttempt("sample-arg", "sample-arg", "sample-arg", RadarStandaloneAssessRequestAuthMethod.values().first(), RadarStandaloneAssessRequestAction.values().first())
+    val result =
+      api().createAttempt(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        RadarStandaloneAssessRequestAuthMethod.values().first(),
+        RadarStandaloneAssessRequestAction.values().first()
+      )
     assertNotNull(result)
   }
 
@@ -63,7 +68,13 @@ class RadarTest : TestBase() {
         )
     )
     assertThrows(UnauthorizedException::class.java) {
-      api().createAttempt("sample-arg", "sample-arg", "sample-arg", RadarStandaloneAssessRequestAuthMethod.values().first(), RadarStandaloneAssessRequestAction.values().first())
+      api().createAttempt(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        RadarStandaloneAssessRequestAuthMethod.values().first(),
+        RadarStandaloneAssessRequestAction.values().first()
+      )
     }
   }
 
@@ -79,7 +90,13 @@ class RadarTest : TestBase() {
         )
     )
     assertThrows(NotFoundException::class.java) {
-      api().createAttempt("sample-arg", "sample-arg", "sample-arg", RadarStandaloneAssessRequestAuthMethod.values().first(), RadarStandaloneAssessRequestAction.values().first())
+      api().createAttempt(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        RadarStandaloneAssessRequestAuthMethod.values().first(),
+        RadarStandaloneAssessRequestAction.values().first()
+      )
     }
   }
 
@@ -95,7 +112,13 @@ class RadarTest : TestBase() {
         )
     )
     assertThrows(RateLimitException::class.java) {
-      api().createAttempt("sample-arg", "sample-arg", "sample-arg", RadarStandaloneAssessRequestAuthMethod.values().first(), RadarStandaloneAssessRequestAction.values().first())
+      api().createAttempt(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        RadarStandaloneAssessRequestAuthMethod.values().first(),
+        RadarStandaloneAssessRequestAction.values().first()
+      )
     }
   }
 
@@ -111,7 +134,13 @@ class RadarTest : TestBase() {
         )
     )
     assertThrows(GenericServerException::class.java) {
-      api().createAttempt("sample-arg", "sample-arg", "sample-arg", RadarStandaloneAssessRequestAuthMethod.values().first(), RadarStandaloneAssessRequestAction.values().first())
+      api().createAttempt(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        RadarStandaloneAssessRequestAuthMethod.values().first(),
+        RadarStandaloneAssessRequestAction.values().first()
+      )
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-13T19:20:13.487Z",
+  "generatedAt": "2026-04-13T20:19:19.434Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.Generated.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",

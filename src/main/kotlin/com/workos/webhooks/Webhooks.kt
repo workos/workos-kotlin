@@ -15,7 +15,7 @@ import com.workos.types.WebhooksOrder
 
 /** API accessor for Webhooks. */
 class Webhooks(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List Webhook Endpoints */
   @JvmOverloads

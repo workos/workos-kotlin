@@ -33,8 +33,6 @@ import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.ResendUserInviteOptionsLocale
 import com.workos.types.UpdateUserPasswordHashType
-import com.workos.types.UserManagementAuthenticationProvider
-import com.workos.types.UserManagementAuthenticationScreenHint
 import com.workos.types.UserManagementInvitationsOrder
 import com.workos.types.UserManagementOrganizationMembershipOrder
 import com.workos.types.UserManagementOrganizationMembershipStatuses
@@ -43,7 +41,7 @@ import com.workos.types.UserManagementUsersOrder
 
 /** API accessor for UserManagement. */
 class UserManagement(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Get JWKS */
   @JvmOverloads
@@ -303,52 +301,6 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** Get an authorization URL */
-  @JvmOverloads
-  fun getAuthorizationUrl(
-    redirectUri: String,
-    codeChallengeMethod: String? = null,
-    codeChallenge: String? = null,
-    domainHint: String? = null,
-    connectionId: String? = null,
-    providerQueryParams: Map<String, String>? = null,
-    providerScopes: List<String>? = null,
-    invitationToken: String? = null,
-    screenHint: UserManagementAuthenticationScreenHint? = null,
-    loginHint: String? = null,
-    provider: UserManagementAuthenticationProvider? = null,
-    prompt: String? = null,
-    state: String? = null,
-    organizationId: String? = null,
-    requestOptions: RequestOptions? = null
-  ) {
-    val params = mutableListOf<Pair<String, String>>()
-    params += "redirect_uri" to redirectUri.toString()
-    if (codeChallengeMethod != null) params += "code_challenge_method" to codeChallengeMethod.toString()
-    if (codeChallenge != null) params += "code_challenge" to codeChallenge.toString()
-    if (domainHint != null) params += "domain_hint" to domainHint.toString()
-    if (connectionId != null) params += "connection_id" to connectionId.toString()
-    if (providerQueryParams != null) params += "provider_query_params" to providerQueryParams.toString()
-    if (providerScopes != null) providerScopes.forEach { params += "provider_scopes" to it.toString() }
-    if (invitationToken != null) params += "invitation_token" to invitationToken.toString()
-    if (screenHint != null) params += "screen_hint" to screenHint.value
-    if (loginHint != null) params += "login_hint" to loginHint.toString()
-    if (provider != null) params += "provider" to provider.value
-    if (prompt != null) params += "prompt" to prompt.toString()
-    if (state != null) params += "state" to state.toString()
-    if (organizationId != null) params += "organization_id" to organizationId.toString()
-    params += "response_type" to "code"
-    workos.clientId?.let { params += "client_id" to it }
-    val config =
-      RequestConfig(
-        method = "GET",
-        path = "/user_management/authorize",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    workos.baseClient.requestVoid(config)
-  }
-
   /** Get device authorization URL */
   @JvmOverloads
   fun createDevice(
@@ -367,26 +319,6 @@ class UserManagement(
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DeviceAuthorizationResponse::class.java)
-  }
-
-  /** Logout */
-  @JvmOverloads
-  fun getLogoutUrl(
-    sessionId: String,
-    returnTo: String? = null,
-    requestOptions: RequestOptions? = null
-  ) {
-    val params = mutableListOf<Pair<String, String>>()
-    params += "session_id" to sessionId.toString()
-    if (returnTo != null) params += "return_to" to returnTo.toString()
-    val config =
-      RequestConfig(
-        method = "GET",
-        path = "/user_management/sessions/logout",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    workos.baseClient.requestVoid(config)
   }
 
   /** Revoke Session */

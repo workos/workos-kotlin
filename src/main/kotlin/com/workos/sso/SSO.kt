@@ -9,16 +9,14 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.models.Connection
 import com.workos.models.Profile
-import com.workos.models.SSOAuthorizeUrlResponse
 import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
 import com.workos.types.ConnectionsOrder
-import com.workos.types.SSOProvider
 
 /** API accessor for SSO. */
 class SSO(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List Connections */
   @JvmOverloads
@@ -83,64 +81,6 @@ class SSO(
       RequestConfig(
         method = "DELETE",
         path = "/connections/$id",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    workos.baseClient.requestVoid(config)
-  }
-
-  /** Initiate SSO */
-  @JvmOverloads
-  fun getAuthorizationUrl(
-    redirectUri: String,
-    providerScopes: List<String>? = null,
-    providerQueryParams: Map<String, String>? = null,
-    domain: String? = null,
-    provider: SSOProvider? = null,
-    state: String? = null,
-    connection: String? = null,
-    organization: String? = null,
-    domainHint: String? = null,
-    loginHint: String? = null,
-    nonce: String? = null,
-    requestOptions: RequestOptions? = null
-  ): SSOAuthorizeUrlResponse {
-    val params = mutableListOf<Pair<String, String>>()
-    params += "redirect_uri" to redirectUri.toString()
-    if (providerScopes != null) providerScopes.forEach { params += "provider_scopes" to it.toString() }
-    if (providerQueryParams != null) params += "provider_query_params" to providerQueryParams.toString()
-    if (domain != null) params += "domain" to domain.toString()
-    if (provider != null) params += "provider" to provider.value
-    if (state != null) params += "state" to state.toString()
-    if (connection != null) params += "connection" to connection.toString()
-    if (organization != null) params += "organization" to organization.toString()
-    if (domainHint != null) params += "domain_hint" to domainHint.toString()
-    if (loginHint != null) params += "login_hint" to loginHint.toString()
-    if (nonce != null) params += "nonce" to nonce.toString()
-    params += "response_type" to "code"
-    workos.clientId?.let { params += "client_id" to it }
-    val config =
-      RequestConfig(
-        method = "GET",
-        path = "/sso/authorize",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, SSOAuthorizeUrlResponse::class.java)
-  }
-
-  /** Logout Redirect */
-  @JvmOverloads
-  fun getLogoutUrl(
-    token: String,
-    requestOptions: RequestOptions? = null
-  ) {
-    val params = mutableListOf<Pair<String, String>>()
-    params += "token" to token.toString()
-    val config =
-      RequestConfig(
-        method = "GET",
-        path = "/sso/logout",
         queryParams = params,
         requestOptions = requestOptions
       )

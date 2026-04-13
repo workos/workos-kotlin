@@ -3,7 +3,6 @@
 package com.workos.apikeys
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -57,7 +56,11 @@ class ApiKeysTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": \"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": " +
+                "\"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
+            )
         )
     )
     val result = api().createOrganizationApiKey("sample-arg", "sample-arg")

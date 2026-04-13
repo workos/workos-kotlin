@@ -3,7 +3,6 @@
 package com.workos.organizations
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.put
@@ -43,7 +42,10 @@ class OrganizationsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
+                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().create("sample-arg")
@@ -58,7 +60,10 @@ class OrganizationsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
+                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getByExternalId("sample-arg")
@@ -73,7 +78,10 @@ class OrganizationsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
+                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().get("sample-arg")
@@ -88,7 +96,10 @@ class OrganizationsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
+                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().update("sample-arg")

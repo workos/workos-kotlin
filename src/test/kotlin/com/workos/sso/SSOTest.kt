@@ -3,7 +3,6 @@
 package com.workos.sso
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -42,25 +41,14 @@ class SSOTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connection\", \"id\": \"sample\", \"connection_type\": \"Pending\", \"name\": \"sample\", \"state\": \"requires_type\", \"status\": \"linked\", \"domains\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connection\", \"id\": \"sample\", \"connection_type\": \"Pending\", \"name\": \"sample\", \"state\": " +
+                "\"requires_type\", \"status\": \"linked\", \"domains\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getConnection("sample-arg")
-    assertNotNull(result)
-  }
-
-  @Test
-  fun `getAuthorizationUrl returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/sso/authorize"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"url\": \"sample\"}")
-        )
-    )
-    val result = api().getAuthorizationUrl("sample-arg")
     assertNotNull(result)
   }
 
@@ -87,7 +75,11 @@ class SSOTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}")
+            .withBody(
+              "{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", " +
+                "\"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": " +
+                "null, \"raw_attributes\": {}}"
+            )
         )
     )
     val result = api().getProfile()
@@ -102,7 +94,11 @@ class SSOTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}")
+            .withBody(
+              "{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", " +
+                "\"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", " +
+                "\"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}"
+            )
         )
     )
     val result = api().getProfileAndToken("sample-arg")

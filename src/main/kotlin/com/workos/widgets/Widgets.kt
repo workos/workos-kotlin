@@ -10,7 +10,7 @@ import com.workos.types.WidgetSessionTokenScopes
 
 /** API accessor for Widgets. */
 class Widgets(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Generate a widget token */
   @JvmOverloads

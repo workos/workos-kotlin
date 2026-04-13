@@ -21,7 +21,7 @@ import com.workos.types.PermissionsOrder
 
 /** API accessor for Authorization. */
 class Authorization(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Check authorization */
   @JvmOverloads

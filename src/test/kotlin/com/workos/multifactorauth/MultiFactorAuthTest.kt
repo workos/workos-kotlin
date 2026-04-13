@@ -3,7 +3,6 @@
 package com.workos.multifactorauth
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -28,7 +27,10 @@ class MultiFactorAuthTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"challenge\": {\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"valid\": false}")
+            .withBody(
+              "{\"challenge\": {\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\"," +
+                " \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"valid\": false}"
+            )
         )
     )
     val result = api().verifyChallenge("sample-arg", "sample-arg")
@@ -43,7 +45,10 @@ class MultiFactorAuthTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
@@ -58,7 +63,10 @@ class MultiFactorAuthTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": " +
+                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getFactor("sample-arg")
@@ -73,7 +81,10 @@ class MultiFactorAuthTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().challengeFactor("sample-arg")
@@ -103,7 +114,12 @@ class MultiFactorAuthTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"authentication_factor\": {\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"authentication_challenge\": {\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+            .withBody(
+              "{\"authentication_factor\": {\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"authentication_challenge\": " +
+                "{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
+            )
         )
     )
     val result = api().createUserAuthFactor("sample-arg", "totp")

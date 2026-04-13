@@ -1,0 +1,215 @@
+// @oagen-ignore-file
+// Pure-JVM port of Iron's Fe26.2 seal/unseal format (the same format Hapi's
+// "iron" and the npm "iron-webcrypto" package produce). Interoperable with
+// WorkOS Node's sealed session cookies.
+package com.workos.session
+
+import java.security.SecureRandom
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.Mac
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
+
+/**
+ * Iron Fe26.2 sealing primitives.
+ *
+ * Key derivation: PBKDF2WithHmacSHA1, 1 iteration, 256-bit keys (matching
+ * iron-webcrypto defaults). Encryption is AES-256-CBC with PKCS7 padding;
+ * integrity is HMAC-SHA-256 over the mac-base string. Both the encryption
+ * and integrity salts are 256 random bits per sealing operation.
+ *
+ * The format is:
+ *   `Fe26.2*<passwordId>*<encSalt>*<iv>*<ciphertext>*<expiration>*<intSalt>*<hmac>`
+ * Each field is base64url-encoded (no padding); [expiration] is empty when
+ * `ttl = 0`. Passwords must be at least 32 characters.
+ */
+object Iron {
+  private const val MAC_PREFIX = "Fe26.2"
+  private const val PASSWORD_ID = "1"
+  private const val ENC_SALT_BITS = 256
+  private const val INT_SALT_BITS = 256
+  private const val ENC_KEY_BITS = 256
+  private const val INT_KEY_BITS = 256
+  private const val IV_BITS = 128
+  private const val MIN_PASSWORD_CHARS = 32
+  private val URL = Base64.getUrlEncoder().withoutPadding()
+  private val URL_DECODER = Base64.getUrlDecoder()
+  private val random = SecureRandom()
+
+  /**
+   * Seal [data] (a UTF-8 string, usually JSON) into an Iron Fe26.2 token.
+   * [ttlMillis] is the lifetime of the seal; `0` means no expiration.
+   */
+  @JvmOverloads
+  fun seal(
+    data: String,
+    password: String,
+    ttlMillis: Long = 0
+  ): String {
+    require(password.length >= MIN_PASSWORD_CHARS) {
+      "Password must be at least $MIN_PASSWORD_CHARS characters"
+    }
+
+    val encSaltBytes = randomBytes(ENC_SALT_BITS / 8)
+    val encSalt = hex(encSaltBytes)
+    val iv = randomBytes(IV_BITS / 8)
+    val encKey = deriveKey(password, encSaltBytes, ENC_KEY_BITS / 8)
+
+    val ciphertext = aesCbcEncrypt(data.toByteArray(Charsets.UTF_8), encKey, iv)
+
+    val expiration = if (ttlMillis > 0) (nowMillis() + ttlMillis).toString() else ""
+    val macBase =
+      listOf(
+        MAC_PREFIX,
+        PASSWORD_ID,
+        encSalt,
+        URL.encodeToString(iv),
+        URL.encodeToString(ciphertext),
+        expiration
+      ).joinToString("*")
+
+    val intSaltBytes = randomBytes(INT_SALT_BITS / 8)
+    val intSalt = hex(intSaltBytes)
+    val intKey = deriveKey(password, intSaltBytes, INT_KEY_BITS / 8)
+    val hmac = hmacSha256(intKey, macBase.toByteArray(Charsets.UTF_8))
+
+    return "$macBase*$intSalt*${URL.encodeToString(hmac)}"
+  }
+
+  /**
+   * Unseal an Iron Fe26.2 token previously produced by [seal]. Throws
+   * [IronException] when the seal is malformed, the password doesn't match,
+   * the HMAC is invalid, or the TTL has expired.
+   */
+  fun unseal(
+    sealed: String,
+    password: String
+  ): String {
+    require(password.length >= MIN_PASSWORD_CHARS) {
+      "Password must be at least $MIN_PASSWORD_CHARS characters"
+    }
+
+    val parts = sealed.split("*")
+    if (parts.size != 8) throw IronException("Incorrect number of sealed components")
+    val prefix = parts[0]
+    val encSaltHex = parts[2]
+    val ivB64 = parts[3]
+    val ctB64 = parts[4]
+    val expiration = parts[5]
+    val intSaltHex = parts[6]
+    val hmacB64 = parts[7]
+    if (prefix != MAC_PREFIX) throw IronException("Wrong mac prefix")
+
+    val macBase =
+      listOf(
+        MAC_PREFIX,
+        PASSWORD_ID,
+        encSaltHex,
+        ivB64,
+        ctB64,
+        expiration
+      ).joinToString("*")
+
+    val intSalt = unhex(intSaltHex)
+    val intKey = deriveKey(password, intSalt, INT_KEY_BITS / 8)
+    val expectedHmac = hmacSha256(intKey, macBase.toByteArray(Charsets.UTF_8))
+    val givenHmac = URL_DECODER.decode(hmacB64)
+    if (!constantTimeEquals(expectedHmac, givenHmac)) {
+      throw IronException("Bad hmac value")
+    }
+
+    if (expiration.isNotEmpty()) {
+      val exp = expiration.toLongOrNull() ?: throw IronException("Invalid expiration")
+      if (nowMillis() > exp) throw IronException("Expired seal")
+    }
+
+    val encSalt = unhex(encSaltHex)
+    val encKey = deriveKey(password, encSalt, ENC_KEY_BITS / 8)
+    val iv = URL_DECODER.decode(ivB64)
+    val ct = URL_DECODER.decode(ctB64)
+    val plaintext = aesCbcDecrypt(ct, encKey, iv)
+    return String(plaintext, Charsets.UTF_8)
+  }
+
+  private fun randomBytes(length: Int): ByteArray = ByteArray(length).also { random.nextBytes(it) }
+
+  private fun deriveKey(
+    password: String,
+    salt: ByteArray,
+    keyLengthBytes: Int
+  ): ByteArray {
+    val spec = PBEKeySpec(password.toCharArray(), salt, 1, keyLengthBytes * 8)
+    return SecretKeyFactory
+      .getInstance("PBKDF2WithHmacSHA1")
+      .generateSecret(spec)
+      .encoded
+  }
+
+  private fun aesCbcEncrypt(
+    plaintext: ByteArray,
+    key: ByteArray,
+    iv: ByteArray
+  ): ByteArray {
+    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
+    return cipher.doFinal(plaintext)
+  }
+
+  private fun aesCbcDecrypt(
+    ciphertext: ByteArray,
+    key: ByteArray,
+    iv: ByteArray
+  ): ByteArray {
+    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
+    return cipher.doFinal(ciphertext)
+  }
+
+  private fun hmacSha256(
+    key: ByteArray,
+    data: ByteArray
+  ): ByteArray {
+    val mac = Mac.getInstance("HmacSHA256")
+    mac.init(SecretKeySpec(key, "HmacSHA256"))
+    return mac.doFinal(data)
+  }
+
+  private fun constantTimeEquals(
+    a: ByteArray,
+    b: ByteArray
+  ): Boolean {
+    if (a.size != b.size) return false
+    var result = 0
+    for (i in a.indices) result = result or (a[i].toInt() xor b[i].toInt())
+    return result == 0
+  }
+
+  private fun hex(bytes: ByteArray): String = bytes.joinToString(separator = "") { "%02x".format(it.toInt() and 0xFF) }
+
+  private fun unhex(s: String): ByteArray {
+    require(s.length % 2 == 0) { "Invalid hex string" }
+    val out = ByteArray(s.length / 2)
+    for (i in out.indices) {
+      out[i] = ((digit(s[2 * i]) shl 4) or digit(s[2 * i + 1])).toByte()
+    }
+    return out
+  }
+
+  private fun digit(c: Char): Int =
+    when (c) {
+      in '0'..'9' -> c - '0'
+      in 'a'..'f' -> c - 'a' + 10
+      in 'A'..'F' -> c - 'A' + 10
+      else -> throw IllegalArgumentException("Invalid hex character: $c")
+    }
+
+  private fun nowMillis(): Long = System.currentTimeMillis()
+}
+
+/** Thrown when an Iron-sealed token cannot be unsealed. */
+class IronException(
+  message: String
+) : RuntimeException(message)

@@ -103,7 +103,10 @@ class AuditLogsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
+                " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
@@ -118,7 +121,10 @@ class AuditLogsTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
+                " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getExport("sample-arg")

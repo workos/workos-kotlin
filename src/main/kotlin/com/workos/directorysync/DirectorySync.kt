@@ -16,7 +16,7 @@ import com.workos.types.DirectoryUsersOrder
 
 /** API accessor for DirectorySync. */
 class DirectorySync(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List Directories */
   @JvmOverloads

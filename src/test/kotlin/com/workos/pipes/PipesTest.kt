@@ -3,7 +3,6 @@
 package com.workos.pipes
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -57,7 +56,10 @@ class PipesTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+                "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+            )
         )
     )
     val result = api().getUserConnectedAccount("sample-arg", "sample-arg")

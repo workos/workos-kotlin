@@ -18,7 +18,7 @@ import com.workos.types.ApplicationsOrder
 
 /** API accessor for Connect. */
 class Connect(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Complete external authentication */
   @JvmOverloads

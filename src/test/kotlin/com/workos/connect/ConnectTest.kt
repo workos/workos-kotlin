@@ -3,7 +3,6 @@
 package com.workos.connect
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.put
@@ -43,7 +42,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createOAuthApplication("sample-arg", false)
@@ -58,7 +60,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().createM2MApplication("sample-arg", "sample-arg")
@@ -73,7 +78,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getApplication("sample-arg")
@@ -88,7 +96,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().updateApplication("sample-arg")
@@ -103,7 +114,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().listApplicationClientSecrets("sample-arg")
@@ -118,7 +132,10 @@ class ConnectTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"secret\": \"sample\"}")
+            .withBody(
+              "{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"secret\": \"sample\"}"
+            )
         )
     )
     val result = api().createApplicationClientSecret("sample-arg")

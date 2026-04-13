@@ -14,7 +14,7 @@ import com.workos.types.OrganizationsOrder
 
 /** API accessor for Organizations. */
 class Organizations(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List Organizations */
   @JvmOverloads

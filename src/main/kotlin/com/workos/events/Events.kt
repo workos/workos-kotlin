@@ -12,7 +12,7 @@ import com.workos.types.EventsOrder
 
 /** API accessor for Events. */
 class Events(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** List events */
   @JvmOverloads

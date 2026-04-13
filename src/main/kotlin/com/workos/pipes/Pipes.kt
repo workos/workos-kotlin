@@ -12,7 +12,7 @@ import com.workos.models.DataIntegrationsListResponse
 
 /** API accessor for Pipes. */
 class Pipes(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Get authorization URL */
   @JvmOverloads

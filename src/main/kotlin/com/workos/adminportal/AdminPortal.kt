@@ -11,7 +11,7 @@ import com.workos.types.GenerateLinkIntent
 
 /** API accessor for AdminPortal. */
 class AdminPortal(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Generate a Portal Link */
   @JvmOverloads

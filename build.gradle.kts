@@ -44,6 +44,9 @@ dependencies {
 
   implementation("commons-codec:commons-codec:1.17.1")
 
+  // JWT verification + JWKS handling for session helpers (hand-maintained).
+  implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
+
   implementation(kotlin("reflect"))
 
   testImplementation(platform("org.junit:junit-bom:6.0.3"))

@@ -3,7 +3,6 @@
 package com.workos.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -41,7 +40,11 @@ class DirectorySyncTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"directory\", \"id\": \"sample\", \"organization_id\": \"sample\", \"external_key\": \"sample\", \"type\": \"azure scim v2.0\", \"state\": \"linked\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"directory\", \"id\": \"sample\", \"organization_id\": \"sample\", \"external_key\": \"sample\", " +
+                "\"type\": \"azure scim v2.0\", \"state\": \"linked\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
+                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().get("sample-arg")
@@ -71,7 +74,11 @@ class DirectorySyncTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+            .withBody(
+              "{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", " +
+                "\"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+                "\"2024-01-01T00:00:00Z\"}"
+            )
         )
     )
     val result = api().getGroup("sample-arg")
@@ -101,7 +108,11 @@ class DirectorySyncTest : TestBase() {
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"idp_id\": \"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}")
+            .withBody(
+              "{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", " +
+                "\"idp_id\": \"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, " +
+                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}"
+            )
         )
     )
     val result = api().getUser("sample-arg")

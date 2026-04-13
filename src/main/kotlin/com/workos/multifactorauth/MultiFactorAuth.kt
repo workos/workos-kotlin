@@ -17,7 +17,7 @@ import com.workos.types.UserManagementMultiFactorAuthenticationOrder
 
 /** API accessor for MultiFactorAuth. */
 class MultiFactorAuth(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Verify Challenge */
   @JvmOverloads

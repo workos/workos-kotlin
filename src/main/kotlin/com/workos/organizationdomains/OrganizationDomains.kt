@@ -10,7 +10,7 @@ import com.workos.models.OrganizationDomainStandAlone
 
 /** API accessor for OrganizationDomains. */
 class OrganizationDomains(
-  private val workos: WorkOS
+  internal val workos: WorkOS
 ) {
   /** Create an Organization Domain */
   @JvmOverloads
