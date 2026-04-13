@@ -38,9 +38,11 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
-  implementation("org.apache.httpcomponents:httpclient:4.5.14")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.2")
 
-  implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+  implementation("commons-codec:commons-codec:1.17.1")
 
   implementation(kotlin("reflect"))
 
