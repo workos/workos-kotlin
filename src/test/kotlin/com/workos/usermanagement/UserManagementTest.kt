@@ -3,7 +3,10 @@
 package com.workos.usermanagement
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -16,6 +19,231 @@ import org.junit.jupiter.api.Test
 
 class UserManagementTest : TestBase() {
   private fun api() = UserManagement(createWorkOSClient())
+
+  @Test
+  fun `getJwks returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/sso/jwks/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"keys\": []}")
+        )
+    )
+    val result = api().getJwks("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithPassword returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithPassword("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithCode returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithCode("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithRefreshToken returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithRefreshToken("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithMagicAuth returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithMagicAuth("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithEmailVerification returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithEmailVerification("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithTotp returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithTotp("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithOrganizationSelection returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithOrganizationSelection("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithDeviceCode returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": \"sample\"}")
+        )
+    )
+    val result = api().authenticateWithDeviceCode("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createDevice returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authorize/device"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"device_code\": \"sample\", \"user_code\": \"sample\", \"verification_uri\": \"sample\", \"expires_in\": 0}")
+        )
+    )
+    val result = api().createDevice("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createCorsOrigin returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/cors_origins"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"cors_origin\", \"id\": \"sample\", \"origin\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().createCorsOrigin("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getEmailVerification returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/email_verification/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"email_verification\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+        )
+    )
+    val result = api().getEmailVerification("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `resetPassword returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/password_reset"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", \"password_reset_url\": \"sample\"}")
+        )
+    )
+    val result = api().resetPassword("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `confirmPasswordReset returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/password_reset/confirm"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+        )
+    )
+    val result = api().confirmPasswordReset("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getPasswordReset returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/password_reset/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"password_reset\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"password_reset_token\": \"sample\", \"password_reset_url\": \"sample\"}")
+        )
+    )
+    val result = api().getPasswordReset("sample-arg")
+    assertNotNull(result)
+  }
 
   @Test
   fun `list returns a typed response`() {
@@ -33,9 +261,429 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
-  fun `list translates 401 to UnauthorizedException`() {
+  fun `create returns a typed response`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users"))
+      post(urlPathMatching("/user_management/users"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().create("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getByExternalId returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/external_id/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getByExternalId("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `get returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().get("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `update returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/user_management/users/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().update("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `confirmEmailChange returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/users/sample-arg/email_change/confirm"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"email_change_confirmation\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+        )
+    )
+    val result = api().confirmEmailChange("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `sendEmailChange returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/users/sample-arg/email_change/send"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"email_change\", \"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"new_email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().sendEmailChange("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `verifyEmail returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/users/sample-arg/email_verification/confirm"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+        )
+    )
+    val result = api().verifyEmail("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `sendVerificationEmail returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/users/sample-arg/email_verification/send"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}")
+        )
+    )
+    val result = api().sendVerificationEmail("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getIdentities returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/sample-arg/identities"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"idp_id\": \"sample\", \"type\": \"OAuth\", \"provider\": \"AppleOAuth\"}")
+        )
+    )
+    val result = api().getIdentities("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listSessions returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/sample-arg/sessions"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listSessions("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listInvitations returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/invitations"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listInvitations()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `sendInvitation returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/invitations"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().sendInvitation("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `findInvitationByToken returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/invitations/by_token/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().findInvitationByToken("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getInvitation returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/invitations/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().getInvitation("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `acceptInvitation returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/invitations/sample-arg/accept"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().acceptInvitation("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `resendInvitation returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/invitations/sample-arg/resend"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().resendInvitation("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `revokeInvitation returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/invitations/sample-arg/revoke"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, \"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, \"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}")
+        )
+    )
+    val result = api().revokeInvitation("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `updateJWTTemplate returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/user_management/jwt_template"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"jwt_template\", \"content\": \"sample\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}")
+        )
+    )
+    val result = api().updateJWTTemplate("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createMagicAuth returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/magic_auth"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+        )
+    )
+    val result = api().createMagicAuth("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getMagicAuth returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/magic_auth/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": \"sample\"}")
+        )
+    )
+    val result = api().getMagicAuth("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listOrganizationMemberships returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/organization_memberships"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listOrganizationMemberships()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createOrganizationMembership returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/organization_memberships"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+        )
+    )
+    val result = api().createOrganizationMembership("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getOrganizationMembership returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/organization_memberships/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+        )
+    )
+    val result = api().getOrganizationMembership("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `updateOrganizationMembership returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/user_management/organization_memberships/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+        )
+    )
+    val result = api().updateOrganizationMembership("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `deactivateOrganizationMembership returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/user_management/organization_memberships/sample-arg/deactivate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+        )
+    )
+    val result = api().deactivateOrganizationMembership("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `reactivateOrganizationMembership returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/user_management/organization_memberships/sample-arg/reactivate"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", \"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}")
+        )
+    )
+    val result = api().reactivateOrganizationMembership("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createRedirectUri returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/redirect_uris"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"redirect_uri\", \"id\": \"sample\", \"uri\": \"sample\", \"default\": false, \"created_at\": \"sample\", \"updated_at\": \"sample\"}")
+        )
+    )
+    val result = api().createRedirectUri("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listAuthorizedApplications returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/sample-arg/authorized_applications"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listAuthorizedApplications("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authenticateWithPassword translates 401 to UnauthorizedException`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/user_management/authenticate"))
         .willReturn(
           aResponse()
             .withStatus(401)
@@ -44,14 +692,14 @@ class UserManagementTest : TestBase() {
         )
     )
     assertThrows(UnauthorizedException::class.java) {
-      api().list()
+      api().authenticateWithPassword("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `list translates 404 to NotFoundException`() {
+  fun `authenticateWithPassword translates 404 to NotFoundException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users"))
+      post(urlPathMatching("/user_management/authenticate"))
         .willReturn(
           aResponse()
             .withStatus(404)
@@ -60,14 +708,14 @@ class UserManagementTest : TestBase() {
         )
     )
     assertThrows(NotFoundException::class.java) {
-      api().list()
+      api().authenticateWithPassword("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `list translates 429 to RateLimitException`() {
+  fun `authenticateWithPassword translates 429 to RateLimitException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users"))
+      post(urlPathMatching("/user_management/authenticate"))
         .willReturn(
           aResponse()
             .withStatus(429)
@@ -76,14 +724,14 @@ class UserManagementTest : TestBase() {
         )
     )
     assertThrows(RateLimitException::class.java) {
-      api().list()
+      api().authenticateWithPassword("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `list translates 500 to GenericServerException`() {
+  fun `authenticateWithPassword translates 500 to GenericServerException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users"))
+      post(urlPathMatching("/user_management/authenticate"))
         .willReturn(
           aResponse()
             .withStatus(500)
@@ -92,7 +740,7 @@ class UserManagementTest : TestBase() {
         )
     )
     assertThrows(GenericServerException::class.java) {
-      api().list()
+      api().authenticateWithPassword("sample-arg", "sample-arg")
     }
   }
 }

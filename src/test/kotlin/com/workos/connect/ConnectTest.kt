@@ -3,7 +3,10 @@
 package com.workos.connect
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -29,6 +32,96 @@ class ConnectTest : TestBase() {
         )
     )
     val result = api().listApplications()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createOAuthApplication returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/connect/applications"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().createOAuthApplication("sample-arg", false)
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createM2MApplication returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/connect/applications"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().createM2MApplication("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getApplication returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/connect/applications/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getApplication("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `updateApplication returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/connect/applications/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": \"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().updateApplication("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listApplicationClientSecrets returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/connect/applications/sample-arg/client_secrets"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().listApplicationClientSecrets("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createApplicationClientSecret returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/connect/applications/sample-arg/client_secrets"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"secret\": \"sample\"}")
+        )
+    )
+    val result = api().createApplicationClientSecret("sample-arg")
     assertNotNull(result)
   }
 

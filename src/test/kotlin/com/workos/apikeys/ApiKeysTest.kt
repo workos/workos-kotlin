@@ -3,7 +3,9 @@
 package com.workos.apikeys
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -16,6 +18,21 @@ import org.junit.jupiter.api.Test
 
 class ApiKeysTest : TestBase() {
   private fun api() = ApiKeys(createWorkOSClient())
+
+  @Test
+  fun `createValidation returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/api_keys/validations"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"api_key\": null}")
+        )
+    )
+    val result = api().createValidation("sample-arg")
+    assertNotNull(result)
+  }
 
   @Test
   fun `listOrganizationApiKeys returns a typed response`() {
@@ -33,9 +50,24 @@ class ApiKeysTest : TestBase() {
   }
 
   @Test
-  fun `listOrganizationApiKeys translates 401 to UnauthorizedException`() {
+  fun `createOrganizationApiKey returns a typed response`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/api_keys"))
+      post(urlPathMatching("/organizations/sample-arg/api_keys"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": \"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}")
+        )
+    )
+    val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createValidation translates 401 to UnauthorizedException`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/api_keys/validations"))
         .willReturn(
           aResponse()
             .withStatus(401)
@@ -44,14 +76,14 @@ class ApiKeysTest : TestBase() {
         )
     )
     assertThrows(UnauthorizedException::class.java) {
-      api().listOrganizationApiKeys("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `listOrganizationApiKeys translates 404 to NotFoundException`() {
+  fun `createValidation translates 404 to NotFoundException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/api_keys"))
+      post(urlPathMatching("/api_keys/validations"))
         .willReturn(
           aResponse()
             .withStatus(404)
@@ -60,14 +92,14 @@ class ApiKeysTest : TestBase() {
         )
     )
     assertThrows(NotFoundException::class.java) {
-      api().listOrganizationApiKeys("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `listOrganizationApiKeys translates 429 to RateLimitException`() {
+  fun `createValidation translates 429 to RateLimitException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/api_keys"))
+      post(urlPathMatching("/api_keys/validations"))
         .willReturn(
           aResponse()
             .withStatus(429)
@@ -76,14 +108,14 @@ class ApiKeysTest : TestBase() {
         )
     )
     assertThrows(RateLimitException::class.java) {
-      api().listOrganizationApiKeys("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `listOrganizationApiKeys translates 500 to GenericServerException`() {
+  fun `createValidation translates 500 to GenericServerException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/api_keys"))
+      post(urlPathMatching("/api_keys/validations"))
         .willReturn(
           aResponse()
             .withStatus(500)
@@ -92,7 +124,7 @@ class ApiKeysTest : TestBase() {
         )
     )
     assertThrows(GenericServerException::class.java) {
-      api().listOrganizationApiKeys("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 }

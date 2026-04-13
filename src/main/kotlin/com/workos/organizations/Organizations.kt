@@ -79,7 +79,7 @@ class Organizations(
 
   /** Get an Organization by External ID */
   @JvmOverloads
-  fun getbyexternalid(
+  fun getByExternalId(
     externalId: String,
     requestOptions: RequestOptions? = null
   ): Organization {

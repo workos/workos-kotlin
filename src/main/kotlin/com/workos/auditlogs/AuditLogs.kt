@@ -23,7 +23,7 @@ class AuditLogs(
 ) {
   /** Get Retention */
   @JvmOverloads
-  fun getauditlogsretention(
+  fun getAuditLogsRetention(
     id: String,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetentionJson {
@@ -40,7 +40,7 @@ class AuditLogs(
 
   /** Set Retention */
   @JvmOverloads
-  fun updateauditlogsretention(
+  fun updateAuditLogsRetention(
     id: String,
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null

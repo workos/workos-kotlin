@@ -3,13 +3,16 @@
 package com.workos.pipes
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
@@ -17,9 +20,69 @@ class PipesTest : TestBase() {
   private fun api() = Pipes(createWorkOSClient())
 
   @Test
-  fun `listUserDataProviders translates 401 to UnauthorizedException`() {
+  fun `authorizeDataIntegration returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/data-integrations/sample-arg/authorize"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"url\": \"sample\"}")
+        )
+    )
+    val result = api().authorizeDataIntegration("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createDataIntegrationToken returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/data-integrations/sample-arg/token"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{}")
+        )
+    )
+    val result = api().createDataIntegrationToken("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getUserConnectedAccount returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/user_management/users/sample-arg/connected_accounts/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}")
+        )
+    )
+    val result = api().getUserConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listUserDataProviders returns a typed response`() {
     wireMockRule.stubFor(
       get(urlPathMatching("/user_management/users/sample-arg/data_providers"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"list\", \"data\": []}")
+        )
+    )
+    val result = api().listUserDataProviders("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authorizeDataIntegration translates 401 to UnauthorizedException`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .willReturn(
           aResponse()
             .withStatus(401)
@@ -28,14 +91,14 @@ class PipesTest : TestBase() {
         )
     )
     assertThrows(UnauthorizedException::class.java) {
-      api().listUserDataProviders("sample-arg")
+      api().authorizeDataIntegration("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `listUserDataProviders translates 404 to NotFoundException`() {
+  fun `authorizeDataIntegration translates 404 to NotFoundException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users/sample-arg/data_providers"))
+      post(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .willReturn(
           aResponse()
             .withStatus(404)
@@ -44,14 +107,14 @@ class PipesTest : TestBase() {
         )
     )
     assertThrows(NotFoundException::class.java) {
-      api().listUserDataProviders("sample-arg")
+      api().authorizeDataIntegration("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `listUserDataProviders translates 429 to RateLimitException`() {
+  fun `authorizeDataIntegration translates 429 to RateLimitException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users/sample-arg/data_providers"))
+      post(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .willReturn(
           aResponse()
             .withStatus(429)
@@ -60,14 +123,14 @@ class PipesTest : TestBase() {
         )
     )
     assertThrows(RateLimitException::class.java) {
-      api().listUserDataProviders("sample-arg")
+      api().authorizeDataIntegration("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `listUserDataProviders translates 500 to GenericServerException`() {
+  fun `authorizeDataIntegration translates 500 to GenericServerException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users/sample-arg/data_providers"))
+      post(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .willReturn(
           aResponse()
             .withStatus(500)
@@ -76,7 +139,7 @@ class PipesTest : TestBase() {
         )
     )
     assertThrows(GenericServerException::class.java) {
-      api().listUserDataProviders("sample-arg")
+      api().authorizeDataIntegration("sample-arg", "sample-arg")
     }
   }
 }

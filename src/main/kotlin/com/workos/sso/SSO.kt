@@ -117,15 +117,13 @@ class SSO(
     if (domainHint != null) params += "domain_hint" to domainHint.toString()
     if (loginHint != null) params += "login_hint" to loginHint.toString()
     if (nonce != null) params += "nonce" to nonce.toString()
-    val body = linkedMapOf<String, Any?>()
-    body["response_type"] = "code"
-    body["client_id"] = workos.clientId
+    params += "response_type" to "code"
+    workos.clientId?.let { params += "client_id" to it }
     val config =
       RequestConfig(
         method = "GET",
         path = "/sso/authorize",
         queryParams = params,
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SSOAuthorizeUrlResponse::class.java)

@@ -3,6 +3,7 @@
 package com.workos.directorysync
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -29,6 +30,81 @@ class DirectorySyncTest : TestBase() {
         )
     )
     val result = api().list()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `get returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/directories/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"directory\", \"id\": \"sample\", \"organization_id\": \"sample\", \"external_key\": \"sample\", \"type\": \"azure scim v2.0\", \"state\": \"linked\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().get("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listGroups returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/directory_groups"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listGroups()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getGroup returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/directory_groups/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getGroup("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listUsers returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/directory_users"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listUsers()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getUser returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/directory_users/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"idp_id\": \"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}")
+        )
+    )
+    val result = api().getUser("sample-arg")
     assertNotNull(result)
   }
 

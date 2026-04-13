@@ -152,17 +152,11 @@ class Authorization(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
-    val body = linkedMapOf<String, Any?>()
-    body["role_slug"] = roleSlug
-    if (resourceId != null) body["resource_id"] = resourceId
-    if (resourceExternalId != null) body["resource_external_id"] = resourceExternalId
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
         queryParams = params,
-        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

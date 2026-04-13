@@ -216,11 +216,13 @@ class Connect(
     requestOptions: RequestOptions? = null
   ): NewConnectApplicationSecret {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/connect/applications/$id/client_secrets",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, NewConnectApplicationSecret::class.java)

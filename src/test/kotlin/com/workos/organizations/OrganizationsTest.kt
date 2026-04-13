@@ -3,7 +3,10 @@
 package com.workos.organizations
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -29,6 +32,81 @@ class OrganizationsTest : TestBase() {
         )
     )
     val result = api().list()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `create returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/organizations"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().create("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getByExternalId returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/organizations/external_id/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getByExternalId("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `get returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/organizations/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().get("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `update returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/organizations/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().update("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getAuditLogConfiguration returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/organizations/sample-arg/audit_log_configuration"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"organization_id\": \"sample\", \"retention_period_in_days\": 0, \"state\": \"active\"}")
+        )
+    )
+    val result = api().getAuditLogConfiguration("sample-arg")
     assertNotNull(result)
   }
 

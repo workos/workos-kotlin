@@ -19,7 +19,7 @@ class Webhooks(
 ) {
   /** List Webhook Endpoints */
   @JvmOverloads
-  fun listendpoints(
+  fun listEndpoints(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
@@ -46,7 +46,7 @@ class Webhooks(
 
   /** Create a Webhook Endpoint */
   @JvmOverloads
-  fun createendpoint(
+  fun createEndpoint(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
@@ -68,7 +68,7 @@ class Webhooks(
 
   /** Update a Webhook Endpoint */
   @JvmOverloads
-  fun updateendpoint(
+  fun updateEndpoint(
     id: String,
     endpointUrl: String? = null,
     status: UpdateWebhookEndpointStatus? = null,
@@ -93,7 +93,7 @@ class Webhooks(
 
   /** Delete a Webhook Endpoint */
   @JvmOverloads
-  fun deleteendpoint(
+  fun deleteEndpoint(
     id: String,
     requestOptions: RequestOptions? = null
   ) {

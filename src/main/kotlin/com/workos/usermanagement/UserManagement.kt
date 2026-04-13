@@ -337,15 +337,13 @@ class UserManagement(
     if (prompt != null) params += "prompt" to prompt.toString()
     if (state != null) params += "state" to state.toString()
     if (organizationId != null) params += "organization_id" to organizationId.toString()
-    val body = linkedMapOf<String, Any?>()
-    body["response_type"] = "code"
-    body["client_id"] = workos.clientId
+    params += "response_type" to "code"
+    workos.clientId?.let { params += "client_id" to it }
     val config =
       RequestConfig(
         method = "GET",
         path = "/user_management/authorize",
         queryParams = params,
-        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -580,7 +578,7 @@ class UserManagement(
 
   /** Get a user by external ID */
   @JvmOverloads
-  fun getbyexternalid(
+  fun getByExternalId(
     externalId: String,
     requestOptions: RequestOptions? = null
   ): User {
@@ -738,11 +736,13 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/$id/email_verification/send",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SendVerificationEmailResponse::class.java)
@@ -750,7 +750,7 @@ class UserManagement(
 
   /** Get user identities */
   @JvmOverloads
-  fun getidentities(
+  fun getIdentities(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserIdentitiesGetItem {
@@ -895,11 +895,13 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): Invitation {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/$id/accept",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -933,11 +935,13 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): Invitation {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/$id/revoke",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -1125,11 +1129,13 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id/deactivate",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationMembership::class.java)
@@ -1142,11 +1148,13 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id/reactivate",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
@@ -1174,7 +1182,7 @@ class UserManagement(
 
   /** List authorized applications */
   @JvmOverloads
-  fun listauthorizedapplications(
+  fun listAuthorizedApplications(
     userId: String,
     before: String? = null,
     after: String? = null,
@@ -1202,7 +1210,7 @@ class UserManagement(
 
   /** Delete an authorized application */
   @JvmOverloads
-  fun deleteauthorizedapplication(
+  fun deleteAuthorizedApplication(
     userId: String,
     applicationId: String,
     requestOptions: RequestOptions? = null

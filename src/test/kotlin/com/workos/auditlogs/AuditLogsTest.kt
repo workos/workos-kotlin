@@ -4,11 +4,14 @@ package com.workos.auditlogs
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
+import com.workos.models.AuditLogSchemaTarget
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -16,6 +19,36 @@ import org.junit.jupiter.api.Test
 
 class AuditLogsTest : TestBase() {
   private fun api() = AuditLogs(createWorkOSClient())
+
+  @Test
+  fun `getAuditLogsRetention returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"retention_period_in_days\": null}")
+        )
+    )
+    val result = api().getAuditLogsRetention("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `updateAuditLogsRetention returns a typed response`() {
+    wireMockRule.stubFor(
+      put(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"retention_period_in_days\": null}")
+        )
+    )
+    val result = api().updateAuditLogsRetention("sample-arg", 0)
+    assertNotNull(result)
+  }
 
   @Test
   fun `listActions returns a typed response`() {
@@ -29,6 +62,66 @@ class AuditLogsTest : TestBase() {
         )
     )
     val result = api().listActions()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listActionSchemas returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/audit_logs/actions/sample-arg/schemas"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+        )
+    )
+    val result = api().listActionSchemas("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createSchema returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/audit_logs/actions/sample-arg/schemas"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"audit_log_schema\", \"version\": 0, \"targets\": [], \"created_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTarget>())
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createExport returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/audit_logs/exports"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getExport returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/audit_logs/exports/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getExport("sample-arg")
     assertNotNull(result)
   }
 

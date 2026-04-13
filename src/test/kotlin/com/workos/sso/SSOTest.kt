@@ -3,7 +3,9 @@
 package com.workos.sso
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -29,6 +31,81 @@ class SSOTest : TestBase() {
         )
     )
     val result = api().listConnections()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getConnection returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/connections/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"connection\", \"id\": \"sample\", \"connection_type\": \"Pending\", \"name\": \"sample\", \"state\": \"requires_type\", \"status\": \"linked\", \"domains\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().getConnection("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getAuthorizationUrl returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/sso/authorize"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"url\": \"sample\"}")
+        )
+    )
+    val result = api().getAuthorizationUrl("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `authorizeLogout returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/sso/logout/authorize"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"logout_url\": \"sample\", \"logout_token\": \"sample\"}")
+        )
+    )
+    val result = api().authorizeLogout("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getProfile returns a typed response`() {
+    wireMockRule.stubFor(
+      get(urlPathMatching("/sso/profile"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}")
+        )
+    )
+    val result = api().getProfile()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getProfileAndToken returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/sso/token"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}")
+        )
+    )
+    val result = api().getProfileAndToken("sample-arg")
     assertNotNull(result)
   }
 

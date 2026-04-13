@@ -1,9 +1,8 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-13T18:59:54.777Z",
+  "generatedAt": "2026-04-13T19:20:13.487Z",
   "files": [
-    "smoke-manifest.json",
     "src/main/kotlin/com/workos/WorkOS.Generated.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
     "src/main/kotlin/com/workos/apikeys/ApiKeys.kt",
@@ -558,6 +557,7 @@
     "src/main/kotlin/com/workos/usermanagement/UserManagement.kt",
     "src/main/kotlin/com/workos/webhooks/Webhooks.kt",
     "src/main/kotlin/com/workos/widgets/Widgets.kt",
+    "src/test/kotlin/com/workos/adminportal/AdminPortalTest.kt",
     "src/test/kotlin/com/workos/apikeys/ApiKeysTest.kt",
     "src/test/kotlin/com/workos/auditlogs/AuditLogsTest.kt",
     "src/test/kotlin/com/workos/authorization/AuthorizationTest.kt",
@@ -570,8 +570,10 @@
     "src/test/kotlin/com/workos/organizationdomains/OrganizationDomainsTest.kt",
     "src/test/kotlin/com/workos/organizations/OrganizationsTest.kt",
     "src/test/kotlin/com/workos/pipes/PipesTest.kt",
+    "src/test/kotlin/com/workos/radar/RadarTest.kt",
     "src/test/kotlin/com/workos/sso/SSOTest.kt",
     "src/test/kotlin/com/workos/usermanagement/UserManagementTest.kt",
-    "src/test/kotlin/com/workos/webhooks/WebhooksTest.kt"
+    "src/test/kotlin/com/workos/webhooks/WebhooksTest.kt",
+    "src/test/kotlin/com/workos/widgets/WidgetsTest.kt"
   ]
 }

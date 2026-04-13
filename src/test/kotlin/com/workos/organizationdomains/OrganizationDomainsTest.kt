@@ -3,13 +3,16 @@
 package com.workos.organizationdomains
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
@@ -17,9 +20,54 @@ class OrganizationDomainsTest : TestBase() {
   private fun api() = OrganizationDomains(createWorkOSClient())
 
   @Test
-  fun `get translates 401 to UnauthorizedException`() {
+  fun `create returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/organization_domains"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().create("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `get returns a typed response`() {
     wireMockRule.stubFor(
       get(urlPathMatching("/organization_domains/sample-arg"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().get("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `verify returns a typed response`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/organization_domains/sample-arg/verify"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}")
+        )
+    )
+    val result = api().verify("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `create translates 401 to UnauthorizedException`() {
+    wireMockRule.stubFor(
+      post(urlPathMatching("/organization_domains"))
         .willReturn(
           aResponse()
             .withStatus(401)
@@ -28,14 +76,14 @@ class OrganizationDomainsTest : TestBase() {
         )
     )
     assertThrows(UnauthorizedException::class.java) {
-      api().get("sample-arg")
+      api().create("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `get translates 404 to NotFoundException`() {
+  fun `create translates 404 to NotFoundException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organization_domains/sample-arg"))
+      post(urlPathMatching("/organization_domains"))
         .willReturn(
           aResponse()
             .withStatus(404)
@@ -44,14 +92,14 @@ class OrganizationDomainsTest : TestBase() {
         )
     )
     assertThrows(NotFoundException::class.java) {
-      api().get("sample-arg")
+      api().create("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `get translates 429 to RateLimitException`() {
+  fun `create translates 429 to RateLimitException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organization_domains/sample-arg"))
+      post(urlPathMatching("/organization_domains"))
         .willReturn(
           aResponse()
             .withStatus(429)
@@ -60,14 +108,14 @@ class OrganizationDomainsTest : TestBase() {
         )
     )
     assertThrows(RateLimitException::class.java) {
-      api().get("sample-arg")
+      api().create("sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `get translates 500 to GenericServerException`() {
+  fun `create translates 500 to GenericServerException`() {
     wireMockRule.stubFor(
-      get(urlPathMatching("/organization_domains/sample-arg"))
+      post(urlPathMatching("/organization_domains"))
         .willReturn(
           aResponse()
             .withStatus(500)
@@ -76,7 +124,7 @@ class OrganizationDomainsTest : TestBase() {
         )
     )
     assertThrows(GenericServerException::class.java) {
-      api().get("sample-arg")
+      api().create("sample-arg", "sample-arg")
     }
   }
 }

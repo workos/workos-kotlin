@@ -68,11 +68,13 @@ class FeatureFlags(
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/$slug/disable",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -85,11 +87,13 @@ class FeatureFlags(
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/$slug/enable",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -103,11 +107,13 @@ class FeatureFlags(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/feature-flags/$slug/targets/$resourceId",
         queryParams = params,
+        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
