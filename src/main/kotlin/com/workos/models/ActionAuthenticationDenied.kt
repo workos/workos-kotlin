@@ -3,26 +3,24 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** ActionAuthenticationDenied model. */
 data class ActionAuthenticationDenied(
   /** Unique identifier for the event. */
-  @JvmField
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
   val data: ActionAuthenticationDeniedData,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
+  override val createdAt: OffsetDateTime,
   /** Always `"action.authentication.denied"`. */
-  @JvmField
   @JsonProperty("event")
-  val event: String = "action.authentication.denied",
+  override val event: String = "action.authentication.denied",
   @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
@@ -30,4 +28,4 @@ data class ActionAuthenticationDenied(
   @JvmField
   @JsonProperty("object")
   val `object`: String = "event"
-)
+) : WorkOSEvent

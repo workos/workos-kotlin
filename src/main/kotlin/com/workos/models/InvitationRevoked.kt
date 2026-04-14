@@ -3,26 +3,24 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** InvitationRevoked model. */
 data class InvitationRevoked(
   /** Unique identifier for the event. */
-  @JvmField
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
   val data: InvitationRevokedData,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
+  override val createdAt: OffsetDateTime,
   /** Always `"invitation.revoked"`. */
-  @JvmField
   @JsonProperty("event")
-  val event: String = "invitation.revoked",
+  override val event: String = "invitation.revoked",
   @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
@@ -30,4 +28,4 @@ data class InvitationRevoked(
   @JvmField
   @JsonProperty("object")
   val `object`: String = "event"
-)
+) : WorkOSEvent

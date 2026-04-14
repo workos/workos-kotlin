@@ -3,26 +3,24 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** An event emitted by WorkOS. */
 data class EventSchema(
   /** Unique identifier for the Event. */
-  @JvmField
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
   /** The type of event that occurred. */
-  @JvmField
   @JsonProperty("event")
-  val event: String,
+  override val event: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
   val data: Map<String, Any>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
+  override val createdAt: OffsetDateTime,
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
@@ -31,4 +29,4 @@ data class EventSchema(
   @JvmField
   @JsonProperty("context")
   val context: Map<String, Any>? = null
-)
+) : WorkOSEvent

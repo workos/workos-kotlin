@@ -3,32 +3,30 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** FlagRuleUpdated model. */
 data class FlagRuleUpdated(
   /** Unique identifier for the event. */
-  @JvmField
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
   val data: FlagRuleUpdatedData,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
+  override val createdAt: OffsetDateTime,
   /** Additional context about the event. */
   @JvmField
   @JsonProperty("context")
   val context: FlagRuleUpdatedContext,
   /** Always `"flag.rule_updated"`. */
-  @JvmField
   @JsonProperty("event")
-  val event: String = "flag.rule_updated",
+  override val event: String = "flag.rule_updated",
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
   val `object`: String = "event"
-)
+) : WorkOSEvent

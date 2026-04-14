@@ -3,32 +3,30 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** FlagDeleted model. */
 data class FlagDeleted(
   /** Unique identifier for the event. */
-  @JvmField
   @JsonProperty("id")
-  val id: String,
+  override val id: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
   val data: FlagDeletedData,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
+  override val createdAt: OffsetDateTime,
   /** Additional context about the event. */
   @JvmField
   @JsonProperty("context")
   val context: FlagDeletedContext,
   /** Always `"flag.deleted"`. */
-  @JvmField
   @JsonProperty("event")
-  val event: String = "flag.deleted",
+  override val event: String = "flag.deleted",
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
   val `object`: String = "event"
-)
+) : WorkOSEvent
