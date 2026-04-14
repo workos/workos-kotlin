@@ -1,9 +1,9 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-14T03:58:38.115Z",
+  "generatedAt": "2026-04-14T16:40:33.389Z",
   "files": [
-    "src/main/kotlin/com/workos/WorkOS.Generated.kt",
+    "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
     "src/main/kotlin/com/workos/apikeys/ApiKeys.kt",
     "src/main/kotlin/com/workos/auditlogs/AuditLogs.kt",

@@ -80,24 +80,18 @@ val workos = WorkOS(
 
 ### Java usage
 
-Service accessors are exposed as Kotlin extension properties on `WorkOS`.
-In Java, call the generated accessor classes directly:
+Service accessors are regular properties on the `WorkOS` class, so they work natively from Java:
 
 ```java
 import com.workos.WorkOS;
-import com.workos.usermanagement.UserManagement;
 
 WorkOS workos = new WorkOS(System.getenv("WORKOS_API_KEY"));
-
-// Kotlin extension properties are exposed to Java as top-level static
-// getters on WorkOSGeneratedKt:
-UserManagement userManagement =
-  com.workos.WorkOSGeneratedKt.getUserManagement(workos);
+workos.getUserManagement().listUsers(params);
 ```
 
 ## Service accessors
 
-Once constructed, every WorkOS API surface is available as an extension property on the `WorkOS` instance.
+Once constructed, every WorkOS API surface is available as a property on the `WorkOS` instance.
 
 ### Authentication and identity
 
