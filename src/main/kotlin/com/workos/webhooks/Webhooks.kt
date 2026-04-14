@@ -5,13 +5,13 @@ package com.workos.webhooks
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
 import com.workos.common.http.Page
+import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.models.WebhookEndpointJson
 import com.workos.types.CreateWebhookEndpointEvents
-import com.workos.types.UpdateWebhookEndpointEvents
-import com.workos.types.UpdateWebhookEndpointStatus
-import com.workos.types.WebhooksOrder
+import com.workos.types.EventsOrder
+import com.workos.types.WebhookEndpointJsonStatus
 
 /** API accessor for Webhooks. */
 class Webhooks(
@@ -34,7 +34,7 @@ class Webhooks(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: WebhooksOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<WebhookEndpointJson> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -99,15 +99,15 @@ class Webhooks(
   @JvmOverloads
   fun updateEndpoint(
     id: String,
-    endpointUrl: String? = null,
-    status: UpdateWebhookEndpointStatus? = null,
-    events: List<UpdateWebhookEndpointEvents>? = null,
+    endpointUrl: PatchField<String> = PatchField.Absent,
+    status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
+    events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
     val body = linkedMapOf<String, Any?>()
-    if (endpointUrl != null) body["endpoint_url"] = endpointUrl
-    if (status != null) body["status"] = status
-    if (events != null) body["events"] = events
+    if (endpointUrl is PatchField.Present) body["endpoint_url"] = endpointUrl.value
+    if (status is PatchField.Present) body["status"] = status.value
+    if (events is PatchField.Present) body["events"] = events.value
     val config =
       RequestConfig(
         method = "PATCH",

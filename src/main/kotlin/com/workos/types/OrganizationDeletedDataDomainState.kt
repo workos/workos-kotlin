@@ -2,18 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid OrganizationDeletedDataDomainState values returned or accepted by the API. */
-enum class OrganizationDeletedDataDomainState(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Failed("failed"),
-  LegacyVerified("legacy_verified"),
-  Pending("pending"),
-  Unverified("unverified"),
-  Verified("verified")
-}
+typealias OrganizationDeletedDataDomainState = OrganizationDomainState

@@ -9,7 +9,7 @@ data class EnrollUserAuthenticationFactor(
   /** The type of the factor to enroll. */
   @JvmField
   @JsonProperty("type")
-  val type: String,
+  val type: String = "totp",
   /** Your application or company name displayed in the user's authenticator app. */
   @JvmField
   @JsonProperty("totp_issuer")

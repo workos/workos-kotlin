@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class AuthenticationPasskeyFailedData(
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  @JvmField
-  @JsonProperty("status")
-  val status: String,
   /** The IP address of the request. */
   @JvmField
   @JsonProperty("ip_address")
@@ -31,5 +25,13 @@ data class AuthenticationPasskeyFailedData(
   /** Details about the authentication error. */
   @JvmField
   @JsonProperty("error")
-  val error: AuthenticationPasskeyFailedDataError
+  val error: AuthenticationPasskeyFailedDataError,
+  /** Always `"passkey"`. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "passkey",
+  /** Always `"failed"`. */
+  @JvmField
+  @JsonProperty("status")
+  val status: String = "failed"
 )

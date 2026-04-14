@@ -10,7 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
 import com.workos.models.OrganizationDomainData
-import com.workos.types.OrganizationsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for Organizations. */
 class Organizations(
@@ -35,7 +35,7 @@ class Organizations(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: OrganizationsOrder? = null,
+    order: EventsOrder? = null,
     domains: List<String>? = null,
     search: String? = null,
     requestOptions: RequestOptions? = null

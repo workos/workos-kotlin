@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** OrganizationMembership model. */
 data class OrganizationMembership(
-  /** Distinguishes the organization membership object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the organization membership. */
   @JvmField
   @JsonProperty("id")
@@ -44,6 +40,10 @@ data class OrganizationMembership(
   @JvmField
   @JsonProperty("role")
   val role: SlimRole,
+  /** Distinguishes the organization membership object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "organization_membership",
   /** The name of the organization which the user belongs to. */
   @JvmField
   @JsonProperty("organization_name")

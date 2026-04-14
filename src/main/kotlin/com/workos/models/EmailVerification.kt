@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** EmailVerification model. */
 data class EmailVerification(
-  /** Distinguishes the email verification object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the email verification code. */
   @JvmField
   @JsonProperty("id")
@@ -38,5 +34,9 @@ data class EmailVerification(
   /** The code used to verify the email. */
   @JvmField
   @JsonProperty("code")
-  val code: String
+  val code: String,
+  /** Distinguishes the email verification object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "email_verification"
 )

@@ -9,10 +9,6 @@ import java.time.OffsetDateTime
 
 /** Directory model. */
 data class Directory(
-  /** Distinguishes the Directory object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Directory. */
   @JvmField
   @JsonProperty("id")
@@ -45,6 +41,10 @@ data class Directory(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Directory object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "directory",
   /** The URL associated with an Enterprise Client. */
   @JvmField
   @JsonProperty("domain")

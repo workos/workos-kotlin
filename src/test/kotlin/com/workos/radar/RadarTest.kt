@@ -2,9 +2,7 @@
 
 package com.workos.radar
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -24,22 +22,14 @@ class RadarTest : TestBase() {
 
   @Test
   fun `createAttempt returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/attempts"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"verdict\": \"allow\", \"reason\": \"sample\", \"attempt_id\": \"sample\"}")
-        )
-    )
+    stubResponse("POST", "/radar/attempts", 200, "{\"verdict\": \"allow\", \"reason\": \"sample\", \"attempt_id\": \"sample\"}")
     val result =
       api().createAttempt(
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        RadarStandaloneAssessRequestAuthMethod.values().first(),
-        RadarStandaloneAssessRequestAction.values().first()
+        RadarStandaloneAssessRequestAuthMethod.values().first { it != RadarStandaloneAssessRequestAuthMethod.Unknown },
+        RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     assertNotNull(result)
     wireMockRule.verify(
@@ -60,15 +50,7 @@ class RadarTest : TestBase() {
 
   @Test
   fun `addListEntry returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"message\": \"sample\"}")
-        )
-    )
+    stubResponse("POST", "/radar/lists/sample-arg/sample-arg", 200, "{\"message\": \"sample\"}")
     val result = api().addListEntry("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
@@ -85,88 +67,56 @@ class RadarTest : TestBase() {
 
   @Test
   fun `createAttempt translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/attempts"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/radar/attempts", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().createAttempt(
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        RadarStandaloneAssessRequestAuthMethod.values().first(),
-        RadarStandaloneAssessRequestAction.values().first()
+        RadarStandaloneAssessRequestAuthMethod.values().first { it != RadarStandaloneAssessRequestAuthMethod.Unknown },
+        RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     }
   }
 
   @Test
   fun `createAttempt translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/attempts"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/radar/attempts", 404)
     assertThrows(NotFoundException::class.java) {
       api().createAttempt(
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        RadarStandaloneAssessRequestAuthMethod.values().first(),
-        RadarStandaloneAssessRequestAction.values().first()
+        RadarStandaloneAssessRequestAuthMethod.values().first { it != RadarStandaloneAssessRequestAuthMethod.Unknown },
+        RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     }
   }
 
   @Test
   fun `createAttempt translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/attempts"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/radar/attempts", 429)
     assertThrows(RateLimitException::class.java) {
       api().createAttempt(
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        RadarStandaloneAssessRequestAuthMethod.values().first(),
-        RadarStandaloneAssessRequestAction.values().first()
+        RadarStandaloneAssessRequestAuthMethod.values().first { it != RadarStandaloneAssessRequestAuthMethod.Unknown },
+        RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     }
   }
 
   @Test
   fun `createAttempt translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/radar/attempts"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/radar/attempts", 500)
     assertThrows(GenericServerException::class.java) {
       api().createAttempt(
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        RadarStandaloneAssessRequestAuthMethod.values().first(),
-        RadarStandaloneAssessRequestAction.values().first()
+        RadarStandaloneAssessRequestAuthMethod.values().first { it != RadarStandaloneAssessRequestAuthMethod.Unknown },
+        RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     }
   }

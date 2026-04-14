@@ -2,17 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid InvitationRevokedDataState values returned or accepted by the API. */
-enum class InvitationRevokedDataState(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Pending("pending"),
-  Accepted("accepted"),
-  Expired("expired"),
-  Revoked("revoked")
-}
+typealias InvitationRevokedDataState = InvitationState

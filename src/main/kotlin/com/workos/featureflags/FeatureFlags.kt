@@ -9,9 +9,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.models.FeatureFlag
 import com.workos.models.Flag
-import com.workos.types.FeatureFlagsOrder
-import com.workos.types.OrganizationsFeatureFlagsOrder
-import com.workos.types.UserManagementUsersFeatureFlagsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for FeatureFlags. */
 class FeatureFlags(
@@ -34,7 +32,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: FeatureFlagsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -195,7 +193,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: OrganizationsFeatureFlagsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -235,7 +233,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementUsersFeatureFlagsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     fun configFor(afterCursor: String? = null): RequestConfig {

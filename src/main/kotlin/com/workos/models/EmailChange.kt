@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** EmailChange model. */
 data class EmailChange(
-  /** Distinguishes the email change object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   @JvmField
   @JsonProperty("user")
   val user: User,
@@ -25,5 +21,9 @@ data class EmailChange(
   /** The timestamp when the email change challenge was created. */
   @JvmField
   @JsonProperty("created_at")
-  val createdAt: OffsetDateTime
+  val createdAt: OffsetDateTime,
+  /** Distinguishes the email change object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "email_change"
 )

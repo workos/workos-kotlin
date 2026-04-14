@@ -2,16 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid WebhooksOrder values returned or accepted by the API. */
-enum class WebhooksOrder(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Normal("normal"),
-  Desc("desc"),
-  Asc("asc")
-}
+typealias WebhooksOrder = EventsOrder

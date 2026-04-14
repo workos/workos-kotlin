@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** ApplicationCredentialsListItem model. */
 data class ApplicationCredentialsListItem(
-  /** Distinguishes the connect application secret object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the client secret. */
   @JvmField
   @JsonProperty("id")
@@ -30,5 +26,9 @@ data class ApplicationCredentialsListItem(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the connect application secret object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connect_application_secret"
 )

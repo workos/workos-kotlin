@@ -14,9 +14,6 @@ data class MfaTotpSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The TOTP code from the authenticator app. */
   @JvmField
   @JsonProperty("code")
@@ -29,6 +26,10 @@ data class MfaTotpSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("authentication_challenge_id")
   val authenticationChallengeId: String,
+  /** Always `"urn:workos:oauth:grant-type:mfa-totp"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "urn:workos:oauth:grant-type:mfa-totp",
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")

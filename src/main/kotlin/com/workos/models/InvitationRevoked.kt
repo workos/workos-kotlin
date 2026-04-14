@@ -11,9 +11,6 @@ data class InvitationRevoked(
   @JvmField
   @JsonProperty("id")
   val id: String,
-  @JvmField
-  @JsonProperty("event")
-  val event: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
@@ -22,11 +19,15 @@ data class InvitationRevoked(
   @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+  /** Always `"invitation.revoked"`. */
+  @JvmField
+  @JsonProperty("event")
+  val event: String = "invitation.revoked",
+  @JvmField
+  @JsonProperty("context")
+  val context: EventContext? = null,
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
-  val `object`: String,
-  @JvmField
-  @JsonProperty("context")
-  val context: EventContext? = null
+  val `object`: String = "event"
 )

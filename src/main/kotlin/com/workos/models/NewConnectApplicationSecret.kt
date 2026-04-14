@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** NewConnectApplicationSecret model. */
 data class NewConnectApplicationSecret(
-  /** Distinguishes the connect application secret object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the client secret. */
   @JvmField
   @JsonProperty("id")
@@ -34,5 +30,9 @@ data class NewConnectApplicationSecret(
   /** The plaintext secret value. Only returned at creation time and cannot be retrieved later. */
   @JvmField
   @JsonProperty("secret")
-  val secret: String
+  val secret: String,
+  /** Distinguishes the connect application secret object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connect_application_secret"
 )

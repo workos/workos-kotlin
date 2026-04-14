@@ -1,6 +1,7 @@
 // @oagen-ignore-file
 package com.workos.common.json
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -9,16 +10,15 @@ import org.junit.jupiter.api.Test
 class ThrowOnUnknownEnumSerializerTest {
   private val mapper = ObjectMapperFactory.create()
 
-  // Use the first generated enum we can find — OrganizationDomainDataState is
-  // guaranteed present and has @JsonEnumDefaultValue + @JsonSerialize on Unknown.
   @Test
-  fun `serializing Unknown throws IllegalArgumentException`() {
+  fun `serializing Unknown throws JsonMappingException`() {
     val unknown = com.workos.types.OrganizationDomainDataState.Unknown
     val ex =
-      assertThrows(IllegalArgumentException::class.java) {
+      assertThrows(JsonMappingException::class.java) {
         mapper.writeValueAsString(unknown)
       }
-    assertTrue(ex.message!!.contains("Unknown"))
+    assertTrue(ex.cause is IllegalArgumentException)
+    assertTrue(ex.cause!!.message!!.contains("Unknown"))
   }
 
   @Test

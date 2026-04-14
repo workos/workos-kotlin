@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** AuthenticationFactorEnrolled model. */
 data class AuthenticationFactorEnrolled(
-  /** Distinguishes the authentication factor object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the factor. */
   @JvmField
   @JsonProperty("id")
@@ -28,6 +24,10 @@ data class AuthenticationFactorEnrolled(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the authentication factor object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "authentication_factor",
   /** The ID of the [user](https://workos.com/docs/reference/authkit/user). */
   @JvmField
   @JsonProperty("user_id")

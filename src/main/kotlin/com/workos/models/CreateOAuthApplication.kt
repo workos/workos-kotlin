@@ -10,14 +10,14 @@ data class CreateOAuthApplication(
   @JvmField
   @JsonProperty("name")
   val name: String,
-  /** The type of application to create. */
-  @JvmField
-  @JsonProperty("application_type")
-  val applicationType: String,
   /** Whether this is a first-party application. Third-party applications require an organization_id. */
   @JvmField
   @JsonProperty("is_first_party")
   val isFirstParty: Boolean,
+  /** The type of application to create. */
+  @JvmField
+  @JsonProperty("application_type")
+  val applicationType: String = "oauth",
   /** A description for the application. */
   @JvmField
   @JsonProperty("description")

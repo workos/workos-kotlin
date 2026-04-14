@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** DirectoryGroup model. */
 data class DirectoryGroup(
-  /** Distinguishes the Directory Group object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Directory Group. */
   @JvmField
   @JsonProperty("id")
@@ -39,6 +35,10 @@ data class DirectoryGroup(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Directory Group object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "directory_group",
   /** The raw attributes received from the directory provider. */
   @JvmField
   @JsonProperty("raw_attributes")

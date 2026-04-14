@@ -2,13 +2,9 @@
 
 package com.workos.webhooks
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.patch
 import com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -27,33 +23,19 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `listEndpoints returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/webhook_endpoints", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listEndpoints()
     assertNotNull(result)
   }
 
   @Test
   fun `createEndpoint returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", " +
-                "\"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/webhook_endpoints",
+      200,
+      "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": " +
+        "\"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createEndpoint("sample-arg", emptyList<CreateWebhookEndpointEvents>())
     assertNotNull(result)
@@ -65,18 +47,12 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `updateEndpoint returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/webhook_endpoints/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", " +
-                "\"status\": \"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/webhook_endpoints/sample-arg",
+      200,
+      "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": " +
+        "\"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateEndpoint("sample-arg")
     assertNotNull(result)
@@ -90,15 +66,7 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `listEndpoints translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/webhook_endpoints", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().listEndpoints()
     }
@@ -106,15 +74,7 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `listEndpoints translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/webhook_endpoints", 404)
     assertThrows(NotFoundException::class.java) {
       api().listEndpoints()
     }
@@ -122,15 +82,7 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `listEndpoints translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/webhook_endpoints", 429)
     assertThrows(RateLimitException::class.java) {
       api().listEndpoints()
     }
@@ -138,15 +90,7 @@ class WebhooksTest : TestBase() {
 
   @Test
   fun `listEndpoints translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/webhook_endpoints"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/webhook_endpoints", 500)
     assertThrows(GenericServerException::class.java) {
       api().listEndpoints()
     }

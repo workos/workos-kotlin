@@ -14,9 +14,6 @@ data class OrganizationSelectionSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The pending authentication token from a previous authentication attempt. */
   @JvmField
   @JsonProperty("pending_authentication_token")
@@ -25,6 +22,10 @@ data class OrganizationSelectionSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
+  /** Always `"urn:workos:oauth:grant-type:organization-selection"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "urn:workos:oauth:grant-type:organization-selection",
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")

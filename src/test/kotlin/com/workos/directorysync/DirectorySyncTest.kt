@@ -2,8 +2,6 @@
 
 package com.workos.directorysync
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -20,33 +18,20 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `list returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/directories", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().list()
     assertNotNull(result)
   }
 
   @Test
   fun `get returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"directory\", \"id\": \"sample\", \"organization_id\": \"sample\", \"external_key\": \"sample\", " +
-                "\"type\": \"azure scim v2.0\", \"state\": \"linked\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/directories/sample-arg",
+      200,
+      "{\"object\": \"directory\", \"id\": \"sample\", \"organization_id\": \"sample\", \"external_key\": \"sample\", \"type\": " +
+        "\"azure scim v2.0\", \"state\": \"linked\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
@@ -60,33 +45,20 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `listGroups returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directory_groups"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/directory_groups", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listGroups()
     assertNotNull(result)
   }
 
   @Test
   fun `getGroup returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directory_groups/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", " +
-                "\"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/directory_groups/sample-arg",
+      200,
+      "{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", " +
+        "\"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getGroup("sample-arg")
     assertNotNull(result)
@@ -94,33 +66,20 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `listUsers returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directory_users"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/directory_users", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listUsers()
     assertNotNull(result)
   }
 
   @Test
   fun `getUser returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directory_users/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", " +
-                "\"idp_id\": \"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/directory_users/sample-arg",
+      200,
+      "{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"idp_id\": " +
+        "\"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}"
     )
     val result = api().getUser("sample-arg")
     assertNotNull(result)
@@ -128,15 +87,7 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `list translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/directories", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().list()
     }
@@ -144,15 +95,7 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `list translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/directories", 404)
     assertThrows(NotFoundException::class.java) {
       api().list()
     }
@@ -160,15 +103,7 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `list translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/directories", 429)
     assertThrows(RateLimitException::class.java) {
       api().list()
     }
@@ -176,15 +111,7 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `list translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/directories"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/directories", 500)
     assertThrows(GenericServerException::class.java) {
       api().list()
     }

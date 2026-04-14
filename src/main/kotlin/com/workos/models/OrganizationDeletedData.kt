@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class OrganizationDeletedData(
-  /** Distinguishes the Organization object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the Organization. */
   @JvmField
   @JsonProperty("id")
@@ -39,6 +35,10 @@ data class OrganizationDeletedData(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Organization object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "organization",
   /** The Stripe customer ID of the Organization. */
   @JvmField
   @JsonProperty("stripe_customer_id")

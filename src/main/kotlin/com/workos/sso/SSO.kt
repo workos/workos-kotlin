@@ -12,7 +12,7 @@ import com.workos.models.Profile
 import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
-import com.workos.types.ConnectionsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for SSO. */
 class SSO(
@@ -39,7 +39,7 @@ class SSO(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: ConnectionsOrder? = null,
+    order: EventsOrder? = null,
     connectionType: ConnectionsConnectionType? = null,
     domain: String? = null,
     organizationId: String? = null,

@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class InvitationAcceptedData(
-  /** Distinguishes the invitation object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the invitation. */
   @JvmField
   @JsonProperty("id")
@@ -55,5 +51,9 @@ data class InvitationAcceptedData(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the invitation object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "invitation"
 )

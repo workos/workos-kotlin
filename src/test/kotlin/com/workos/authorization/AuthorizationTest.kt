@@ -2,16 +2,11 @@
 
 package com.workos.authorization
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.patch
 import com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -29,15 +24,7 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `check returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/organization_memberships/sample-arg/check"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"authorized\": false}")
-        )
-    )
+    stubResponse("POST", "/authorization/organization_memberships/sample-arg/check", 200, "{\"authorized\": false}")
     val result = api().check("sample-arg", "sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
@@ -48,14 +35,11 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listOrganizationMembershipResources returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organization_memberships/sample-arg/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/authorization/organization_memberships/sample-arg/resources",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listOrganizationMembershipResources("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -67,14 +51,11 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listOrganizationMembershipRoleAssignments returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/authorization/organization_memberships/sample-arg/role_assignments",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listOrganizationMembershipRoleAssignments("sample-arg")
     assertNotNull(result)
@@ -82,18 +63,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `assignRole returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"role_assignment\", \"id\": \"sample\", \"role\": {\"slug\": \"sample\"}, \"resource\": {\"id\": " +
-                "\"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/organization_memberships/sample-arg/role_assignments",
+      200,
+      "{\"object\": \"role_assignment\", \"id\": \"sample\", \"role\": {\"slug\": \"sample\"}, \"resource\": {\"id\": \"sample\", " +
+        "\"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
     )
     val result = api().assignRole("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -117,33 +93,20 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listOrganizationRoles returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organizations/sample-arg/roles"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"list\", \"data\": []}")
-        )
-    )
+    stubResponse("GET", "/authorization/organizations/sample-arg/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listOrganizationRoles("sample-arg")
     assertNotNull(result)
   }
 
   @Test
   fun `createOrganizationRole returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/organizations/sample-arg/roles"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/organizations/sample-arg/roles",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -155,18 +118,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `getOrganizationRole returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/authorization/organizations/sample-arg/roles/sample-arg",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -174,18 +132,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updateOrganizationRole returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/authorization/organizations/sample-arg/roles/sample-arg",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -199,18 +152,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `createRolePermission returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/organizations/sample-arg/roles/sample-arg/permissions",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -222,18 +170,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updateRolePermissions returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/authorization/organizations/sample-arg/roles/sample-arg/permissions",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateRolePermissions("sample-arg", "sample-arg", emptyList<String>())
     assertNotNull(result)
@@ -247,18 +190,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `getOrganizationResource returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
-                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg",
+      200,
+      "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+        "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -266,18 +204,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updateOrganizationResource returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
-                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg",
+      200,
+      "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+        "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -291,14 +224,11 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResourceOrganizationMemberships returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/organization_memberships"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/organization_memberships",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listResourceOrganizationMemberships("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -310,33 +240,20 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResources returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/authorization/resources", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listResources()
     assertNotNull(result)
   }
 
   @Test
   fun `createResource returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
-                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/resources",
+      200,
+      "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+        "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createResource("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -351,18 +268,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `getResource returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
-                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/authorization/resources/sample-arg",
+      200,
+      "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+        "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getResource("sample-arg")
     assertNotNull(result)
@@ -370,18 +282,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updateResource returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/authorization/resources/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
-                "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/authorization/resources/sample-arg",
+      200,
+      "{\"object\": \"authorization_resource\", \"name\": \"sample\", \"description\": null, \"organization_id\": \"sample\", " +
+        "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateResource("sample-arg")
     assertNotNull(result)
@@ -395,14 +302,11 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listMembershipsForResource returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources/sample-arg/organization_memberships"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/authorization/resources/sample-arg/organization_memberships",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listMembershipsForResource("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -414,33 +318,20 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listEnvironmentRoles returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/roles"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"list\", \"data\": []}")
-        )
-    )
+    stubResponse("GET", "/authorization/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listEnvironmentRoles()
     assertNotNull(result)
   }
 
   @Test
   fun `createEnvironmentRole returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/roles"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/roles",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createEnvironmentRole("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -453,18 +344,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `getEnvironmentRole returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/roles/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/authorization/roles/sample-arg",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getEnvironmentRole("sample-arg")
     assertNotNull(result)
@@ -472,18 +358,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updateEnvironmentRole returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/authorization/roles/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/authorization/roles/sample-arg",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateEnvironmentRole("sample-arg")
     assertNotNull(result)
@@ -491,18 +372,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `addEnvironmentRolePermission returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/roles/sample-arg/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/roles/sample-arg/permissions",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().addEnvironmentRolePermission("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -514,18 +390,13 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `setEnvironmentRolePermissions returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/authorization/roles/sample-arg/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
-                "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/authorization/roles/sample-arg/permissions",
+      200,
+      "{\"slug\": \"sample\", \"object\": \"role\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"type\": " +
+        "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().setEnvironmentRolePermissions("sample-arg", emptyList<String>())
     assertNotNull(result)
@@ -533,33 +404,19 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listPermissions returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/authorization/permissions", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listPermissions()
     assertNotNull(result)
   }
 
   @Test
   fun `createPermission returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/authorization/permissions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/authorization/permissions",
+      200,
+      "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createPermission("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -572,18 +429,12 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `getPermission returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/permissions/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/authorization/permissions/sample-arg",
+      200,
+      "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getPermission("sample-arg")
     assertNotNull(result)
@@ -591,18 +442,12 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `updatePermission returns a typed response`() {
-    wireMockRule.stubFor(
-      patch(urlPathMatching("/authorization/permissions/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"system\": false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PATCH",
+      "/authorization/permissions/sample-arg",
+      200,
+      "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updatePermission("sample-arg")
     assertNotNull(result)
@@ -616,15 +461,7 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResources translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/authorization/resources", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().listResources()
     }
@@ -632,15 +469,7 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResources translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/authorization/resources", 404)
     assertThrows(NotFoundException::class.java) {
       api().listResources()
     }
@@ -648,15 +477,7 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResources translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/authorization/resources", 429)
     assertThrows(RateLimitException::class.java) {
       api().listResources()
     }
@@ -664,15 +485,7 @@ class AuthorizationTest : TestBase() {
 
   @Test
   fun `listResources translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/authorization/resources"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/authorization/resources", 500)
     assertThrows(GenericServerException::class.java) {
       api().listResources()
     }

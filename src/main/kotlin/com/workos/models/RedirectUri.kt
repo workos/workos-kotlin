@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** RedirectUri model. */
 data class RedirectUri(
-  /** The object type. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The ID of the redirect URI. */
   @JvmField
   @JsonProperty("id")
@@ -29,5 +25,9 @@ data class RedirectUri(
   /** The timestamp when the redirect URI was last updated. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+  /** The object type. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "redirect_uri"
 )

@@ -2,15 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid VaultDataDeletedDataActorSource values returned or accepted by the API. */
-enum class VaultDataDeletedDataActorSource(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Api("api"),
-  Dashboard("dashboard")
-}
+typealias VaultDataDeletedDataActorSource = VaultDekReadDataActorSource

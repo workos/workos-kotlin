@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** PasswordReset model. */
 data class PasswordReset(
-  /** Distinguishes the password reset object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the password reset object. */
   @JvmField
   @JsonProperty("id")
@@ -38,5 +34,9 @@ data class PasswordReset(
   /** The URL where the user can reset their password. */
   @JvmField
   @JsonProperty("password_reset_url")
-  val passwordResetUrl: String
+  val passwordResetUrl: String,
+  /** Distinguishes the password reset object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "password_reset"
 )

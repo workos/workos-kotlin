@@ -14,7 +14,7 @@ import com.workos.models.NewConnectApplicationSecret
 import com.workos.models.RedirectUriInput
 import com.workos.models.UserConsentOption
 import com.workos.models.UserObject
-import com.workos.types.ApplicationsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for Connect. */
 class Connect(
@@ -79,7 +79,7 @@ class Connect(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: ApplicationsOrder? = null,
+    order: EventsOrder? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<ConnectApplication> {
@@ -128,7 +128,6 @@ class Connect(
         method = "POST",
         path = "/connect/applications",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, ConnectApplication::class.java)
@@ -154,7 +153,6 @@ class Connect(
         method = "POST",
         path = "/connect/applications",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, ConnectApplication::class.java)

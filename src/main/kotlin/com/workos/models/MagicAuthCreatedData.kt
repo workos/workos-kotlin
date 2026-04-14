@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class MagicAuthCreatedData(
-  /** Distinguishes the Magic Auth object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the Magic Auth code. */
   @JvmField
   @JsonProperty("id")
@@ -34,5 +30,9 @@ data class MagicAuthCreatedData(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the Magic Auth object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "magic_auth"
 )

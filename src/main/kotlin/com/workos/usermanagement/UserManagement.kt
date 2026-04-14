@@ -31,13 +31,8 @@ import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
-import com.workos.types.ResendUserInviteOptionsLocale
-import com.workos.types.UpdateUserPasswordHashType
-import com.workos.types.UserManagementInvitationsOrder
-import com.workos.types.UserManagementOrganizationMembershipOrder
-import com.workos.types.UserManagementOrganizationMembershipStatuses
-import com.workos.types.UserManagementUsersAuthorizedApplicationsOrder
-import com.workos.types.UserManagementUsersOrder
+import com.workos.types.EventsOrder
+import com.workos.types.OrganizationMembershipStatus
 
 /** API accessor for UserManagement. */
 class UserManagement(
@@ -92,7 +87,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -120,7 +114,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -150,7 +143,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -182,7 +174,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -212,7 +203,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -244,7 +234,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -274,7 +263,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -301,7 +289,6 @@ class UserManagement(
         method = "POST",
         path = "/user_management/authenticate",
         body = body,
-        formBody = null,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
@@ -507,7 +494,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementUsersOrder? = null,
+    order: EventsOrder? = null,
     organization: String? = null,
     organizationId: String? = null,
     email: String? = null,
@@ -658,7 +645,7 @@ class UserManagement(
     emailVerified: Boolean? = null,
     password: String? = null,
     passwordHash: String? = null,
-    passwordHashType: UpdateUserPasswordHashType? = null,
+    passwordHashType: CreateUserPasswordHashType? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
     locale: String? = null,
@@ -858,7 +845,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementUsersOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserSessionsListItem> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -898,7 +885,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementInvitationsOrder? = null,
+    order: EventsOrder? = null,
     organizationId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
@@ -1048,7 +1035,7 @@ class UserManagement(
   @JvmOverloads
   fun resendInvitation(
     id: String,
-    locale: ResendUserInviteOptionsLocale? = null,
+    locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
     val body = linkedMapOf<String, Any?>()
@@ -1186,9 +1173,9 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementOrganizationMembershipOrder? = null,
+    order: EventsOrder? = null,
     organizationId: String? = null,
-    statuses: List<UserManagementOrganizationMembershipStatuses>? = null,
+    statuses: List<OrganizationMembershipStatus>? = null,
     userId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembership> {
@@ -1430,7 +1417,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementUsersAuthorizedApplicationsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizedConnectApplicationListData> {
     fun configFor(afterCursor: String? = null): RequestConfig {

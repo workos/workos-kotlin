@@ -14,9 +14,6 @@ data class PasswordSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The user's email address. */
   @JvmField
   @JsonProperty("email")
@@ -25,6 +22,10 @@ data class PasswordSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("password")
   val password: String,
+  /** Always `"password"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "password",
   /** An invitation token to accept during authentication. */
   @JvmField
   @JsonProperty("invitation_token")

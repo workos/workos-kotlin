@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class PermissionCreatedData(
-  /** Distinguishes the permission object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the permission. */
   @JvmField
   @JsonProperty("id")
@@ -38,5 +34,9 @@ data class PermissionCreatedData(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the permission object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "permission"
 )

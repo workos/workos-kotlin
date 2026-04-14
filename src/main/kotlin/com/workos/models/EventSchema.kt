@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** An event emitted by WorkOS. */
 data class EventSchema(
-  /** Distinguishes the Event object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Event. */
   @JvmField
   @JsonProperty("id")
@@ -27,6 +23,10 @@ data class EventSchema(
   @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+  /** Distinguishes the Event object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "event",
   /** Additional context about the event. */
   @JvmField
   @JsonProperty("context")

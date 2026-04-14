@@ -2,17 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid AuthenticationFactorEnrolledType values returned or accepted by the API. */
-enum class AuthenticationFactorEnrolledType(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  GenericOtp("generic_otp"),
-  Sms("sms"),
-  Totp("totp"),
-  Webauthn("webauthn")
-}
+typealias AuthenticationFactorEnrolledType = AuthenticationFactorType

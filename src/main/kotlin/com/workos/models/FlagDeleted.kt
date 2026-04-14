@@ -11,9 +11,6 @@ data class FlagDeleted(
   @JvmField
   @JsonProperty("id")
   val id: String,
-  @JvmField
-  @JsonProperty("event")
-  val event: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
@@ -26,8 +23,12 @@ data class FlagDeleted(
   @JvmField
   @JsonProperty("context")
   val context: FlagDeletedContext,
+  /** Always `"flag.deleted"`. */
+  @JvmField
+  @JsonProperty("event")
+  val event: String = "flag.deleted",
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
-  val `object`: String
+  val `object`: String = "event"
 )

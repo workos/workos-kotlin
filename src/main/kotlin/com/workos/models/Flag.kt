@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** Flag model. */
 data class Flag(
-  /** Distinguishes the Feature Flag object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the Feature Flag. */
   @JvmField
   @JsonProperty("id")
@@ -50,5 +46,9 @@ data class Flag(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the Feature Flag object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "feature_flag"
 )

@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class DsyncUserUpdatedData(
-  /** Distinguishes the Directory User object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Directory User. */
   @JvmField
   @JsonProperty("id")
@@ -53,6 +49,10 @@ data class DsyncUserUpdatedData(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Directory User object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "directory_user",
   /** The first name of the user. */
   @JvmField
   @JsonProperty("first_name")

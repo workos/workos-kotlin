@@ -7,10 +7,6 @@ import com.workos.types.ProfileConnectionType
 
 /** Profile model. */
 data class Profile(
-  /** Distinguishes the profile object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the profile. */
   @JvmField
   @JsonProperty("id")
@@ -47,6 +43,10 @@ data class Profile(
   @JvmField
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>,
+  /** Distinguishes the profile object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "profile",
   /** The role assigned to the user within the organization, if applicable. */
   @JvmField
   @JsonProperty("role")

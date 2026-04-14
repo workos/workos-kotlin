@@ -2,11 +2,8 @@
 
 package com.workos.apikeys
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -24,15 +21,7 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `createValidation returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/api_keys/validations"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"api_key\": null}")
-        )
-    )
+    stubResponse("POST", "/api_keys/validations", 200, "{\"api_key\": null}")
     val result = api().createValidation("sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
@@ -49,33 +38,20 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `listOrganizationApiKeys returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/api_keys"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/organizations/sample-arg/api_keys", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listOrganizationApiKeys("sample-arg")
     assertNotNull(result)
   }
 
   @Test
   fun `createOrganizationApiKey returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organizations/sample-arg/api_keys"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": " +
-                "\"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": " +
-                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/organizations/sample-arg/api_keys",
+      200,
+      "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": \"sample\"," +
+        " \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
     )
     val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -87,15 +63,7 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `createValidation translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/api_keys/validations"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/api_keys/validations", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().createValidation("sample-arg")
     }
@@ -103,15 +71,7 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `createValidation translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/api_keys/validations"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/api_keys/validations", 404)
     assertThrows(NotFoundException::class.java) {
       api().createValidation("sample-arg")
     }
@@ -119,15 +79,7 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `createValidation translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/api_keys/validations"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/api_keys/validations", 429)
     assertThrows(RateLimitException::class.java) {
       api().createValidation("sample-arg")
     }
@@ -135,15 +87,7 @@ class ApiKeysTest : TestBase() {
 
   @Test
   fun `createValidation translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/api_keys/validations"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/api_keys/validations", 500)
     assertThrows(GenericServerException::class.java) {
       api().createValidation("sample-arg")
     }

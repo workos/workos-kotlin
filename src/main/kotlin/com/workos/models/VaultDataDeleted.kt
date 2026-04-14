@@ -11,9 +11,6 @@ data class VaultDataDeleted(
   @JvmField
   @JsonProperty("id")
   val id: String,
-  @JvmField
-  @JsonProperty("event")
-  val event: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
@@ -22,11 +19,15 @@ data class VaultDataDeleted(
   @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+  /** Always `"vault.data.deleted"`. */
+  @JvmField
+  @JsonProperty("event")
+  val event: String = "vault.data.deleted",
+  @JvmField
+  @JsonProperty("context")
+  val context: EventContext? = null,
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
-  val `object`: String,
-  @JvmField
-  @JsonProperty("context")
-  val context: EventContext? = null
+  val `object`: String = "event"
 )

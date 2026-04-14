@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The API Key object if the value is valid, or `null` if invalid. */
 data class ApiKey(
-  /** Distinguishes the API Key object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the API Key. */
   @JvmField
   @JsonProperty("id")
@@ -42,5 +38,9 @@ data class ApiKey(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the API Key object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "api_key"
 )

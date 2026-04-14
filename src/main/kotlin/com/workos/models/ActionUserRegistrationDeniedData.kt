@@ -14,14 +14,6 @@ data class ActionUserRegistrationDeniedData(
   @JvmField
   @JsonProperty("action_execution_id")
   val actionExecutionId: String,
-  /** The type of action that was denied. */
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  /** The verdict of the action. */
-  @JvmField
-  @JsonProperty("verdict")
-  val verdict: String,
   /** The ID of the organization. */
   @JvmField
   @JsonProperty("organization_id")
@@ -37,5 +29,13 @@ data class ActionUserRegistrationDeniedData(
   /** The user agent of the request. */
   @JvmField
   @JsonProperty("user_agent")
-  val userAgent: String?
+  val userAgent: String?,
+  /** The type of action that was denied. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "user_registration",
+  /** The verdict of the action. */
+  @JvmField
+  @JsonProperty("verdict")
+  val verdict: String = "Deny"
 )

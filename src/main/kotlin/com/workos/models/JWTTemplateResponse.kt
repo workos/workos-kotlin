@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** JWTTemplateResponse model. */
 data class JWTTemplateResponse(
-  /** The object type. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The JWT template content as a Liquid template string. */
   @JvmField
   @JsonProperty("content")
@@ -21,5 +17,9 @@ data class JWTTemplateResponse(
   /** The timestamp when the JWT template was last updated. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+  /** The object type. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "jwt_template"
 )

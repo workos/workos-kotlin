@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class AuthenticationEmailVerificationFailedData(
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  @JvmField
-  @JsonProperty("status")
-  val status: String,
   /** The IP address of the request. */
   @JvmField
   @JsonProperty("ip_address")
@@ -31,5 +25,13 @@ data class AuthenticationEmailVerificationFailedData(
   /** Details about the authentication error. */
   @JvmField
   @JsonProperty("error")
-  val error: AuthenticationEmailVerificationFailedDataError
+  val error: AuthenticationEmailVerificationFailedDataError,
+  /** Always `"email_verification"`. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "email_verification",
+  /** Always `"failed"`. */
+  @JvmField
+  @JsonProperty("status")
+  val status: String = "failed"
 )

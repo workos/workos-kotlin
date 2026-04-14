@@ -9,10 +9,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class DsyncDeactivatedData(
-  /** Distinguishes the directory object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the directory. */
   @JvmField
   @JsonProperty("id")
@@ -45,6 +41,10 @@ data class DsyncDeactivatedData(
   @JvmField
   @JsonProperty("domains")
   val domains: List<DsyncDeactivatedDataDomain>,
+  /** Distinguishes the directory object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "directory",
   /** The ID of the organization the directory belongs to. */
   @JvmField
   @JsonProperty("organization_id")

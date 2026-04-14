@@ -2,10 +2,6 @@
 
 package com.workos.connect
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.post
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -22,32 +18,19 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplications returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/connect/applications", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listApplications()
     assertNotNull(result)
   }
 
   @Test
   fun `createOAuthApplication returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
-                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/connect/applications",
+      200,
+      "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+        "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createOAuthApplication("sample-arg", false)
     assertNotNull(result)
@@ -55,17 +38,12 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `createM2MApplication returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
-                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/connect/applications",
+      200,
+      "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+        "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createM2MApplication("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -73,17 +51,12 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `getApplication returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
-                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/connect/applications/sample-arg",
+      200,
+      "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+        "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getApplication("sample-arg")
     assertNotNull(result)
@@ -91,17 +64,12 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `updateApplication returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/connect/applications/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
-                "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/connect/applications/sample-arg",
+      200,
+      "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+        "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateApplication("sample-arg")
     assertNotNull(result)
@@ -115,17 +83,12 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplicationClientSecrets returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications/sample-arg/client_secrets"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "[{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}]"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/connect/applications/sample-arg/client_secrets",
+      200,
+      "[{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}]"
     )
     val result = api().listApplicationClientSecrets("sample-arg")
     assertNotNull(result)
@@ -133,17 +96,12 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `createApplicationClientSecret returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/connect/applications/sample-arg/client_secrets"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"secret\": \"sample\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/connect/applications/sample-arg/client_secrets",
+      200,
+      "{\"object\": \"connect_application_secret\", \"id\": \"sample\", \"secret_hint\": \"sample\", \"last_used_at\": null, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"secret\": \"sample\"}"
     )
     val result = api().createApplicationClientSecret("sample-arg")
     assertNotNull(result)
@@ -157,15 +115,7 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplications translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connect/applications", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().listApplications()
     }
@@ -173,15 +123,7 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplications translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connect/applications", 404)
     assertThrows(NotFoundException::class.java) {
       api().listApplications()
     }
@@ -189,15 +131,7 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplications translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connect/applications", 429)
     assertThrows(RateLimitException::class.java) {
       api().listApplications()
     }
@@ -205,15 +139,7 @@ class ConnectTest : TestBase() {
 
   @Test
   fun `listApplications translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connect/applications"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connect/applications", 500)
     assertThrows(GenericServerException::class.java) {
       api().listApplications()
     }

@@ -11,9 +11,6 @@ data class FlagRuleUpdated(
   @JvmField
   @JsonProperty("id")
   val id: String,
-  @JvmField
-  @JsonProperty("event")
-  val event: String,
   /** The event payload. */
   @JvmField
   @JsonProperty("data")
@@ -26,8 +23,12 @@ data class FlagRuleUpdated(
   @JvmField
   @JsonProperty("context")
   val context: FlagRuleUpdatedContext,
+  /** Always `"flag.rule_updated"`. */
+  @JvmField
+  @JsonProperty("event")
+  val event: String = "flag.rule_updated",
   /** Distinguishes the Event object. */
   @JvmField
   @JsonProperty("object")
-  val `object`: String
+  val `object`: String = "event"
 )

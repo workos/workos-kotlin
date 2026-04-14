@@ -12,10 +12,6 @@ data class Role(
   @JvmField
   @JsonProperty("slug")
   val slug: String,
-  /** Distinguishes the role object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the role. */
   @JvmField
   @JsonProperty("id")
@@ -47,5 +43,9 @@ data class Role(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the role object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "role"
 )

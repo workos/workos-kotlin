@@ -10,13 +10,14 @@ data class DeviceCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_id")
   val clientId: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The device verification code. */
   @JvmField
   @JsonProperty("device_code")
   val deviceCode: String,
+  /** Always `"urn:ietf:params:oauth:grant-type:device_code"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "urn:ietf:params:oauth:grant-type:device_code",
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")

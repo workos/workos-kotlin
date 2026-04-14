@@ -2,13 +2,9 @@
 
 package com.workos.organizations
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -26,32 +22,19 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `list returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/organizations", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().list()
     assertNotNull(result)
   }
 
   @Test
   fun `create returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
-                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/organizations",
+      200,
+      "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
@@ -63,17 +46,12 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `getByExternalId returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/external_id/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
-                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/organizations/external_id/sample-arg",
+      200,
+      "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getByExternalId("sample-arg")
     assertNotNull(result)
@@ -81,17 +59,12 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `get returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
-                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg",
+      200,
+      "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
@@ -99,17 +72,12 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `update returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/organizations/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, " +
-                "\"external_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/organizations/sample-arg",
+      200,
+      "{\"object\": \"organization\", \"id\": \"sample\", \"name\": \"sample\", \"domains\": [], \"metadata\": {}, \"external_id\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().update("sample-arg")
     assertNotNull(result)
@@ -123,14 +91,11 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `getAuditLogConfiguration returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/audit_log_configuration"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"organization_id\": \"sample\", \"retention_period_in_days\": 0, \"state\": \"active\"}")
-        )
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg/audit_log_configuration",
+      200,
+      "{\"organization_id\": \"sample\", \"retention_period_in_days\": 0, \"state\": \"active\"}"
     )
     val result = api().getAuditLogConfiguration("sample-arg")
     assertNotNull(result)
@@ -138,15 +103,7 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `list translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/organizations", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().list()
     }
@@ -154,15 +111,7 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `list translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/organizations", 404)
     assertThrows(NotFoundException::class.java) {
       api().list()
     }
@@ -170,15 +119,7 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `list translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/organizations", 429)
     assertThrows(RateLimitException::class.java) {
       api().list()
     }
@@ -186,15 +127,7 @@ class OrganizationsTest : TestBase() {
 
   @Test
   fun `list translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/organizations", 500)
     assertThrows(GenericServerException::class.java) {
       api().list()
     }

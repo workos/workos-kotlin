@@ -9,7 +9,7 @@ data class DataIntegrationAccessTokenResponse(
   /** Indicates whether the access token is valid and ready for use, or if reauthorization is required. */
   @JvmField
   @JsonProperty("active")
-  val active: Boolean? = null,
+  val active: Boolean = true,
   /** The [access token](/reference/pipes/access-token) object, present when `active` is `true`. */
   @JvmField
   @JsonProperty("access_token")

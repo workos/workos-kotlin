@@ -2,4 +2,12 @@
 
 package com.workos.models
 
-typealias ConfirmEmailChange = AuthenticationChallengesVerifyRequest
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** ConfirmEmailChange model. */
+data class ConfirmEmailChange(
+  /** The one-time code used to confirm the email change. */
+  @JvmField
+  @JsonProperty("code")
+  val code: String
+)

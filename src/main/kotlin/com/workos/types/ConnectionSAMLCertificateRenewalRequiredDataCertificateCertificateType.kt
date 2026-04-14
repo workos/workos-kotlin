@@ -2,16 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType values returned or accepted by the API. */
-enum class ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  ResponseSigning("ResponseSigning"),
-  RequestSigning("RequestSigning"),
-  ResponseEncryption("ResponseEncryption")
-}
+typealias ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType = ConnectionSAMLCertificateRenewedDataCertificateCertificateType

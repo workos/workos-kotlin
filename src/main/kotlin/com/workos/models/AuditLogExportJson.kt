@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** AuditLogExportJson model. */
 data class AuditLogExportJson(
-  /** Distinguishes the Audit Log Export object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the Audit Log Export. */
   @JvmField
   @JsonProperty("id")
@@ -28,6 +24,10 @@ data class AuditLogExportJson(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Audit Log Export object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "audit_log_export",
   /** A URL to the CSV file. Only defined when the Audit Log Export is ready. */
   @JvmField
   @JsonProperty("url")

@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** ConnectApplication model. */
 data class ConnectApplication(
-  /** Distinguishes the connect application object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the connect application. */
   @JvmField
   @JsonProperty("id")
@@ -39,10 +35,14 @@ data class ConnectApplication(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the connect application object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connect_application",
   /** The type of the application. */
   @JvmField
   @JsonProperty("application_type")
-  val applicationType: String? = null,
+  val applicationType: String = "oauth",
   /** The redirect URIs configured for this application. */
   @JvmField
   @JsonProperty("redirect_uris")
@@ -54,11 +54,11 @@ data class ConnectApplication(
   /** Whether the application is a first-party application. */
   @JvmField
   @JsonProperty("is_first_party")
-  val isFirstParty: Boolean? = null,
+  val isFirstParty: Boolean = true,
   /** Whether the application was dynamically registered. */
   @JvmField
   @JsonProperty("was_dynamically_registered")
-  val wasDynamicallyRegistered: Boolean? = null,
+  val wasDynamicallyRegistered: Boolean = false,
   /** The ID of the organization the application belongs to. */
   @JvmField
   @JsonProperty("organization_id")

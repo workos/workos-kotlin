@@ -9,10 +9,6 @@ import java.time.OffsetDateTime
 
 /** UserSessionsListItem model. */
 data class UserSessionsListItem(
-  /** Distinguishes the session object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the session. */
   @JvmField
   @JsonProperty("id")
@@ -53,6 +49,10 @@ data class UserSessionsListItem(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the session object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "session",
   /** Information about the impersonator if this session was created via impersonation. */
   @JvmField
   @JsonProperty("impersonator")

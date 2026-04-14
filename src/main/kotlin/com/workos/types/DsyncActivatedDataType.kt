@@ -2,36 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid DsyncActivatedDataType values returned or accepted by the API. */
-enum class DsyncActivatedDataType(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  AzureSCIMV20("azure scim v2.0"),
-  Bamboohr("bamboohr"),
-  BreatheHr("breathe hr"),
-  CezanneHr("cezanne hr"),
-  CyberarkSCIMV20("cyberark scim v2.0"),
-  FourthHr("fourth hr"),
-  GenericSCIMV20("generic scim v2.0"),
-  GsuiteDirectory("gsuite directory"),
-  Gusto("gusto"),
-  Hibob("hibob"),
-  JumpCloudSCIMV20("jump cloud scim v2.0"),
-  OktaSCIMV20("okta scim v2.0"),
-  OneloginSCIMV20("onelogin scim v2.0"),
-  PeopleHr("people hr"),
-  Personio("personio"),
-  PingfederateSCIMV20("pingfederate scim v2.0"),
-  RipplingSCIMV20("rippling scim v2.0"),
-  Rippling("rippling"),
-  SailpointSCIMV20("sailpoint scim v2.0"),
-  S3("s3"),
-  Sftp("sftp"),
-  SftpWorkday("sftp workday"),
-  Workday("workday")
-}
+typealias DsyncActivatedDataType = DsyncDeletedDataType

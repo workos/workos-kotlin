@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The user object. */
 data class EmailChangeConfirmationUser(
-  /** Distinguishes the user object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the user. */
   @JvmField
   @JsonProperty("id")
@@ -51,6 +47,10 @@ data class EmailChangeConfirmationUser(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the user object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "user",
   /** Object containing metadata key/value pairs associated with the user. */
   @JvmField
   @JsonProperty("metadata")

@@ -14,9 +14,6 @@ data class MagicAuthCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The one-time code for Magic Auth authentication. */
   @JvmField
   @JsonProperty("code")
@@ -25,6 +22,10 @@ data class MagicAuthCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("email")
   val email: String,
+  /** Always `"urn:workos:oauth:grant-type:magic-auth:code"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "urn:workos:oauth:grant-type:magic-auth:code",
   /** An invitation token to accept during authentication. */
   @JvmField
   @JsonProperty("invitation_token")

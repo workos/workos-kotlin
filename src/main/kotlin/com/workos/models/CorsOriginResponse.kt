@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** CorsOriginResponse model. */
 data class CorsOriginResponse(
-  /** Distinguishes the CORS origin object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the CORS origin. */
   @JvmField
   @JsonProperty("id")
@@ -26,5 +22,9 @@ data class CorsOriginResponse(
   /** Timestamp when the CORS origin was last updated. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the CORS origin object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "cors_origin"
 )

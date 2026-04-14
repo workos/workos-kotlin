@@ -10,7 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.models.ApiKey
 import com.workos.models.ApiKeyValidationResponse
 import com.workos.models.ApiKeyWithValue
-import com.workos.types.OrganizationsApiKeysOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for ApiKeys. */
 class ApiKeys(
@@ -82,7 +82,7 @@ class ApiKeys(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: OrganizationsApiKeysOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<ApiKey> {
     fun configFor(afterCursor: String? = null): RequestConfig {

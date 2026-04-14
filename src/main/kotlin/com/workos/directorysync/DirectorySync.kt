@@ -10,9 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectoryUserWithGroups
-import com.workos.types.DirectoriesOrder
-import com.workos.types.DirectoryGroupsOrder
-import com.workos.types.DirectoryUsersOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for DirectorySync. */
 class DirectorySync(
@@ -38,7 +36,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: DirectoriesOrder? = null,
+    order: EventsOrder? = null,
     organizationId: String? = null,
     search: String? = null,
     domain: String? = null,
@@ -128,7 +126,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: DirectoryGroupsOrder? = null,
+    order: EventsOrder? = null,
     directory: String? = null,
     user: String? = null,
     requestOptions: RequestOptions? = null
@@ -195,7 +193,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: DirectoryUsersOrder? = null,
+    order: EventsOrder? = null,
     directory: String? = null,
     group: String? = null,
     requestOptions: RequestOptions? = null

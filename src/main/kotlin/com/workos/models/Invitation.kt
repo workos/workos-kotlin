@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** Invitation model. */
 data class Invitation(
-  /** Distinguishes the invitation object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the invitation. */
   @JvmField
   @JsonProperty("id")
@@ -63,5 +59,9 @@ data class Invitation(
   /** The URL where the recipient can accept the invitation. */
   @JvmField
   @JsonProperty("accept_invitation_url")
-  val acceptInvitationUrl: String
+  val acceptInvitationUrl: String,
+  /** Distinguishes the invitation object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "invitation"
 )

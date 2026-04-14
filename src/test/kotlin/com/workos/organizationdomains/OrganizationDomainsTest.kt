@@ -2,11 +2,8 @@
 
 package com.workos.organizationdomains
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -24,17 +21,12 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `create returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/organization_domains",
+      200,
+      "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().create("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -47,17 +39,12 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `get returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organization_domains/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/organization_domains/sample-arg",
+      200,
+      "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
@@ -71,17 +58,12 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `verify returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains/sample-arg/verify"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/organization_domains/sample-arg/verify",
+      200,
+      "{\"object\": \"organization_domain\", \"id\": \"sample\", \"organization_id\": \"sample\", \"domain\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().verify("sample-arg")
     assertNotNull(result)
@@ -89,15 +71,7 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `create translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/organization_domains", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().create("sample-arg", "sample-arg")
     }
@@ -105,15 +79,7 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `create translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/organization_domains", 404)
     assertThrows(NotFoundException::class.java) {
       api().create("sample-arg", "sample-arg")
     }
@@ -121,15 +87,7 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `create translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/organization_domains", 429)
     assertThrows(RateLimitException::class.java) {
       api().create("sample-arg", "sample-arg")
     }
@@ -137,15 +95,7 @@ class OrganizationDomainsTest : TestBase() {
 
   @Test
   fun `create translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/organization_domains"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/organization_domains", 500)
     assertThrows(GenericServerException::class.java) {
       api().create("sample-arg", "sample-arg")
     }

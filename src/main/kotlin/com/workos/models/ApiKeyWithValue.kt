@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** ApiKeyWithValue model. */
 data class ApiKeyWithValue(
-  /** Distinguishes the API Key object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the API Key. */
   @JvmField
   @JsonProperty("id")
@@ -46,5 +42,9 @@ data class ApiKeyWithValue(
   /** The full API Key value. Only returned once at creation time. */
   @JvmField
   @JsonProperty("value")
-  val value: String
+  val value: String,
+  /** Distinguishes the API Key object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "api_key"
 )

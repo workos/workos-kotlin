@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class AuthenticationOAuthSucceededData(
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  @JvmField
-  @JsonProperty("status")
-  val status: String,
   /** The IP address of the request. */
   @JvmField
   @JsonProperty("ip_address")
@@ -27,5 +21,13 @@ data class AuthenticationOAuthSucceededData(
   /** The email address of the user. */
   @JvmField
   @JsonProperty("email")
-  val email: String
+  val email: String,
+  /** Always `"oauth"`. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "oauth",
+  /** Always `"succeeded"`. */
+  @JvmField
+  @JsonProperty("status")
+  val status: String = "succeeded"
 )

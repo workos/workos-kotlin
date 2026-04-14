@@ -2,11 +2,8 @@
 
 package com.workos.multifactorauth
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -25,17 +22,12 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `verifyChallenge returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/challenges/sample-arg/verify"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"challenge\": {\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\"," +
-                " \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"valid\": false}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/auth/challenges/sample-arg/verify",
+      200,
+      "{\"challenge\": {\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"valid\": false}"
     )
     val result = api().verifyChallenge("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -47,19 +39,17 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `enrollFactor returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/enroll"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": " +
-                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/auth/factors/enroll",
+      200,
+      "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
+        " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
+    val result =
+      api().enrollFactor(
+        AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown }
+      )
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/factors/enroll"))
@@ -69,17 +59,12 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `getFactor returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/auth/factors/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": " +
-                "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/auth/factors/sample-arg",
+      200,
+      "{\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
+        " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getFactor("sample-arg")
     assertNotNull(result)
@@ -93,17 +78,12 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `challengeFactor returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/sample-arg/challenge"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/auth/factors/sample-arg/challenge",
+      200,
+      "{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().challengeFactor("sample-arg")
     assertNotNull(result)
@@ -111,14 +91,11 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `listUserAuthFactors returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users/sample-arg/auth_factors"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/user_management/users/sample-arg/auth_factors",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listUserAuthFactors("sample-arg")
     assertNotNull(result)
@@ -126,19 +103,14 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `createUserAuthFactor returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/user_management/users/sample-arg/auth_factors"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"authentication_factor\": {\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"authentication_challenge\": " +
-                "{\"object\": \"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", " +
-                "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/user_management/users/sample-arg/auth_factors",
+      200,
+      "{\"authentication_factor\": {\"object\": \"authentication_factor\", \"id\": \"sample\", \"type\": \"generic_otp\", " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"authentication_challenge\": {\"object\": " +
+        "\"authentication_challenge\", \"id\": \"sample\", \"authentication_factor_id\": \"sample\", \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().createUserAuthFactor("sample-arg", "totp")
     assertNotNull(result)
@@ -150,65 +122,33 @@ class MultiFactorAuthTest : TestBase() {
 
   @Test
   fun `enrollFactor translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/enroll"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/auth/factors/enroll", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
+      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown })
     }
   }
 
   @Test
   fun `enrollFactor translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/enroll"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/auth/factors/enroll", 404)
     assertThrows(NotFoundException::class.java) {
-      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
+      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown })
     }
   }
 
   @Test
   fun `enrollFactor translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/enroll"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/auth/factors/enroll", 429)
     assertThrows(RateLimitException::class.java) {
-      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
+      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown })
     }
   }
 
   @Test
   fun `enrollFactor translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/auth/factors/enroll"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/auth/factors/enroll", 500)
     assertThrows(GenericServerException::class.java) {
-      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
+      api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown })
     }
   }
 }

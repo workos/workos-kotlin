@@ -7,10 +7,6 @@ import com.workos.types.ConnectedAccountState
 
 /** ConnectedAccount model. */
 data class ConnectedAccount(
-  /** Distinguishes the connected account object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique identifier of the connected account. */
   @JvmField
   @JsonProperty("id")
@@ -38,5 +34,9 @@ data class ConnectedAccount(
   /** The timestamp when the connection was last updated. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+  /** Distinguishes the connected account object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connected_account"
 )

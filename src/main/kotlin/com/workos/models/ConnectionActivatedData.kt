@@ -10,10 +10,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class ConnectionActivatedData(
-  /** Distinguishes the connection object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the connection. */
   @JvmField
   @JsonProperty("id")
@@ -50,6 +46,10 @@ data class ConnectionActivatedData(
   @JvmField
   @JsonProperty("domains")
   val domains: List<ConnectionActivatedDataDomain>,
+  /** Distinguishes the connection object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connection",
   /** The ID of the organization the connection belongs to. */
   @JvmField
   @JsonProperty("organization_id")

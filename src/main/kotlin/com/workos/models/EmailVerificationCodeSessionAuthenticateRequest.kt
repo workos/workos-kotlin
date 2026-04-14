@@ -14,9 +14,6 @@ data class EmailVerificationCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The email verification code. */
   @JvmField
   @JsonProperty("code")
@@ -25,6 +22,10 @@ data class EmailVerificationCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("pending_authentication_token")
   val pendingAuthenticationToken: String,
+  /** Always `"urn:workos:oauth:grant-type:email-verification:code"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "urn:workos:oauth:grant-type:email-verification:code",
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")

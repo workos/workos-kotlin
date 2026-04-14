@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class AuthenticationSSOTimedOutData(
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  @JvmField
-  @JsonProperty("status")
-  val status: String,
   /** The IP address of the request. */
   @JvmField
   @JsonProperty("ip_address")
@@ -35,5 +29,13 @@ data class AuthenticationSSOTimedOutData(
   /** Details about the authentication error. */
   @JvmField
   @JsonProperty("error")
-  val error: AuthenticationSSOTimedOutDataError
+  val error: AuthenticationSSOTimedOutDataError,
+  /** Always `"sso"`. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "sso",
+  /** Always `"timed_out"`. */
+  @JvmField
+  @JsonProperty("status")
+  val status: String = "timed_out"
 )

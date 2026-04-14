@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** AuditLogActionJson model. */
 data class AuditLogActionJson(
-  /** Distinguishes the Audit Log Action object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Identifier of what action was taken. */
   @JvmField
   @JsonProperty("name")
@@ -26,5 +22,9 @@ data class AuditLogActionJson(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the Audit Log Action object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "audit_log_action"
 )

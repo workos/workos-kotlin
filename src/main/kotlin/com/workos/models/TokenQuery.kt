@@ -21,5 +21,5 @@ data class TokenQuery(
   /** The grant type for the token request. */
   @JvmField
   @JsonProperty("grant_type")
-  val grantType: String
+  val grantType: String = "authorization_code"
 )

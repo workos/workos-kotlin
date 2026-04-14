@@ -6,18 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** JwksResponseKeys model. */
 data class JwksResponseKeys(
-  /** Algorithm. */
-  @JvmField
-  @JsonProperty("alg")
-  val alg: String,
-  /** Key type. */
-  @JvmField
-  @JsonProperty("kty")
-  val kty: String,
-  /** Key use (signature). */
-  @JvmField
-  @JsonProperty("use")
-  val use: String,
   /** X.509 certificate chain. */
   @JvmField
   @JsonProperty("x5c")
@@ -37,5 +25,17 @@ data class JwksResponseKeys(
   /** X.509 certificate SHA-256 thumbprint. */
   @JvmField
   @JsonProperty("x5t#S256")
-  val x5TS256: String
+  val x5TS256: String,
+  /** Algorithm. */
+  @JvmField
+  @JsonProperty("alg")
+  val alg: String = "RS256",
+  /** Key type. */
+  @JvmField
+  @JsonProperty("kty")
+  val kty: String = "RSA",
+  /** Key use (signature). */
+  @JvmField
+  @JsonProperty("use")
+  val use: String = "sig"
 )

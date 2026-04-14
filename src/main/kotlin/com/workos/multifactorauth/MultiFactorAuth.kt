@@ -13,7 +13,7 @@ import com.workos.models.AuthenticationFactor
 import com.workos.models.AuthenticationFactorEnrolled
 import com.workos.models.UserAuthenticationFactorEnrollResponse
 import com.workos.types.AuthenticationFactorsCreateRequestType
-import com.workos.types.UserManagementMultiFactorAuthenticationOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for MultiFactorAuth. */
 class MultiFactorAuth(
@@ -176,7 +176,7 @@ class MultiFactorAuth(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: UserManagementMultiFactorAuthenticationOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthenticationFactor> {
     fun configFor(afterCursor: String? = null): RequestConfig {

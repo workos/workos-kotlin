@@ -2,9 +2,6 @@
 
 package com.workos.featureflags
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -21,33 +18,20 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `list returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/feature-flags", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().list()
     assertNotNull(result)
   }
 
   @Test
   fun `get returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/feature-flags/sample-arg",
+      200,
+      "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+        "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
@@ -55,18 +39,13 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `disable returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/feature-flags/sample-arg/disable"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/feature-flags/sample-arg/disable",
+      200,
+      "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+        "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().disable("sample-arg")
     assertNotNull(result)
@@ -74,18 +53,13 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `enable returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/feature-flags/sample-arg/enable"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
-                "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
-                "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "PUT",
+      "/feature-flags/sample-arg/enable",
+      200,
+      "{\"object\": \"feature_flag\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, " +
+        "\"owner\": null, \"tags\": [], \"enabled\": false, \"default_value\": false, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().enable("sample-arg")
     assertNotNull(result)
@@ -105,14 +79,11 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `listOrganizationFeatureFlags returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg/feature-flags",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listOrganizationFeatureFlags("sample-arg")
     assertNotNull(result)
@@ -120,14 +91,11 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `listUserFeatureFlags returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/user_management/users/sample-arg/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/user_management/users/sample-arg/feature-flags",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listUserFeatureFlags("sample-arg")
     assertNotNull(result)
@@ -135,15 +103,7 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `list translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/feature-flags", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().list()
     }
@@ -151,15 +111,7 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `list translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/feature-flags", 404)
     assertThrows(NotFoundException::class.java) {
       api().list()
     }
@@ -167,15 +119,7 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `list translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/feature-flags", 429)
     assertThrows(RateLimitException::class.java) {
       api().list()
     }
@@ -183,15 +127,7 @@ class FeatureFlagsTest : TestBase() {
 
   @Test
   fun `list translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/feature-flags"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/feature-flags", 500)
     assertThrows(GenericServerException::class.java) {
       api().list()
     }

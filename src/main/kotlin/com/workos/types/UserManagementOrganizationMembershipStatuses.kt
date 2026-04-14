@@ -2,16 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid UserManagementOrganizationMembershipStatuses values returned or accepted by the API. */
-enum class UserManagementOrganizationMembershipStatuses(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Active("active"),
-  Inactive("inactive"),
-  Pending("pending")
-}
+typealias UserManagementOrganizationMembershipStatuses = OrganizationMembershipStatus

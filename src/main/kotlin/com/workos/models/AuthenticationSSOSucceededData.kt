@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class AuthenticationSSOSucceededData(
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
-  @JvmField
-  @JsonProperty("status")
-  val status: String,
   /** The IP address of the request. */
   @JvmField
   @JsonProperty("ip_address")
@@ -31,5 +25,13 @@ data class AuthenticationSSOSucceededData(
   /** SSO connection details. */
   @JvmField
   @JsonProperty("sso")
-  val sso: AuthenticationSSOSucceededDataSSO
+  val sso: AuthenticationSSOSucceededDataSSO,
+  /** Always `"sso"`. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "sso",
+  /** Always `"succeeded"`. */
+  @JvmField
+  @JsonProperty("status")
+  val status: String = "succeeded"
 )

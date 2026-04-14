@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** AuthorizationResource model. */
 data class AuthorizationResource(
-  /** Distinguishes the Resource object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** A human-readable name for the Resource. */
   @JvmField
   @JsonProperty("name")
@@ -46,5 +42,9 @@ data class AuthorizationResource(
   /** An ISO 8601 timestamp. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the Resource object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "authorization_resource"
 )

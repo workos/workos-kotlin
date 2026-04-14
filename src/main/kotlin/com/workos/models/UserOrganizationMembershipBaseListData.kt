@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** UserOrganizationMembershipBaseListData model. */
 data class UserOrganizationMembershipBaseListData(
-  /** Distinguishes the organization membership object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the organization membership. */
   @JvmField
   @JsonProperty("id")
@@ -40,6 +36,10 @@ data class UserOrganizationMembershipBaseListData(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the organization membership object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "organization_membership",
   /** The name of the organization which the user belongs to. */
   @JvmField
   @JsonProperty("organization_name")

@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class OrganizationMembershipCreatedData(
-  /** Distinguishes the organization membership object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the organization membership. */
   @JvmField
   @JsonProperty("id")
@@ -48,6 +44,10 @@ data class OrganizationMembershipCreatedData(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the organization membership object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "organization_membership",
   /** The roles associated with the membership. */
   @JvmField
   @JsonProperty("roles")

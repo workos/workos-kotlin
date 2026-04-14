@@ -2,18 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid ConnectionActivatedDataState values returned or accepted by the API. */
-enum class ConnectionActivatedDataState(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Draft("draft"),
-  Active("active"),
-  Validating("validating"),
-  Inactive("inactive"),
-  Deleting("deleting")
-}
+typealias ConnectionActivatedDataState = ConnectionDeletedDataState

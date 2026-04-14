@@ -2,12 +2,9 @@
 
 package com.workos.sso
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -25,33 +22,20 @@ class SSOTest : TestBase() {
 
   @Test
   fun `listConnections returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/connections", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listConnections()
     assertNotNull(result)
   }
 
   @Test
   fun `getConnection returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"connection\", \"id\": \"sample\", \"connection_type\": \"Pending\", \"name\": \"sample\", \"state\": " +
-                "\"requires_type\", \"status\": \"linked\", \"domains\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-                "\"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/connections/sample-arg",
+      200,
+      "{\"object\": \"connection\", \"id\": \"sample\", \"connection_type\": \"Pending\", \"name\": \"sample\", \"state\": " +
+        "\"requires_type\", \"status\": \"linked\", \"domains\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getConnection("sample-arg")
     assertNotNull(result)
@@ -65,15 +49,7 @@ class SSOTest : TestBase() {
 
   @Test
   fun `authorizeLogout returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/sso/logout/authorize"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"logout_url\": \"sample\", \"logout_token\": \"sample\"}")
-        )
-    )
+    stubResponse("POST", "/sso/logout/authorize", 200, "{\"logout_url\": \"sample\", \"logout_token\": \"sample\"}")
     val result = api().authorizeLogout("sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
@@ -84,18 +60,12 @@ class SSOTest : TestBase() {
 
   @Test
   fun `getProfile returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/sso/profile"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", " +
-                "\"connection_type\": \"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": " +
-                "null, \"raw_attributes\": {}}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/sso/profile",
+      200,
+      "{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": " +
+        "\"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}"
     )
     val result = api().getProfile()
     assertNotNull(result)
@@ -103,18 +73,13 @@ class SSOTest : TestBase() {
 
   @Test
   fun `getProfileAndToken returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/sso/token"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", " +
-                "\"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", " +
-                "\"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/sso/token",
+      200,
+      "{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", \"id\": " +
+        "\"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", " +
+        "\"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}"
     )
     val result = api().getProfileAndToken("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -127,15 +92,7 @@ class SSOTest : TestBase() {
 
   @Test
   fun `listConnections translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connections", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().listConnections()
     }
@@ -143,15 +100,7 @@ class SSOTest : TestBase() {
 
   @Test
   fun `listConnections translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connections", 404)
     assertThrows(NotFoundException::class.java) {
       api().listConnections()
     }
@@ -159,15 +108,7 @@ class SSOTest : TestBase() {
 
   @Test
   fun `listConnections translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connections", 429)
     assertThrows(RateLimitException::class.java) {
       api().listConnections()
     }
@@ -175,15 +116,7 @@ class SSOTest : TestBase() {
 
   @Test
   fun `listConnections translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/connections"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/connections", 500)
     assertThrows(GenericServerException::class.java) {
       api().listConnections()
     }

@@ -15,7 +15,7 @@ import com.workos.models.AuditLogSchemaActor
 import com.workos.models.AuditLogSchemaJson
 import com.workos.models.AuditLogSchemaTarget
 import com.workos.models.AuditLogsRetentionJson
-import com.workos.types.AuditLogsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for AuditLogs. */
 class AuditLogs(
@@ -89,7 +89,7 @@ class AuditLogs(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuditLogsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogActionJson> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -129,7 +129,7 @@ class AuditLogs(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuditLogsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogSchemaJson> {
     fun configFor(afterCursor: String? = null): RequestConfig {

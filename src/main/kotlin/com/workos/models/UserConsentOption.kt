@@ -10,10 +10,6 @@ data class UserConsentOption(
   @JvmField
   @JsonProperty("claim")
   val claim: String,
-  /** The type of consent option. */
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
   /** A human-readable label for this consent option. */
   @JvmField
   @JsonProperty("label")
@@ -21,5 +17,9 @@ data class UserConsentOption(
   /** The available choices for this consent option. */
   @JvmField
   @JsonProperty("choices")
-  val choices: List<UserConsentOptionChoice>
+  val choices: List<UserConsentOptionChoice>,
+  /** The type of consent option. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "enum"
 )

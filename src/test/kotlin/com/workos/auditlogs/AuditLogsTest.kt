@@ -2,13 +2,9 @@
 
 package com.workos.auditlogs
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -26,30 +22,14 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `getAuditLogsRetention returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"retention_period_in_days\": null}")
-        )
-    )
+    stubResponse("GET", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
     val result = api().getAuditLogsRetention("sample-arg")
     assertNotNull(result)
   }
 
   @Test
   fun `updateAuditLogsRetention returns a typed response`() {
-    wireMockRule.stubFor(
-      put(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"retention_period_in_days\": null}")
-        )
-    )
+    stubResponse("PUT", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
     val result = api().updateAuditLogsRetention("sample-arg", 0)
     assertNotNull(result)
     wireMockRule.verify(
@@ -60,29 +40,18 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `listActions returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/audit_logs/actions", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listActions()
     assertNotNull(result)
   }
 
   @Test
   fun `listActionSchemas returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions/sample-arg/schemas"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
+    stubResponse(
+      "GET",
+      "/audit_logs/actions/sample-arg/schemas",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
     val result = api().listActionSchemas("sample-arg")
     assertNotNull(result)
@@ -90,14 +59,11 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `createSchema returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/audit_logs/actions/sample-arg/schemas"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"object\": \"audit_log_schema\", \"version\": 0, \"targets\": [], \"created_at\": \"2024-01-01T00:00:00Z\"}")
-        )
+    stubResponse(
+      "POST",
+      "/audit_logs/actions/sample-arg/schemas",
+      200,
+      "{\"object\": \"audit_log_schema\", \"version\": 0, \"targets\": [], \"created_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTarget>())
     assertNotNull(result)
@@ -105,17 +71,12 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `createExport returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/audit_logs/exports"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
-                " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "POST",
+      "/audit_logs/exports",
+      200,
+      "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -129,17 +90,12 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `getExport returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/exports/sample-arg"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody(
-              "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\"," +
-                " \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-            )
-        )
+    stubResponse(
+      "GET",
+      "/audit_logs/exports/sample-arg",
+      200,
+      "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getExport("sample-arg")
     assertNotNull(result)
@@ -147,15 +103,7 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `listActions translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/audit_logs/actions", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().listActions()
     }
@@ -163,15 +111,7 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `listActions translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/audit_logs/actions", 404)
     assertThrows(NotFoundException::class.java) {
       api().listActions()
     }
@@ -179,15 +119,7 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `listActions translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/audit_logs/actions", 429)
     assertThrows(RateLimitException::class.java) {
       api().listActions()
     }
@@ -195,15 +127,7 @@ class AuditLogsTest : TestBase() {
 
   @Test
   fun `listActions translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/audit_logs/actions"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/audit_logs/actions", 500)
     assertThrows(GenericServerException::class.java) {
       api().listActions()
     }

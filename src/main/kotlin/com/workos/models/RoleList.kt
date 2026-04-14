@@ -6,11 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** RoleList model. */
 data class RoleList(
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The list of records for the current page. */
   @JvmField
   @JsonProperty("data")
-  val data: List<Role>
+  val data: List<Role>,
+  /** Always `"list"`. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "list"
 )

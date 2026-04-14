@@ -8,10 +8,6 @@ import java.time.OffsetDateTime
 
 /** DirectoryUserWithGroups model. */
 data class DirectoryUserWithGroups(
-  /** Distinguishes the Directory User object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Directory User. */
   @JvmField
   @JsonProperty("id")
@@ -57,6 +53,10 @@ data class DirectoryUserWithGroups(
   @JvmField
   @JsonProperty("groups")
   val groups: List<DirectoryGroup>,
+  /** Distinguishes the Directory User object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "directory_user",
   /** The first name of the user. */
   @JvmField
   @JsonProperty("first_name")

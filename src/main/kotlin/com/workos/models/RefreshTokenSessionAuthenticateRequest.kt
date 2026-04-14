@@ -14,13 +14,14 @@ data class RefreshTokenSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The refresh token to exchange for new tokens. */
   @JvmField
   @JsonProperty("refresh_token")
   val refreshToken: String,
+  /** Always `"refresh_token"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "refresh_token",
   /** The ID of the organization to scope the session to. */
   @JvmField
   @JsonProperty("organization_id")

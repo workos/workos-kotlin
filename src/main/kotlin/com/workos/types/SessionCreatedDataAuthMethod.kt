@@ -2,22 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid SessionCreatedDataAuthMethod values returned or accepted by the API. */
-enum class SessionCreatedDataAuthMethod(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  CrossAppAuth("cross_app_auth"),
-  ExternalAuth("external_auth"),
-  Impersonation("impersonation"),
-  MagicCode("magic_code"),
-  MigratedSession("migrated_session"),
-  OAuth("oauth"),
-  Passkey("passkey"),
-  Password("password"),
-  SSO("sso")
-}
+typealias SessionCreatedDataAuthMethod = UserSessionsAuthMethod

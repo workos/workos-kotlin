@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** MagicAuth model. */
 data class MagicAuth(
-  /** Distinguishes the Magic Auth object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the Magic Auth code. */
   @JvmField
   @JsonProperty("id")
@@ -38,5 +34,9 @@ data class MagicAuth(
   /** The code used to verify the Magic Auth code. */
   @JvmField
   @JsonProperty("code")
-  val code: String
+  val code: String,
+  /** Distinguishes the Magic Auth object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "magic_auth"
 )

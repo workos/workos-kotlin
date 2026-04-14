@@ -13,5 +13,5 @@ data class SSOIntentOptions(
   /** The SSO provider type to configure. */
   @JvmField
   @JsonProperty("provider_type")
-  val providerType: String? = null
+  val providerType: String = "GoogleSAML"
 )

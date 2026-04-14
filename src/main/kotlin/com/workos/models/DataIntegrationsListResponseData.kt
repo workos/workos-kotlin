@@ -7,10 +7,6 @@ import com.workos.types.DataIntegrationsListResponseDataOwnership
 
 /** DataIntegrationsListResponseData model. */
 data class DataIntegrationsListResponseData(
-  /** Distinguishes the data provider object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique identifier of the provider. */
   @JvmField
   @JsonProperty("id")
@@ -54,5 +50,9 @@ data class DataIntegrationsListResponseData(
   /** The user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` if the user has not connected. */
   @JvmField
   @JsonProperty("connected_account")
-  val connectedAccount: DataIntegrationsListResponseDataConnectedAccount?
+  val connectedAccount: DataIntegrationsListResponseDataConnectedAccount?,
+  /** Distinguishes the data provider object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "data_provider"
 )

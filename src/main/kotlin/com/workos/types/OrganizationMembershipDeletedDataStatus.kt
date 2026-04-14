@@ -2,16 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid OrganizationMembershipDeletedDataStatus values returned or accepted by the API. */
-enum class OrganizationMembershipDeletedDataStatus(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Active("active"),
-  Inactive("inactive"),
-  Pending("pending")
-}
+typealias OrganizationMembershipDeletedDataStatus = OrganizationMembershipStatus

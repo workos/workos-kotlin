@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** AuthenticationChallenge model. */
 data class AuthenticationChallenge(
-  /** Distinguishes the authentication challenge object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the authentication challenge. */
   @JvmField
   @JsonProperty("id")
@@ -27,6 +23,10 @@ data class AuthenticationChallenge(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the authentication challenge object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "authentication_challenge",
   /** The timestamp when the challenge will expire. Does not apply to TOTP factors. */
   @JvmField
   @JsonProperty("expires_at")

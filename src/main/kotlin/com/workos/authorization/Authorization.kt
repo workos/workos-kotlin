@@ -5,6 +5,7 @@ package com.workos.authorization
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
 import com.workos.common.http.Page
+import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.models.AuthorizationCheck
@@ -16,8 +17,7 @@ import com.workos.models.RoleAssignment
 import com.workos.models.RoleList
 import com.workos.models.UserOrganizationMembershipBaseListData
 import com.workos.types.AuthorizationAssignment
-import com.workos.types.AuthorizationOrder
-import com.workos.types.PermissionsOrder
+import com.workos.types.EventsOrder
 
 /** API accessor for Authorization. */
 class Authorization(
@@ -86,7 +86,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuthorizationOrder? = null,
+    order: EventsOrder? = null,
     parentResourceId: String? = null,
     parentResourceTypeSlug: String? = null,
     parentResourceExternalId: String? = null,
@@ -133,7 +133,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuthorizationOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<RoleAssignment> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -350,13 +350,13 @@ class Authorization(
   fun updateOrganizationRole(
     organizationId: String,
     slug: String,
-    name: String? = null,
-    description: String? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
     val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
+    if (name is PatchField.Present) body["name"] = name.value
+    if (description is PatchField.Present) body["description"] = description.value
     val config =
       RequestConfig(
         method = "PATCH",
@@ -523,19 +523,19 @@ class Authorization(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
-    name: String? = null,
-    description: String? = null,
-    parentResourceId: String? = null,
-    parentResourceExternalId: String? = null,
-    parentResourceTypeSlug: String? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    parentResourceId: PatchField<String> = PatchField.Absent,
+    parentResourceExternalId: PatchField<String> = PatchField.Absent,
+    parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
     val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
-    if (parentResourceId != null) body["parent_resource_id"] = parentResourceId
-    if (parentResourceExternalId != null) body["parent_resource_external_id"] = parentResourceExternalId
-    if (parentResourceTypeSlug != null) body["parent_resource_type_slug"] = parentResourceTypeSlug
+    if (name is PatchField.Present) body["name"] = name.value
+    if (description is PatchField.Present) body["description"] = description.value
+    if (parentResourceId is PatchField.Present) body["parent_resource_id"] = parentResourceId.value
+    if (parentResourceExternalId is PatchField.Present) body["parent_resource_external_id"] = parentResourceExternalId.value
+    if (parentResourceTypeSlug is PatchField.Present) body["parent_resource_type_slug"] = parentResourceTypeSlug.value
     val config =
       RequestConfig(
         method = "PATCH",
@@ -602,7 +602,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuthorizationOrder? = null,
+    order: EventsOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
@@ -649,7 +649,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuthorizationOrder? = null,
+    order: EventsOrder? = null,
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     parentResourceId: String? = null,
@@ -769,19 +769,19 @@ class Authorization(
   @JvmOverloads
   fun updateResource(
     resourceId: String,
-    name: String? = null,
-    description: String? = null,
-    parentResourceId: String? = null,
-    parentResourceExternalId: String? = null,
-    parentResourceTypeSlug: String? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    parentResourceId: PatchField<String> = PatchField.Absent,
+    parentResourceExternalId: PatchField<String> = PatchField.Absent,
+    parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
     val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
-    if (parentResourceId != null) body["parent_resource_id"] = parentResourceId
-    if (parentResourceExternalId != null) body["parent_resource_external_id"] = parentResourceExternalId
-    if (parentResourceTypeSlug != null) body["parent_resource_type_slug"] = parentResourceTypeSlug
+    if (name is PatchField.Present) body["name"] = name.value
+    if (description is PatchField.Present) body["description"] = description.value
+    if (parentResourceId is PatchField.Present) body["parent_resource_id"] = parentResourceId.value
+    if (parentResourceExternalId is PatchField.Present) body["parent_resource_external_id"] = parentResourceExternalId.value
+    if (parentResourceTypeSlug is PatchField.Present) body["parent_resource_type_slug"] = parentResourceTypeSlug.value
     val config =
       RequestConfig(
         method = "PATCH",
@@ -840,7 +840,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: AuthorizationOrder? = null,
+    order: EventsOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
@@ -954,13 +954,13 @@ class Authorization(
   @JvmOverloads
   fun updateEnvironmentRole(
     slug: String,
-    name: String? = null,
-    description: String? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
     val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
+    if (name is PatchField.Present) body["name"] = name.value
+    if (description is PatchField.Present) body["description"] = description.value
     val config =
       RequestConfig(
         method = "PATCH",
@@ -1044,7 +1044,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Long? = null,
-    order: PermissionsOrder? = null,
+    order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -1137,13 +1137,13 @@ class Authorization(
   @JvmOverloads
   fun updatePermission(
     slug: String,
-    name: String? = null,
-    description: String? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationPermission {
     val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
+    if (name is PatchField.Present) body["name"] = name.value
+    if (description is PatchField.Present) body["description"] = description.value
     val config =
       RequestConfig(
         method = "PATCH",

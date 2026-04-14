@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** EmailChangeConfirmation model. */
 data class EmailChangeConfirmation(
-  /** Distinguishes the email change confirmation object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The user object. */
   @JvmField
   @JsonProperty("user")
-  val user: EmailChangeConfirmationUser
+  val user: EmailChangeConfirmationUser,
+  /** Distinguishes the email change confirmation object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "email_change_confirmation"
 )

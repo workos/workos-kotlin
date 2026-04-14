@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The event payload. */
 data class ApiKeyRevokedData(
-  /** Distinguishes the API key object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the API key. */
   @JvmField
   @JsonProperty("id")
@@ -41,5 +37,9 @@ data class ApiKeyRevokedData(
   /** The timestamp when the API key was last updated. */
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+  /** Distinguishes the API key object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "api_key"
 )

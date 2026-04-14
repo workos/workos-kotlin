@@ -9,10 +9,6 @@ import java.time.OffsetDateTime
 
 /** OrganizationCreatedDataDomain model. */
 data class OrganizationCreatedDataDomain(
-  /** Distinguishes the organization domain object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier of the organization domain. */
   @JvmField
   @JsonProperty("id")
@@ -33,6 +29,10 @@ data class OrganizationCreatedDataDomain(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the organization domain object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "organization_domain",
   /** Verification state of the domain. */
   @JvmField
   @JsonProperty("state")

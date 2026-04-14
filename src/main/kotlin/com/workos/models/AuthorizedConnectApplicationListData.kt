@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** AuthorizedConnectApplicationListData model. */
 data class AuthorizedConnectApplicationListData(
-  /** Distinguishes the authorized connect application object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique ID of the authorized connect application. */
   @JvmField
   @JsonProperty("id")
@@ -20,5 +16,9 @@ data class AuthorizedConnectApplicationListData(
   val grantedScopes: List<String>,
   @JvmField
   @JsonProperty("application")
-  val application: ConnectApplication
+  val application: ConnectApplication,
+  /** Distinguishes the authorized connect application object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "authorized_connect_application"
 )

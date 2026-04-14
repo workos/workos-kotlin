@@ -2,20 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid RadarStandaloneResponseBlocklistType values returned or accepted by the API. */
-enum class RadarStandaloneResponseBlocklistType(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  IpAddress("ip_address"),
-  Domain("domain"),
-  Email("email"),
-  Device("device"),
-  UserAgent("user_agent"),
-  DeviceFingerprint("device_fingerprint"),
-  Country("country")
-}
+typealias RadarStandaloneResponseBlocklistType = RadarType

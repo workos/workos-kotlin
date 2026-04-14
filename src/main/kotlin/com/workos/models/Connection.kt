@@ -10,10 +10,6 @@ import java.time.OffsetDateTime
 
 /** Connection model. */
 data class Connection(
-  /** Distinguishes the Connection object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** Unique identifier for the Connection. */
   @JvmField
   @JsonProperty("id")
@@ -47,6 +43,10 @@ data class Connection(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the Connection object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connection",
   /** Unique identifier for the Organization in which the Connection resides. */
   @JvmField
   @JsonProperty("organization_id")

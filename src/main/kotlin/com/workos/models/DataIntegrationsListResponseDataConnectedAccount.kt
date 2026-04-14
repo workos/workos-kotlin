@@ -7,10 +7,6 @@ import com.workos.types.DataIntegrationsListResponseDataConnectedAccountState
 
 /** DataIntegrationsListResponseDataConnectedAccount model. */
 data class DataIntegrationsListResponseDataConnectedAccount(
-  /** Distinguishes the connected account object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The unique identifier of the connected account. */
   @JvmField
   @JsonProperty("id")
@@ -43,5 +39,9 @@ data class DataIntegrationsListResponseDataConnectedAccount(
   @JvmField
   @JsonProperty("userlandUserId")
   @Deprecated("Deprecated field")
-  val userlandUserId: String?
+  val userlandUserId: String?,
+  /** Distinguishes the connected account object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "connected_account"
 )

@@ -14,13 +14,14 @@ data class AuthorizationCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
-  @JvmField
-  @JsonProperty("grant_type")
-  val grantType: String,
   /** The authorization code received from the redirect. */
   @JvmField
   @JsonProperty("code")
   val code: String,
+  /** Always `"authorization_code"`. */
+  @JvmField
+  @JsonProperty("grant_type")
+  val grantType: String = "authorization_code",
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")

@@ -2,9 +2,7 @@
 
 package com.workos.adminportal
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
@@ -21,15 +19,7 @@ class AdminPortalTest : TestBase() {
 
   @Test
   fun `generateLink returns a typed response`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/portal/generate_link"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"link\": \"sample\"}")
-        )
-    )
+    stubResponse("POST", "/portal/generate_link", 200, "{\"link\": \"sample\"}")
     val result = api().generateLink("sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
@@ -40,15 +30,7 @@ class AdminPortalTest : TestBase() {
 
   @Test
   fun `generateLink translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/portal/generate_link"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/portal/generate_link", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().generateLink("sample-arg")
     }
@@ -56,15 +38,7 @@ class AdminPortalTest : TestBase() {
 
   @Test
   fun `generateLink translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/portal/generate_link"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/portal/generate_link", 404)
     assertThrows(NotFoundException::class.java) {
       api().generateLink("sample-arg")
     }
@@ -72,15 +46,7 @@ class AdminPortalTest : TestBase() {
 
   @Test
   fun `generateLink translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/portal/generate_link"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/portal/generate_link", 429)
     assertThrows(RateLimitException::class.java) {
       api().generateLink("sample-arg")
     }
@@ -88,15 +54,7 @@ class AdminPortalTest : TestBase() {
 
   @Test
   fun `generateLink translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      post(urlPathMatching("/portal/generate_link"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("POST", "/portal/generate_link", 500)
     assertThrows(GenericServerException::class.java) {
       api().generateLink("sample-arg")
     }

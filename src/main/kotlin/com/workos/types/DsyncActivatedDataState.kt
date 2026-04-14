@@ -2,18 +2,4 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid DsyncActivatedDataState values returned or accepted by the API. */
-enum class DsyncActivatedDataState(
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  Active("active"),
-  Validating("validating"),
-  InvalidCredentials("invalid_credentials"),
-  Inactive("inactive"),
-  Deleting("deleting")
-}
+typealias DsyncActivatedDataState = DsyncDeletedDataState

@@ -7,10 +7,6 @@ import java.time.OffsetDateTime
 
 /** The event payload. */
 data class RoleCreatedData(
-  /** Distinguishes the role object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String,
   /** The slug identifier of the role. */
   @JvmField
   @JsonProperty("slug")
@@ -27,6 +23,10 @@ data class RoleCreatedData(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** Distinguishes the role object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "role",
   /** The permissions granted by the role. */
   @JvmField
   @JsonProperty("permissions")

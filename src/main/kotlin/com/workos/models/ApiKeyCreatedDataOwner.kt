@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** The owner of the API key. */
 data class ApiKeyCreatedDataOwner(
-  /** The type of the API key owner. */
-  @JvmField
-  @JsonProperty("type")
-  val type: String,
   /** The unique identifier of the API key owner. */
   @JvmField
   @JsonProperty("id")
-  val id: String
+  val id: String,
+  /** The type of the API key owner. */
+  @JvmField
+  @JsonProperty("type")
+  val type: String = "organization"
 )

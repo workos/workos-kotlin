@@ -2,8 +2,6 @@
 
 package com.workos.events
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -19,30 +17,14 @@ class EventsTest : TestBase() {
 
   @Test
   fun `list returns a typed response`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/events"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-        )
-    )
+    stubResponse("GET", "/events", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().list()
     assertNotNull(result)
   }
 
   @Test
   fun `list translates 401 to UnauthorizedException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/events"))
-        .willReturn(
-          aResponse()
-            .withStatus(401)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/events", 401)
     assertThrows(UnauthorizedException::class.java) {
       api().list()
     }
@@ -50,15 +32,7 @@ class EventsTest : TestBase() {
 
   @Test
   fun `list translates 404 to NotFoundException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/events"))
-        .willReturn(
-          aResponse()
-            .withStatus(404)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/events", 404)
     assertThrows(NotFoundException::class.java) {
       api().list()
     }
@@ -66,15 +40,7 @@ class EventsTest : TestBase() {
 
   @Test
   fun `list translates 429 to RateLimitException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/events"))
-        .willReturn(
-          aResponse()
-            .withStatus(429)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/events", 429)
     assertThrows(RateLimitException::class.java) {
       api().list()
     }
@@ -82,15 +48,7 @@ class EventsTest : TestBase() {
 
   @Test
   fun `list translates 500 to GenericServerException`() {
-    wireMockRule.stubFor(
-      get(urlPathMatching("/events"))
-        .willReturn(
-          aResponse()
-            .withStatus(500)
-            .withHeader("Content-Type", "application/json")
-            .withBody("{}")
-        )
-    )
+    stubResponse("GET", "/events", 500)
     assertThrows(GenericServerException::class.java) {
       api().list()
     }
