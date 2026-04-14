@@ -2,45 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.OffsetDateTime
-
-/** The event payload. */
-data class OrganizationUpdatedData(
-  /** Unique identifier of the Organization. */
-  @JvmField
-  @JsonProperty("id")
-  val id: String,
-  /** A descriptive name for the Organization. This field does not need to be unique. */
-  @JvmField
-  @JsonProperty("name")
-  val name: String,
-  /** List of Organization Domains. */
-  @JvmField
-  @JsonProperty("domains")
-  val domains: List<OrganizationUpdatedDataDomain>,
-  /** Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization. */
-  @JvmField
-  @JsonProperty("metadata")
-  val metadata: Map<String, String>,
-  /** The external ID of the Organization. */
-  @JvmField
-  @JsonProperty("external_id")
-  val externalId: String?,
-  /** An ISO 8601 timestamp. */
-  @JvmField
-  @JsonProperty("created_at")
-  val createdAt: OffsetDateTime,
-  /** An ISO 8601 timestamp. */
-  @JvmField
-  @JsonProperty("updated_at")
-  val updatedAt: OffsetDateTime,
-  /** Distinguishes the Organization object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String = "organization",
-  /** The Stripe customer ID of the Organization. */
-  @JvmField
-  @JsonProperty("stripe_customer_id")
-  val stripeCustomerId: String? = null
-)
+typealias OrganizationUpdatedData = OrganizationCreatedData

@@ -2,16 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** Additional context about the event. */
-data class FlagDeletedContext(
-  /** The client ID associated with the flag event. */
-  @JvmField
-  @JsonProperty("client_id")
-  val clientId: String,
-  /** The actor who performed the action. */
-  @JvmField
-  @JsonProperty("actor")
-  val actor: FlagDeletedContextActor
-)
+typealias FlagDeletedContext = FlagCreatedContext

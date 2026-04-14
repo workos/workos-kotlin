@@ -2,16 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** The previous configured targets for the flag rule. */
-data class FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget(
-  /** The organizations targeted by the flag rule. */
-  @JvmField
-  @JsonProperty("organizations")
-  val organizations: List<FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization>,
-  /** The users targeted by the flag rule. */
-  @JvmField
-  @JsonProperty("users")
-  val users: List<FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser>
-)
+typealias FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget = FlagRuleUpdatedContextConfiguredTarget
