@@ -4,8 +4,12 @@ package com.workos.auditlogs
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.put
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -48,6 +52,10 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().updateAuditLogsRetention("sample-arg", 0)
     assertNotNull(result)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
+        .withRequestBody(matchingJsonPath("$.retention_period_in_days"))
+    )
   }
 
   @Test
@@ -111,6 +119,12 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/audit_logs/exports"))
+        .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withRequestBody(matchingJsonPath("$.range_start"))
+        .withRequestBody(matchingJsonPath("$.range_end"))
+    )
   }
 
   @Test

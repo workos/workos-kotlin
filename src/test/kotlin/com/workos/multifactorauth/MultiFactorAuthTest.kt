@@ -4,7 +4,10 @@ package com.workos.multifactorauth
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -36,6 +39,10 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().verifyChallenge("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/auth/challenges/sample-arg/verify"))
+        .withRequestBody(matchingJsonPath("$.code"))
+    )
   }
 
   @Test
@@ -54,6 +61,10 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().enrollFactor(AuthenticationFactorsCreateRequestType.values().first())
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/auth/factors/enroll"))
+        .withRequestBody(matchingJsonPath("$.type"))
+    )
   }
 
   @Test
@@ -131,6 +142,10 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().createUserAuthFactor("sample-arg", "totp")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users/sample-arg/auth_factors"))
+        .withRequestBody(matchingJsonPath("$.type"))
+    )
   }
 
   @Test

@@ -4,7 +4,10 @@ package com.workos.pipes
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -32,6 +35,10 @@ class PipesTest : TestBase() {
     )
     val result = api().authorizeDataIntegration("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+    )
   }
 
   @Test
@@ -47,6 +54,10 @@ class PipesTest : TestBase() {
     )
     val result = api().createDataIntegrationToken("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/token"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+    )
   }
 
   @Test

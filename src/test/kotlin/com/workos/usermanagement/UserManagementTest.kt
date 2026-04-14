@@ -4,8 +4,12 @@ package com.workos.usermanagement
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.put
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -208,6 +212,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createDevice("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/authorize/device"))
+        .withRequestBody(matchingJsonPath("$.client_id"))
+    )
   }
 
   @Test
@@ -232,6 +240,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createCorsOrigin("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/cors_origins"))
+        .withRequestBody(matchingJsonPath("$.origin"))
+    )
   }
 
   @Test
@@ -270,6 +282,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().resetPassword("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/password_reset"))
+        .withRequestBody(matchingJsonPath("$.email"))
+    )
   }
 
   @Test
@@ -289,6 +305,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().confirmPasswordReset("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/password_reset/confirm"))
+        .withRequestBody(matchingJsonPath("$.token"))
+        .withRequestBody(matchingJsonPath("$.new_password"))
+    )
   }
 
   @Test
@@ -342,6 +363,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users"))
+        .withRequestBody(matchingJsonPath("$.email"))
+    )
   }
 
   @Test
@@ -424,6 +449,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().confirmEmailChange("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/confirm"))
+        .withRequestBody(matchingJsonPath("$.code"))
+    )
   }
 
   @Test
@@ -444,6 +473,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().sendEmailChange("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/send"))
+        .withRequestBody(matchingJsonPath("$.new_email"))
+    )
   }
 
   @Test
@@ -463,6 +496,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().verifyEmail("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_verification/confirm"))
+        .withRequestBody(matchingJsonPath("$.code"))
+    )
   }
 
   @Test
@@ -547,6 +584,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().sendInvitation("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/invitations"))
+        .withRequestBody(matchingJsonPath("$.email"))
+    )
   }
 
   @Test
@@ -662,6 +703,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().updateJWTTemplate("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/user_management/jwt_template"))
+        .withRequestBody(matchingJsonPath("$.content"))
+    )
   }
 
   @Test
@@ -681,6 +726,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createMagicAuth("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/magic_auth"))
+        .withRequestBody(matchingJsonPath("$.email"))
+    )
   }
 
   @Test
@@ -734,6 +783,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createOrganizationMembership("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/organization_memberships"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("$.organization_id"))
+    )
   }
 
   @Test
@@ -834,6 +888,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createRedirectUri("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/redirect_uris"))
+        .withRequestBody(matchingJsonPath("$.uri"))
+    )
   }
 
   @Test

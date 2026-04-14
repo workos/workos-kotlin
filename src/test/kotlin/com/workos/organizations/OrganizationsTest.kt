@@ -4,8 +4,12 @@ package com.workos.organizations
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.put
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -51,6 +55,10 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/organizations"))
+        .withRequestBody(matchingJsonPath("$.name"))
+    )
   }
 
   @Test

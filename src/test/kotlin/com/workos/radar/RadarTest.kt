@@ -3,7 +3,9 @@
 package com.workos.radar
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -40,6 +42,14 @@ class RadarTest : TestBase() {
         RadarStandaloneAssessRequestAction.values().first()
       )
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/radar/attempts"))
+        .withRequestBody(matchingJsonPath("$.ip_address"))
+        .withRequestBody(matchingJsonPath("$.user_agent"))
+        .withRequestBody(matchingJsonPath("$.email"))
+        .withRequestBody(matchingJsonPath("$.auth_method"))
+        .withRequestBody(matchingJsonPath("$.action"))
+    )
   }
 
   @Test
@@ -61,6 +71,10 @@ class RadarTest : TestBase() {
     )
     val result = api().addListEntry("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
+        .withRequestBody(matchingJsonPath("$.entry"))
+    )
   }
 
   @Test

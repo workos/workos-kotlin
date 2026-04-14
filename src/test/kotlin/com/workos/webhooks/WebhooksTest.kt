@@ -4,8 +4,12 @@ package com.workos.webhooks
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.patch
+import com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -53,6 +57,10 @@ class WebhooksTest : TestBase() {
     )
     val result = api().createEndpoint("sample-arg", emptyList<CreateWebhookEndpointEvents>())
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/webhook_endpoints"))
+        .withRequestBody(matchingJsonPath("$.endpoint_url"))
+    )
   }
 
   @Test

@@ -3,7 +3,9 @@
 package com.workos.widgets
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -30,6 +32,10 @@ class WidgetsTest : TestBase() {
     )
     val result = api().createToken("sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/widgets/token"))
+        .withRequestBody(matchingJsonPath("$.organization_id"))
+    )
   }
 
   @Test

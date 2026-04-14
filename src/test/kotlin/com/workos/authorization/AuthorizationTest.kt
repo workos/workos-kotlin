@@ -4,9 +4,15 @@ package com.workos.authorization
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.patch
+import com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.put
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -34,6 +40,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().check("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/check"))
+        .withRequestBody(matchingJsonPath("$.permission_slug"))
+    )
   }
 
   @Test
@@ -49,6 +59,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().listOrganizationMembershipResources("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      getRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/resources"))
+        .withQueryParam("permission_slug", matching("sample-arg"))
+    )
   }
 
   @Test
@@ -83,6 +97,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().assignRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
+        .withRequestBody(matchingJsonPath("$.role_slug"))
+    )
   }
 
   @Test
@@ -129,6 +147,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles"))
+        .withRequestBody(matchingJsonPath("$.name"))
+    )
   }
 
   @Test
@@ -192,6 +214,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
+        .withRequestBody(matchingJsonPath("$.slug"))
+    )
   }
 
   @Test
@@ -276,6 +302,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().listResourceOrganizationMemberships("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      getRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/organization_memberships"))
+        .withQueryParam("permission_slug", matching("sample-arg"))
+    )
   }
 
   @Test
@@ -310,6 +340,13 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createResource("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/resources"))
+        .withRequestBody(matchingJsonPath("$.external_id"))
+        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("$.resource_type_slug"))
+        .withRequestBody(matchingJsonPath("$.organization_id"))
+    )
   }
 
   @Test
@@ -369,6 +406,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().listMembershipsForResource("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      getRequestedFor(urlPathMatching("/authorization/resources/sample-arg/organization_memberships"))
+        .withQueryParam("permission_slug", matching("sample-arg"))
+    )
   }
 
   @Test
@@ -403,6 +444,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createEnvironmentRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/roles"))
+        .withRequestBody(matchingJsonPath("$.slug"))
+        .withRequestBody(matchingJsonPath("$.name"))
+    )
   }
 
   @Test
@@ -460,6 +506,10 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().addEnvironmentRolePermission("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/roles/sample-arg/permissions"))
+        .withRequestBody(matchingJsonPath("$.slug"))
+    )
   }
 
   @Test
@@ -513,6 +563,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createPermission("sample-arg", "sample-arg")
     assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/permissions"))
+        .withRequestBody(matchingJsonPath("$.slug"))
+        .withRequestBody(matchingJsonPath("$.name"))
+    )
   }
 
   @Test
