@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias OrganizationDomainDeletedData = OrganizationCreatedDataDomain
+typealias OrganizationDomainDeletedData = OrganizationDomain

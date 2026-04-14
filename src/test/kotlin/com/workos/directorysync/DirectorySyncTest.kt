@@ -7,9 +7,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class DirectorySyncTest : TestBase() {
@@ -34,12 +34,17 @@ class DirectorySyncTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
+    assertEquals("directory", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.externalKey)
+    assertEquals("sample", result.name)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for delete")
-  fun `delete returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `delete completes without throwing`() {
+    stubResponse("DELETE", "/directories/sample-arg", 204)
+    api().delete("sample-arg")
   }
 
   @Test
@@ -61,6 +66,11 @@ class DirectorySyncTest : TestBase() {
     )
     val result = api().getGroup("sample-arg")
     assertNotNull(result)
+    assertEquals("directory_group", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.idpId)
+    assertEquals("sample", result.directoryId)
+    assertEquals("sample", result.organizationId)
   }
 
   @Test
@@ -82,6 +92,11 @@ class DirectorySyncTest : TestBase() {
     )
     val result = api().getUser("sample-arg")
     assertNotNull(result)
+    assertEquals("directory_user", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.directoryId)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.idpId)
   }
 
   @Test

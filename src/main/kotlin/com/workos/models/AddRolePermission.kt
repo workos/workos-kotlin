@@ -2,12 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** AddRolePermission model. */
-data class AddRolePermission(
-  /** The slug of the permission to add to the role. */
-  @JvmField
-  @JsonProperty("slug")
-  val slug: String
-)
+typealias AddRolePermission = SlimRole

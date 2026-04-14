@@ -2,16 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** UpdateAuthorizationPermission model. */
-data class UpdateAuthorizationPermission(
-  /** A descriptive name for the Permission. */
-  @JvmField
-  @JsonProperty("name")
-  val name: String? = null,
-  /** An optional description of the Permission. */
-  @JvmField
-  @JsonProperty("description")
-  val description: String? = null
-)
+typealias UpdateAuthorizationPermission = UpdateRole

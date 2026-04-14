@@ -12,6 +12,7 @@ import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.models.AuditLogSchemaTarget
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -66,6 +67,8 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTarget>())
     assertNotNull(result)
+    assertEquals("audit_log_schema", result.`object`)
+    assertEquals(0L, result.version)
   }
 
   @Test
@@ -79,6 +82,8 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("audit_log_export", result.`object`)
+    assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/audit_logs/exports"))
         .withRequestBody(matchingJsonPath("$.organization_id"))
@@ -98,6 +103,8 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().getExport("sample-arg")
     assertNotNull(result)
+    assertEquals("audit_log_export", result.`object`)
+    assertEquals("sample", result.id)
   }
 
   @Test

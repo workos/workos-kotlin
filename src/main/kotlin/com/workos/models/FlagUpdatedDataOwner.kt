@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias FlagUpdatedDataOwner = FeatureFlagOwner
+typealias FlagUpdatedDataOwner = FlagOwner

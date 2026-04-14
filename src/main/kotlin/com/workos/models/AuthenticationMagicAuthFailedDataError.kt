@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias AuthenticationMagicAuthFailedDataError = AuthenticationEmailVerificationFailedDataError
+typealias AuthenticationMagicAuthFailedDataError = AuthenticationMfaFailedDataError

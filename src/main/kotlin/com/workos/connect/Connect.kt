@@ -105,7 +105,18 @@ class Connect(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
-  /** createOAuthApplication */
+  /**
+   * Create a Connect Application
+   *
+   * @param name The name of the application.
+   * @param isFirstParty Whether this is a first-party application. Third-party applications require an organization_id.
+   * @param description A description for the application.
+   * @param scopes The OAuth scopes granted to the application.
+   * @param redirectUris Redirect URIs for the application.
+   * @param usesPkce Whether the application uses PKCE (Proof Key for Code Exchange).
+   * @param organizationId The organization ID this application belongs to. Required when is_first_party is false.
+   * @return the ConnectApplication
+   */
   @JvmOverloads
   fun createOAuthApplication(
     name: String,
@@ -117,15 +128,17 @@ class Connect(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication {
-    val body = linkedMapOf<String, Any?>()
-    body["name"] = name
-    body["is_first_party"] = isFirstParty
-    if (description != null) body["description"] = description
-    if (scopes != null) body["scopes"] = scopes
-    if (redirectUris != null) body["redirect_uris"] = redirectUris
-    if (usesPkce != null) body["uses_pkce"] = usesPkce
-    if (organizationId != null) body["organization_id"] = organizationId
-    body["application_type"] = "oauth"
+    val body =
+      bodyOf(
+        "name" to name,
+        "is_first_party" to isFirstParty,
+        "description" to description,
+        "scopes" to scopes,
+        "redirect_uris" to redirectUris,
+        "uses_pkce" to usesPkce,
+        "organization_id" to organizationId,
+        "application_type" to "oauth"
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -136,7 +149,15 @@ class Connect(
     return workos.baseClient.request(config, ConnectApplication::class.java)
   }
 
-  /** createM2MApplication */
+  /**
+   * Create a Connect Application
+   *
+   * @param name The name of the application.
+   * @param organizationId The organization ID this application belongs to.
+   * @param description A description for the application.
+   * @param scopes The OAuth scopes granted to the application.
+   * @return the ConnectApplication
+   */
   @JvmOverloads
   fun createM2MApplication(
     name: String,
@@ -145,12 +166,14 @@ class Connect(
     scopes: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication {
-    val body = linkedMapOf<String, Any?>()
-    body["name"] = name
-    body["organization_id"] = organizationId
-    if (description != null) body["description"] = description
-    if (scopes != null) body["scopes"] = scopes
-    body["application_type"] = "m2m"
+    val body =
+      bodyOf(
+        "name" to name,
+        "organization_id" to organizationId,
+        "description" to description,
+        "scopes" to scopes,
+        "application_type" to "m2m"
+      )
     val config =
       RequestConfig(
         method = "POST",

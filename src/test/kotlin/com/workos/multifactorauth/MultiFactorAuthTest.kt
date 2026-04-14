@@ -11,9 +11,9 @@ import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import com.workos.types.AuthenticationFactorsCreateRequestType
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class MultiFactorAuthTest : TestBase() {
@@ -30,6 +30,7 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().verifyChallenge("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals(false, result.valid)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/challenges/sample-arg/verify"))
         .withRequestBody(matchingJsonPath("$.code"))
@@ -50,6 +51,8 @@ class MultiFactorAuthTest : TestBase() {
         AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown }
       )
     assertNotNull(result)
+    assertEquals("authentication_factor", result.`object`)
+    assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/factors/enroll"))
         .withRequestBody(matchingJsonPath("$.type"))
@@ -67,12 +70,14 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().getFactor("sample-arg")
     assertNotNull(result)
+    assertEquals("authentication_factor", result.`object`)
+    assertEquals("sample", result.id)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteFactor")
-  fun `deleteFactor returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteFactor completes without throwing`() {
+    stubResponse("DELETE", "/auth/factors/sample-arg", 204)
+    api().deleteFactor("sample-arg")
   }
 
   @Test
@@ -86,6 +91,9 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().challengeFactor("sample-arg")
     assertNotNull(result)
+    assertEquals("authentication_challenge", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.authenticationFactorId)
   }
 
   @Test

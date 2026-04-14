@@ -62,7 +62,17 @@ class UserManagement(
     return workos.baseClient.request(config, JwksResponse::class.java)
   }
 
-  /** authenticateWithPassword */
+  /**
+   * Authenticate
+   *
+   * @param email The user's email address.
+   * @param password The user's password.
+   * @param invitationToken An invitation token to accept during authentication.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithPassword(
     email: String,
@@ -73,16 +83,18 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["email"] = email
-    body["password"] = password
-    if (invitationToken != null) body["invitation_token"] = invitationToken
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "password"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "email" to email,
+        "password" to password,
+        "invitation_token" to invitationToken,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "password",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -93,7 +105,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithCode */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithCode(
     code: String,
@@ -102,14 +118,16 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "authorization_code"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "code" to code,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "authorization_code",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -120,7 +138,16 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithRefreshToken */
+  /**
+   * Authenticate
+   *
+   * @param refreshToken The refresh token to exchange for new tokens.
+   * @param organizationId The ID of the organization to scope the session to.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithRefreshToken(
     refreshToken: String,
@@ -130,15 +157,17 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["refresh_token"] = refreshToken
-    if (organizationId != null) body["organization_id"] = organizationId
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "refresh_token"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "refresh_token" to refreshToken,
+        "organization_id" to organizationId,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "refresh_token",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -149,7 +178,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithMagicAuth */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithMagicAuth(
     code: String,
@@ -160,16 +193,18 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
-    body["email"] = email
-    if (invitationToken != null) body["invitation_token"] = invitationToken
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "urn:workos:oauth:grant-type:magic-auth:code"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "code" to code,
+        "email" to email,
+        "invitation_token" to invitationToken,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "urn:workos:oauth:grant-type:magic-auth:code",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -180,7 +215,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithEmailVerification */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithEmailVerification(
     code: String,
@@ -190,15 +229,17 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
-    if (pendingAuthenticationToken != null) body["pending_authentication_token"] = pendingAuthenticationToken
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "urn:workos:oauth:grant-type:email-verification:code"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "code" to code,
+        "pending_authentication_token" to pendingAuthenticationToken,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "urn:workos:oauth:grant-type:email-verification:code",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -209,7 +250,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithTotp */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithTotp(
     code: String,
@@ -220,16 +265,18 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
-    body["pending_authentication_token"] = pendingAuthenticationToken
-    body["authentication_challenge_id"] = authenticationChallengeId
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "urn:workos:oauth:grant-type:mfa-totp"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "code" to code,
+        "pending_authentication_token" to pendingAuthenticationToken,
+        "authentication_challenge_id" to authenticationChallengeId,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "urn:workos:oauth:grant-type:mfa-totp",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -240,7 +287,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithOrganizationSelection */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithOrganizationSelection(
     pendingAuthenticationToken: String,
@@ -250,15 +301,17 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["pending_authentication_token"] = pendingAuthenticationToken
-    body["organization_id"] = organizationId
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "urn:workos:oauth:grant-type:organization-selection"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body =
+      bodyOf(
+        "pending_authentication_token" to pendingAuthenticationToken,
+        "organization_id" to organizationId,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "urn:workos:oauth:grant-type:organization-selection",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -269,7 +322,11 @@ class UserManagement(
     return workos.baseClient.request(config, AuthenticateResponse::class.java)
   }
 
-  /** authenticateWithDeviceCode */
+  /**
+   * Authenticate
+   *
+   * @return the AuthenticateResponse
+   */
   @JvmOverloads
   fun authenticateWithDeviceCode(
     deviceCode: String,
@@ -278,13 +335,15 @@ class UserManagement(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["device_code"] = deviceCode
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code"
-    body["client_id"] = workos.clientId
+    val body =
+      bodyOf(
+        "device_code" to deviceCode,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "urn:ietf:params:oauth:grant-type:device_code",
+        "client_id" to workos.clientId
+      )
     val config =
       RequestConfig(
         method = "POST",

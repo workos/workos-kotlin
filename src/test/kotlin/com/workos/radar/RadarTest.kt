@@ -2,6 +2,7 @@
 
 package com.workos.radar
 
+import com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -12,9 +13,9 @@ import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import com.workos.types.RadarStandaloneAssessRequestAction
 import com.workos.types.RadarStandaloneAssessRequestAuthMethod
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class RadarTest : TestBase() {
@@ -32,6 +33,8 @@ class RadarTest : TestBase() {
         RadarStandaloneAssessRequestAction.values().first { it != RadarStandaloneAssessRequestAction.Unknown }
       )
     assertNotNull(result)
+    assertEquals("sample", result.reason)
+    assertEquals("sample", result.attemptId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/radar/attempts"))
         .withRequestBody(matchingJsonPath("$.ip_address"))
@@ -43,9 +46,9 @@ class RadarTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for updateAttempt")
-  fun `updateAttempt returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `updateAttempt completes without throwing`() {
+    stubResponse("PUT", "/radar/attempts/sample-arg", 200)
+    api().updateAttempt("sample-arg")
   }
 
   @Test
@@ -53,6 +56,7 @@ class RadarTest : TestBase() {
     stubResponse("POST", "/radar/lists/sample-arg/sample-arg", 200, "{\"message\": \"sample\"}")
     val result = api().addListEntry("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.message)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
         .withRequestBody(matchingJsonPath("$.entry"))
@@ -60,9 +64,13 @@ class RadarTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for removeListEntry")
-  fun `removeListEntry returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `removeListEntry completes without throwing`() {
+    stubResponse("DELETE", "/radar/lists/sample-arg/sample-arg", 204)
+    api().removeListEntry("sample-arg", "sample-arg", "sample-arg")
+    wireMockRule.verify(
+      deleteRequestedFor(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
+        .withRequestBody(matchingJsonPath("$.entry"))
+    )
   }
 
   @Test

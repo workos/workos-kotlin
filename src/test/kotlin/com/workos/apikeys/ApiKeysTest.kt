@@ -10,9 +10,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class ApiKeysTest : TestBase() {
@@ -30,9 +30,9 @@ class ApiKeysTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for delete")
-  fun `delete returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `delete completes without throwing`() {
+    stubResponse("DELETE", "/api_keys/sample-arg", 204)
+    api().delete("sample-arg")
   }
 
   @Test
@@ -54,6 +54,11 @@ class ApiKeysTest : TestBase() {
     )
     val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("api_key", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.obfuscatedValue)
+    assertEquals("sample", result.value)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations/sample-arg/api_keys"))
         .withRequestBody(matchingJsonPath("$.name"))

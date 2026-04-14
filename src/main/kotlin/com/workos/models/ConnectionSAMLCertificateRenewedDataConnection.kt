@@ -2,4 +2,16 @@
 
 package com.workos.models
 
-typealias ConnectionSAMLCertificateRenewedDataConnection = ConnectionSAMLCertificateRenewalRequiredDataConnection
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** The connection with the renewed certificate. */
+data class ConnectionSAMLCertificateRenewedDataConnection(
+  /** Unique identifier of the connection. */
+  @JvmField
+  @JsonProperty("id")
+  val id: String,
+  /** The ID of the organization the connection belongs to. */
+  @JvmField
+  @JsonProperty("organization_id")
+  val organizationId: String? = null
+)

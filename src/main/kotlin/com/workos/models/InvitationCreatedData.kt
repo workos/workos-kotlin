@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias InvitationCreatedData = InvitationAcceptedData
+typealias InvitationCreatedData = InvitationResentData

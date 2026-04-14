@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias UpdateOrganizationRole = UpdateAuthorizationPermission
+typealias UpdateOrganizationRole = UpdateRole

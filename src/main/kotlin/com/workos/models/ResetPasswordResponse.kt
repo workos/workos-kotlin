@@ -2,12 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** ResetPasswordResponse model. */
-data class ResetPasswordResponse(
-  /** The user whose password was reset. */
-  @JvmField
-  @JsonProperty("user")
-  val user: User
-)
+typealias ResetPasswordResponse = VerifyEmailResponse

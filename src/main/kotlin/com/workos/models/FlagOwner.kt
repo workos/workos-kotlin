@@ -2,4 +2,20 @@
 
 package com.workos.models
 
-typealias FlagOwner = FeatureFlagOwner
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** FlagOwner model. */
+data class FlagOwner(
+  /** The email address of the flag owner. */
+  @JvmField
+  @JsonProperty("email")
+  val email: String,
+  /** The first name of the flag owner. */
+  @JvmField
+  @JsonProperty("first_name")
+  val firstName: String?,
+  /** The last name of the flag owner. */
+  @JvmField
+  @JsonProperty("last_name")
+  val lastName: String?
+)

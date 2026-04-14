@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias AuditLogSchemaJsonTarget = AuditLogSchemaTarget
+typealias EventSchemaContextActor = EventContextActor

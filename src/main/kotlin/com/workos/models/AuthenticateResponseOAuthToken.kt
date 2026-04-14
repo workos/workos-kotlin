@@ -2,28 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** The OAuth tokens from the identity provider, if applicable. */
-data class AuthenticateResponseOAuthToken(
-  /** The OAuth provider used for authentication. */
-  @JvmField
-  @JsonProperty("provider")
-  val provider: String,
-  /** The refresh token from the OAuth provider. */
-  @JvmField
-  @JsonProperty("refresh_token")
-  val refreshToken: String,
-  /** The access token from the OAuth provider. */
-  @JvmField
-  @JsonProperty("access_token")
-  val accessToken: String,
-  /** The timestamp at which the access token expires. */
-  @JvmField
-  @JsonProperty("expires_at")
-  val expiresAt: Long,
-  /** A list of OAuth scopes for which the access token is authorized. */
-  @JvmField
-  @JsonProperty("scopes")
-  val scopes: List<String>
-)
+typealias AuthenticateResponseOAuthToken = SSOTokenResponseOAuthToken

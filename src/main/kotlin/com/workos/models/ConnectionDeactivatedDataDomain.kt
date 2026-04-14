@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias ConnectionDeactivatedDataDomain = ConnectionActivatedDataDomain
+typealias ConnectionDeactivatedDataDomain = ConnectionDomain

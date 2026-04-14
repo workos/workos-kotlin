@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationAccessTokenResponseError
 
 /** DataIntegrationAccessTokenResponse model. */
 data class DataIntegrationAccessTokenResponse(
@@ -13,9 +14,9 @@ data class DataIntegrationAccessTokenResponse(
   /** The [access token](/reference/pipes/access-token) object, present when `active` is `true`. */
   @JvmField
   @JsonProperty("access_token")
-  val accessToken: Any? = null,
+  val accessToken: DataIntegrationAccessTokenResponseAccessToken? = null,
   /** - `"not_installed"`: The user does not have the integration installed. */
   @JvmField
   @JsonProperty("error")
-  val error: String? = null
+  val error: DataIntegrationAccessTokenResponseError? = null
 )

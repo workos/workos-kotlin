@@ -46,7 +46,7 @@ data class ConnectApplication(
   /** The redirect URIs configured for this application. */
   @JvmField
   @JsonProperty("redirect_uris")
-  val redirectUris: List<Any>? = null,
+  val redirectUris: List<ConnectApplicationRedirectUri>? = null,
   /** Whether the application uses PKCE for authorization. */
   @JvmField
   @JsonProperty("uses_pkce")

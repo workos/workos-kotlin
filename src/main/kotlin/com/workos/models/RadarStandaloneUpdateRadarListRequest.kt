@@ -2,4 +2,12 @@
 
 package com.workos.models
 
-typealias RadarStandaloneUpdateRadarListRequest = RadarStandaloneDeleteRadarListEntryRequest
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** RadarStandaloneUpdateRadarListRequest model. */
+data class RadarStandaloneUpdateRadarListRequest(
+  /** The value to add to the list. Must match the format of the list type (e.g. a valid IP address for `ip_address`, a valid email for `email`). */
+  @JvmField
+  @JsonProperty("entry")
+  val entry: String
+)

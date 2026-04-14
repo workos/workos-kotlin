@@ -2,4 +2,16 @@
 
 package com.workos.models
 
-typealias UserSessionsImpersonator = AuthenticateResponseImpersonator
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** Information about the impersonator if this session was created via impersonation. */
+data class UserSessionsImpersonator(
+  /** The email address of the WorkOS Dashboard user who is impersonating the user. */
+  @JvmField
+  @JsonProperty("email")
+  val email: String,
+  /** The justification the impersonator gave for impersonating the user. */
+  @JvmField
+  @JsonProperty("reason")
+  val reason: String?
+)

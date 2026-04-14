@@ -2,6 +2,7 @@
 
 package com.workos.authorization
 
+import com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
@@ -12,9 +13,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class AuthorizationTest : TestBase() {
@@ -25,6 +26,7 @@ class AuthorizationTest : TestBase() {
     stubResponse("POST", "/authorization/organization_memberships/sample-arg/check", 200, "{\"authorized\": false}")
     val result = api().check("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals(false, result.authorized)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/check"))
         .withRequestBody(matchingJsonPath("$.permission_slug"))
@@ -71,6 +73,8 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().assignRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("role_assignment", result.`object`)
+    assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
         .withRequestBody(matchingJsonPath("$.role_slug"))
@@ -78,15 +82,19 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for removeRole")
-  fun `removeRole returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `removeRole completes without throwing`() {
+    stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments", 204)
+    api().removeRole("sample-arg", "sample-arg")
+    wireMockRule.verify(
+      deleteRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
+        .withRequestBody(matchingJsonPath("$.role_slug"))
+    )
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteOrganizationMembershipRoleAssignment")
-  fun `deleteOrganizationMembershipRoleAssignment returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteOrganizationMembershipRoleAssignment completes without throwing`() {
+    stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments/sample-arg", 204)
+    api().deleteOrganizationMembershipRoleAssignment("sample-arg", "sample-arg")
   }
 
   @Test
@@ -94,6 +102,7 @@ class AuthorizationTest : TestBase() {
     stubResponse("GET", "/authorization/organizations/sample-arg/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listOrganizationRoles("sample-arg")
     assertNotNull(result)
+    assertEquals("list", result.`object`)
   }
 
   @Test
@@ -108,6 +117,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles"))
         .withRequestBody(matchingJsonPath("$.name"))
@@ -126,6 +140,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
@@ -140,12 +159,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteOrganizationRole")
-  fun `deleteOrganizationRole returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteOrganizationRole completes without throwing`() {
+    stubResponse("DELETE", "/authorization/organizations/sample-arg/roles/sample-arg", 204)
+    api().deleteOrganizationRole("sample-arg", "sample-arg")
   }
 
   @Test
@@ -160,6 +184,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
         .withRequestBody(matchingJsonPath("$.slug"))
@@ -178,12 +207,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateRolePermissions("sample-arg", "sample-arg", emptyList<String>())
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteRolePermission")
-  fun `deleteRolePermission returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteRolePermission completes without throwing`() {
+    stubResponse("DELETE", "/authorization/organizations/sample-arg/roles/sample-arg/permissions/sample-arg", 204)
+    api().deleteRolePermission("sample-arg", "sample-arg", "sample-arg")
   }
 
   @Test
@@ -198,6 +232,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("authorization_resource", result.`object`)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.externalId)
   }
 
   @Test
@@ -212,12 +251,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("authorization_resource", result.`object`)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.externalId)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteOrganizationResource")
-  fun `deleteOrganizationResource returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteOrganizationResource completes without throwing`() {
+    stubResponse("DELETE", "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg", 204)
+    api().deleteOrganizationResource("sample-arg", "sample-arg", "sample-arg")
   }
 
   @Test
@@ -255,6 +299,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createResource("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("authorization_resource", result.`object`)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.externalId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/resources"))
         .withRequestBody(matchingJsonPath("$.external_id"))
@@ -276,6 +325,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getResource("sample-arg")
     assertNotNull(result)
+    assertEquals("authorization_resource", result.`object`)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.externalId)
   }
 
   @Test
@@ -290,12 +344,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateResource("sample-arg")
     assertNotNull(result)
+    assertEquals("authorization_resource", result.`object`)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.externalId)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteResource")
-  fun `deleteResource returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteResource completes without throwing`() {
+    stubResponse("DELETE", "/authorization/resources/sample-arg", 204)
+    api().deleteResource("sample-arg")
   }
 
   @Test
@@ -319,6 +378,7 @@ class AuthorizationTest : TestBase() {
     stubResponse("GET", "/authorization/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listEnvironmentRoles()
     assertNotNull(result)
+    assertEquals("list", result.`object`)
   }
 
   @Test
@@ -333,6 +393,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createEnvironmentRole("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/roles"))
         .withRequestBody(matchingJsonPath("$.slug"))
@@ -352,6 +417,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getEnvironmentRole("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
@@ -366,6 +436,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateEnvironmentRole("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
@@ -380,6 +455,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().addEnvironmentRolePermission("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/roles/sample-arg/permissions"))
         .withRequestBody(matchingJsonPath("$.slug"))
@@ -398,6 +478,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().setEnvironmentRolePermissions("sample-arg", emptyList<String>())
     assertNotNull(result)
+    assertEquals("sample", result.slug)
+    assertEquals("role", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.resourceTypeSlug)
   }
 
   @Test
@@ -418,6 +503,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createPermission("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("permission", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.system)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/permissions"))
         .withRequestBody(matchingJsonPath("$.slug"))
@@ -436,6 +526,11 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getPermission("sample-arg")
     assertNotNull(result)
+    assertEquals("permission", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.system)
   }
 
   @Test
@@ -449,12 +544,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updatePermission("sample-arg")
     assertNotNull(result)
+    assertEquals("permission", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.system)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deletePermission")
-  fun `deletePermission returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deletePermission completes without throwing`() {
+    stubResponse("DELETE", "/authorization/permissions/sample-arg", 204)
+    api().deletePermission("sample-arg")
   }
 
   @Test

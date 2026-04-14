@@ -7,9 +7,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class ConnectTest : TestBase() {
@@ -33,6 +33,10 @@ class ConnectTest : TestBase() {
     )
     val result = api().createOAuthApplication("sample-arg", false)
     assertNotNull(result)
+    assertEquals("connect_application", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.clientId)
+    assertEquals("sample", result.name)
   }
 
   @Test
@@ -46,6 +50,10 @@ class ConnectTest : TestBase() {
     )
     val result = api().createM2MApplication("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("connect_application", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.clientId)
+    assertEquals("sample", result.name)
   }
 
   @Test
@@ -59,6 +67,10 @@ class ConnectTest : TestBase() {
     )
     val result = api().getApplication("sample-arg")
     assertNotNull(result)
+    assertEquals("connect_application", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.clientId)
+    assertEquals("sample", result.name)
   }
 
   @Test
@@ -72,12 +84,16 @@ class ConnectTest : TestBase() {
     )
     val result = api().updateApplication("sample-arg")
     assertNotNull(result)
+    assertEquals("connect_application", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.clientId)
+    assertEquals("sample", result.name)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteApplication")
-  fun `deleteApplication returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteApplication completes without throwing`() {
+    stubResponse("DELETE", "/connect/applications/sample-arg", 204)
+    api().deleteApplication("sample-arg")
   }
 
   @Test
@@ -104,12 +120,16 @@ class ConnectTest : TestBase() {
     )
     val result = api().createApplicationClientSecret("sample-arg")
     assertNotNull(result)
+    assertEquals("connect_application_secret", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.secretHint)
+    assertEquals("sample", result.secret)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteClientSecret")
-  fun `deleteClientSecret returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteClientSecret completes without throwing`() {
+    stubResponse("DELETE", "/connect/client_secrets/sample-arg", 204)
+    api().deleteClientSecret("sample-arg")
   }
 
   @Test

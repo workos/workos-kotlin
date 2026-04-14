@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias SendVerificationEmailResponse = ResetPasswordResponse
+typealias SendVerificationEmailResponse = VerifyEmailResponse

@@ -10,9 +10,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class OrganizationsTest : TestBase() {
@@ -36,6 +36,9 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
+    assertEquals("organization", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations"))
         .withRequestBody(matchingJsonPath("$.name"))
@@ -53,6 +56,9 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().getByExternalId("sample-arg")
     assertNotNull(result)
+    assertEquals("organization", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
   }
 
   @Test
@@ -66,6 +72,9 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
+    assertEquals("organization", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
   }
 
   @Test
@@ -79,12 +88,15 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().update("sample-arg")
     assertNotNull(result)
+    assertEquals("organization", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for delete")
-  fun `delete returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `delete completes without throwing`() {
+    stubResponse("DELETE", "/organizations/sample-arg", 204)
+    api().delete("sample-arg")
   }
 
   @Test
@@ -97,6 +109,8 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().getAuditLogConfiguration("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.organizationId)
+    assertEquals(0L, result.retentionPeriodInDays)
   }
 
   @Test

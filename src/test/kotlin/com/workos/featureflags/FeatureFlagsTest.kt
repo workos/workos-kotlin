@@ -7,9 +7,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class FeatureFlagsTest : TestBase() {
@@ -34,6 +34,11 @@ class FeatureFlagsTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
+    assertEquals("feature_flag", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.enabled)
   }
 
   @Test
@@ -48,6 +53,11 @@ class FeatureFlagsTest : TestBase() {
     )
     val result = api().disable("sample-arg")
     assertNotNull(result)
+    assertEquals("feature_flag", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.enabled)
   }
 
   @Test
@@ -62,18 +72,23 @@ class FeatureFlagsTest : TestBase() {
     )
     val result = api().enable("sample-arg")
     assertNotNull(result)
+    assertEquals("feature_flag", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.name)
+    assertEquals(false, result.enabled)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for addFlagTarget")
-  fun `addFlagTarget returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `addFlagTarget completes without throwing`() {
+    stubResponse("POST", "/feature-flags/sample-arg/targets/sample-arg", 200)
+    api().addFlagTarget("sample-arg", "sample-arg")
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for removeFlagTarget")
-  fun `removeFlagTarget returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `removeFlagTarget completes without throwing`() {
+    stubResponse("DELETE", "/feature-flags/sample-arg/targets/sample-arg", 204)
+    api().removeFlagTarget("sample-arg", "sample-arg")
   }
 
   @Test

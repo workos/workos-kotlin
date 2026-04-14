@@ -10,9 +10,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class PipesTest : TestBase() {
@@ -23,6 +23,7 @@ class PipesTest : TestBase() {
     stubResponse("POST", "/data-integrations/sample-arg/authorize", 200, "{\"url\": \"sample\"}")
     val result = api().authorizeDataIntegration("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.url)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .withRequestBody(matchingJsonPath("$.user_id"))
@@ -51,12 +52,16 @@ class PipesTest : TestBase() {
     )
     val result = api().getUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("connected_account", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteUserConnectedAccount")
-  fun `deleteUserConnectedAccount returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteUserConnectedAccount completes without throwing`() {
+    stubResponse("DELETE", "/user_management/users/sample-arg/connected_accounts/sample-arg", 204)
+    api().deleteUserConnectedAccount("sample-arg", "sample-arg")
   }
 
   @Test
@@ -64,6 +69,7 @@ class PipesTest : TestBase() {
     stubResponse("GET", "/user_management/users/sample-arg/data_providers", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listUserDataProviders("sample-arg")
     assertNotNull(result)
+    assertEquals("list", result.`object`)
   }
 
   @Test

@@ -2,4 +2,45 @@
 
 package com.workos.models
 
-typealias Permission = AuthorizationPermission
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
+
+/** Permission model. */
+data class Permission(
+  /** Unique identifier of the Permission. */
+  @JvmField
+  @JsonProperty("id")
+  val id: String,
+  /** A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks. */
+  @JvmField
+  @JsonProperty("slug")
+  val slug: String,
+  /** A descriptive name for the Permission. */
+  @JvmField
+  @JsonProperty("name")
+  val name: String,
+  /** An optional description of the Permission. */
+  @JvmField
+  @JsonProperty("description")
+  val description: String?,
+  /** Whether the permission is a system permission. System permissions are managed by WorkOS and cannot be deleted. */
+  @JvmField
+  @JsonProperty("system")
+  val system: Boolean,
+  /** The slug of the resource type associated with the permission. */
+  @JvmField
+  @JsonProperty("resource_type_slug")
+  val resourceTypeSlug: String,
+  /** An ISO 8601 timestamp. */
+  @JvmField
+  @JsonProperty("created_at")
+  val createdAt: OffsetDateTime,
+  /** An ISO 8601 timestamp. */
+  @JvmField
+  @JsonProperty("updated_at")
+  val updatedAt: OffsetDateTime,
+  /** Distinguishes the Permission object. */
+  @JvmField
+  @JsonProperty("object")
+  val `object`: String = "permission"
+)

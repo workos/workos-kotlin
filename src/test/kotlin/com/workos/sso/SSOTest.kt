@@ -11,9 +11,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class SSOTest : TestBase() {
@@ -38,12 +38,15 @@ class SSOTest : TestBase() {
     )
     val result = api().getConnection("sample-arg")
     assertNotNull(result)
+    assertEquals("connection", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteConnection")
-  fun `deleteConnection returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteConnection completes without throwing`() {
+    stubResponse("DELETE", "/connections/sample-arg", 204)
+    api().deleteConnection("sample-arg")
   }
 
   @Test
@@ -51,6 +54,8 @@ class SSOTest : TestBase() {
     stubResponse("POST", "/sso/logout/authorize", 200, "{\"logout_url\": \"sample\", \"logout_token\": \"sample\"}")
     val result = api().authorizeLogout("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.logoutUrl)
+    assertEquals("sample", result.logoutToken)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/sso/logout/authorize"))
         .withRequestBody(matchingJsonPath("$.profile_id"))
@@ -68,6 +73,11 @@ class SSOTest : TestBase() {
     )
     val result = api().getProfile()
     assertNotNull(result)
+    assertEquals("profile", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.connectionId)
+    assertEquals("sample", result.idpId)
+    assertEquals("sample", result.email)
   }
 
   @Test
@@ -82,6 +92,9 @@ class SSOTest : TestBase() {
     )
     val result = api().getProfileAndToken("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("Bearer", result.tokenType)
+    assertEquals("sample", result.accessToken)
+    assertEquals(0L, result.expiresIn)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/sso/token"))
         .withRequestBody(matchingJsonPath("$.code"))

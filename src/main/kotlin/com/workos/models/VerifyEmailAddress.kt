@@ -2,12 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** VerifyEmailAddress model. */
-data class VerifyEmailAddress(
-  /** The one-time email verification code. */
-  @JvmField
-  @JsonProperty("code")
-  val code: String
-)
+typealias VerifyEmailAddress = ConfirmEmailChange

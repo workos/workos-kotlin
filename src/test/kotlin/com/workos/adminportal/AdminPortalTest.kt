@@ -10,6 +10,7 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -22,6 +23,7 @@ class AdminPortalTest : TestBase() {
     stubResponse("POST", "/portal/generate_link", 200, "{\"link\": \"sample\"}")
     val result = api().generateLink("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.link)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/portal/generate_link"))
         .withRequestBody(matchingJsonPath("$.organization"))

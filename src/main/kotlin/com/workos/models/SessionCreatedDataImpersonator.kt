@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias SessionCreatedDataImpersonator = AuthenticateResponseImpersonator
+typealias SessionCreatedDataImpersonator = UserSessionsImpersonator

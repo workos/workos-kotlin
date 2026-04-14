@@ -4,7 +4,21 @@ package com.workos.models
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.common.json.ObjectMapperFactory
+import com.workos.types.AuditLogExportJsonState
+import com.workos.types.AuthenticationFactorEnrolledType
+import com.workos.types.AuthenticationFactorType
+import com.workos.types.ConnectionType
+import com.workos.types.CreateUserInviteOptionsLocale
+import com.workos.types.CreateUserPasswordHashType
+import com.workos.types.CreateWebhookEndpointEvents
+import com.workos.types.GenerateLinkIntent
 import com.workos.types.OrganizationDomainDataState
+import com.workos.types.ResendUserInviteOptionsLocale
+import com.workos.types.RoleType
+import com.workos.types.UpdateUserPasswordHashType
+import com.workos.types.UpdateWebhookEndpointEvents
+import com.workos.types.UpdateWebhookEndpointStatus
+import com.workos.types.WidgetSessionTokenScopes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -20,9 +34,107 @@ class GeneratedForwardCompatTest {
   }
 
   @Test
-  fun `ValidateApiKey ignores unknown JSON fields`() {
-    val json = "{\"__oagen_future_field__\": \"ignored\", \"value\": \"sample\"}"
-    val parsed = mapper.readValue(json, ValidateApiKey::class.java)
+  fun `unknown GenerateLinkIntent wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", GenerateLinkIntent::class.java)
+    assertEquals(GenerateLinkIntent.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown CreateUserInviteOptionsLocale wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateUserInviteOptionsLocale::class.java)
+    assertEquals(CreateUserInviteOptionsLocale.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown ResendUserInviteOptionsLocale wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", ResendUserInviteOptionsLocale::class.java)
+    assertEquals(ResendUserInviteOptionsLocale.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown CreateUserPasswordHashType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateUserPasswordHashType::class.java)
+    assertEquals(CreateUserPasswordHashType.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown UpdateUserPasswordHashType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateUserPasswordHashType::class.java)
+    assertEquals(UpdateUserPasswordHashType.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown CreateWebhookEndpointEvents wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateWebhookEndpointEvents::class.java)
+    assertEquals(CreateWebhookEndpointEvents.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown UpdateWebhookEndpointStatus wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateWebhookEndpointStatus::class.java)
+    assertEquals(UpdateWebhookEndpointStatus.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown UpdateWebhookEndpointEvents wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateWebhookEndpointEvents::class.java)
+    assertEquals(UpdateWebhookEndpointEvents.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown WidgetSessionTokenScopes wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", WidgetSessionTokenScopes::class.java)
+    assertEquals(WidgetSessionTokenScopes.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown AuditLogExportJsonState wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuditLogExportJsonState::class.java)
+    assertEquals(AuditLogExportJsonState.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown AuthenticationFactorEnrolledType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuthenticationFactorEnrolledType::class.java)
+    assertEquals(AuthenticationFactorEnrolledType.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown AuthenticationFactorType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuthenticationFactorType::class.java)
+    assertEquals(AuthenticationFactorType.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown RoleType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", RoleType::class.java)
+    assertEquals(RoleType.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown ConnectionType wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", ConnectionType::class.java)
+    assertEquals(ConnectionType.Unknown, parsed)
+  }
+
+  @Test
+  fun `UserObject ignores unknown JSON fields`() {
+    val json = "{\"__oagen_future_field__\": \"ignored\", \"id\": \"sample\", \"email\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserObject::class.java)
     assertNotNull(parsed)
   }
 

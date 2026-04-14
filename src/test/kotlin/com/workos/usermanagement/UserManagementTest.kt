@@ -11,9 +11,9 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class UserManagementTest : TestBase() {
@@ -39,6 +39,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithPassword("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -54,6 +56,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithCode("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -69,6 +73,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithRefreshToken("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -84,6 +90,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithMagicAuth("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -99,6 +107,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithEmailVerification("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -114,6 +124,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithTotp("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -129,6 +141,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithOrganizationSelection("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -144,6 +158,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().authenticateWithDeviceCode("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
   }
 
   @Test
@@ -156,6 +172,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createDevice("sample-arg")
     assertNotNull(result)
+    assertEquals("sample", result.deviceCode)
+    assertEquals("sample", result.userCode)
+    assertEquals("sample", result.verificationUri)
+    assertEquals(0.0, result.expiresIn)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/authorize/device"))
         .withRequestBody(matchingJsonPath("$.client_id"))
@@ -163,9 +183,13 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for revokeSession")
-  fun `revokeSession returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `revokeSession completes without throwing`() {
+    stubResponse("POST", "/user_management/sessions/revoke", 200)
+    api().revokeSession("sample-arg")
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/sessions/revoke"))
+        .withRequestBody(matchingJsonPath("$.session_id"))
+    )
   }
 
   @Test
@@ -179,6 +203,9 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createCorsOrigin("sample-arg")
     assertNotNull(result)
+    assertEquals("cors_origin", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.origin)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/cors_origins"))
         .withRequestBody(matchingJsonPath("$.origin"))
@@ -197,6 +224,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getEmailVerification("sample-arg")
     assertNotNull(result)
+    assertEquals("email_verification", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.code)
   }
 
   @Test
@@ -211,6 +243,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().resetPassword("sample-arg")
     assertNotNull(result)
+    assertEquals("password_reset", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.passwordResetToken)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/password_reset"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -248,6 +285,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getPasswordReset("sample-arg")
     assertNotNull(result)
+    assertEquals("password_reset", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.passwordResetToken)
   }
 
   @Test
@@ -269,6 +311,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
+    assertEquals("user", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals(false, result.emailVerified)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -287,6 +333,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getByExternalId("sample-arg")
     assertNotNull(result)
+    assertEquals("user", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals(false, result.emailVerified)
   }
 
   @Test
@@ -301,6 +351,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
+    assertEquals("user", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals(false, result.emailVerified)
   }
 
   @Test
@@ -315,12 +369,16 @@ class UserManagementTest : TestBase() {
     )
     val result = api().update("sample-arg")
     assertNotNull(result)
+    assertEquals("user", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals(false, result.emailVerified)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for delete")
-  fun `delete returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `delete completes without throwing`() {
+    stubResponse("DELETE", "/user_management/users/sample-arg", 204)
+    api().delete("sample-arg")
   }
 
   @Test
@@ -335,6 +393,7 @@ class UserManagementTest : TestBase() {
     )
     val result = api().confirmEmailChange("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("email_change_confirmation", result.`object`)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/confirm"))
         .withRequestBody(matchingJsonPath("$.code"))
@@ -354,6 +413,8 @@ class UserManagementTest : TestBase() {
     )
     val result = api().sendEmailChange("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("email_change", result.`object`)
+    assertEquals("sample", result.newEmail)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/send"))
         .withRequestBody(matchingJsonPath("$.new_email"))
@@ -436,6 +497,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().sendInvitation("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/invitations"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -455,6 +521,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().findInvitationByToken("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
   }
 
   @Test
@@ -470,6 +541,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getInvitation("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
   }
 
   @Test
@@ -485,6 +561,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().acceptInvitation("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
   }
 
   @Test
@@ -500,6 +581,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().resendInvitation("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
   }
 
   @Test
@@ -515,6 +601,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().revokeInvitation("sample-arg")
     assertNotNull(result)
+    assertEquals("invitation", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.token)
+    assertEquals("sample", result.acceptInvitationUrl)
   }
 
   @Test
@@ -527,6 +618,10 @@ class UserManagementTest : TestBase() {
     )
     val result = api().updateJWTTemplate("sample-arg")
     assertNotNull(result)
+    assertEquals("jwt_template", result.`object`)
+    assertEquals("sample", result.content)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/user_management/jwt_template"))
         .withRequestBody(matchingJsonPath("$.content"))
@@ -545,6 +640,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createMagicAuth("sample-arg")
     assertNotNull(result)
+    assertEquals("magic_auth", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.code)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/magic_auth"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -563,6 +663,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getMagicAuth("sample-arg")
     assertNotNull(result)
+    assertEquals("magic_auth", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.code)
   }
 
   @Test
@@ -589,6 +694,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createOrganizationMembership("sample-arg", "sample-arg")
     assertNotNull(result)
+    assertEquals("organization_membership", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.organizationId)
+    assertEquals(false, result.directoryManaged)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/organization_memberships"))
         .withRequestBody(matchingJsonPath("$.user_id"))
@@ -608,6 +718,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().getOrganizationMembership("sample-arg")
     assertNotNull(result)
+    assertEquals("organization_membership", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.organizationId)
+    assertEquals(false, result.directoryManaged)
   }
 
   @Test
@@ -622,12 +737,17 @@ class UserManagementTest : TestBase() {
     )
     val result = api().updateOrganizationMembership("sample-arg")
     assertNotNull(result)
+    assertEquals("organization_membership", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.organizationId)
+    assertEquals(false, result.directoryManaged)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteOrganizationMembership")
-  fun `deleteOrganizationMembership returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteOrganizationMembership completes without throwing`() {
+    stubResponse("DELETE", "/user_management/organization_memberships/sample-arg", 204)
+    api().deleteOrganizationMembership("sample-arg")
   }
 
   @Test
@@ -642,6 +762,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().deactivateOrganizationMembership("sample-arg")
     assertNotNull(result)
+    assertEquals("organization_membership", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.organizationId)
+    assertEquals(false, result.directoryManaged)
   }
 
   @Test
@@ -656,6 +781,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().reactivateOrganizationMembership("sample-arg")
     assertNotNull(result)
+    assertEquals("organization_membership", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.organizationId)
+    assertEquals(false, result.directoryManaged)
   }
 
   @Test
@@ -669,6 +799,11 @@ class UserManagementTest : TestBase() {
     )
     val result = api().createRedirectUri("sample-arg")
     assertNotNull(result)
+    assertEquals("redirect_uri", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.uri)
+    assertEquals(false, result.default)
+    assertEquals("sample", result.createdAt)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/redirect_uris"))
         .withRequestBody(matchingJsonPath("$.uri"))
@@ -688,9 +823,9 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteAuthorizedApplication")
-  fun `deleteAuthorizedApplication returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteAuthorizedApplication completes without throwing`() {
+    stubResponse("DELETE", "/user_management/users/sample-arg/authorized_applications/sample-arg", 204)
+    api().deleteAuthorizedApplication("sample-arg", "sample-arg")
   }
 
   @Test

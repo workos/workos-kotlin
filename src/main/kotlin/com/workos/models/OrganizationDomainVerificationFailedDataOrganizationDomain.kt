@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias OrganizationDomainVerificationFailedDataOrganizationDomain = OrganizationCreatedDataDomain
+typealias OrganizationDomainVerificationFailedDataOrganizationDomain = OrganizationDomain

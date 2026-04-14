@@ -11,9 +11,9 @@ import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import com.workos.types.CreateWebhookEndpointEvents
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class WebhooksTest : TestBase() {
@@ -37,6 +37,10 @@ class WebhooksTest : TestBase() {
     )
     val result = api().createEndpoint("sample-arg", emptyList<CreateWebhookEndpointEvents>())
     assertNotNull(result)
+    assertEquals("webhook_endpoint", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.endpointUrl)
+    assertEquals("sample", result.secret)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/webhook_endpoints"))
         .withRequestBody(matchingJsonPath("$.endpoint_url"))
@@ -54,12 +58,16 @@ class WebhooksTest : TestBase() {
     )
     val result = api().updateEndpoint("sample-arg")
     assertNotNull(result)
+    assertEquals("webhook_endpoint", result.`object`)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.endpointUrl)
+    assertEquals("sample", result.secret)
   }
 
   @Test
-  @Disabled("generator: could not synthesize required arguments for deleteEndpoint")
-  fun `deleteEndpoint returns a typed response`() {
-    // Intentionally empty: the generator could not synthesize required arguments.
+  fun `deleteEndpoint completes without throwing`() {
+    stubResponse("DELETE", "/webhook_endpoints/sample-arg", 204)
+    api().deleteEndpoint("sample-arg")
   }
 
   @Test

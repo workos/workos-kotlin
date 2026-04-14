@@ -2,16 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** Details about the authentication error. */
-data class AuthenticationEmailVerificationFailedDataError(
-  /** The error code. */
-  @JvmField
-  @JsonProperty("code")
-  val code: String,
-  /** A human-readable error message. */
-  @JvmField
-  @JsonProperty("message")
-  val message: String
-)
+typealias AuthenticationEmailVerificationFailedDataError = AuthenticationMfaFailedDataError

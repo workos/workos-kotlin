@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias ApiKeyRevokedDataOwner = ApiKeyCreatedDataOwner
+typealias ApiKeyRevokedDataOwner = ApiKeyOwner

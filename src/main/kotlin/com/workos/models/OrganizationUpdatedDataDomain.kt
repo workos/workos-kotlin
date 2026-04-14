@@ -2,4 +2,4 @@
 
 package com.workos.models
 
-typealias OrganizationUpdatedDataDomain = OrganizationCreatedDataDomain
+typealias OrganizationUpdatedDataDomain = OrganizationDomain

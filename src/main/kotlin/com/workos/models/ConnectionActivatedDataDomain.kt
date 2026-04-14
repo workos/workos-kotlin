@@ -2,20 +2,4 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** ConnectionActivatedDataDomain model. */
-data class ConnectionActivatedDataDomain(
-  /** Unique identifier of the connection domain. */
-  @JvmField
-  @JsonProperty("id")
-  val id: String,
-  /** The domain value. */
-  @JvmField
-  @JsonProperty("domain")
-  val domain: String,
-  /** Distinguishes the connection domain object. */
-  @JvmField
-  @JsonProperty("object")
-  val `object`: String = "connection_domain"
-)
+typealias ConnectionActivatedDataDomain = ConnectionDomain
