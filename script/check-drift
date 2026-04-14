@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# --------------------------------------------------------------------------
+# Drift guard for hand-maintained Kotlin files that mirror spec-backed
+# operations. When the OpenAPI spec changes the parameters or body schema
+# for these endpoints, this script flags the drift so the hand-maintained
+# code can be updated.
+#
+# Usage:
+#   OPENAPI_SPEC_PATH=../openapi-spec/spec/open-api-spec.yaml ./script/check-drift
+# --------------------------------------------------------------------------
+set -euo pipefail
+
+SPEC="${OPENAPI_SPEC_PATH:?Set OPENAPI_SPEC_PATH to the OpenAPI spec YAML}"
+
+# Each entry: "<file> <endpoint-pattern>"
+WATCHED=(
+  "src/main/kotlin/com/workos/sso/SSOAuthUrls.kt            /sso/authorize|/sso/logout|/sso/token"
+  "src/main/kotlin/com/workos/usermanagement/AuthKitAuthUrls.kt  /user_management/authorize"
+  "src/main/kotlin/com/workos/usermanagement/DeviceFlow.kt       /user_management/device_authorizations"
+  "src/main/kotlin/com/workos/pkce/PKCE.kt                       /user_management/pkce"
+)
+
+drift=0
+for entry in "${WATCHED[@]}"; do
+  file=$(echo "$entry" | awk '{print $1}')
+  patterns=$(echo "$entry" | awk '{print $2}')
+
+  IFS='|' read -ra paths <<< "$patterns"
+  for path in "${paths[@]}"; do
+    # Extract parameter names from the spec for this path
+    spec_params=$(grep -A 100 "^  ${path}:" "$SPEC" 2>/dev/null \
+      | grep -E "^\s+- name:" \
+      | sed 's/.*name: //' \
+      | sort || true)
+
+    if [ -z "$spec_params" ]; then
+      continue
+    fi
+
+    # Check if any spec parameter is missing from the hand-maintained file
+    while IFS= read -r param; do
+      param=$(echo "$param" | xargs)
+      if [ -z "$param" ]; then continue; fi
+      if ! grep -q "$param" "$file" 2>/dev/null; then
+        echo "DRIFT: $file is missing spec parameter '$param' for $path"
+        drift=1
+      fi
+    done <<< "$spec_params"
+  done
+done
+
+if [ "$drift" -eq 0 ]; then
+  echo "No drift detected in hand-maintained files."
+else
+  echo ""
+  echo "Hand-maintained files may need updating. Check the spec changes above."
+  exit 1
+fi
