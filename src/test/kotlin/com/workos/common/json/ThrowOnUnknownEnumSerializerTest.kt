@@ -23,7 +23,10 @@ class ThrowOnUnknownEnumSerializerTest {
 
   @Test
   fun `serializing a concrete variant succeeds`() {
-    val concrete = com.workos.types.OrganizationDomainDataState.values().first { it != com.workos.types.OrganizationDomainDataState.Unknown }
+    val concrete =
+      com.workos.types.OrganizationDomainDataState.values().first {
+        it != com.workos.types.OrganizationDomainDataState.Unknown
+      }
     assertDoesNotThrow {
       mapper.writeValueAsString(concrete)
     }

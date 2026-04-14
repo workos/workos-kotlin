@@ -48,11 +48,12 @@ class Connect(
     userConsentOptions: List<UserConsentOption>? = null,
     requestOptions: RequestOptions? = null
   ): ExternalAuthCompleteResponse {
-    val body = bodyOf(
-      "external_auth_id" to externalAuthId,
-      "user" to user,
-      "user_consent_options" to userConsentOptions
-    )
+    val body =
+      bodyOf(
+        "external_auth_id" to externalAuthId,
+        "user" to user,
+        "user_consent_options" to userConsentOptions
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -205,12 +206,13 @@ class Connect(
     redirectUris: List<RedirectUriInput>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication {
-    val body = bodyOf(
-      "name" to name,
-      "description" to description,
-      "scopes" to scopes,
-      "redirect_uris" to redirectUris
-    )
+    val body =
+      bodyOf(
+        "name" to name,
+        "description" to description,
+        "scopes" to scopes,
+        "redirect_uris" to redirectUris
+      )
     val config =
       RequestConfig(
         method = "PUT",

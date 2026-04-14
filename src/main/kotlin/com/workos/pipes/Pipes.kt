@@ -35,11 +35,12 @@ class Pipes(
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse {
-    val body = bodyOf(
-      "user_id" to userId,
-      "organization_id" to organizationId,
-      "return_to" to returnTo
-    )
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "organization_id" to organizationId,
+        "return_to" to returnTo
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -68,10 +69,11 @@ class Pipes(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse {
-    val body = bodyOf(
-      "user_id" to userId,
-      "organization_id" to organizationId
-    )
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "organization_id" to organizationId
+      )
     val config =
       RequestConfig(
         method = "POST",

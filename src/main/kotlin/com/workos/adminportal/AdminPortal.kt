@@ -38,14 +38,15 @@ class AdminPortal(
     adminEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse {
-    val body = bodyOf(
-      "organization" to organization,
-      "return_url" to returnUrl,
-      "success_url" to successUrl,
-      "intent" to intent,
-      "intent_options" to intentOptions,
-      "admin_emails" to adminEmails
-    )
+    val body =
+      bodyOf(
+        "organization" to organization,
+        "return_url" to returnUrl,
+        "success_url" to successUrl,
+        "intent" to intent,
+        "intent_options" to intentOptions,
+        "admin_emails" to adminEmails
+      )
     val config =
       RequestConfig(
         method = "POST",

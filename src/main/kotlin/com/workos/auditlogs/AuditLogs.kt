@@ -61,9 +61,10 @@ class AuditLogs(
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetentionJson {
-    val body = bodyOf(
-      "retention_period_in_days" to retentionPeriodInDays
-    )
+    val body =
+      bodyOf(
+        "retention_period_in_days" to retentionPeriodInDays
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -172,11 +173,12 @@ class AuditLogs(
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogSchemaJson {
-    val body = bodyOf(
-      "targets" to targets,
-      "actor" to actor,
-      "metadata" to metadata
-    )
+    val body =
+      bodyOf(
+        "targets" to targets,
+        "actor" to actor,
+        "metadata" to metadata
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -209,10 +211,11 @@ class AuditLogs(
     event: AuditLogEvent,
     requestOptions: RequestOptions? = null
   ): AuditLogEventCreateResponse {
-    val body = bodyOf(
-      "organization_id" to organizationId,
-      "event" to event
-    )
+    val body =
+      bodyOf(
+        "organization_id" to organizationId,
+        "event" to event
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -251,16 +254,17 @@ class AuditLogs(
     targets: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogExportJson {
-    val body = bodyOf(
-      "organization_id" to organizationId,
-      "range_start" to rangeStart,
-      "range_end" to rangeEnd,
-      "actions" to actions,
-      "actors" to actors,
-      "actor_names" to actorNames,
-      "actor_ids" to actorIds,
-      "targets" to targets
-    )
+    val body =
+      bodyOf(
+        "organization_id" to organizationId,
+        "range_start" to rangeStart,
+        "range_end" to rangeEnd,
+        "actions" to actions,
+        "actors" to actors,
+        "actor_names" to actorNames,
+        "actor_ids" to actorIds,
+        "targets" to targets
+      )
     val config =
       RequestConfig(
         method = "POST",

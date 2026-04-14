@@ -280,7 +280,10 @@ open class BaseClient(
     header.trim().toLongOrNull()?.let { return it }
     return try {
       val httpDate = java.time.ZonedDateTime.parse(header.trim(), java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME)
-      val delta = java.time.Duration.between(java.time.ZonedDateTime.now(httpDate.zone), httpDate).seconds
+      val delta =
+        java.time.Duration
+          .between(java.time.ZonedDateTime.now(httpDate.zone), httpDate)
+          .seconds
       if (delta < 0) 0L else delta
     } catch (_: java.time.format.DateTimeParseException) {
       null

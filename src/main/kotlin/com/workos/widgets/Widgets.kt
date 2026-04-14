@@ -31,11 +31,12 @@ class Widgets(
     scopes: List<WidgetSessionTokenScopes>? = null,
     requestOptions: RequestOptions? = null
   ): WidgetSessionTokenResponse {
-    val body = bodyOf(
-      "organization_id" to organizationId,
-      "user_id" to userId,
-      "scopes" to scopes
-    )
+    val body =
+      bodyOf(
+        "organization_id" to organizationId,
+        "user_id" to userId,
+        "scopes" to scopes
+      )
     val config =
       RequestConfig(
         method = "POST",

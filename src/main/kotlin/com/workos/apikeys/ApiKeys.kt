@@ -31,9 +31,10 @@ class ApiKeys(
     value: String,
     requestOptions: RequestOptions? = null
   ): ApiKeyValidationResponse {
-    val body = bodyOf(
-      "value" to value
-    )
+    val body =
+      bodyOf(
+        "value" to value
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -123,10 +124,11 @@ class ApiKeys(
     permissions: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ApiKeyWithValue {
-    val body = bodyOf(
-      "name" to name,
-      "permissions" to permissions
-    )
+    val body =
+      bodyOf(
+        "name" to name,
+        "permissions" to permissions
+      )
     val config =
       RequestConfig(
         method = "POST",

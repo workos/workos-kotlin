@@ -127,9 +127,10 @@ class SSO(
     profileId: String,
     requestOptions: RequestOptions? = null
   ): SSOLogoutAuthorizeResponse {
-    val body = bodyOf(
-      "profile_id" to profileId
-    )
+    val body =
+      bodyOf(
+        "profile_id" to profileId
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -176,12 +177,13 @@ class SSO(
   ): SSOTokenResponse {
     val params = mutableListOf<Pair<String, String>>()
     params += "code" to code.toString()
-    val body = bodyOf(
-      "code" to bodyCode,
-      "grant_type" to "authorization_code",
-      "client_id" to workos.clientId,
-      "client_secret" to workos.apiKey
-    )
+    val body =
+      bodyOf(
+        "code" to bodyCode,
+        "grant_type" to "authorization_code",
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
     val config =
       RequestConfig(
         method = "POST",

@@ -47,12 +47,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationCheck {
-    val body = bodyOf(
-      "permission_slug" to permissionSlug,
-      "resource_id" to resourceId,
-      "resource_external_id" to resourceExternalId,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "permission_slug" to permissionSlug,
+        "resource_id" to resourceId,
+        "resource_external_id" to resourceExternalId,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -179,12 +180,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): RoleAssignment {
-    val body = bodyOf(
-      "role_slug" to roleSlug,
-      "resource_id" to resourceId,
-      "resource_external_id" to resourceExternalId,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "role_slug" to roleSlug,
+        "resource_id" to resourceId,
+        "resource_external_id" to resourceExternalId,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -215,12 +217,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val body = bodyOf(
-      "role_slug" to roleSlug,
-      "resource_id" to resourceId,
-      "resource_external_id" to resourceExternalId,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "role_slug" to roleSlug,
+        "resource_id" to resourceId,
+        "resource_external_id" to resourceExternalId,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "DELETE",
@@ -299,12 +302,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "name" to name,
-      "slug" to slug,
-      "description" to description,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "name" to name,
+        "slug" to slug,
+        "description" to description,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -360,10 +364,11 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = patchBodyOf(
-      "name" to name,
-      "description" to description
-    )
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description
+      )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -415,9 +420,10 @@ class Authorization(
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "slug" to bodySlug
-    )
+    val body =
+      bodyOf(
+        "slug" to bodySlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -446,9 +452,10 @@ class Authorization(
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "permissions" to permissions
-    )
+    val body =
+      bodyOf(
+        "permissions" to permissions
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -539,13 +546,14 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = patchBodyOf(
-      "name" to name,
-      "description" to description,
-      "parent_resource_id" to parentResourceId,
-      "parent_resource_external_id" to parentResourceExternalId,
-      "parent_resource_type_slug" to parentResourceTypeSlug
-    )
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description,
+        "parent_resource_id" to parentResourceId,
+        "parent_resource_external_id" to parentResourceExternalId,
+        "parent_resource_type_slug" to parentResourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -720,16 +728,17 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = bodyOf(
-      "external_id" to externalId,
-      "name" to name,
-      "resource_type_slug" to resourceTypeSlug,
-      "organization_id" to organizationId,
-      "description" to description,
-      "parent_resource_id" to parentResourceId,
-      "parent_resource_external_id" to parentResourceExternalId,
-      "parent_resource_type_slug" to parentResourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "external_id" to externalId,
+        "name" to name,
+        "resource_type_slug" to resourceTypeSlug,
+        "organization_id" to organizationId,
+        "description" to description,
+        "parent_resource_id" to parentResourceId,
+        "parent_resource_external_id" to parentResourceExternalId,
+        "parent_resource_type_slug" to parentResourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -787,13 +796,14 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = patchBodyOf(
-      "name" to name,
-      "description" to description,
-      "parent_resource_id" to parentResourceId,
-      "parent_resource_external_id" to parentResourceExternalId,
-      "parent_resource_type_slug" to parentResourceTypeSlug
-    )
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description,
+        "parent_resource_id" to parentResourceId,
+        "parent_resource_external_id" to parentResourceExternalId,
+        "parent_resource_type_slug" to parentResourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -914,12 +924,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "slug" to slug,
-      "name" to name,
-      "description" to description,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "slug" to slug,
+        "name" to name,
+        "description" to description,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -971,10 +982,11 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = patchBodyOf(
-      "name" to name,
-      "description" to description
-    )
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description
+      )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -1001,9 +1013,10 @@ class Authorization(
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "slug" to bodySlug
-    )
+    val body =
+      bodyOf(
+        "slug" to bodySlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1030,9 +1043,10 @@ class Authorization(
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = bodyOf(
-      "permissions" to permissions
-    )
+    val body =
+      bodyOf(
+        "permissions" to permissions
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1101,12 +1115,13 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Permission {
-    val body = bodyOf(
-      "slug" to slug,
-      "name" to name,
-      "description" to description,
-      "resource_type_slug" to resourceTypeSlug
-    )
+    val body =
+      bodyOf(
+        "slug" to slug,
+        "name" to name,
+        "description" to description,
+        "resource_type_slug" to resourceTypeSlug
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1158,10 +1173,11 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationPermission {
-    val body = patchBodyOf(
-      "name" to name,
-      "description" to description
-    )
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description
+      )
     val config =
       RequestConfig(
         method = "PATCH",

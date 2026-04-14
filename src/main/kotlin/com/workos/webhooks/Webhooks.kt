@@ -73,10 +73,11 @@ class Webhooks(
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val body = bodyOf(
-      "endpoint_url" to endpointUrl,
-      "events" to events
-    )
+    val body =
+      bodyOf(
+        "endpoint_url" to endpointUrl,
+        "events" to events
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -107,11 +108,12 @@ class Webhooks(
     events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val body = patchBodyOf(
-      "endpoint_url" to endpointUrl,
-      "status" to status,
-      "events" to events
-    )
+    val body =
+      patchBodyOf(
+        "endpoint_url" to endpointUrl,
+        "status" to status,
+        "events" to events
+      )
     val config =
       RequestConfig(
         method = "PATCH",

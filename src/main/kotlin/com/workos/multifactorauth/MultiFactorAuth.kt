@@ -36,9 +36,10 @@ class MultiFactorAuth(
     code: String,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallengeVerifyResponse {
-    val body = bodyOf(
-      "code" to code
-    )
+    val body =
+      bodyOf(
+        "code" to code
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -71,13 +72,14 @@ class MultiFactorAuth(
     userId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationFactorEnrolled {
-    val body = bodyOf(
-      "type" to type,
-      "phone_number" to phoneNumber,
-      "totp_issuer" to totpIssuer,
-      "totp_user" to totpUser,
-      "user_id" to userId
-    )
+    val body =
+      bodyOf(
+        "type" to type,
+        "phone_number" to phoneNumber,
+        "totp_issuer" to totpIssuer,
+        "totp_user" to totpUser,
+        "user_id" to userId
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -148,9 +150,10 @@ class MultiFactorAuth(
     smsTemplate: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallenge {
-    val body = bodyOf(
-      "sms_template" to smsTemplate
-    )
+    val body =
+      bodyOf(
+        "sms_template" to smsTemplate
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -223,12 +226,13 @@ class MultiFactorAuth(
     totpSecret: String? = null,
     requestOptions: RequestOptions? = null
   ): UserAuthenticationFactorEnrollResponse {
-    val body = bodyOf(
-      "type" to type,
-      "totp_issuer" to totpIssuer,
-      "totp_user" to totpUser,
-      "totp_secret" to totpSecret
-    )
+    val body =
+      bodyOf(
+        "type" to type,
+        "totp_issuer" to totpIssuer,
+        "totp_user" to totpUser,
+        "totp_secret" to totpSecret
+      )
     val config =
       RequestConfig(
         method = "POST",

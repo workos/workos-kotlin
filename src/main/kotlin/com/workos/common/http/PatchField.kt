@@ -41,7 +41,9 @@ sealed class PatchField<out T> {
   }
 
   /** The field is explicitly set (including an explicit `null` to clear it). */
-  data class Present<T>(val value: T?) : PatchField<T>()
+  data class Present<T>(
+    val value: T?
+  ) : PatchField<T>()
 
   companion object {
     /** Wrap a non-null value. */

@@ -29,10 +29,11 @@ class OrganizationDomains(
     organizationId: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomain {
-    val body = bodyOf(
-      "domain" to domain,
-      "organization_id" to organizationId
-    )
+    val body =
+      bodyOf(
+        "domain" to domain,
+        "organization_id" to organizationId
+      )
     val config =
       RequestConfig(
         method = "POST",

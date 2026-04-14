@@ -309,9 +309,10 @@ class UserManagement(
     clientId: String,
     requestOptions: RequestOptions? = null
   ): DeviceAuthorizationResponse {
-    val body = bodyOf(
-      "client_id" to clientId
-    )
+    val body =
+      bodyOf(
+        "client_id" to clientId
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -336,10 +337,11 @@ class UserManagement(
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val body = bodyOf(
-      "session_id" to sessionId,
-      "return_to" to returnTo
-    )
+    val body =
+      bodyOf(
+        "session_id" to sessionId,
+        "return_to" to returnTo
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -364,9 +366,10 @@ class UserManagement(
     origin: String,
     requestOptions: RequestOptions? = null
   ): CorsOriginResponse {
-    val body = bodyOf(
-      "origin" to origin
-    )
+    val body =
+      bodyOf(
+        "origin" to origin
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -414,9 +417,10 @@ class UserManagement(
     email: String,
     requestOptions: RequestOptions? = null
   ): PasswordReset {
-    val body = bodyOf(
-      "email" to email
-    )
+    val body =
+      bodyOf(
+        "email" to email
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -443,10 +447,11 @@ class UserManagement(
     newPassword: String,
     requestOptions: RequestOptions? = null
   ): ResetPasswordResponse {
-    val body = bodyOf(
-      "token" to token,
-      "new_password" to newPassword
-    )
+    val body =
+      bodyOf(
+        "token" to token,
+        "new_password" to newPassword
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -557,17 +562,18 @@ class UserManagement(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val body = bodyOf(
-      "email" to email,
-      "password" to password,
-      "password_hash" to passwordHash,
-      "password_hash_type" to passwordHashType,
-      "first_name" to firstName,
-      "last_name" to lastName,
-      "email_verified" to emailVerified,
-      "metadata" to metadata,
-      "external_id" to externalId
-    )
+    val body =
+      bodyOf(
+        "email" to email,
+        "password" to password,
+        "password_hash" to passwordHash,
+        "password_hash_type" to passwordHashType,
+        "first_name" to firstName,
+        "last_name" to lastName,
+        "email_verified" to emailVerified,
+        "metadata" to metadata,
+        "external_id" to externalId
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -658,18 +664,19 @@ class UserManagement(
     locale: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val body = bodyOf(
-      "email" to email,
-      "first_name" to firstName,
-      "last_name" to lastName,
-      "email_verified" to emailVerified,
-      "password" to password,
-      "password_hash" to passwordHash,
-      "password_hash_type" to passwordHashType,
-      "metadata" to metadata,
-      "external_id" to externalId,
-      "locale" to locale
-    )
+    val body =
+      bodyOf(
+        "email" to email,
+        "first_name" to firstName,
+        "last_name" to lastName,
+        "email_verified" to emailVerified,
+        "password" to password,
+        "password_hash" to passwordHash,
+        "password_hash_type" to passwordHashType,
+        "metadata" to metadata,
+        "external_id" to externalId,
+        "locale" to locale
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -717,9 +724,10 @@ class UserManagement(
     code: String,
     requestOptions: RequestOptions? = null
   ): EmailChangeConfirmation {
-    val body = bodyOf(
-      "code" to code
-    )
+    val body =
+      bodyOf(
+        "code" to code
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -746,9 +754,10 @@ class UserManagement(
     newEmail: String,
     requestOptions: RequestOptions? = null
   ): EmailChange {
-    val body = bodyOf(
-      "new_email" to newEmail
-    )
+    val body =
+      bodyOf(
+        "new_email" to newEmail
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -775,9 +784,10 @@ class UserManagement(
     code: String,
     requestOptions: RequestOptions? = null
   ): VerifyEmailResponse {
-    val body = bodyOf(
-      "code" to code
-    )
+    val body =
+      bodyOf(
+        "code" to code
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -945,14 +955,15 @@ class UserManagement(
     locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val body = bodyOf(
-      "email" to email,
-      "organization_id" to organizationId,
-      "role_slug" to roleSlug,
-      "expires_in_days" to expiresInDays,
-      "inviter_user_id" to inviterUserId,
-      "locale" to locale
-    )
+    val body =
+      bodyOf(
+        "email" to email,
+        "organization_id" to organizationId,
+        "role_slug" to roleSlug,
+        "expires_in_days" to expiresInDays,
+        "inviter_user_id" to inviterUserId,
+        "locale" to locale
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1050,9 +1061,10 @@ class UserManagement(
     locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val body = bodyOf(
-      "locale" to locale
-    )
+    val body =
+      bodyOf(
+        "locale" to locale
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1102,9 +1114,10 @@ class UserManagement(
     content: String,
     requestOptions: RequestOptions? = null
   ): JWTTemplateResponse {
-    val body = bodyOf(
-      "content" to content
-    )
+    val body =
+      bodyOf(
+        "content" to content
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1131,10 +1144,11 @@ class UserManagement(
     invitationToken: String? = null,
     requestOptions: RequestOptions? = null
   ): MagicAuth {
-    val body = bodyOf(
-      "email" to email,
-      "invitation_token" to invitationToken
-    )
+    val body =
+      bodyOf(
+        "email" to email,
+        "invitation_token" to invitationToken
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1237,12 +1251,13 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val body = bodyOf(
-      "user_id" to userId,
-      "organization_id" to organizationId,
-      "role_slug" to roleSlug,
-      "role_slugs" to roleSlugs
-    )
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "organization_id" to organizationId,
+        "role_slug" to roleSlug,
+        "role_slugs" to roleSlugs
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1294,10 +1309,11 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val body = bodyOf(
-      "role_slug" to roleSlug,
-      "role_slugs" to roleSlugs
-    )
+    val body =
+      bodyOf(
+        "role_slug" to roleSlug,
+        "role_slugs" to roleSlugs
+      )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1403,9 +1419,10 @@ class UserManagement(
     uri: String,
     requestOptions: RequestOptions? = null
   ): RedirectUri {
-    val body = bodyOf(
-      "uri" to uri
-    )
+    val body =
+      bodyOf(
+        "uri" to uri
+      )
     val config =
       RequestConfig(
         method = "POST",

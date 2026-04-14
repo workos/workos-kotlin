@@ -55,7 +55,11 @@ object UnknownEnumGuardModule {
     private val delegate: JsonSerializer<Any>,
     private val defaultMember: Enum<*>
   ) : JsonSerializer<Any>() {
-    override fun serialize(value: Any, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+      value: Any,
+      gen: JsonGenerator,
+      serializers: SerializerProvider
+    ) {
       if (value == defaultMember) {
         throw IllegalArgumentException(
           "Cannot serialize ${defaultMember.declaringJavaClass.simpleName}.${defaultMember.name} — " +

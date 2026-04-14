@@ -85,14 +85,15 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val body = bodyOf(
-      "name" to name,
-      "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
-      "domains" to domains,
-      "domain_data" to domainData,
-      "metadata" to metadata,
-      "external_id" to externalId
-    )
+    val body =
+      bodyOf(
+        "name" to name,
+        "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
+        "domains" to domains,
+        "domain_data" to domainData,
+        "metadata" to metadata,
+        "external_id" to externalId
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -177,15 +178,16 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val body = bodyOf(
-      "name" to name,
-      "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
-      "domains" to domains,
-      "domain_data" to domainData,
-      "stripe_customer_id" to stripeCustomerId,
-      "metadata" to metadata,
-      "external_id" to externalId
-    )
+    val body =
+      bodyOf(
+        "name" to name,
+        "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
+        "domains" to domains,
+        "domain_data" to domainData,
+        "stripe_customer_id" to stripeCustomerId,
+        "metadata" to metadata,
+        "external_id" to externalId
+      )
     val config =
       RequestConfig(
         method = "PUT",
