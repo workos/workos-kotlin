@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.ApiKey
 import com.workos.models.ApiKeyValidationResponse
 import com.workos.models.ApiKeyWithValue
@@ -30,8 +31,9 @@ class ApiKeys(
     value: String,
     requestOptions: RequestOptions? = null
   ): ApiKeyValidationResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["value"] = value
+    val body = bodyOf(
+      "value" to value
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -121,9 +123,10 @@ class ApiKeys(
     permissions: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ApiKeyWithValue {
-    val body = linkedMapOf<String, Any?>()
-    body["name"] = name
-    if (permissions != null) body["permissions"] = permissions
+    val body = bodyOf(
+      "name" to name,
+      "permissions" to permissions
+    )
     val config =
       RequestConfig(
         method = "POST",

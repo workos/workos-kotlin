@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.AuthenticateResponse
 import com.workos.models.AuthorizedConnectApplicationListData
 import com.workos.models.CorsOriginResponse
@@ -308,8 +309,9 @@ class UserManagement(
     clientId: String,
     requestOptions: RequestOptions? = null
   ): DeviceAuthorizationResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["client_id"] = clientId
+    val body = bodyOf(
+      "client_id" to clientId
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -334,9 +336,10 @@ class UserManagement(
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val body = linkedMapOf<String, Any?>()
-    body["session_id"] = sessionId
-    if (returnTo != null) body["return_to"] = returnTo
+    val body = bodyOf(
+      "session_id" to sessionId,
+      "return_to" to returnTo
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -361,8 +364,9 @@ class UserManagement(
     origin: String,
     requestOptions: RequestOptions? = null
   ): CorsOriginResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["origin"] = origin
+    val body = bodyOf(
+      "origin" to origin
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -410,8 +414,9 @@ class UserManagement(
     email: String,
     requestOptions: RequestOptions? = null
   ): PasswordReset {
-    val body = linkedMapOf<String, Any?>()
-    body["email"] = email
+    val body = bodyOf(
+      "email" to email
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -438,9 +443,10 @@ class UserManagement(
     newPassword: String,
     requestOptions: RequestOptions? = null
   ): ResetPasswordResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["token"] = token
-    body["new_password"] = newPassword
+    val body = bodyOf(
+      "token" to token,
+      "new_password" to newPassword
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -551,16 +557,17 @@ class UserManagement(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val body = linkedMapOf<String, Any?>()
-    body["email"] = email
-    if (password != null) body["password"] = password
-    if (passwordHash != null) body["password_hash"] = passwordHash
-    if (passwordHashType != null) body["password_hash_type"] = passwordHashType
-    if (firstName != null) body["first_name"] = firstName
-    if (lastName != null) body["last_name"] = lastName
-    if (emailVerified != null) body["email_verified"] = emailVerified
-    if (metadata != null) body["metadata"] = metadata
-    if (externalId != null) body["external_id"] = externalId
+    val body = bodyOf(
+      "email" to email,
+      "password" to password,
+      "password_hash" to passwordHash,
+      "password_hash_type" to passwordHashType,
+      "first_name" to firstName,
+      "last_name" to lastName,
+      "email_verified" to emailVerified,
+      "metadata" to metadata,
+      "external_id" to externalId
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -651,17 +658,18 @@ class UserManagement(
     locale: String? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val body = linkedMapOf<String, Any?>()
-    if (email != null) body["email"] = email
-    if (firstName != null) body["first_name"] = firstName
-    if (lastName != null) body["last_name"] = lastName
-    if (emailVerified != null) body["email_verified"] = emailVerified
-    if (password != null) body["password"] = password
-    if (passwordHash != null) body["password_hash"] = passwordHash
-    if (passwordHashType != null) body["password_hash_type"] = passwordHashType
-    if (metadata != null) body["metadata"] = metadata
-    if (externalId != null) body["external_id"] = externalId
-    if (locale != null) body["locale"] = locale
+    val body = bodyOf(
+      "email" to email,
+      "first_name" to firstName,
+      "last_name" to lastName,
+      "email_verified" to emailVerified,
+      "password" to password,
+      "password_hash" to passwordHash,
+      "password_hash_type" to passwordHashType,
+      "metadata" to metadata,
+      "external_id" to externalId,
+      "locale" to locale
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -709,8 +717,9 @@ class UserManagement(
     code: String,
     requestOptions: RequestOptions? = null
   ): EmailChangeConfirmation {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
+    val body = bodyOf(
+      "code" to code
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -737,8 +746,9 @@ class UserManagement(
     newEmail: String,
     requestOptions: RequestOptions? = null
   ): EmailChange {
-    val body = linkedMapOf<String, Any?>()
-    body["new_email"] = newEmail
+    val body = bodyOf(
+      "new_email" to newEmail
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -765,8 +775,9 @@ class UserManagement(
     code: String,
     requestOptions: RequestOptions? = null
   ): VerifyEmailResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
+    val body = bodyOf(
+      "code" to code
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -934,13 +945,14 @@ class UserManagement(
     locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val body = linkedMapOf<String, Any?>()
-    body["email"] = email
-    if (organizationId != null) body["organization_id"] = organizationId
-    if (roleSlug != null) body["role_slug"] = roleSlug
-    if (expiresInDays != null) body["expires_in_days"] = expiresInDays
-    if (inviterUserId != null) body["inviter_user_id"] = inviterUserId
-    if (locale != null) body["locale"] = locale
+    val body = bodyOf(
+      "email" to email,
+      "organization_id" to organizationId,
+      "role_slug" to roleSlug,
+      "expires_in_days" to expiresInDays,
+      "inviter_user_id" to inviterUserId,
+      "locale" to locale
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1038,8 +1050,9 @@ class UserManagement(
     locale: CreateUserInviteOptionsLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
-    val body = linkedMapOf<String, Any?>()
-    if (locale != null) body["locale"] = locale
+    val body = bodyOf(
+      "locale" to locale
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1089,8 +1102,9 @@ class UserManagement(
     content: String,
     requestOptions: RequestOptions? = null
   ): JWTTemplateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["content"] = content
+    val body = bodyOf(
+      "content" to content
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1117,9 +1131,10 @@ class UserManagement(
     invitationToken: String? = null,
     requestOptions: RequestOptions? = null
   ): MagicAuth {
-    val body = linkedMapOf<String, Any?>()
-    body["email"] = email
-    if (invitationToken != null) body["invitation_token"] = invitationToken
+    val body = bodyOf(
+      "email" to email,
+      "invitation_token" to invitationToken
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1222,11 +1237,12 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
-    body["user_id"] = userId
-    body["organization_id"] = organizationId
-    if (roleSlug != null) body["role_slug"] = roleSlug
-    if (roleSlugs != null) body["role_slugs"] = roleSlugs
+    val body = bodyOf(
+      "user_id" to userId,
+      "organization_id" to organizationId,
+      "role_slug" to roleSlug,
+      "role_slugs" to roleSlugs
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1278,9 +1294,10 @@ class UserManagement(
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
-    if (roleSlug != null) body["role_slug"] = roleSlug
-    if (roleSlugs != null) body["role_slugs"] = roleSlugs
+    val body = bodyOf(
+      "role_slug" to roleSlug,
+      "role_slugs" to roleSlugs
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1386,8 +1403,9 @@ class UserManagement(
     uri: String,
     requestOptions: RequestOptions? = null
   ): RedirectUri {
-    val body = linkedMapOf<String, Any?>()
-    body["uri"] = uri
+    val body = bodyOf(
+      "uri" to uri
+    )
     val config =
       RequestConfig(
         method = "POST",

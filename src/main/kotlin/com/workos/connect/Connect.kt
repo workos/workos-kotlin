@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.ApplicationCredentialsListItem
 import com.workos.models.ConnectApplication
 import com.workos.models.ExternalAuthCompleteResponse
@@ -47,10 +48,11 @@ class Connect(
     userConsentOptions: List<UserConsentOption>? = null,
     requestOptions: RequestOptions? = null
   ): ExternalAuthCompleteResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["external_auth_id"] = externalAuthId
-    body["user"] = user
-    if (userConsentOptions != null) body["user_consent_options"] = userConsentOptions
+    val body = bodyOf(
+      "external_auth_id" to externalAuthId,
+      "user" to user,
+      "user_consent_options" to userConsentOptions
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -203,11 +205,12 @@ class Connect(
     redirectUris: List<RedirectUriInput>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication {
-    val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (description != null) body["description"] = description
-    if (scopes != null) body["scopes"] = scopes
-    if (redirectUris != null) body["redirect_uris"] = redirectUris
+    val body = bodyOf(
+      "name" to name,
+      "description" to description,
+      "scopes" to scopes,
+      "redirect_uris" to redirectUris
+    )
     val config =
       RequestConfig(
         method = "PUT",

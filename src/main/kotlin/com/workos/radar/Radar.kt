@@ -5,6 +5,7 @@ package com.workos.radar
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.RadarListEntryAlreadyPresentResponse
 import com.workos.models.RadarStandaloneResponse
 import com.workos.types.RadarStandaloneAssessRequestAction
@@ -40,14 +41,15 @@ class Radar(
     botScore: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["ip_address"] = ipAddress
-    body["user_agent"] = userAgent
-    body["email"] = email
-    body["auth_method"] = authMethod
-    body["action"] = action
-    if (deviceFingerprint != null) body["device_fingerprint"] = deviceFingerprint
-    if (botScore != null) body["bot_score"] = botScore
+    val body = bodyOf(
+      "ip_address" to ipAddress,
+      "user_agent" to userAgent,
+      "email" to email,
+      "auth_method" to authMethod,
+      "action" to action,
+      "device_fingerprint" to deviceFingerprint,
+      "bot_score" to botScore
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -74,9 +76,10 @@ class Radar(
     attemptStatus: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val body = linkedMapOf<String, Any?>()
-    if (challengeStatus != null) body["challenge_status"] = challengeStatus
-    if (attemptStatus != null) body["attempt_status"] = attemptStatus
+    val body = bodyOf(
+      "challenge_status" to challengeStatus,
+      "attempt_status" to attemptStatus
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -105,8 +108,9 @@ class Radar(
     entry: String,
     requestOptions: RequestOptions? = null
   ): RadarListEntryAlreadyPresentResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["entry"] = entry
+    val body = bodyOf(
+      "entry" to entry
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -133,8 +137,9 @@ class Radar(
     entry: String,
     requestOptions: RequestOptions? = null
   ) {
-    val body = linkedMapOf<String, Any?>()
-    body["entry"] = entry
+    val body = bodyOf(
+      "entry" to entry
+    )
     val config =
       RequestConfig(
         method = "DELETE",

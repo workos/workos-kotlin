@@ -5,6 +5,7 @@ package com.workos.adminportal
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.IntentOptions
 import com.workos.models.PortalLinkResponse
 import com.workos.types.GenerateLinkIntent
@@ -37,13 +38,14 @@ class AdminPortal(
     adminEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["organization"] = organization
-    if (returnUrl != null) body["return_url"] = returnUrl
-    if (successUrl != null) body["success_url"] = successUrl
-    if (intent != null) body["intent"] = intent
-    if (intentOptions != null) body["intent_options"] = intentOptions
-    if (adminEmails != null) body["admin_emails"] = adminEmails
+    val body = bodyOf(
+      "organization" to organization,
+      "return_url" to returnUrl,
+      "success_url" to successUrl,
+      "intent" to intent,
+      "intent_options" to intentOptions,
+      "admin_emails" to adminEmails
+    )
     val config =
       RequestConfig(
         method = "POST",

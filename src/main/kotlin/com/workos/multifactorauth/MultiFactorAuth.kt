@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.AuthenticationChallenge
 import com.workos.models.AuthenticationChallengeVerifyResponse
 import com.workos.models.AuthenticationFactor
@@ -35,8 +36,9 @@ class MultiFactorAuth(
     code: String,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallengeVerifyResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
+    val body = bodyOf(
+      "code" to code
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -69,12 +71,13 @@ class MultiFactorAuth(
     userId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationFactorEnrolled {
-    val body = linkedMapOf<String, Any?>()
-    body["type"] = type
-    if (phoneNumber != null) body["phone_number"] = phoneNumber
-    if (totpIssuer != null) body["totp_issuer"] = totpIssuer
-    if (totpUser != null) body["totp_user"] = totpUser
-    if (userId != null) body["user_id"] = userId
+    val body = bodyOf(
+      "type" to type,
+      "phone_number" to phoneNumber,
+      "totp_issuer" to totpIssuer,
+      "totp_user" to totpUser,
+      "user_id" to userId
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -145,8 +148,9 @@ class MultiFactorAuth(
     smsTemplate: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticationChallenge {
-    val body = linkedMapOf<String, Any?>()
-    if (smsTemplate != null) body["sms_template"] = smsTemplate
+    val body = bodyOf(
+      "sms_template" to smsTemplate
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -219,11 +223,12 @@ class MultiFactorAuth(
     totpSecret: String? = null,
     requestOptions: RequestOptions? = null
   ): UserAuthenticationFactorEnrollResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["type"] = type
-    if (totpIssuer != null) body["totp_issuer"] = totpIssuer
-    if (totpUser != null) body["totp_user"] = totpUser
-    if (totpSecret != null) body["totp_secret"] = totpSecret
+    val body = bodyOf(
+      "type" to type,
+      "totp_issuer" to totpIssuer,
+      "totp_user" to totpUser,
+      "totp_secret" to totpSecret
+    )
     val config =
       RequestConfig(
         method = "POST",

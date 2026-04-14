@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
 import com.workos.models.OrganizationDomainData
@@ -84,13 +85,14 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val body = linkedMapOf<String, Any?>()
-    body["name"] = name
-    if (allowProfilesOutsideOrganization != null) body["allow_profiles_outside_organization"] = allowProfilesOutsideOrganization
-    if (domains != null) body["domains"] = domains
-    if (domainData != null) body["domain_data"] = domainData
-    if (metadata != null) body["metadata"] = metadata
-    if (externalId != null) body["external_id"] = externalId
+    val body = bodyOf(
+      "name" to name,
+      "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
+      "domains" to domains,
+      "domain_data" to domainData,
+      "metadata" to metadata,
+      "external_id" to externalId
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -175,14 +177,15 @@ class Organizations(
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): Organization {
-    val body = linkedMapOf<String, Any?>()
-    if (name != null) body["name"] = name
-    if (allowProfilesOutsideOrganization != null) body["allow_profiles_outside_organization"] = allowProfilesOutsideOrganization
-    if (domains != null) body["domains"] = domains
-    if (domainData != null) body["domain_data"] = domainData
-    if (stripeCustomerId != null) body["stripe_customer_id"] = stripeCustomerId
-    if (metadata != null) body["metadata"] = metadata
-    if (externalId != null) body["external_id"] = externalId
+    val body = bodyOf(
+      "name" to name,
+      "allow_profiles_outside_organization" to allowProfilesOutsideOrganization,
+      "domains" to domains,
+      "domain_data" to domainData,
+      "stripe_customer_id" to stripeCustomerId,
+      "metadata" to metadata,
+      "external_id" to externalId
+    )
     val config =
       RequestConfig(
         method = "PUT",

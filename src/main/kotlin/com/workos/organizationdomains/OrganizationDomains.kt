@@ -5,6 +5,7 @@ package com.workos.organizationdomains
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.OrganizationDomain
 import com.workos.models.OrganizationDomainStandAlone
 
@@ -28,9 +29,10 @@ class OrganizationDomains(
     organizationId: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomain {
-    val body = linkedMapOf<String, Any?>()
-    body["domain"] = domain
-    body["organization_id"] = organizationId
+    val body = bodyOf(
+      "domain" to domain,
+      "organization_id" to organizationId
+    )
     val config =
       RequestConfig(
         method = "POST",

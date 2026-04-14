@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.AuditLogActionJson
 import com.workos.models.AuditLogEvent
 import com.workos.models.AuditLogEventCreateResponse
@@ -60,8 +61,9 @@ class AuditLogs(
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetentionJson {
-    val body = linkedMapOf<String, Any?>()
-    body["retention_period_in_days"] = retentionPeriodInDays
+    val body = bodyOf(
+      "retention_period_in_days" to retentionPeriodInDays
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -170,10 +172,11 @@ class AuditLogs(
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogSchemaJson {
-    val body = linkedMapOf<String, Any?>()
-    body["targets"] = targets
-    if (actor != null) body["actor"] = actor
-    if (metadata != null) body["metadata"] = metadata
+    val body = bodyOf(
+      "targets" to targets,
+      "actor" to actor,
+      "metadata" to metadata
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -206,9 +209,10 @@ class AuditLogs(
     event: AuditLogEvent,
     requestOptions: RequestOptions? = null
   ): AuditLogEventCreateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["organization_id"] = organizationId
-    body["event"] = event
+    val body = bodyOf(
+      "organization_id" to organizationId,
+      "event" to event
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -247,15 +251,16 @@ class AuditLogs(
     targets: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): AuditLogExportJson {
-    val body = linkedMapOf<String, Any?>()
-    body["organization_id"] = organizationId
-    body["range_start"] = rangeStart
-    body["range_end"] = rangeEnd
-    if (actions != null) body["actions"] = actions
-    if (actors != null) body["actors"] = actors
-    if (actorNames != null) body["actor_names"] = actorNames
-    if (actorIds != null) body["actor_ids"] = actorIds
-    if (targets != null) body["targets"] = targets
+    val body = bodyOf(
+      "organization_id" to organizationId,
+      "range_start" to rangeStart,
+      "range_end" to rangeEnd,
+      "actions" to actions,
+      "actors" to actors,
+      "actor_names" to actorNames,
+      "actor_ids" to actorIds,
+      "targets" to targets
+    )
     val config =
       RequestConfig(
         method = "POST",

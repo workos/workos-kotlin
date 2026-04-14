@@ -5,6 +5,7 @@ package com.workos.widgets
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.WidgetSessionTokenResponse
 import com.workos.types.WidgetSessionTokenScopes
 
@@ -30,10 +31,11 @@ class Widgets(
     scopes: List<WidgetSessionTokenScopes>? = null,
     requestOptions: RequestOptions? = null
   ): WidgetSessionTokenResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["organization_id"] = organizationId
-    if (userId != null) body["user_id"] = userId
-    if (scopes != null) body["scopes"] = scopes
+    val body = bodyOf(
+      "organization_id" to organizationId,
+      "user_id" to userId,
+      "scopes" to scopes
+    )
     val config =
       RequestConfig(
         method = "POST",

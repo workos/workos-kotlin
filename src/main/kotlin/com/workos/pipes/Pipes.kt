@@ -5,6 +5,7 @@ package com.workos.pipes
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.ConnectedAccount
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
@@ -34,10 +35,11 @@ class Pipes(
     returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["user_id"] = userId
-    if (organizationId != null) body["organization_id"] = organizationId
-    if (returnTo != null) body["return_to"] = returnTo
+    val body = bodyOf(
+      "user_id" to userId,
+      "organization_id" to organizationId,
+      "return_to" to returnTo
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -66,9 +68,10 @@ class Pipes(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["user_id"] = userId
-    if (organizationId != null) body["organization_id"] = organizationId
+    val body = bodyOf(
+      "user_id" to userId,
+      "organization_id" to organizationId
+    )
     val config =
       RequestConfig(
         method = "POST",

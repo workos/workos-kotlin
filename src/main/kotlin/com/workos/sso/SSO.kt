@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.Connection
 import com.workos.models.Profile
 import com.workos.models.SSOLogoutAuthorizeResponse
@@ -126,8 +127,9 @@ class SSO(
     profileId: String,
     requestOptions: RequestOptions? = null
   ): SSOLogoutAuthorizeResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["profile_id"] = profileId
+    val body = bodyOf(
+      "profile_id" to profileId
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -174,11 +176,12 @@ class SSO(
   ): SSOTokenResponse {
     val params = mutableListOf<Pair<String, String>>()
     params += "code" to code.toString()
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = bodyCode
-    body["grant_type"] = "authorization_code"
-    body["client_id"] = workos.clientId
-    body["client_secret"] = workos.apiKey
+    val body = bodyOf(
+      "code" to bodyCode,
+      "grant_type" to "authorization_code",
+      "client_id" to workos.clientId,
+      "client_secret" to workos.apiKey
+    )
     val config =
       RequestConfig(
         method = "POST",

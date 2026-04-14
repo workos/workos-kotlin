@@ -8,6 +8,8 @@ import com.workos.common.http.Page
 import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
+import com.workos.common.http.patchBodyOf
 import com.workos.models.AuthorizationCheck
 import com.workos.models.AuthorizationPermission
 import com.workos.models.AuthorizationResource
@@ -45,11 +47,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationCheck {
-    val body = linkedMapOf<String, Any?>()
-    body["permission_slug"] = permissionSlug
-    if (resourceId != null) body["resource_id"] = resourceId
-    if (resourceExternalId != null) body["resource_external_id"] = resourceExternalId
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "permission_slug" to permissionSlug,
+      "resource_id" to resourceId,
+      "resource_external_id" to resourceExternalId,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -176,11 +179,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): RoleAssignment {
-    val body = linkedMapOf<String, Any?>()
-    body["role_slug"] = roleSlug
-    if (resourceId != null) body["resource_id"] = resourceId
-    if (resourceExternalId != null) body["resource_external_id"] = resourceExternalId
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "role_slug" to roleSlug,
+      "resource_id" to resourceId,
+      "resource_external_id" to resourceExternalId,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -211,11 +215,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val body = linkedMapOf<String, Any?>()
-    body["role_slug"] = roleSlug
-    if (resourceId != null) body["resource_id"] = resourceId
-    if (resourceExternalId != null) body["resource_external_id"] = resourceExternalId
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "role_slug" to roleSlug,
+      "resource_id" to resourceId,
+      "resource_external_id" to resourceExternalId,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "DELETE",
@@ -294,11 +299,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["name"] = name
-    if (slug != null) body["slug"] = slug
-    if (description != null) body["description"] = description
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "name" to name,
+      "slug" to slug,
+      "description" to description,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -354,9 +360,10 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    if (name is PatchField.Present) body["name"] = name.value
-    if (description is PatchField.Present) body["description"] = description.value
+    val body = patchBodyOf(
+      "name" to name,
+      "description" to description
+    )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -408,8 +415,9 @@ class Authorization(
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["slug"] = bodySlug
+    val body = bodyOf(
+      "slug" to bodySlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -438,8 +446,9 @@ class Authorization(
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["permissions"] = permissions
+    val body = bodyOf(
+      "permissions" to permissions
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -530,12 +539,13 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = linkedMapOf<String, Any?>()
-    if (name is PatchField.Present) body["name"] = name.value
-    if (description is PatchField.Present) body["description"] = description.value
-    if (parentResourceId is PatchField.Present) body["parent_resource_id"] = parentResourceId.value
-    if (parentResourceExternalId is PatchField.Present) body["parent_resource_external_id"] = parentResourceExternalId.value
-    if (parentResourceTypeSlug is PatchField.Present) body["parent_resource_type_slug"] = parentResourceTypeSlug.value
+    val body = patchBodyOf(
+      "name" to name,
+      "description" to description,
+      "parent_resource_id" to parentResourceId,
+      "parent_resource_external_id" to parentResourceExternalId,
+      "parent_resource_type_slug" to parentResourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -710,15 +720,16 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = linkedMapOf<String, Any?>()
-    body["external_id"] = externalId
-    body["name"] = name
-    body["resource_type_slug"] = resourceTypeSlug
-    body["organization_id"] = organizationId
-    if (description != null) body["description"] = description
-    if (parentResourceId != null) body["parent_resource_id"] = parentResourceId
-    if (parentResourceExternalId != null) body["parent_resource_external_id"] = parentResourceExternalId
-    if (parentResourceTypeSlug != null) body["parent_resource_type_slug"] = parentResourceTypeSlug
+    val body = bodyOf(
+      "external_id" to externalId,
+      "name" to name,
+      "resource_type_slug" to resourceTypeSlug,
+      "organization_id" to organizationId,
+      "description" to description,
+      "parent_resource_id" to parentResourceId,
+      "parent_resource_external_id" to parentResourceExternalId,
+      "parent_resource_type_slug" to parentResourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -776,12 +787,13 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val body = linkedMapOf<String, Any?>()
-    if (name is PatchField.Present) body["name"] = name.value
-    if (description is PatchField.Present) body["description"] = description.value
-    if (parentResourceId is PatchField.Present) body["parent_resource_id"] = parentResourceId.value
-    if (parentResourceExternalId is PatchField.Present) body["parent_resource_external_id"] = parentResourceExternalId.value
-    if (parentResourceTypeSlug is PatchField.Present) body["parent_resource_type_slug"] = parentResourceTypeSlug.value
+    val body = patchBodyOf(
+      "name" to name,
+      "description" to description,
+      "parent_resource_id" to parentResourceId,
+      "parent_resource_external_id" to parentResourceExternalId,
+      "parent_resource_type_slug" to parentResourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -902,11 +914,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["slug"] = slug
-    body["name"] = name
-    if (description != null) body["description"] = description
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "slug" to slug,
+      "name" to name,
+      "description" to description,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -958,9 +971,10 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    if (name is PatchField.Present) body["name"] = name.value
-    if (description is PatchField.Present) body["description"] = description.value
+    val body = patchBodyOf(
+      "name" to name,
+      "description" to description
+    )
     val config =
       RequestConfig(
         method = "PATCH",
@@ -987,8 +1001,9 @@ class Authorization(
     bodySlug: String,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["slug"] = bodySlug
+    val body = bodyOf(
+      "slug" to bodySlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1015,8 +1030,9 @@ class Authorization(
     permissions: List<String>,
     requestOptions: RequestOptions? = null
   ): Role {
-    val body = linkedMapOf<String, Any?>()
-    body["permissions"] = permissions
+    val body = bodyOf(
+      "permissions" to permissions
+    )
     val config =
       RequestConfig(
         method = "PUT",
@@ -1085,11 +1101,12 @@ class Authorization(
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Permission {
-    val body = linkedMapOf<String, Any?>()
-    body["slug"] = slug
-    body["name"] = name
-    if (description != null) body["description"] = description
-    if (resourceTypeSlug != null) body["resource_type_slug"] = resourceTypeSlug
+    val body = bodyOf(
+      "slug" to slug,
+      "name" to name,
+      "description" to description,
+      "resource_type_slug" to resourceTypeSlug
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -1141,9 +1158,10 @@ class Authorization(
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationPermission {
-    val body = linkedMapOf<String, Any?>()
-    if (name is PatchField.Present) body["name"] = name.value
-    if (description is PatchField.Present) body["description"] = description.value
+    val body = patchBodyOf(
+      "name" to name,
+      "description" to description
+    )
     val config =
       RequestConfig(
         method = "PATCH",

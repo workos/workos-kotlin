@@ -8,6 +8,8 @@ import com.workos.common.http.Page
 import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
+import com.workos.common.http.patchBodyOf
 import com.workos.models.WebhookEndpointJson
 import com.workos.types.CreateWebhookEndpointEvents
 import com.workos.types.EventsOrder
@@ -71,9 +73,10 @@ class Webhooks(
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val body = linkedMapOf<String, Any?>()
-    body["endpoint_url"] = endpointUrl
-    body["events"] = events
+    val body = bodyOf(
+      "endpoint_url" to endpointUrl,
+      "events" to events
+    )
     val config =
       RequestConfig(
         method = "POST",
@@ -104,10 +107,11 @@ class Webhooks(
     events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): WebhookEndpointJson {
-    val body = linkedMapOf<String, Any?>()
-    if (endpointUrl is PatchField.Present) body["endpoint_url"] = endpointUrl.value
-    if (status is PatchField.Present) body["status"] = status.value
-    if (events is PatchField.Present) body["events"] = events.value
+    val body = patchBodyOf(
+      "endpoint_url" to endpointUrl,
+      "status" to status,
+      "events" to events
+    )
     val config =
       RequestConfig(
         method = "PATCH",
