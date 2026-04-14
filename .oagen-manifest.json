@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-14T00:01:31.634Z",
+  "generatedAt": "2026-04-14T00:03:28.055Z",
   "files": [
     "smoke-manifest.json",
     "src/main/kotlin/com/workos/WorkOS.Generated.kt",
@@ -566,6 +566,7 @@
     "src/test/kotlin/com/workos/directorysync/DirectorySyncTest.kt",
     "src/test/kotlin/com/workos/events/EventsTest.kt",
     "src/test/kotlin/com/workos/featureflags/FeatureFlagsTest.kt",
+    "src/test/kotlin/com/workos/models/GeneratedForwardCompatTest.kt",
     "src/test/kotlin/com/workos/models/GeneratedModelRoundTripTest.kt",
     "src/test/kotlin/com/workos/multifactorauth/MultiFactorAuthTest.kt",
     "src/test/kotlin/com/workos/organizationdomains/OrganizationDomainsTest.kt",
