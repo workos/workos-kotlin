@@ -1,6 +1,5 @@
 package com.workos.sso.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -22,58 +21,44 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param customAttributes Object of key-value pairs containing mapped data from the Identity Provider.
  * @param rawAttributes Object of key-value pairs containing relevant user data from the Identity Provider.
  */
-data class Profile
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Profile(
   @JvmField
   @JsonProperty("object")
   val obj: String = "profile",
-
   @JvmField
   val id: String,
-
   @JvmField
   @JsonProperty("idp_id")
   val idpId: String,
-
   @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
-
   @JvmField
   @JsonProperty("connection_id")
   val connectionId: String,
-
   @JvmField
   @JsonProperty("connection_type")
   val connectionType: String,
-
   @JvmField
   val email: String,
-
   @JvmField
   @JsonProperty("first_name")
   val firstName: String?,
-
   @JvmField
   @JsonProperty("last_name")
   val lastName: String?,
-
   @JvmField
   @JsonProperty("role")
   val role: ProfileRole? = null,
-
   @JvmField
   @JsonProperty("roles")
   val roles: List<ProfileRole>? = null,
-
   @JvmField
   @JsonProperty("groups")
   val groups: List<String>?,
-
   @JvmField
   @JsonProperty("custom_attributes")
   val customAttributes: Map<String, Any>,
-
   @JvmField
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>

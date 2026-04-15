@@ -14,16 +14,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class AuthenticationTotp(
   @JsonProperty("issuer")
   val issuer: String? = null,
-
   @JsonProperty("user")
   val user: String? = null,
-
   @JsonProperty("qr_code")
   val qrCode: String? = null,
-
   @JsonProperty("secret")
   val secret: String? = null,
-
   @JsonProperty("uri")
   val uri: String? = null
 )

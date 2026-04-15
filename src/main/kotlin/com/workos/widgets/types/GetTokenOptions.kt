@@ -9,18 +9,16 @@ class GetTokenOptions(
    */
   @JsonProperty("organization_id")
   val organizationId: String,
-
   /**
    * The ID of the user to generate a token for.
    */
   @JsonProperty("user_id")
   val userId: String,
-
   /**
    * The scopes to generate a token for.
    */
   @JsonProperty("scopes")
-  val scopes: List<WidgetScope>,
+  val scopes: List<WidgetScope>
 ) {
   init {
     require(organizationId.isNotBlank()) { "Organization ID is required" }

@@ -8,12 +8,11 @@ class ResetPasswordOptions(
    */
   @JsonProperty("token")
   val token: String,
-
   /**
    * The new password to set for the user.
    */
   @JsonProperty("new_password")
-  val newPassword: String,
+  val newPassword: String
 ) {
   init {
     require(token.isNotBlank()) { "Token is required" }

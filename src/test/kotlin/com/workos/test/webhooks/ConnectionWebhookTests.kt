@@ -1,19 +1,20 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.webhooks
 
 import com.workos.test.TestBase
-import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
-import org.junit.Test
+import com.workos.webhooks.models.*
 import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ConnectionWebhookTests : TestBase() {
-
   private val connectionId = "conn_01FMXJ0YAP7JX3377YFV2XPCJE"
 
   private val webhookId = "wh_01FMXKE185HQ2DQ84BH33HMF99"
 
-  private fun generateGroupWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateGroupWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "data": {
@@ -30,7 +31,6 @@ class ConnectionWebhookTests : TestBase() {
       "created_at": "2021-11-20T10:15:23.713Z"
     }
     """
-  }
 
   @Test
   fun constructDirectoryActivatedEvent() {
@@ -38,11 +38,12 @@ class ConnectionWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.ConnectionActivated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is ConnectionActivatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -55,11 +56,12 @@ class ConnectionWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.ConnectionDeactivated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is ConnectionDeactivatedEvent)
     assertEquals(webhook.id, webhookId)
@@ -72,11 +74,12 @@ class ConnectionWebhookTests : TestBase() {
     val webhookData = generateGroupWebhookEvent(EventType.ConnectionDeleted)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is ConnectionDeletedEvent)
     assertEquals(webhook.id, webhookId)
@@ -107,11 +110,12 @@ class ConnectionWebhookTests : TestBase() {
     """
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is ConnectionSamlCertificateRenewalRequiredEvent)
     assertEquals(webhook.id, webhookId)
@@ -142,11 +146,12 @@ class ConnectionWebhookTests : TestBase() {
     """
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is ConnectionSamlCertificateRenewedEvent)
     assertEquals(webhook.id, webhookId)

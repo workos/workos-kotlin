@@ -1,21 +1,28 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.workos.WorkOS
-import org.junit.ClassRule
+import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.AfterTest
 
 open class TestBase {
   val stubs = mutableListOf<StubMapping>()
 
   companion object {
-    @ClassRule
+    @RegisterExtension
     @JvmField
-    val wireMockRule = WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort())
+    val wireMockRule =
+      WireMockExtension
+        .newInstance()
+        .options(wireMockConfig().dynamicPort().dynamicHttpsPort())
+        .configureStaticDsl(true)
+        .build()
   }
 
   @AfterTest
@@ -35,9 +42,7 @@ open class TestBase {
     return workos
   }
 
-  fun getWireMockPort(): Int {
-    return wireMockRule.port()
-  }
+  fun getWireMockPort(): Int = wireMockRule.port
 
   fun stubResponse(
     url: String,
@@ -47,14 +52,15 @@ open class TestBase {
     requestBody: String? = null,
     requestHeaders: Map<String, String>? = null
   ): StubMapping {
-    val mapping = any(urlPathEqualTo(url))
-      .withQueryParams(params)
-      .willReturn(
-        aResponse()
-          .withStatus(responseStatus)
-          .withBody(responseBody)
-          .withHeader("X-Request-ID", "request_id_value")
-      )
+    val mapping =
+      any(urlPathEqualTo(url))
+        .withQueryParams(params)
+        .willReturn(
+          aResponse()
+            .withStatus(responseStatus)
+            .withBody(responseBody)
+            .withHeader("X-Request-ID", "request_id_value")
+        )
 
     if (requestBody != null) {
       mapping.withRequestBody(equalToJson(requestBody))
@@ -84,17 +90,17 @@ open class TestBase {
     scenarioState: String,
     nextScenarioState: String
   ): StubMapping {
-    val mapping = any(urlPathEqualTo(url))
-      .inScenario(scenarioName)
-      .whenScenarioStateIs(scenarioState)
-      .withQueryParams(params)
-      .willReturn(
-        aResponse()
-          .withStatus(responseStatus)
-          .withBody(responseBody)
-          .withHeader("X-Request-ID", "request_id_value")
-      )
-      .willSetStateTo(nextScenarioState)
+    val mapping =
+      any(urlPathEqualTo(url))
+        .inScenario(scenarioName)
+        .whenScenarioStateIs(scenarioState)
+        .withQueryParams(params)
+        .willReturn(
+          aResponse()
+            .withStatus(responseStatus)
+            .withBody(responseBody)
+            .withHeader("X-Request-ID", "request_id_value")
+        ).willSetStateTo(nextScenarioState)
 
     if (requestBody != null) {
       mapping.withRequestBody(equalToJson(requestBody))

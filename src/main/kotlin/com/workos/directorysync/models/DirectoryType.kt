@@ -8,11 +8,13 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param type The Directory Type string value.
  */
-enum class DirectoryType(@JsonValue val type: String) {
+enum class DirectoryType(
+  @JsonValue val type: String
+) {
   /**
    * Azure SCIM 2.0
    */
-  AzureSCIMV2_0("azure scim v2.0"),
+  AzureScimV20("azure scim v2.0"),
 
   /**
    * BambooHR
@@ -32,7 +34,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * Cyberark SCIM 2.0
    */
-  CyberarkSCIMV2_0("cyberark scim v2.0"),
+  CyberarkScimV20("cyberark scim v2.0"),
 
   /**
    * FourthHR
@@ -42,7 +44,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * Generic SCIM 2.0
    */
-  GenericSCIMV2_0("generic scim v2.0"),
+  GenericScimV20("generic scim v2.0"),
 
   /**
    * Google Workspace https://workspace.google.com/
@@ -57,17 +59,17 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * JumpCloud SCIM https://jumpcloud.com/
    */
-  JumpCloudSCIM2_0("jump cloud scim v2.0"),
+  JumpCloudScimV20("jump cloud scim v2.0"),
 
   /**
    * Okta SCIM 2.0 https://developer.okta.com/docs/reference/scim/scim-20/
    */
-  OktaSCIMV2_0("okta scim v2.0"),
+  OktaScimV20("okta scim v2.0"),
 
   /**
    * OneLogin SCIM 2.0 https://developers.onelogin.com/scim
    */
-  OneLoginSCIMV2_0("onelogin scim v2.0"),
+  OneLoginScimV20("onelogin scim v2.0"),
 
   /**
    * PeopleHR  https://peoplehr.com/
@@ -82,7 +84,7 @@ enum class DirectoryType(@JsonValue val type: String) {
   /**
    * PingFederate SCIM 2.0  https://pingfederate.com/
    */
-  PingFederateSCIMV2_0("pingfederate scim v2.0"),
+  PingFederateScimV20("pingfederate scim v2.0"),
 
   /**
    * Rippling https://www.rippling.com/

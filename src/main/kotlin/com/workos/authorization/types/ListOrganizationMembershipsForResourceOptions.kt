@@ -5,22 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.common.models.Order
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class ListOrganizationMembershipsForResourceOptions @JvmOverloads constructor(
-  @JsonProperty("permission_slug")
-  val permissionSlug: String,
-
-  @JsonProperty("assignment")
-  val assignment: String? = null,
-
-  @JsonProperty("limit")
-  val limit: Int? = null,
-
-  @JsonProperty("order")
-  val order: Order? = null,
-
-  @JsonProperty("before")
-  val before: String? = null,
-
-  @JsonProperty("after")
-  val after: String? = null
-)
+class ListOrganizationMembershipsForResourceOptions
+  @JvmOverloads
+  constructor(
+    @JsonProperty("permission_slug")
+    val permissionSlug: String,
+    @JsonProperty("assignment")
+    val assignment: String? = null,
+    @JsonProperty("limit")
+    val limit: Int? = null,
+    @JsonProperty("order")
+    val order: Order? = null,
+    @JsonProperty("before")
+    val before: String? = null,
+    @JsonProperty("after")
+    val after: String? = null
+  )

@@ -15,51 +15,50 @@ import com.workos.usermanagement.types.UpdateUserOptions
  * @param passwordHash The hashed password to set for the user. Mutually exclusive with password.
  * @param passwordHashType The algorithm originally used to hash the password, used when providing a password_hash.
  */
-class UpdateUserOptionsBuilder @JvmOverloads constructor(
-  val id: String,
-  var email: String? = null,
-  override var firstName: String? = null,
-  override var lastName: String? = null,
-  override var emailVerified: Boolean? = null,
-  override var password: String? = null,
-  override var passwordHash: String? = null,
-  override var passwordHashType: PasswordHashTypeEnumType? = null,
-) : AbstractUserOptionsBuilder<UpdateUserOptions>(
-  password,
-  passwordHash,
-  passwordHashType,
-  firstName,
-  lastName,
-  emailVerified
-) {
-  /**
-   * Generates the UpdateUserOptions object.
-   */
-  override fun build(): UpdateUserOptions {
-    return UpdateUserOptions(
-      id = this.id,
-      email = this.email,
-      firstName = this.firstName,
-      lastName = this.lastName,
-      emailVerified = this.emailVerified,
-      password = this.password,
-      passwordHash = this.passwordHash,
-      passwordHashType = this.passwordHashType,
-    )
-  }
+class UpdateUserOptionsBuilder
+  @JvmOverloads
+  constructor(
+    val id: String,
+    var email: String? = null,
+    override var firstName: String? = null,
+    override var lastName: String? = null,
+    override var emailVerified: Boolean? = null,
+    override var password: String? = null,
+    override var passwordHash: String? = null,
+    override var passwordHashType: PasswordHashTypeEnumType? = null
+  ) : AbstractUserOptionsBuilder<UpdateUserOptions>(
+      password,
+      passwordHash,
+      passwordHashType,
+      firstName,
+      lastName,
+      emailVerified
+    ) {
+    /**
+     * Generates the UpdateUserOptions object.
+     */
+    override fun build(): UpdateUserOptions =
+      UpdateUserOptions(
+        id = this.id,
+        email = this.email,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        emailVerified = this.emailVerified,
+        password = this.password,
+        passwordHash = this.passwordHash,
+        passwordHashType = this.passwordHashType
+      )
 
-  /**
-   * Email
-   */
-  fun email(value: String) = apply { email = value }
+    /**
+     * Email
+     */
+    fun email(value: String) = apply { email = value }
 
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun create(id: String): UpdateUserOptionsBuilder {
-      return UpdateUserOptionsBuilder(id)
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun create(id: String): UpdateUserOptionsBuilder = UpdateUserOptionsBuilder(id)
     }
   }
-}

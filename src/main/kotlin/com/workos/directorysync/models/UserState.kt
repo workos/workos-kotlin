@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param state The User State string value.
  */
-enum class UserState(@JsonValue val state: String) {
+enum class UserState(
+  @JsonValue val state: String
+) {
   /**
    * The user is active.
    */

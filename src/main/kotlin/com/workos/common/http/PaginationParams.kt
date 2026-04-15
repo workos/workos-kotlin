@@ -10,70 +10,69 @@ import com.workos.common.models.Order
  * @param limit Upper limit on the number of resources to return, between 1 and 100. The default value is 10.
  * @param order The order to paginate records
  */
-open class PaginationParams @JvmOverloads constructor(
-  after: String? = null,
-  before: String? = null,
-  limit: Int? = null,
-  order: Order? = null
-) : HashMap<String, String>() {
+open class PaginationParams
+  @JvmOverloads
+  constructor(
+    after: String? = null,
+    before: String? = null,
+    limit: Int? = null,
+    order: Order? = null
+  ) : HashMap<String, String>() {
+    init {
+      if (after != null) {
+        set("after", after)
+      }
 
-  init {
-    if (after != null) {
-      set("after", after)
+      if (before != null) {
+        set("before", before)
+      }
+
+      if (limit != null) {
+        set("limit", limit.toString())
+      }
+
+      if (order != null) {
+        set("order", order.toString())
+      }
     }
 
-    if (before != null) {
-      set("before", before)
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun builder(): PaginationParamsBuilder<PaginationParams> = PaginationParamsBuilder(PaginationParams())
     }
 
-    if (limit != null) {
-      set("limit", limit.toString())
-    }
+    /**
+     * Builder class for creating [PaginationParams].
+     */
+    open class PaginationParamsBuilder<T : PaginationParams>(
+      protected val params: T
+    ) {
+      /**
+       * Sets the `after` query parameter.
+       */
+      fun after(after: String) = apply { this.params["after"] = after }
 
-    if (order != null) {
-      set("order", order.toString())
+      /**
+       * Sets the `before` query parameter.
+       */
+      fun before(before: String) = apply { this.params["before"] = before }
+
+      /**
+       * Sets the `limit` query parameter.
+       */
+      fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
+
+      /**
+       * Sets the `order` query parameter.
+       */
+      fun order(order: Order) = apply { this.params["order"] = order.type }
+
+      /**
+       * Creates an instance of T with the given builder parameters.
+       */
+      open fun build(): T = params
     }
   }
-
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun builder(): PaginationParamsBuilder<PaginationParams> {
-      return PaginationParamsBuilder(PaginationParams())
-    }
-  }
-
-  /**
-   * Builder class for creating [PaginationParams].
-   */
-  open class PaginationParamsBuilder<T : PaginationParams>(protected val params: T) {
-    /**
-     * Sets the `after` query parameter.
-     */
-    fun after(after: String) = apply { this.params["after"] = after }
-
-    /**
-     * Sets the `before` query parameter.
-     */
-    fun before(before: String) = apply { this.params["before"] = before }
-
-    /**
-     * Sets the `limit` query parameter.
-     */
-    fun limit(limit: Int) = apply { this.params["limit"] = limit.toString() }
-
-    /**
-     * Sets the `order` query parameter.
-     */
-    fun order(order: Order) = apply { this.params["order"] = order.type }
-
-    /**
-     * Creates an instance of T with the given builder parameters.
-     */
-    open fun build(): T {
-      return params
-    }
-  }
-}

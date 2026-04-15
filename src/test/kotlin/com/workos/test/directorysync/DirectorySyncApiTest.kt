@@ -1,6 +1,8 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.directorysync
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.directorysync.DirectorySyncApi
 import com.workos.directorysync.models.DirectoryState
@@ -13,7 +15,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DirectorySyncApiTest : TestBase() {
-
   @Test
   fun deleteDirectoryShouldNotError() {
     val workos = createWorkOSClient()
@@ -126,7 +127,7 @@ class DirectorySyncApiTest : TestBase() {
     assertEquals(gsuiteDirectory.id, gsuiteDirectoryId)
     assertEquals(oktaDirectory.id, oktaDirectoryId)
     assertEquals(gsuiteDirectory.type, DirectoryType.GSuiteDirectory)
-    assertEquals(oktaDirectory.type, DirectoryType.OktaSCIMV2_0)
+    assertEquals(oktaDirectory.type, DirectoryType.OktaScimV20)
   }
 
   @Test
@@ -137,11 +138,12 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directories",
-      params = mapOf(
-        "after" to equalTo("someAfterId"),
-        "before" to equalTo("someBeforeId"),
-        "limit" to equalTo("1")
-      ),
+      params =
+        mapOf(
+          "after" to equalTo("someAfterId"),
+          "before" to equalTo("someBeforeId"),
+          "limit" to equalTo("1")
+        ),
       responseBody = """{
         "data": [{
           "id": "$gsuiteDirectoryId",
@@ -164,11 +166,13 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val paginationParams = DirectorySyncApi.ListDirectoriesOptions.builder()
-      .after("someAfterId")
-      .before("someBeforeId")
-      .limit((1))
-      .build()
+    val paginationParams =
+      DirectorySyncApi.ListDirectoriesOptions
+        .builder()
+        .after("someAfterId")
+        .before("someBeforeId")
+        .limit((1))
+        .build()
 
     val (data) = workos.directorySync.listDirectories(paginationParams)
 
@@ -187,7 +191,6 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directories",
-
       responseBody = """{
         "data": [{
           "id": "directory_01EHZNVPK3SFK441AXXXXXSHRT",
@@ -210,12 +213,14 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listDirectoriesOptions = DirectorySyncApi.ListDirectoriesOptions.builder()
-      .organization(gsuiteOrganizationId)
-      .after("someAfterId")
-      .before("someBeforeId")
-      .limit((1))
-      .build()
+    val listDirectoriesOptions =
+      DirectorySyncApi.ListDirectoriesOptions
+        .builder()
+        .organization(gsuiteOrganizationId)
+        .after("someAfterId")
+        .before("someBeforeId")
+        .limit((1))
+        .build()
 
     val (data) = workos.directorySync.listDirectories(listDirectoriesOptions)
 
@@ -265,7 +270,7 @@ class DirectorySyncApiTest : TestBase() {
           "after" : "someAfterId",
           "before" : "someBeforeId"
         }
-      }""",
+      }"""
     )
 
     val (data) = workos.directorySync.listDirectories()
@@ -276,7 +281,7 @@ class DirectorySyncApiTest : TestBase() {
     assertEquals(unknownDirectory.id, unknownDirectoryId)
     assertEquals(unknownDirectory.type, DirectoryType.Unknown)
     assertEquals(oktaDirectory.id, oktaDirectoryId)
-    assertEquals(oktaDirectory.type, DirectoryType.OktaSCIMV2_0)
+    assertEquals(oktaDirectory.type, DirectoryType.OktaScimV20)
   }
 
   @Test
@@ -365,9 +370,10 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_groups",
-      params = mapOf(
-        "user" to equalTo(userId)
-      ),
+      params =
+        mapOf(
+          "user" to equalTo(userId)
+        ),
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
@@ -387,9 +393,11 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
-      .user(userId)
-      .build()
+    val listOptions =
+      DirectorySyncApi.ListDirectoryGroupOptions
+        .builder()
+        .user(userId)
+        .build()
 
     val (data) = workos.directorySync.listDirectoryGroups(listOptions)
 
@@ -407,9 +415,10 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_groups",
-      params = mapOf(
-        "directory" to equalTo(directoryId)
-      ),
+      params =
+        mapOf(
+          "directory" to equalTo(directoryId)
+        ),
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
@@ -429,9 +438,11 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryGroupOptions.builder()
-      .directory(directoryId)
-      .build()
+    val listOptions =
+      DirectorySyncApi.ListDirectoryGroupOptions
+        .builder()
+        .directory(directoryId)
+        .build()
 
     val (data) = workos.directorySync.listDirectoryGroups(listOptions)
 
@@ -450,13 +461,14 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_groups",
-      params = mapOf(
-        "directory" to equalTo(directoryId),
-        "user" to equalTo(userId),
-        "after" to equalTo("after"),
-        "before" to equalTo("before"),
-        "limit" to equalTo("10")
-      ),
+      params =
+        mapOf(
+          "directory" to equalTo(directoryId),
+          "user" to equalTo(userId),
+          "after" to equalTo("after"),
+          "before" to equalTo("before"),
+          "limit" to equalTo("10")
+        ),
       responseBody = """{
         "data" : [{
           "id" : "$directoryGroupId",
@@ -476,13 +488,14 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryGroupOptions(
-      directory = directoryId,
-      user = userId,
-      after = "after",
-      before = "before",
-      limit = 10
-    )
+    val listOptions =
+      DirectorySyncApi.ListDirectoryGroupOptions(
+        directory = directoryId,
+        user = userId,
+        after = "after",
+        before = "before",
+        limit = 10
+      )
 
     val (data) = workos.directorySync.listDirectoryGroups(listOptions)
 
@@ -501,9 +514,10 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_users",
-      params = mapOf(
-        "directory" to equalTo("directoryId")
-      ),
+      params =
+        mapOf(
+          "directory" to equalTo("directoryId")
+        ),
       responseBody = """{
           "data": [{
             "id": "$userId1",
@@ -578,10 +592,11 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryUserOptions
-      .builder()
-      .directory("directoryId")
-      .build()
+    val listOptions =
+      DirectorySyncApi.ListDirectoryUserOptions
+        .builder()
+        .directory("directoryId")
+        .build()
 
     val (data) = workos.directorySync.listDirectoryUsers(listOptions)
 
@@ -604,9 +619,10 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_users",
-      params = mapOf(
-        "group" to equalTo(groupId)
-      ),
+      params =
+        mapOf(
+          "group" to equalTo(groupId)
+        ),
       responseBody = """{
           "data": [{
             "id": "$userId1",
@@ -680,10 +696,11 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryUserOptions
-      .builder()
-      .group(groupId)
-      .build()
+    val listOptions =
+      DirectorySyncApi.ListDirectoryUserOptions
+        .builder()
+        .group(groupId)
+        .build()
 
     val (data) = workos.directorySync.listDirectoryUsers(listOptions)
 
@@ -706,12 +723,13 @@ class DirectorySyncApiTest : TestBase() {
 
     stubResponse(
       url = "/directory_users",
-      params = mapOf(
-        "group" to equalTo(groupId),
-        "after" to equalTo("after"),
-        "before" to equalTo("before"),
-        "limit" to equalTo("10")
-      ),
+      params =
+        mapOf(
+          "group" to equalTo(groupId),
+          "after" to equalTo("after"),
+          "before" to equalTo("before"),
+          "limit" to equalTo("10")
+        ),
       responseBody = """{
           "data": [{
             "id": "$userId1",
@@ -786,12 +804,13 @@ class DirectorySyncApiTest : TestBase() {
       responseStatus = 200
     )
 
-    val listOptions = DirectorySyncApi.ListDirectoryUserOptions(
-      group = groupId,
-      after = "after",
-      before = "before",
-      limit = 10
-    )
+    val listOptions =
+      DirectorySyncApi.ListDirectoryUserOptions(
+        group = groupId,
+        after = "after",
+        before = "before",
+        limit = 10
+      )
 
     val (data) = workos.directorySync.listDirectoryUsers(listOptions)
 

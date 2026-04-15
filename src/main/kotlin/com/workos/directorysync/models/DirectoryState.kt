@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonValue
  *
  * @param state The Directory State string value.
  */
-enum class DirectoryState(@JsonValue val state: String) {
+enum class DirectoryState(
+  @JsonValue val state: String
+) {
   /**
    * The directory is connected to an external provider.
    * This state exists only from the webhook payload

@@ -13,65 +13,64 @@ import com.workos.usermanagement.types.ListUsersOptions
  * @param after Pagination cursor to receive records after a provided user ID.
  * @param order Sort records in either ascending or descending order by created_at timestamp: "asc" or "desc".
  */
-class ListUsersOptionsBuilder @JvmOverloads constructor(
-  private var email: String? = null,
-  private var organizationId: String? = null,
-  private var limit: Int? = null,
-  private var before: String? = null,
-  private var after: String? = null,
-  private var order: Order? = null,
-) {
-  /**
-   * Email
-   */
-  fun email(value: String) = apply { email = value }
+class ListUsersOptionsBuilder
+  @JvmOverloads
+  constructor(
+    private var email: String? = null,
+    private var organizationId: String? = null,
+    private var limit: Int? = null,
+    private var before: String? = null,
+    private var after: String? = null,
+    private var order: Order? = null
+  ) {
+    /**
+     * Email
+     */
+    fun email(value: String) = apply { email = value }
 
-  /**
-   * Organization Id
-   */
-  fun organizationId(value: String) = apply { organizationId = value }
+    /**
+     * Organization Id
+     */
+    fun organizationId(value: String) = apply { organizationId = value }
 
-  /**
-   * Limit
-   */
-  fun limit(value: Int) = apply { limit = value }
+    /**
+     * Limit
+     */
+    fun limit(value: Int) = apply { limit = value }
 
-  /**
-   * Before
-   */
-  fun before(value: String) = apply { before = value }
+    /**
+     * Before
+     */
+    fun before(value: String) = apply { before = value }
 
-  /**
-   * After
-   */
-  fun after(value: String) = apply { after = value }
+    /**
+     * After
+     */
+    fun after(value: String) = apply { after = value }
 
-  /**
-   * Sorting Order
-   */
-  fun order(value: Order) = apply { order = value }
+    /**
+     * Sorting Order
+     */
+    fun order(value: Order) = apply { order = value }
 
-  /**
-   * Generates the ListUsers options.
-   */
-  fun build(): ListUsersOptions {
-    return ListUsersOptions(
-      email = this.email,
-      organizationId = this.organizationId,
-      limit = this.limit,
-      before = this.before,
-      after = this.after,
-      order = this.order,
-    )
-  }
+    /**
+     * Generates the ListUsers options.
+     */
+    fun build(): ListUsersOptions =
+      ListUsersOptions(
+        email = this.email,
+        organizationId = this.organizationId,
+        limit = this.limit,
+        before = this.before,
+        after = this.after,
+        order = this.order
+      )
 
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun create(): ListUsersOptionsBuilder {
-      return ListUsersOptionsBuilder()
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun create(): ListUsersOptionsBuilder = ListUsersOptionsBuilder()
     }
   }
-}

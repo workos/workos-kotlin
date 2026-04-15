@@ -31,46 +31,45 @@ import com.workos.authorization.types.UpdatePermissionOptions
 import com.workos.authorization.types.UpdateRoleOptions
 import com.workos.common.http.RequestConfig
 
-class AuthorizationApi(private val workos: WorkOS) {
-
-  private fun toStringParams(options: Any): Map<String, String> {
-    return RequestConfig.toMap(options).mapValues { it.value.toString() }
-  }
+class AuthorizationApi(
+  private val workos: WorkOS
+) {
+  private fun toStringParams(options: Any): Map<String, String> = RequestConfig.toMap(options).mapValues { it.value.toString() }
 
   // ── Access Checks ──────────────────────────────────────────────────────
 
   /** Check if an organization membership has a permission on a resource. */
-  fun check(organizationMembershipId: String, options: CheckAuthorizationOptions): AuthorizationCheck {
-    return workos.post(
+  fun check(
+    organizationMembershipId: String,
+    options: CheckAuthorizationOptions
+  ): AuthorizationCheck =
+    workos.post(
       "/authorization/organization_memberships/$organizationMembershipId/check",
       AuthorizationCheck::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** List resources where an organization membership has a specific permission. */
   fun listResourcesForOrganizationMembership(
     organizationMembershipId: String,
     options: ListResourcesForOrganizationMembershipOptions
-  ): AuthorizationResourceList {
-    return workos.get(
+  ): AuthorizationResourceList =
+    workos.get(
       "/authorization/organization_memberships/$organizationMembershipId/resources",
       AuthorizationResourceList::class.java,
       RequestConfig.builder().params(toStringParams(options)).build()
     )
-  }
 
   /** List organization memberships that have a specific permission on a resource. */
   fun listOrganizationMembershipsForResource(
     resourceId: String,
     options: ListOrganizationMembershipsForResourceOptions
-  ): OrganizationMembershipList {
-    return workos.get(
+  ): OrganizationMembershipList =
+    workos.get(
       "/authorization/resources/$resourceId/organization_memberships",
       OrganizationMembershipList::class.java,
       RequestConfig.builder().params(toStringParams(options)).build()
     )
-  }
 
   /** List organization memberships for a resource identified by external ID. */
   fun listOrganizationMembershipsForResourceByExternalId(
@@ -78,13 +77,12 @@ class AuthorizationApi(private val workos: WorkOS) {
     resourceTypeSlug: String,
     externalId: String,
     options: ListOrganizationMembershipsForResourceOptions
-  ): OrganizationMembershipList {
-    return workos.get(
+  ): OrganizationMembershipList =
+    workos.get(
       "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId/organization_memberships",
       OrganizationMembershipList::class.java,
       RequestConfig.builder().params(toStringParams(options)).build()
     )
-  }
 
   // ── Role Assignments ───────────────────────────────────────────────────
 
@@ -93,25 +91,29 @@ class AuthorizationApi(private val workos: WorkOS) {
   fun listRoleAssignments(
     organizationMembershipId: String,
     options: ListRoleAssignmentsOptions? = null
-  ): RoleAssignmentList {
-    return workos.get(
+  ): RoleAssignmentList =
+    workos.get(
       "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
       RoleAssignmentList::class.java,
       RequestConfig.builder().params(toStringParams(options ?: ListRoleAssignmentsOptions())).build()
     )
-  }
 
   /** Assign a role to an organization membership on a specific resource. */
-  fun assignRole(organizationMembershipId: String, options: AssignRoleOptions): RoleAssignment {
-    return workos.post(
+  fun assignRole(
+    organizationMembershipId: String,
+    options: AssignRoleOptions
+  ): RoleAssignment =
+    workos.post(
       "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
       RoleAssignment::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Remove a role assignment by role slug and resource. */
-  fun removeRole(organizationMembershipId: String, options: RemoveRoleOptions) {
+  fun removeRole(
+    organizationMembershipId: String,
+    options: RemoveRoleOptions
+  ) {
     workos.deleteWithBody(
       "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
       RequestConfig.builder().data(options).build()
@@ -119,7 +121,10 @@ class AuthorizationApi(private val workos: WorkOS) {
   }
 
   /** Remove a role assignment by ID. */
-  fun removeRoleAssignment(organizationMembershipId: String, roleAssignmentId: String) {
+  fun removeRoleAssignment(
+    organizationMembershipId: String,
+    roleAssignmentId: String
+  ) {
     workos.delete(
       "/authorization/organization_memberships/$organizationMembershipId/role_assignments/$roleAssignmentId"
     )
@@ -129,43 +134,45 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   /** List authorization resources. */
   @JvmOverloads
-  fun listResources(options: ListAuthorizationResourcesOptions? = null): AuthorizationResourceList {
-    return workos.get(
+  fun listResources(options: ListAuthorizationResourcesOptions? = null): AuthorizationResourceList =
+    workos.get(
       "/authorization/resources",
       AuthorizationResourceList::class.java,
       RequestConfig.builder().params(toStringParams(options ?: ListAuthorizationResourcesOptions())).build()
     )
-  }
 
   /** Create an authorization resource. */
-  fun createResource(options: CreateAuthorizationResourceOptions): AuthorizationResource {
-    return workos.post(
+  fun createResource(options: CreateAuthorizationResourceOptions): AuthorizationResource =
+    workos.post(
       "/authorization/resources",
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Get an authorization resource by ID. */
-  fun getResource(resourceId: String): AuthorizationResource {
-    return workos.get(
+  fun getResource(resourceId: String): AuthorizationResource =
+    workos.get(
       "/authorization/resources/$resourceId",
       AuthorizationResource::class.java
     )
-  }
 
   /** Update an authorization resource by ID. */
-  fun updateResource(resourceId: String, options: UpdateAuthorizationResourceOptions): AuthorizationResource {
-    return workos.patch(
+  fun updateResource(
+    resourceId: String,
+    options: UpdateAuthorizationResourceOptions
+  ): AuthorizationResource =
+    workos.patch(
       "/authorization/resources/$resourceId",
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Delete an authorization resource by ID. */
   @JvmOverloads
-  fun deleteResource(resourceId: String, cascadeDelete: Boolean = false) {
+  fun deleteResource(
+    resourceId: String,
+    cascadeDelete: Boolean = false
+  ) {
     val params = mutableMapOf<String, String>()
     if (cascadeDelete) params["cascade_delete"] = "true"
 
@@ -180,12 +187,11 @@ class AuthorizationApi(private val workos: WorkOS) {
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String
-  ): AuthorizationResource {
-    return workos.get(
+  ): AuthorizationResource =
+    workos.get(
       "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
       AuthorizationResource::class.java
     )
-  }
 
   /** Update a resource by external ID. */
   fun updateResourceByExternalId(
@@ -193,13 +199,12 @@ class AuthorizationApi(private val workos: WorkOS) {
     resourceTypeSlug: String,
     externalId: String,
     options: UpdateAuthorizationResourceOptions
-  ): AuthorizationResource {
-    return workos.patch(
+  ): AuthorizationResource =
+    workos.patch(
       "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
       AuthorizationResource::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Delete a resource by external ID. */
   @JvmOverloads
@@ -222,39 +227,38 @@ class AuthorizationApi(private val workos: WorkOS) {
 
   /** List all permissions. */
   @JvmOverloads
-  fun listPermissions(options: ListPermissionsOptions? = null): AuthorizationPermissionList {
-    return workos.get(
+  fun listPermissions(options: ListPermissionsOptions? = null): AuthorizationPermissionList =
+    workos.get(
       "/authorization/permissions",
       AuthorizationPermissionList::class.java,
       RequestConfig.builder().params(toStringParams(options ?: ListPermissionsOptions())).build()
     )
-  }
 
   /** Create a permission. */
-  fun createPermission(options: CreatePermissionOptions): AuthorizationPermission {
-    return workos.post(
+  fun createPermission(options: CreatePermissionOptions): AuthorizationPermission =
+    workos.post(
       "/authorization/permissions",
       AuthorizationPermission::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Get a permission by slug. */
-  fun getPermission(slug: String): AuthorizationPermission {
-    return workos.get(
+  fun getPermission(slug: String): AuthorizationPermission =
+    workos.get(
       "/authorization/permissions/$slug",
       AuthorizationPermission::class.java
     )
-  }
 
   /** Update a permission by slug. */
-  fun updatePermission(slug: String, options: UpdatePermissionOptions): AuthorizationPermission {
-    return workos.patch(
+  fun updatePermission(
+    slug: String,
+    options: UpdatePermissionOptions
+  ): AuthorizationPermission =
+    workos.patch(
       "/authorization/permissions/$slug",
       AuthorizationPermission::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Delete a permission by slug. */
   fun deletePermission(slug: String) {
@@ -266,99 +270,107 @@ class AuthorizationApi(private val workos: WorkOS) {
   // individual permissions from them, unlike organization roles.
 
   /** List environment roles. */
-  fun listRoles(): AuthorizationRoleList {
-    return workos.get(
+  fun listRoles(): AuthorizationRoleList =
+    workos.get(
       "/authorization/roles",
       AuthorizationRoleList::class.java
     )
-  }
 
   /** Create an environment role. */
-  fun createRole(options: CreateRoleOptions): AuthorizationRole {
-    return workos.post(
+  fun createRole(options: CreateRoleOptions): AuthorizationRole =
+    workos.post(
       "/authorization/roles",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Get an environment role by slug. */
-  fun getRole(slug: String): AuthorizationRole {
-    return workos.get(
+  fun getRole(slug: String): AuthorizationRole =
+    workos.get(
       "/authorization/roles/$slug",
       AuthorizationRole::class.java
     )
-  }
 
   /** Update an environment role by slug. */
-  fun updateRole(slug: String, options: UpdateRoleOptions): AuthorizationRole {
-    return workos.patch(
+  fun updateRole(
+    slug: String,
+    options: UpdateRoleOptions
+  ): AuthorizationRole =
+    workos.patch(
       "/authorization/roles/$slug",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Set permissions for an environment role (replaces all existing permissions). */
-  fun setRolePermissions(slug: String, options: SetRolePermissionsOptions): AuthorizationRole {
-    return workos.put(
+  fun setRolePermissions(
+    slug: String,
+    options: SetRolePermissionsOptions
+  ): AuthorizationRole =
+    workos.put(
       "/authorization/roles/$slug/permissions",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Add a permission to an environment role. */
-  fun addRolePermission(slug: String, options: AddRolePermissionOptions): AuthorizationRole {
-    return workos.post(
+  fun addRolePermission(
+    slug: String,
+    options: AddRolePermissionOptions
+  ): AuthorizationRole =
+    workos.post(
       "/authorization/roles/$slug/permissions",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   // ── Organization Roles ─────────────────────────────────────────────────
 
   /** List roles for an organization. */
-  fun listOrganizationRoles(organizationId: String): AuthorizationRoleList {
-    return workos.get(
+  fun listOrganizationRoles(organizationId: String): AuthorizationRoleList =
+    workos.get(
       "/authorization/organizations/$organizationId/roles",
       AuthorizationRoleList::class.java
     )
-  }
 
   /** Create a custom role for an organization. */
-  fun createOrganizationRole(organizationId: String, options: CreateOrganizationRoleOptions): AuthorizationRole {
-    return workos.post(
+  fun createOrganizationRole(
+    organizationId: String,
+    options: CreateOrganizationRoleOptions
+  ): AuthorizationRole =
+    workos.post(
       "/authorization/organizations/$organizationId/roles",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Get an organization role by slug. */
-  fun getOrganizationRole(organizationId: String, slug: String): AuthorizationRole {
-    return workos.get(
+  fun getOrganizationRole(
+    organizationId: String,
+    slug: String
+  ): AuthorizationRole =
+    workos.get(
       "/authorization/organizations/$organizationId/roles/$slug",
       AuthorizationRole::class.java
     )
-  }
 
   /** Update an organization role by slug. */
   fun updateOrganizationRole(
     organizationId: String,
     slug: String,
     options: UpdateOrganizationRoleOptions
-  ): AuthorizationRole {
-    return workos.patch(
+  ): AuthorizationRole =
+    workos.patch(
       "/authorization/organizations/$organizationId/roles/$slug",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Delete a custom organization role. */
-  fun deleteOrganizationRole(organizationId: String, slug: String) {
+  fun deleteOrganizationRole(
+    organizationId: String,
+    slug: String
+  ) {
     workos.delete("/authorization/organizations/$organizationId/roles/$slug")
   }
 
@@ -367,26 +379,24 @@ class AuthorizationApi(private val workos: WorkOS) {
     organizationId: String,
     slug: String,
     options: SetRolePermissionsOptions
-  ): AuthorizationRole {
-    return workos.put(
+  ): AuthorizationRole =
+    workos.put(
       "/authorization/organizations/$organizationId/roles/$slug/permissions",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Add a permission to an organization role. */
   fun addOrganizationRolePermission(
     organizationId: String,
     slug: String,
     options: AddRolePermissionOptions
-  ): AuthorizationRole {
-    return workos.post(
+  ): AuthorizationRole =
+    workos.post(
       "/authorization/organizations/$organizationId/roles/$slug/permissions",
       AuthorizationRole::class.java,
       RequestConfig.builder().data(options).build()
     )
-  }
 
   /** Remove a permission from an organization role. */
   fun removeOrganizationRolePermission(

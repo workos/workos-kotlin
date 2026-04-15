@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.usermanagement.types.AuthenticationEventStatusEnumType
 import com.workos.usermanagement.types.AuthenticationEventTypeEnumType
@@ -16,25 +15,19 @@ import com.workos.usermanagement.types.AuthenticationEventTypeEnumType
  * @param userAgent The user agent of the authentication attempy, if available.
  * @param error Error details if the event is for a failed authentication attempt.
  */
-data class AuthenticationEventData @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class AuthenticationEventData(
   @JsonProperty("type")
   val type: AuthenticationEventTypeEnumType,
-
   @JsonProperty("status")
   val status: AuthenticationEventStatusEnumType,
-
   @JsonProperty("email")
   val email: String? = null,
-
   @JsonProperty("user_id")
   val userId: String? = null,
-
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
-
   @JsonProperty("user_agent")
   val userAgent: String? = null,
-
   @JsonProperty("error")
   val error: AuthenticationEventError? = null
 )

@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -11,16 +10,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the access token expires.
  * @param scopes The scopes granted to the access token.
  */
-data class OAuthTokens @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OAuthTokens(
   @JsonProperty("access_token")
   val accessToken: String,
-
   @JsonProperty("refresh_token")
   val refreshToken: String,
-
   @JsonProperty("expires_at")
   val expiresAt: Long,
-
   @JsonProperty("scopes")
-  val scopes: List<String>,
+  val scopes: List<String>
 )

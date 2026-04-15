@@ -14,10 +14,11 @@ import kotlin.jvm.Throws
  * The WebhooksApi class provides convenience methods for working
  * with WorkOS Webhooks.
  */
-class WebhooksApi() {
-  private val objectMapper = jacksonMapperBuilder()
-    .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
-    .build()
+class WebhooksApi {
+  private val objectMapper =
+    jacksonMapperBuilder()
+      .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+      .build()
 
   /**
    * Validates a WorkOS Webhook payload and constructs the corresponding event.
@@ -67,11 +68,12 @@ class WebhooksApi() {
       throw SignatureException("Timestamp outside the tolerance zone")
     }
 
-    val expectedSignature = createSignature(
-      timestamp,
-      payload,
-      secret
-    )
+    val expectedSignature =
+      createSignature(
+        timestamp,
+        payload,
+        secret
+      )
 
     if (!MessageDigest.isEqual(
         expectedSignature.toByteArray(),
@@ -89,7 +91,11 @@ class WebhooksApi() {
    * @param data The request body from the webhook
    * @param key The secret for generating webhooks for the webhook endpoint.
    */
-  fun createSignature(timestamp: String, data: String, key: String): String {
+  fun createSignature(
+    timestamp: String,
+    data: String,
+    key: String
+  ): String {
     val payload = "$timestamp.$data"
     val sha256Hmac = Mac.getInstance("HmacSHA256")
     val secretKey = SecretKeySpec(key.toByteArray(), "HmacSHA256")

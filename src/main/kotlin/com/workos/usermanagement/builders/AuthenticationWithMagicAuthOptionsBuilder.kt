@@ -22,8 +22,8 @@ class AuthenticationWithMagicAuthOptionsBuilder(
   /**
    * Generates the AuthenticationWithMagicAuthOptions object.
    */
-  fun build(): AuthenticationWithMagicAuthOptions {
-    return AuthenticationWithMagicAuthOptions(
+  fun build(): AuthenticationWithMagicAuthOptions =
+    AuthenticationWithMagicAuthOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "urn:workos:oauth:grant-type:magic-auth:code",
@@ -31,17 +31,20 @@ class AuthenticationWithMagicAuthOptionsBuilder(
       code = this.code,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, email: String, code: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithMagicAuthOptionsBuilder {
-      return AuthenticationWithMagicAuthOptionsBuilder(clientId, clientSecret, email, code, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      email: String,
+      code: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithMagicAuthOptionsBuilder = AuthenticationWithMagicAuthOptionsBuilder(clientId, clientSecret, email, code, options)
   }
 }

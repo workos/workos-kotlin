@@ -37,10 +37,10 @@ import java.net.SocketTimeoutException
 import java.util.Properties
 import kotlin.random.Random
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.nanoseconds
 
-@OptIn(ExperimentalTime::class)
-val MINIMUM_SLEEP_TIME = Duration.milliseconds(500)
+val MINIMUM_SLEEP_TIME = 500.milliseconds
 val BACKOFF_MULTIPLER = 1.5
 
 /**
@@ -51,7 +51,6 @@ val BACKOFF_MULTIPLER = 1.5
 class WorkOS(
   val apiKey: String
 ) {
-
   /**
    * Host to send requests to.
    */
@@ -174,9 +173,10 @@ class WorkOS(
 
   private val manager = FuelManager()
 
-  private val mapper = jacksonMapperBuilder()
-    .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
-    .build()
+  private val mapper =
+    jacksonMapperBuilder()
+      .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+      .build()
 
   init {
     if (apiKey.isNullOrBlank()) {
@@ -190,17 +190,22 @@ class WorkOS(
 
     manager.removeAllResponseInterceptors()
     manager.basePath = baseUrl
-    manager.baseHeaders = mapOf(
-      "Authorization" to "Bearer $apiKey",
-      "User-Agent" to "workos-kotlin/$version",
-      "Content-Type" to "application/json"
-    )
+    manager.baseHeaders =
+      mapOf(
+        "Authorization" to "Bearer $apiKey",
+        "User-Agent" to "workos-kotlin/$version",
+        "Content-Type" to "application/json"
+      )
   }
 
   /**
    * Performs a GET request with the baseURL prepended to the given path.
    */
-  fun <Res : Any> get(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+  fun <Res : Any> get(
+    path: String,
+    responseType: Class<Res>,
+    config: RequestConfig? = null
+  ): Res {
     val uri = URIBuilder(baseUrl).setPath(path)
 
     if (config?.params != null) {
@@ -217,7 +222,10 @@ class WorkOS(
   /**
    * Performs a POST request with WorkOS configuration parameters.
    */
-  fun post(path: String, config: RequestConfig? = null) {
+  fun post(
+    path: String,
+    config: RequestConfig? = null
+  ) {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
@@ -230,7 +238,11 @@ class WorkOS(
   /**
    * Performs a POST request with WorkOS configuration parameters.
    */
-  fun <Res : Any> post(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+  fun <Res : Any> post(
+    path: String,
+    responseType: Class<Res>,
+    config: RequestConfig? = null
+  ): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
@@ -243,7 +255,11 @@ class WorkOS(
   /**
    * Performs a PUT request with WorkOS configuration parameters.
    */
-  fun <Res : Any> put(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+  fun <Res : Any> put(
+    path: String,
+    responseType: Class<Res>,
+    config: RequestConfig? = null
+  ): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
@@ -256,7 +272,11 @@ class WorkOS(
   /**
    * Performs a PATCH request with WorkOS configuration parameters.
    */
-  fun <Res : Any> patch(path: String, responseType: Class<Res>, config: RequestConfig? = null): Res {
+  fun <Res : Any> patch(
+    path: String,
+    responseType: Class<Res>,
+    config: RequestConfig? = null
+  ): Res {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
@@ -269,7 +289,10 @@ class WorkOS(
   /**
    * Performs a DELETE request with WorkOS configuration parameters.
    */
-  fun delete(path: String, config: RequestConfig? = null): String {
+  fun delete(
+    path: String,
+    config: RequestConfig? = null
+  ): String {
     val uri = URIBuilder(baseUrl).setPath(path)
 
     if (config?.params != null) {
@@ -286,7 +309,10 @@ class WorkOS(
   /**
    * Performs a DELETE request with a request body.
    */
-  fun deleteWithBody(path: String, config: RequestConfig? = null) {
+  fun deleteWithBody(
+    path: String,
+    config: RequestConfig? = null
+  ) {
     val uri = URIBuilder(baseUrl).setPath(path).build()
 
     val body = if (config?.data != null) mapper.writeValueAsString(config.data) else ""
@@ -296,7 +322,10 @@ class WorkOS(
     sendRequest(buildRequest(request, config))
   }
 
-  private fun buildRequest(request: Request, config: RequestConfig? = null): Request {
+  private fun buildRequest(
+    request: Request,
+    config: RequestConfig? = null
+  ): Request {
     if (config?.headers != null) {
       for ((key, value) in config.headers) {
         request.set(key, value)
@@ -325,7 +354,6 @@ class WorkOS(
     return payload
   }
 
-  @OptIn(ExperimentalTime::class)
   private fun sendRequestWithRetry(request: Request): String {
     var requestException: Exception? = null
     var response: Response? = null
@@ -373,12 +401,19 @@ class WorkOS(
     return payload
   }
 
-  private fun shouldRetryRequest(response: Response?, retryAttempts: Int, requestException: Exception?): Boolean {
+  private fun shouldRetryRequest(
+    response: Response?,
+    retryAttempts: Int,
+    requestException: Exception?
+  ): Boolean {
     if (retryAttempts >= 3) {
       return false
     }
 
-    if ((requestException != null) && (requestException.cause != null) && (requestException.cause is ConnectException || requestException.cause is SocketTimeoutException)) {
+    if ((requestException != null) &&
+      (requestException.cause != null) &&
+      (requestException.cause is ConnectException || requestException.cause is SocketTimeoutException)
+    ) {
       return true
     }
 
@@ -393,20 +428,26 @@ class WorkOS(
     return false
   }
 
-  @OptIn(ExperimentalTime::class)
   private fun getSleepTime(retryAttempt: Int): Duration {
-    var sleepTime: Duration = Duration.nanoseconds(MINIMUM_SLEEP_TIME.inWholeNanoseconds * Math.pow(BACKOFF_MULTIPLER, (retryAttempt + 1).toDouble()))
+    var sleepTime: Duration =
+      (MINIMUM_SLEEP_TIME.inWholeNanoseconds * Math.pow(BACKOFF_MULTIPLER, (retryAttempt + 1).toDouble())).toLong().nanoseconds
     val jitter = Random.nextDouble(0.5, 1.5)
-    sleepTime = Duration.nanoseconds(sleepTime.inWholeNanoseconds * jitter)
+    sleepTime = (sleepTime.inWholeNanoseconds * jitter).toLong().nanoseconds
     return sleepTime
   }
 
-  private fun <Res : Any> sendRequest(request: Request, responseType: Class<Res>): Res {
+  private fun <Res : Any> sendRequest(
+    request: Request,
+    responseType: Class<Res>
+  ): Res {
     val response = sendRequest(request)
     return mapper.readValue(response, responseType)
   }
 
-  private fun handleResponseError(response: Response, payload: String) {
+  private fun handleResponseError(
+    response: Response,
+    payload: String
+  ) {
     val requestId = response.header("X-Request-ID").firstOrNull() ?: "unknown"
 
     when (val status = response.statusCode) {
@@ -432,7 +473,12 @@ class WorkOS(
 
       422 -> {
         val unprocessableEntityException = mapper.readValue(payload, UnprocessableEntityExceptionResponse::class.java)
-        throw UnprocessableEntityException(unprocessableEntityException.message, unprocessableEntityException.code, unprocessableEntityException.errors, requestId)
+        throw UnprocessableEntityException(
+          unprocessableEntityException.message,
+          unprocessableEntityException.code,
+          unprocessableEntityException.errors,
+          requestId
+        )
       }
 
       else -> {

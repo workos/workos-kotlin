@@ -36,10 +36,11 @@ class AuthorizationApiTest : TestBase() {
       responseBody = """{"authorized": true}"""
     )
 
-    val result = workos.authorization.check(
-      "om_01HXYZ",
-      CheckAuthorizationOptions("documents:read", resourceId = "authz_resource_01ABC")
-    )
+    val result =
+      workos.authorization.check(
+        "om_01HXYZ",
+        CheckAuthorizationOptions("documents:read", resourceId = "authz_resource_01ABC")
+      )
 
     assertTrue(result.authorized)
   }
@@ -56,14 +57,15 @@ class AuthorizationApiTest : TestBase() {
       responseBody = """{"authorized": false}"""
     )
 
-    val result = workos.authorization.check(
-      "om_01HXYZ",
-      CheckAuthorizationOptions(
-        "documents:write",
-        resourceExternalId = "proj-456",
-        resourceTypeSlug = "project"
+    val result =
+      workos.authorization.check(
+        "om_01HXYZ",
+        CheckAuthorizationOptions(
+          "documents:write",
+          resourceExternalId = "proj-456",
+          resourceTypeSlug = "project"
+        )
       )
-    )
 
     assertEquals(false, result.authorized)
   }
@@ -127,14 +129,15 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val resource = workos.authorization.createResource(
-      CreateAuthorizationResourceOptions(
-        externalId = "proj-456",
-        name = "Website Redesign",
-        resourceTypeSlug = "project",
-        organizationId = "org_01EHZNVPK3SFK441A1RGBFSHRT"
+    val resource =
+      workos.authorization.createResource(
+        CreateAuthorizationResourceOptions(
+          externalId = "proj-456",
+          name = "Website Redesign",
+          resourceTypeSlug = "project",
+          organizationId = "org_01EHZNVPK3SFK441A1RGBFSHRT"
+        )
       )
-    )
 
     assertEquals("authz_resource_01ABC", resource.id)
     assertEquals("proj-456", resource.externalId)
@@ -181,10 +184,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val resource = workos.authorization.updateResource(
-      "authz_resource_01ABC",
-      UpdateAuthorizationResourceOptions(name = "Updated Name")
-    )
+    val resource =
+      workos.authorization.updateResource(
+        "authz_resource_01ABC",
+        UpdateAuthorizationResourceOptions(name = "Updated Name")
+      )
 
     assertEquals("Updated Name", resource.name)
   }
@@ -240,10 +244,13 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val resource = workos.authorization.updateResourceByExternalId(
-      "org_01ABC", "project", "proj-456",
-      UpdateAuthorizationResourceOptions(name = "New Name")
-    )
+    val resource =
+      workos.authorization.updateResourceByExternalId(
+        "org_01ABC",
+        "project",
+        "proj-456",
+        UpdateAuthorizationResourceOptions(name = "New Name")
+      )
 
     assertEquals("New Name", resource.name)
   }
@@ -316,10 +323,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val assignment = workos.authorization.assignRole(
-      "om_01HXYZ",
-      AssignRoleOptions("admin", resourceId = "authz_resource_01ABC")
-    )
+    val assignment =
+      workos.authorization.assignRole(
+        "om_01HXYZ",
+        AssignRoleOptions("admin", resourceId = "authz_resource_01ABC")
+      )
 
     assertEquals("role_assignment_01ABC", assignment.id)
     assertEquals("admin", assignment.role.slug)
@@ -378,10 +386,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listResourcesForOrganizationMembership(
-      "om_01HXYZ",
-      ListResourcesForOrganizationMembershipOptions("documents:read")
-    )
+    val result =
+      workos.authorization.listResourcesForOrganizationMembership(
+        "om_01HXYZ",
+        ListResourcesForOrganizationMembershipOptions("documents:read")
+      )
 
     assertEquals(1, result.data.size)
     assertEquals("authz_resource_01ABC", result.data[0].id)
@@ -413,10 +422,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listOrganizationMembershipsForResource(
-      "authz_resource_01ABC",
-      ListOrganizationMembershipsForResourceOptions("documents:read")
-    )
+    val result =
+      workos.authorization.listOrganizationMembershipsForResource(
+        "authz_resource_01ABC",
+        ListOrganizationMembershipsForResourceOptions("documents:read")
+      )
 
     assertEquals(1, result.data.size)
     assertEquals("om_01HXYZ", result.data[0].id)
@@ -448,10 +458,13 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listOrganizationMembershipsForResourceByExternalId(
-      "org_01ABC", "project", "proj-456",
-      ListOrganizationMembershipsForResourceOptions("documents:read")
-    )
+    val result =
+      workos.authorization.listOrganizationMembershipsForResourceByExternalId(
+        "org_01ABC",
+        "project",
+        "proj-456",
+        ListOrganizationMembershipsForResourceOptions("documents:read")
+      )
 
     assertEquals(1, result.data.size)
     assertEquals("om_01HXYZ", result.data[0].id)
@@ -511,9 +524,10 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val permission = workos.authorization.createPermission(
-      CreatePermissionOptions("documents:read", "Read Documents")
-    )
+    val permission =
+      workos.authorization.createPermission(
+        CreatePermissionOptions("documents:read", "Read Documents")
+      )
 
     assertEquals("perm_01ABC", permission.id)
     assertEquals("documents:read", permission.slug)
@@ -557,10 +571,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val permission = workos.authorization.updatePermission(
-      "documents:read",
-      UpdatePermissionOptions(name = "Read All Documents")
-    )
+    val permission =
+      workos.authorization.updatePermission(
+        "documents:read",
+        UpdatePermissionOptions(name = "Read All Documents")
+      )
 
     assertEquals("Read All Documents", permission.name)
   }
@@ -626,9 +641,10 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.createRole(
-      CreateRoleOptions("editor", "Editor")
-    )
+    val role =
+      workos.authorization.createRole(
+        CreateRoleOptions("editor", "Editor")
+      )
 
     assertEquals("role_01ABC", role.id)
     assertEquals("editor", role.slug)
@@ -674,10 +690,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.updateRole(
-      "admin",
-      UpdateRoleOptions(name = "Super Admin")
-    )
+    val role =
+      workos.authorization.updateRole(
+        "admin",
+        UpdateRoleOptions(name = "Super Admin")
+      )
 
     assertEquals("Super Admin", role.name)
   }
@@ -701,10 +718,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.setRolePermissions(
-      "admin",
-      SetRolePermissionsOptions(listOf("documents:read", "documents:write"))
-    )
+    val role =
+      workos.authorization.setRolePermissions(
+        "admin",
+        SetRolePermissionsOptions(listOf("documents:read", "documents:write"))
+      )
 
     assertEquals(listOf("documents:read", "documents:write"), role.permissions)
   }
@@ -728,10 +746,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.addRolePermission(
-      "admin",
-      AddRolePermissionOptions("documents:delete")
-    )
+    val role =
+      workos.authorization.addRolePermission(
+        "admin",
+        AddRolePermissionOptions("documents:delete")
+      )
 
     assertEquals(2, role.permissions?.size)
   }
@@ -784,10 +803,11 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.createOrganizationRole(
-      "org_01ABC",
-      CreateOrganizationRoleOptions("Org Editor")
-    )
+    val role =
+      workos.authorization.createOrganizationRole(
+        "org_01ABC",
+        CreateOrganizationRoleOptions("Org Editor")
+      )
 
     assertEquals("role_01DEF", role.id)
     assertEquals("org-editor", role.slug)
@@ -833,10 +853,12 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.updateOrganizationRole(
-      "org_01ABC", "org-admin",
-      UpdateOrganizationRoleOptions(name = "Organization Administrator")
-    )
+    val role =
+      workos.authorization.updateOrganizationRole(
+        "org_01ABC",
+        "org-admin",
+        UpdateOrganizationRoleOptions(name = "Organization Administrator")
+      )
 
     assertEquals("Organization Administrator", role.name)
   }
@@ -870,10 +892,12 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.setOrganizationRolePermissions(
-      "org_01ABC", "org-admin",
-      SetRolePermissionsOptions(listOf("documents:read", "documents:write"))
-    )
+    val role =
+      workos.authorization.setOrganizationRolePermissions(
+        "org_01ABC",
+        "org-admin",
+        SetRolePermissionsOptions(listOf("documents:read", "documents:write"))
+      )
 
     assertEquals(listOf("documents:read", "documents:write"), role.permissions)
   }
@@ -897,10 +921,12 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val role = workos.authorization.addOrganizationRolePermission(
-      "org_01ABC", "org-admin",
-      AddRolePermissionOptions("documents:delete")
-    )
+    val role =
+      workos.authorization.addOrganizationRolePermission(
+        "org_01ABC",
+        "org-admin",
+        AddRolePermissionOptions("documents:delete")
+      )
 
     assertEquals(2, role.permissions?.size)
   }

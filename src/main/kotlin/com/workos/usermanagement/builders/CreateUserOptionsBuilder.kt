@@ -14,44 +14,43 @@ import com.workos.usermanagement.types.PasswordHashTypeEnumType
  * @param lastName The last name of the user.
  * @param emailVerified Whether the user’s email address was previously verified.
  */
-class CreateUserOptionsBuilder @JvmOverloads constructor(
-  val email: String,
-  override var password: String? = null,
-  override var passwordHash: String? = null,
-  override var passwordHashType: PasswordHashTypeEnumType? = null,
-  override var firstName: String? = null,
-  override var lastName: String? = null,
-  override var emailVerified: Boolean? = null,
-) : AbstractUserOptionsBuilder<CreateUserOptions>(
-  password,
-  passwordHash,
-  passwordHashType,
-  firstName,
-  lastName,
-  emailVerified
-) {
-  /**
-   * Generates the CreateUserOptions object.
-   */
-  override fun build(): CreateUserOptions {
-    return CreateUserOptions(
-      email = this.email,
-      password = this.password,
-      passwordHash = this.passwordHash,
-      passwordHashType = this.passwordHashType,
-      firstName = this.firstName,
-      lastName = this.lastName,
-      emailVerified = this.emailVerified,
-    )
-  }
+class CreateUserOptionsBuilder
+  @JvmOverloads
+  constructor(
+    val email: String,
+    override var password: String? = null,
+    override var passwordHash: String? = null,
+    override var passwordHashType: PasswordHashTypeEnumType? = null,
+    override var firstName: String? = null,
+    override var lastName: String? = null,
+    override var emailVerified: Boolean? = null
+  ) : AbstractUserOptionsBuilder<CreateUserOptions>(
+      password,
+      passwordHash,
+      passwordHashType,
+      firstName,
+      lastName,
+      emailVerified
+    ) {
+    /**
+     * Generates the CreateUserOptions object.
+     */
+    override fun build(): CreateUserOptions =
+      CreateUserOptions(
+        email = this.email,
+        password = this.password,
+        passwordHash = this.passwordHash,
+        passwordHashType = this.passwordHashType,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        emailVerified = this.emailVerified
+      )
 
-  /**
-   * @suppress
-   */
-  companion object {
-    @JvmStatic
-    fun create(email: String): CreateUserOptionsBuilder {
-      return CreateUserOptionsBuilder(email)
+    /**
+     * @suppress
+     */
+    companion object {
+      @JvmStatic
+      fun create(email: String): CreateUserOptionsBuilder = CreateUserOptionsBuilder(email)
     }
   }
-}

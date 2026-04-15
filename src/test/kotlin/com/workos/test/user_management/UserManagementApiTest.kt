@@ -186,7 +186,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "email": "test01@example.com",
         "password": "password",
         "first_name": "Test",
@@ -238,7 +238,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "id": "user_123",
         "password": "password",
         "first_name": "Test",
@@ -277,7 +277,7 @@ class UserManagementApiTest : TestBase() {
   fun deleteUserShouldWorkAndReturnNothing() {
     stubResponse("/user_management/users/user_123", "")
 
-    assertDoesNotThrow() { workos.userManagement.deleteUser("user_123") }
+    assertDoesNotThrow { workos.userManagement.deleteUser("user_123") }
   }
 
   @Test
@@ -297,7 +297,7 @@ class UserManagementApiTest : TestBase() {
       Identity(
         "idp_123",
         "OAuth",
-        IdentityProviderEnumType.MicrosoftOAuth,
+        IdentityProviderEnumType.MicrosoftOAuth
       ),
       identities[0]
     )
@@ -423,7 +423,7 @@ class UserManagementApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "authorization_code",
@@ -475,7 +475,7 @@ class UserManagementApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "authorization_code",
@@ -508,13 +508,14 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 400
     )
 
-    val exception = assertThrows(BadRequestException::class.java) {
-      workos.userManagement.authenticateWithCode(
-        "client_123",
-        "INVALID_CODE",
-        null
-      )
-    }
+    val exception =
+      assertThrows(BadRequestException::class.java) {
+        workos.userManagement.authenticateWithCode(
+          "client_123",
+          "INVALID_CODE",
+          null
+        )
+      }
 
     // OAuth errors should map error_description to message and error to code
     assertEquals("The code 'INVALID_CODE' has expired or is invalid.", exception.message)
@@ -533,13 +534,14 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 400
     )
 
-    val exception = assertThrows(BadRequestException::class.java) {
-      workos.userManagement.authenticateWithCode(
-        "client_123",
-        "SOME_CODE",
-        null
-      )
-    }
+    val exception =
+      assertThrows(BadRequestException::class.java) {
+        workos.userManagement.authenticateWithCode(
+          "client_123",
+          "SOME_CODE",
+          null
+        )
+      }
 
     assertEquals("invalid_client", exception.code)
     assertEquals(null, exception.message)
@@ -568,7 +570,7 @@ class UserManagementApiTest : TestBase() {
         "refresh_token": "refresh_token"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "password",
@@ -614,7 +616,7 @@ class UserManagementApiTest : TestBase() {
         "organization_id": "org_456"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:magic-auth:code",
@@ -650,7 +652,7 @@ class UserManagementApiTest : TestBase() {
         "refresh_token": "refresh_token"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "refresh_token",
@@ -695,7 +697,7 @@ class UserManagementApiTest : TestBase() {
         "organization_id": "org_456"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:email-verification:code",
@@ -741,7 +743,7 @@ class UserManagementApiTest : TestBase() {
         "organization_id": "org_456"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:mfa-totp",
@@ -789,7 +791,7 @@ class UserManagementApiTest : TestBase() {
         "organization_id": "org_456"
       }""",
       requestBody =
-      """{
+        """{
         "client_id": "client_id",
         "client_secret": "apiKey",
         "grant_type": "urn:workos:oauth:grant-type:organization-selection",
@@ -866,7 +868,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "email": "test01@example.com",
         "invitation_token": null
       }"""
@@ -894,7 +896,7 @@ class UserManagementApiTest : TestBase() {
   fun sendMagicAuthCodeShouldWorkAndReturnNothing() {
     stubResponse("/user_management/magic_auth/send", "")
 
-    assertDoesNotThrow() { workos.userManagement.sendMagicAuthCode("test01@example.com") }
+    assertDoesNotThrow { workos.userManagement.sendMagicAuthCode("test01@example.com") }
   }
 
   @Test
@@ -927,7 +929,7 @@ class UserManagementApiTest : TestBase() {
         }
       }""",
       requestBody =
-      """{
+        """{
         "type": "totp",
         "totp_issuer": "Foo Corp",
         "totp_user": "test01@example.com"
@@ -964,7 +966,7 @@ class UserManagementApiTest : TestBase() {
             "otpauth://totp/FooCorp:alan.turing@example.com?secret=secret&issuer=FooCorp"
           ),
           "user_123"
-        ),
+        )
       ),
       enrolledAuthenticationFactor
     )
@@ -1123,7 +1125,7 @@ class UserManagementApiTest : TestBase() {
   fun sendPasswordResetEmailShouldWorkAndReturnNothing() {
     stubResponse("/user_management/password_reset/send", "")
 
-    assertDoesNotThrow() {
+    assertDoesNotThrow {
       workos.userManagement.sendPasswordResetEmail(
         "test01@example.com",
         "https://your-app.com/reset-password"
@@ -1148,7 +1150,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "token": "token_123",
         "new_password": "new_password"
       }"""
@@ -1205,7 +1207,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1254,7 +1256,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMemberships.data[0]
     )
@@ -1265,15 +1267,16 @@ class UserManagementApiTest : TestBase() {
   fun listOrganizationMembershipsShouldReturnValidOrganizationMembershipsWithPaginationAndFilters() {
     stubResponse(
       url = "/user_management/organization_memberships",
-      params = mapOf(
-        "user_id" to equalTo("id_456"),
-        "organization_id" to equalTo("org_789"),
-        "statuses" to equalTo("active,inactive"),
-        "order" to equalTo("desc"),
-        "limit" to equalTo("10"),
-        "after" to equalTo("someAfterId"),
-        "before" to equalTo("someBeforeId"),
-      ),
+      params =
+        mapOf(
+          "user_id" to equalTo("id_456"),
+          "organization_id" to equalTo("org_789"),
+          "statuses" to equalTo("active,inactive"),
+          "order" to equalTo("desc"),
+          "limit" to equalTo("10"),
+          "after" to equalTo("someAfterId"),
+          "before" to equalTo("someBeforeId")
+        ),
       responseBody = """{
         "data": [
           {
@@ -1308,8 +1311,7 @@ class UserManagementApiTest : TestBase() {
             OrganizationMembershipStatusEnumType.Active,
             OrganizationMembershipStatusEnumType.Inactive
           )
-        )
-        .order(Order.Desc)
+        ).order(Order.Desc)
         .limit(10)
         .after("someAfterId")
         .before("someBeforeId")
@@ -1326,7 +1328,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMemberships.data[0]
     )
@@ -1353,7 +1355,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "user_id": "user_456",
         "organization_id": "org_789",
         "role_slug": "admin"
@@ -1374,7 +1376,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1417,7 +1419,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("member")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1444,7 +1446,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "user_id": "user_456",
         "organization_id": "org_789",
         "role_slugs": ["admin", "editor"]
@@ -1465,7 +1467,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin"), OrganizationMembershipRole("editor")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1509,7 +1511,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("viewer"), OrganizationMembershipRole("commenter")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1519,7 +1521,7 @@ class UserManagementApiTest : TestBase() {
   fun deleteOrganizationMembershipShouldWorkAndReturnNothing() {
     stubResponse("/user_management/organization_memberships/om_123", "")
 
-    assertDoesNotThrow() { workos.userManagement.deleteOrganizationMembership("om_123") }
+    assertDoesNotThrow { workos.userManagement.deleteOrganizationMembership("om_123") }
   }
 
   @Test
@@ -1554,7 +1556,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Inactive,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1592,7 +1594,7 @@ class UserManagementApiTest : TestBase() {
         listOf(OrganizationMembershipRole("admin")),
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        "2021-06-25T19:07:33.155Z"
       ),
       organizationMembership
     )
@@ -1809,7 +1811,7 @@ class UserManagementApiTest : TestBase() {
         "updated_at": "2021-06-25T19:07:33.155Z"
       }""",
       requestBody =
-      """{
+        """{
         "email": "test01@example.com",
         "organization_id": "org_456",
         "expires_in_days": 10,
@@ -1940,9 +1942,10 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 400
     )
 
-    val exception = assertThrows(BadRequestException::class.java) {
-      workos.userManagement.resendInvitation("invitation_123")
-    }
+    val exception =
+      assertThrows(BadRequestException::class.java) {
+        workos.userManagement.resendInvitation("invitation_123")
+      }
 
     assertEquals("Invite has expired.", exception.message)
     assertEquals("invite_expired", exception.code)
@@ -1959,9 +1962,10 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 400
     )
 
-    val exception = assertThrows(BadRequestException::class.java) {
-      workos.userManagement.resendInvitation("invitation_123")
-    }
+    val exception =
+      assertThrows(BadRequestException::class.java) {
+        workos.userManagement.resendInvitation("invitation_123")
+      }
 
     assertEquals("Invite has been revoked.", exception.message)
     assertEquals("invite_revoked", exception.code)
@@ -1978,9 +1982,10 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 400
     )
 
-    val exception = assertThrows(BadRequestException::class.java) {
-      workos.userManagement.resendInvitation("invitation_123")
-    }
+    val exception =
+      assertThrows(BadRequestException::class.java) {
+        workos.userManagement.resendInvitation("invitation_123")
+      }
 
     assertEquals("Invite has already been accepted.", exception.message)
     assertEquals("invite_accepted", exception.code)
@@ -1997,9 +2002,10 @@ class UserManagementApiTest : TestBase() {
       responseStatus = 404
     )
 
-    val exception = assertThrows(com.workos.common.exceptions.NotFoundException::class.java) {
-      workos.userManagement.resendInvitation("invitation_invalid")
-    }
+    val exception =
+      assertThrows(com.workos.common.exceptions.NotFoundException::class.java) {
+        workos.userManagement.resendInvitation("invitation_invalid")
+      }
 
     assertEquals("NotFoundException", exception.message)
   }

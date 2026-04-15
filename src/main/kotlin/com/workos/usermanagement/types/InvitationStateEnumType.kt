@@ -2,7 +2,9 @@ package com.workos.usermanagement.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum class InvitationStateEnumType(val type: String) {
+enum class InvitationStateEnumType(
+  val type: String
+) {
   /**
    * Accepted
    */
@@ -25,5 +27,5 @@ enum class InvitationStateEnumType(val type: String) {
    * Revoked
    */
   @JsonProperty("revoked")
-  Revoked("revoked"),
+  Revoked("revoked")
 }

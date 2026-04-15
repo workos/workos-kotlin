@@ -2,7 +2,9 @@ package com.workos.organizations.types
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum class OrganizationDomainState(@JsonValue val type: String) {
+enum class OrganizationDomainState(
+  @JsonValue val type: String
+) {
   /**
    * Failed
    */
@@ -21,5 +23,5 @@ enum class OrganizationDomainState(@JsonValue val type: String) {
   /**
    * Verified
    */
-  Verified("verified");
+  Verified("verified")
 }

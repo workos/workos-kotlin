@@ -1,6 +1,5 @@
 package com.workos.events.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.directorysync.models.DirectoryUserRole
 import com.workos.directorysync.models.Group
@@ -20,8 +19,7 @@ import com.workos.usermanagement.models.User as UmUser
  * Strongly-typed Event variants used by EventsJsonDeserializer.
  */
 
-data class OrganizationEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -29,16 +27,15 @@ data class OrganizationEvent
   val data: OrganizationEventData
 ) : Event(id, event, createdAt, context)
 
-data class ConnectionEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class ConnectionEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
   override val context: Map<String, Any>? = null,
   val data: Connection
 ) : Event(id, event, createdAt, context)
-data class DirectoryUserEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+
+data class DirectoryUserEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -46,8 +43,7 @@ data class DirectoryUserEvent
   val data: DirectoryUserMinimal
 ) : Event(id, event, createdAt, context)
 
-data class DirectoryGroupEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryGroupEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -55,8 +51,7 @@ data class DirectoryGroupEvent
   val data: DirectoryGroupEventData
 ) : Event(id, event, createdAt, context)
 
-data class DirectoryEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -64,8 +59,7 @@ data class DirectoryEvent
   val data: DirectoryEventData
 ) : Event(id, event, createdAt, context)
 
-data class UserEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class UserEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -73,8 +67,7 @@ data class UserEvent
   val data: UmUser
 ) : Event(id, event, createdAt, context)
 
-data class AuthenticationEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class AuthenticationEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -82,8 +75,7 @@ data class AuthenticationEvent
   val data: AuthenticationEventData
 ) : Event(id, event, createdAt, context)
 
-data class EmailVerificationEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class EmailVerificationEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -91,8 +83,7 @@ data class EmailVerificationEvent
   val data: EmailVerificationEventData
 ) : Event(id, event, createdAt, context)
 
-data class MagicAuthEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class MagicAuthEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -100,8 +91,7 @@ data class MagicAuthEvent
   val data: MagicAuthEventData
 ) : Event(id, event, createdAt, context)
 
-data class InvitationEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class InvitationEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -109,8 +99,7 @@ data class InvitationEvent
   val data: InvitationEventData
 ) : Event(id, event, createdAt, context)
 
-data class PasswordResetEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class PasswordResetEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -118,8 +107,7 @@ data class PasswordResetEvent
   val data: PasswordResetEventData
 ) : Event(id, event, createdAt, context)
 
-data class OrganizationDomainEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationDomainEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -127,8 +115,7 @@ data class OrganizationDomainEvent
   val data: OrganizationDomain
 ) : Event(id, event, createdAt, context)
 
-data class RoleEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class RoleEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -136,8 +123,7 @@ data class RoleEvent
   val data: RolesRole
 ) : Event(id, event, createdAt, context)
 
-data class OrganizationMembershipEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationMembershipEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -145,8 +131,7 @@ data class OrganizationMembershipEvent
   val data: OrganizationMembership
 ) : Event(id, event, createdAt, context)
 
-data class EventDirectoryUser
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class EventDirectoryUser(
   @JsonProperty("id") val id: String,
   @JsonProperty("directory_id") val directoryId: String,
   @JsonProperty("organization_id") val organizationId: String?,
@@ -162,38 +147,32 @@ data class EventDirectoryUser
   @JsonProperty("raw_attributes") val rawAttributes: Map<String, Any?>
 )
 
-data class OrganizationEventData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationEventData(
   val id: String,
   val name: String
 )
 
-data class DirectoryEventData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryEventData(
   val id: String,
   val name: String
 )
 
-data class DirectoryGroupEventData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryGroupEventData(
   val id: String,
   val name: String
 )
 
-data class DirectoryUserMinimal
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryUserMinimal(
   val id: String,
   val email: String?
 )
 
-data class SessionImpersonator
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SessionImpersonator(
   val email: String?,
   val reason: String?
 )
 
-data class SessionEventData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SessionEventData(
   val obj: String = "session",
   val id: String,
   @JsonProperty("user_id") val userId: String?,
@@ -205,8 +184,7 @@ data class SessionEventData
   @JsonProperty("updated_at") val updatedAt: String
 )
 
-data class SessionEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SessionEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -214,14 +192,12 @@ data class SessionEvent
   val data: SessionEventData
 ) : Event(id, event, createdAt, context)
 
-data class DirectoryGroupMembershipData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryGroupMembershipData(
   val user: EventDirectoryUser,
   val group: Group
 )
 
-data class DirectoryGroupMembershipEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class DirectoryGroupMembershipEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -229,8 +205,7 @@ data class DirectoryGroupMembershipEvent
   val data: DirectoryGroupMembershipData
 ) : Event(id, event, createdAt, context)
 
-data class FlagEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class FlagEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -238,8 +213,7 @@ data class FlagEvent
   val data: FlagEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class ApiKeyEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class ApiKeyEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -247,8 +221,7 @@ data class ApiKeyEvent
   val data: ApiKeyEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class OrganizationRoleEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationRoleEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -256,8 +229,7 @@ data class OrganizationRoleEvent
   val data: OrganizationRoleEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class PermissionEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class PermissionEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -265,8 +237,7 @@ data class PermissionEvent
   val data: PermissionEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class FlagEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class FlagEventsApiData(
   val id: String,
   val slug: String,
   val name: String,
@@ -274,30 +245,26 @@ data class FlagEventsApiData
   @JsonProperty("default_value") val defaultValue: Boolean? = null
 )
 
-data class ApiKeyEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class ApiKeyEventsApiData(
   val id: String,
   val name: String,
   @JsonProperty("obfuscated_value") val obfuscatedValue: String? = null
 )
 
-data class OrganizationRoleEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class OrganizationRoleEventsApiData(
   val slug: String,
   val name: String,
   @JsonProperty("organization_id") val organizationId: String? = null,
   val permissions: List<String> = emptyList()
 )
 
-data class PermissionEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class PermissionEventsApiData(
   val id: String,
   val slug: String,
   val name: String
 )
 
-data class RadarRiskDetectedEventsApiEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class RadarRiskDetectedEventsApiEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -305,8 +272,7 @@ data class RadarRiskDetectedEventsApiEvent
   val data: RadarRiskDetectedEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class RadarRiskDetectedEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class RadarRiskDetectedEventsApiData(
   @JsonProperty("auth_method") val authMethod: String,
   val action: String,
   val control: String? = null,
@@ -317,8 +283,7 @@ data class RadarRiskDetectedEventsApiData
   val email: String
 )
 
-data class SamlCertificateRenewalRequiredEventsApiEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateRenewalRequiredEventsApiEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -326,15 +291,13 @@ data class SamlCertificateRenewalRequiredEventsApiEvent
   val data: SamlCertificateRenewalRequiredEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class SamlCertificateRenewalRequiredEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateRenewalRequiredEventsApiData(
   val connection: SamlCertificateConnectionEventsApi,
   val certificate: SamlCertificateInfoEventsApi,
   @JsonProperty("days_until_expiry") val daysUntilExpiry: Int
 )
 
-data class SamlCertificateRenewedEventsApiEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateRenewedEventsApiEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,
@@ -342,28 +305,24 @@ data class SamlCertificateRenewedEventsApiEvent
   val data: SamlCertificateRenewedEventsApiData
 ) : Event(id, event, createdAt, context)
 
-data class SamlCertificateRenewedEventsApiData
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateRenewedEventsApiData(
   val connection: SamlCertificateConnectionEventsApi,
   val certificate: SamlCertificateInfoEventsApi,
   @JsonProperty("renewed_at") val renewedAt: String
 )
 
-data class SamlCertificateConnectionEventsApi
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateConnectionEventsApi(
   val id: String,
   @JsonProperty("organization_id") val organizationId: String? = null
 )
 
-data class SamlCertificateInfoEventsApi
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class SamlCertificateInfoEventsApi(
   @JsonProperty("certificate_type") val certificateType: String,
   @JsonProperty("expiry_date") val expiryDate: String,
   @JsonProperty("is_expired") val isExpired: Boolean? = null
 )
 
-data class UnknownEvent
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class UnknownEvent(
   override val id: String,
   override val event: String,
   override val createdAt: String,

@@ -8,12 +8,11 @@ class SendPasswordResetEmailOptions(
    */
   @JsonProperty("email")
   val email: String,
-
   /**
    * The URL to include in the email.
    */
   @JsonProperty("password_reset_url")
-  val passwordResetUrl: String,
+  val passwordResetUrl: String
 ) {
   init {
     require(email.isNotBlank()) { "Email is required" }

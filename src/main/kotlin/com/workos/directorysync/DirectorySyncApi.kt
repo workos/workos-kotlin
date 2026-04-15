@@ -1,10 +1,12 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.directorysync
 
 import com.workos.WorkOS
 import com.workos.common.http.PaginationParams
 import com.workos.common.http.RequestConfig
 import com.workos.common.models.Order
-import com.workos.directorysync.models.* // ktlint-disable no-wildcard-imports
+import com.workos.directorysync.models.*
 import java.lang.IllegalArgumentException
 
 /**
@@ -12,7 +14,9 @@ import java.lang.IllegalArgumentException
  * Directory Sync platform. You'll need a valid API key and to have created a Directory
  * Sync connection on your WorkOS dashboard.
  */
-class DirectorySyncApi(private val workos: WorkOS) {
+class DirectorySyncApi(
+  private val workos: WorkOS
+) {
   /**
    * Deletes a single directory by the given [com.workos.directorysync.models.Directory] ID.
    */
@@ -23,21 +27,22 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Fetches a single directory by the given [com.workos.directorysync.models.Directory] ID.
    */
-  fun getDirectory(id: String): Directory {
-    return workos.get(
+  fun getDirectory(id: String): Directory =
+    workos.get(
       "/directories/$id",
       Directory::class.java
     )
-  }
 
   /**
    * Fetches the list of directories.
    */
   @JvmOverloads
   fun listDirectories(listOptions: ListDirectoriesOptions? = null): DirectoryList {
-    val requestConfig = RequestConfig.builder()
-      .params(listOptions ?: emptyMap())
-      .build()
+    val requestConfig =
+      RequestConfig
+        .builder()
+        .params(listOptions ?: emptyMap())
+        .build()
 
     return workos.get(
       "/directories",
@@ -55,42 +60,43 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * @param limit @see [com.workos.common.http.PaginationParams]
    * @param order @see [com.workos.common.http.PaginationParams]
    */
-  class ListDirectoriesOptions @JvmOverloads constructor(
-    organization: String? = null,
-    after: String? = null,
-    before: String? = null,
-    limit: Int? = null,
-    order: Order? = null
-  ) : PaginationParams(after, before, limit, order) {
-    init {
-      if (organization != null) set("organization_id", organization)
-    }
+  class ListDirectoriesOptions
+    @JvmOverloads
+    constructor(
+      organization: String? = null,
+      after: String? = null,
+      before: String? = null,
+      limit: Int? = null,
+      order: Order? = null
+    ) : PaginationParams(after, before, limit, order) {
+      init {
+        if (organization != null) set("organization_id", organization)
+      }
 
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): ListDirectoriesOptionsBuilder {
-        return ListDirectoriesOptionsBuilder()
+      /**
+       * @suppress
+       */
+      companion object {
+        @JvmStatic
+        fun builder(): ListDirectoriesOptionsBuilder = ListDirectoriesOptionsBuilder()
+      }
+
+      /**
+       * Builder class for creating [ListDirectoriesOptions].
+       */
+      class ListDirectoriesOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoriesOptions>(ListDirectoriesOptions()) {
+        /**
+         * The organization identifier to filter on.
+         */
+        fun organization(value: String) = apply { this.params["organization_id"] = value }
       }
     }
-
-    /**
-     * Builder class for creating [ListDirectoriesOptions].
-     */
-    class ListDirectoriesOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoriesOptions>(ListDirectoriesOptions()) {
-      /**
-       * The organization identifier to filter on.
-       */
-      fun organization(value: String) = apply { this.params["organization_id"] = value }
-    }
-  }
 
   /**
    * Builder class for creating [ListDirectoryGroupOptions].
    */
-  class ListDirectoryGroupOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+  class ListDirectoryGroupOptionsBuilder :
+    PaginationParams.PaginationParamsBuilder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
     /**
      * The directory identifier to filter on.
      */
@@ -105,26 +111,25 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Fetches a directory user by the given [com.workos.directorysync.models.User] ID.
    */
-  fun getDirectoryUser(id: String): User {
-    return workos.get(
+  fun getDirectoryUser(id: String): User =
+    workos.get(
       "/directory_users/$id",
       User::class.java
     )
-  }
 
   /**
    * Fetches the list of users based on the given options.
    */
-  fun listDirectoryUsers(
-    listOptions: ListDirectoryUserOptions
-  ): DirectoryUserList {
+  fun listDirectoryUsers(listOptions: ListDirectoryUserOptions): DirectoryUserList {
     if (listOptions["directory"] == null && listOptions["group"] == null) {
       throw IllegalArgumentException("A directory or group must be provided.")
     }
 
-    val requestConfig = RequestConfig.builder()
-      .params(listOptions)
-      .build()
+    val requestConfig =
+      RequestConfig
+        .builder()
+        .params(listOptions)
+        .build()
 
     return workos.get(
       "/directory_users",
@@ -136,26 +141,25 @@ class DirectorySyncApi(private val workos: WorkOS) {
   /**
    * Fetches a directory group by the given [com.workos.directorysync.models.Group] ID.
    */
-  fun getDirectoryGroup(id: String): Group {
-    return workos.get(
+  fun getDirectoryGroup(id: String): Group =
+    workos.get(
       "/directory_groups/$id",
       Group::class.java
     )
-  }
 
   /**
    * Fetches the list of directory groups.
    */
-  fun listDirectoryGroups(
-    listOptions: ListDirectoryGroupOptions
-  ): DirectoryGroupList {
+  fun listDirectoryGroups(listOptions: ListDirectoryGroupOptions): DirectoryGroupList {
     if (listOptions["directory"] == null && listOptions["user"] == null) {
       throw IllegalArgumentException("Either directory or user must be provided.")
     }
 
-    val requestConfig = RequestConfig.builder()
-      .params(listOptions)
-      .build()
+    val requestConfig =
+      RequestConfig
+        .builder()
+        .params(listOptions)
+        .build()
 
     return workos.get(
       "/directory_groups",
@@ -173,44 +177,45 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * @param before @see [com.workos.common.http.PaginationParams]
    * @param limit @see [com.workos.common.http.PaginationParams]
    */
-  class ListDirectoryGroupOptions @JvmOverloads constructor(
-    directory: String? = null,
-    user: String? = null,
-    after: String? = null,
-    before: String? = null,
-    limit: Int? = null,
-    order: Order? = null
-  ) : PaginationParams(after, before, limit, order) {
-    init {
-      if (directory != null) set("directory", directory)
-      if (user != null) set("user", user)
-    }
+  class ListDirectoryGroupOptions
+    @JvmOverloads
+    constructor(
+      directory: String? = null,
+      user: String? = null,
+      after: String? = null,
+      before: String? = null,
+      limit: Int? = null,
+      order: Order? = null
+    ) : PaginationParams(after, before, limit, order) {
+      init {
+        if (directory != null) set("directory", directory)
+        if (user != null) set("user", user)
+      }
 
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): ListDirectoryGroupOptionsBuilder {
-        return ListDirectoryGroupOptionsBuilder()
+      /**
+       * @suppress
+       */
+      companion object {
+        @JvmStatic
+        fun builder(): ListDirectoryGroupOptionsBuilder = ListDirectoryGroupOptionsBuilder()
+      }
+
+      /**
+       * Builder class for creating [ListDirectoryGroupOptions].
+       */
+      class ListDirectoryGroupOptionsBuilder :
+        PaginationParams.PaginationParamsBuilder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
+        /**
+         * The directory identifier to filter on.
+         */
+        fun directory(value: String) = apply { this.params["directory"] = value }
+
+        /**
+         * The user identifier to filter on.
+         */
+        fun user(value: String) = apply { this.params["user"] = value }
       }
     }
-
-    /**
-     * Builder class for creating [ListDirectoryGroupOptions].
-     */
-    class ListDirectoryGroupOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryGroupOptions>(ListDirectoryGroupOptions()) {
-      /**
-       * The directory identifier to filter on.
-       */
-      fun directory(value: String) = apply { this.params["directory"] = value }
-
-      /**
-       * The user identifier to filter on.
-       */
-      fun user(value: String) = apply { this.params["user"] = value }
-    }
-  }
 
   /**
    * Parameters for [listDirectoryUsers].
@@ -221,42 +226,43 @@ class DirectorySyncApi(private val workos: WorkOS) {
    * @param before @see [com.workos.common.http.PaginationParams]
    * @param limit @see [com.workos.common.http.PaginationParams]
    */
-  class ListDirectoryUserOptions @JvmOverloads constructor(
-    directory: String? = null,
-    group: String? = null,
-    after: String? = null,
-    before: String? = null,
-    limit: Int? = null,
-    order: Order? = null
-  ) : PaginationParams(after, before, limit, order) {
-    init {
-      if (directory != null) set("directory", directory)
-      if (group != null) set("group", group)
-    }
+  class ListDirectoryUserOptions
+    @JvmOverloads
+    constructor(
+      directory: String? = null,
+      group: String? = null,
+      after: String? = null,
+      before: String? = null,
+      limit: Int? = null,
+      order: Order? = null
+    ) : PaginationParams(after, before, limit, order) {
+      init {
+        if (directory != null) set("directory", directory)
+        if (group != null) set("group", group)
+      }
 
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): ListDirectoryUserOptionsBuilder {
-        return ListDirectoryUserOptionsBuilder()
+      /**
+       * @suppress
+       */
+      companion object {
+        @JvmStatic
+        fun builder(): ListDirectoryUserOptionsBuilder = ListDirectoryUserOptionsBuilder()
+      }
+
+      /**
+       * Builder class for creating [ListDirectoryUserOptions].
+       */
+      class ListDirectoryUserOptionsBuilder :
+        PaginationParams.PaginationParamsBuilder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
+        /**
+         * The directory identifier to filter on.
+         */
+        fun directory(value: String) = apply { this.params["directory"] = value }
+
+        /**
+         * The group identifier to filter on.
+         */
+        fun group(value: String) = apply { this.params["group"] = value }
       }
     }
-
-    /**
-     * Builder class for creating [ListDirectoryUserOptions].
-     */
-    class ListDirectoryUserOptionsBuilder : PaginationParams.PaginationParamsBuilder<ListDirectoryUserOptions>(ListDirectoryUserOptions()) {
-      /**
-       * The directory identifier to filter on.
-       */
-      fun directory(value: String) = apply { this.params["directory"] = value }
-
-      /**
-       * The group identifier to filter on.
-       */
-      fun group(value: String) = apply { this.params["group"] = value }
-    }
-  }
 }

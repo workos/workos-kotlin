@@ -8,12 +8,11 @@ class CreateMagicAuthOptions(
    */
   @JsonProperty("email")
   val email: String,
-
   /**
    * The token of an invitation, if required.
    */
   @JsonProperty("invitation_token")
-  val invitationToken: String? = null,
+  val invitationToken: String? = null
 ) {
   init {
     require(email.isNotBlank()) { "Email is required" }

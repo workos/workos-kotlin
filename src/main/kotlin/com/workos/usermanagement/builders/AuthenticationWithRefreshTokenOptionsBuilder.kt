@@ -22,8 +22,8 @@ class AuthenticationWithRefreshTokenOptionsBuilder(
   /**
    * Generates the AuthenticationWithRefreshTokenOptions object.
    */
-  fun build(): AuthenticationWithRefreshTokenOptions {
-    return AuthenticationWithRefreshTokenOptions(
+  fun build(): AuthenticationWithRefreshTokenOptions =
+    AuthenticationWithRefreshTokenOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "refresh_token",
@@ -31,17 +31,21 @@ class AuthenticationWithRefreshTokenOptionsBuilder(
       organizationId = this.organizationId,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, refreshToken: String, organizationId: String? = null, options: AuthenticationAdditionalOptions? = null): AuthenticationWithRefreshTokenOptionsBuilder {
-      return AuthenticationWithRefreshTokenOptionsBuilder(clientId, clientSecret, refreshToken, organizationId, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      refreshToken: String,
+      organizationId: String? = null,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithRefreshTokenOptionsBuilder =
+      AuthenticationWithRefreshTokenOptionsBuilder(clientId, clientSecret, refreshToken, organizationId, options)
   }
 }

@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -14,25 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param expiresAt The timestamp when the password reset token will expire.
  * @param createdAt The timestamp when the password reset token was created.
  */
-data class PasswordReset @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class PasswordReset(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("user_id")
   val userId: String,
-
   @JsonProperty("email")
   val email: String,
-
   @JsonProperty("password_reset_token")
   val passwordResetToken: String,
-
   @JsonProperty("password_reset_url")
   val passwordResetUrl: String,
-
   @JsonProperty("expires_at")
   val expiresAt: String,
-
   @JsonProperty("created_at")
   val createdAt: String
 )

@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -13,22 +12,17 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param totp Time-based one-time password (see [AuthenticationTotp]).
  * @param userId The ID of the user.
  */
-data class AuthenticationFactor @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class AuthenticationFactor(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JsonProperty("updated_at")
   val updatedAt: String,
-
   @JsonProperty("type")
   val type: String,
-
   @JsonProperty("totp")
   val totp: AuthenticationTotp? = null,
-
   @JsonProperty("user_id")
   val userId: String? = null
 )

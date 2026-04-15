@@ -1,6 +1,5 @@
 package com.workos.organizations.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -15,29 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp of when the Organization was created.
  * @param updatedAt The timestamp of when the Organization was updated.
  */
-data class Organization
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Organization(
   @JvmField
   @JsonProperty("object")
   val obj: String = "organization",
-
   @JvmField
   val id: String,
-
   @JvmField
   val name: String,
-
   @JvmField
   @JsonProperty("allow_profiles_outside_organization")
   val allowProfilesOutsideOrganization: Boolean,
-
   @JvmField
   val domains: List<OrganizationDomain>,
-
   @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String

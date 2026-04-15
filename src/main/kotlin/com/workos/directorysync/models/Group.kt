@@ -1,6 +1,5 @@
 package com.workos.directorysync.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -15,39 +14,21 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param name The name of the Directory Group.
  * @param rawAttributes An object containing the data returned from the Directory Provider.
  */
-open class Group
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
-  @JvmField
+open class Group(
   @JsonProperty("object")
   open val obj: String = "directory_group",
-
-  @JvmField
   @JsonProperty("directory_id")
   open val directoryId: String,
-
-  @JvmField
   @JsonProperty("organization_id")
   open val organizationId: String?,
-
-  @JvmField
   open val id: String,
-
-  @JvmField
   @JsonProperty("idp_id")
   open val idpId: String,
-
-  @JvmField
   open val name: String,
-
-  @JvmField
   @JsonProperty("created_at")
   open val createdAt: String,
-
-  @JvmField
   @JsonProperty("updated_at")
   open val updatedAt: String,
-
-  @JvmField
   @JsonProperty("raw_attributes")
   open val rawAttributes: Map<String, Any?>
 )

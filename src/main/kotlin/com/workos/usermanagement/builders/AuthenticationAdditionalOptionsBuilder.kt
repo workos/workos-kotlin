@@ -32,21 +32,18 @@ class AuthenticationAdditionalOptionsBuilder(
   /**
    * Generates the AuthenticationAdditionalOptions object.
    */
-  fun build(): AuthenticationAdditionalOptions {
-    return AuthenticationAdditionalOptions(
+  fun build(): AuthenticationAdditionalOptions =
+    AuthenticationAdditionalOptions(
       invitationToken = this.invitationToken,
       ipAddress = this.ipAddress,
-      userAgent = this.userAgent,
+      userAgent = this.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(): AuthenticationAdditionalOptionsBuilder {
-      return AuthenticationAdditionalOptionsBuilder()
-    }
+    fun create(): AuthenticationAdditionalOptionsBuilder = AuthenticationAdditionalOptionsBuilder()
   }
 }

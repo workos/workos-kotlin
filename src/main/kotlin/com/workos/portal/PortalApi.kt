@@ -13,8 +13,9 @@ import java.lang.IllegalArgumentException
  * The PortalApi class provides convenience methods for working with the WorkOS
  * Admin Portal product.
  */
-class PortalApi(private val workos: WorkOS) {
-
+class PortalApi(
+  private val workos: WorkOS
+) {
   /**
    * Parameters for [generateLink].
    *
@@ -24,89 +25,87 @@ class PortalApi(private val workos: WorkOS) {
    * @param successUrl The URL to which WorkOS will redirect users to upon successfully setting up Single Sign On or Directory Sync.
    */
   @JsonInclude(Include.NON_NULL)
-  class GeneratePortalLinkOptions @JvmOverloads constructor(
-    val organization: String,
-
-    val intent: Intent,
-
-    @JsonProperty("return_url")
-    val returnUrl: String? = null,
-
-    @JsonProperty("success_url")
-    val successUrl: String? = null
-  ) {
-    /**
-     * Builder class for [GeneratePortalLinkOptions].
-     */
-    class GeneratePortalLinkOptionsBuilder {
-      private var organization: String? = null
-
-      private var intent: Intent? = null
-
-      private var returnUrl: String? = null
-
-      private var successUrl: String? = null
-
+  class GeneratePortalLinkOptions
+    @JvmOverloads
+    constructor(
+      val organization: String,
+      val intent: Intent,
+      @JsonProperty("return_url")
+      val returnUrl: String? = null,
+      @JsonProperty("success_url")
+      val successUrl: String? = null
+    ) {
       /**
-       * Sets the organizationId.
+       * Builder class for [GeneratePortalLinkOptions].
        */
-      fun organization(value: String) = apply { organization = value }
+      class GeneratePortalLinkOptionsBuilder {
+        private var organization: String? = null
 
-      /**
-       * Sets the portal intent.
-       */
-      fun intent(value: Intent) = apply { intent = value }
+        private var intent: Intent? = null
 
-      /**
-       * Sets the return URL.
-       */
-      fun returnUrl(value: String) = apply { returnUrl = value }
+        private var returnUrl: String? = null
 
-      /**
-       * Sets the success URL.
-       */
-      fun successUrl(value: String) = apply { successUrl = value }
+        private var successUrl: String? = null
 
-      /**
-       * Creates a [GeneratePortalLinkOptions] with the given builder parameters.
-       */
-      fun build(): GeneratePortalLinkOptions {
-        if (organization == null) {
-          throw IllegalArgumentException("An organization id must be provided")
+        /**
+         * Sets the organizationId.
+         */
+        fun organization(value: String) = apply { organization = value }
+
+        /**
+         * Sets the portal intent.
+         */
+        fun intent(value: Intent) = apply { intent = value }
+
+        /**
+         * Sets the return URL.
+         */
+        fun returnUrl(value: String) = apply { returnUrl = value }
+
+        /**
+         * Sets the success URL.
+         */
+        fun successUrl(value: String) = apply { successUrl = value }
+
+        /**
+         * Creates a [GeneratePortalLinkOptions] with the given builder parameters.
+         */
+        fun build(): GeneratePortalLinkOptions {
+          if (organization == null) {
+            throw IllegalArgumentException("An organization id must be provided")
+          }
+
+          if (intent == null) {
+            throw IllegalArgumentException("An intent must be provided")
+          }
+
+          return GeneratePortalLinkOptions(
+            organization = organization!!,
+            intent = intent!!,
+            returnUrl = returnUrl,
+            successUrl = successUrl
+          )
         }
+      }
 
-        if (intent == null) {
-          throw IllegalArgumentException("An intent must be provided")
-        }
-
-        return GeneratePortalLinkOptions(
-          organization = organization!!,
-          intent = intent!!,
-          returnUrl = returnUrl,
-          successUrl = successUrl
-        )
+      /**
+       * @suppress
+       */
+      companion object {
+        @JvmStatic
+        fun builder(): GeneratePortalLinkOptionsBuilder = GeneratePortalLinkOptionsBuilder()
       }
     }
-
-    /**
-     * @suppress
-     */
-    companion object {
-      @JvmStatic
-      fun builder(): GeneratePortalLinkOptionsBuilder {
-        return GeneratePortalLinkOptionsBuilder()
-      }
-    }
-  }
 
   /**
    * Generate an Admin Portal Link.
    */
   fun generateLink(generateLinkOptions: GeneratePortalLinkOptions): Link {
-    val config = RequestConfig
-      .builder()
-      .data(generateLinkOptions)
-      .build()
+    val config =
+      RequestConfig
+        .builder()
+        .data(generateLinkOptions)
+        .build()
 
     return workos.post("/portal/generate_link", Link::class.java, config)
   }

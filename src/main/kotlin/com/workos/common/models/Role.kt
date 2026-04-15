@@ -1,6 +1,5 @@
 package com.workos.common.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -8,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  *
  * @param slug The unique role identifier.
  */
-data class Role @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Role(
   @JsonProperty("slug")
   val slug: String
 )

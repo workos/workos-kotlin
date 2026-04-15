@@ -22,8 +22,8 @@ class AuthenticationWithPasswordOptionsBuilder(
   /**
    * Generates the AuthenticationWithPasswordOptions object.
    */
-  fun build(): AuthenticationWithPasswordOptions {
-    return AuthenticationWithPasswordOptions(
+  fun build(): AuthenticationWithPasswordOptions =
+    AuthenticationWithPasswordOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "password",
@@ -31,17 +31,20 @@ class AuthenticationWithPasswordOptionsBuilder(
       password = this.password,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, email: String, password: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithPasswordOptionsBuilder {
-      return AuthenticationWithPasswordOptionsBuilder(clientId, clientSecret, email, password, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      email: String,
+      password: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithPasswordOptionsBuilder = AuthenticationWithPasswordOptionsBuilder(clientId, clientSecret, email, password, options)
   }
 }

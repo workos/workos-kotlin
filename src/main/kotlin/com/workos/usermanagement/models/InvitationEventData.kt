@@ -1,6 +1,5 @@
 package com.workos.usermanagement.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.usermanagement.types.InvitationStateEnumType
 
@@ -20,34 +19,25 @@ import com.workos.usermanagement.types.InvitationStateEnumType
  * @param createdAt The timestamp when the invitation was created.
  * @param updatedAt The timestamp when the invitation was last updated.
  */
-data class InvitationEventData @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class InvitationEventData(
   @JsonProperty("id")
   val id: String,
-
   @JsonProperty("email")
   val email: String,
-
   @JsonProperty("state")
   val state: InvitationStateEnumType,
-
   @JsonProperty("accepted_at")
   val acceptedAt: String? = null,
-
   @JsonProperty("revoked_at")
   val revokedAt: String? = null,
-
   @JsonProperty("expires_at")
   val expiresAt: String,
-
   @JsonProperty("organization_id")
   val organizationId: String? = null,
-
   @JsonProperty("inviter_user_id")
   val inviterUserId: String? = null,
-
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JsonProperty("updated_at")
   val updatedAt: String
 )

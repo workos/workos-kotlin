@@ -13,7 +13,6 @@ open class AuthenticationAdditionalOptions(
    */
   @JsonProperty("invitation_token")
   open val invitationToken: String? = null,
-
   /**
    * The IP address of the request from the user who is attempting to authenticate.
    *
@@ -24,7 +23,6 @@ open class AuthenticationAdditionalOptions(
    */
   @JsonProperty("ip_address")
   open val ipAddress: String? = null,
-
   /**
    * The user agent of the request from the user who is attempting to authenticate.
    * This should be the value of the `User-Agent` header.

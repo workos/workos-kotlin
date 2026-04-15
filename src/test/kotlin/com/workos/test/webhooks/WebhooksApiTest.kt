@@ -3,13 +3,13 @@ package com.workos.test.webhooks
 import com.workos.directorysync.models.User
 import com.workos.test.TestBase
 import org.apache.commons.codec.binary.Hex
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.security.SignatureException
 import java.time.Instant
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WebhooksApiTest : TestBase() {
@@ -113,9 +113,10 @@ class WebhooksApiTest : TestBase() {
       val sha256Hmac = Mac.getInstance("HmacSHA256")
       val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
       sha256Hmac.init(secretKey)
-      val signature = Hex.encodeHexString(
-        sha256Hmac.doFinal("$timestamp.$webhookData".toByteArray())
-      )
+      val signature =
+        Hex.encodeHexString(
+          sha256Hmac.doFinal("$timestamp.$webhookData".toByteArray())
+        )
 
       return mapOf(
         "secret" to secret,
@@ -130,11 +131,12 @@ class WebhooksApiTest : TestBase() {
     val workos = createWorkOSClient()
     val testData = prepareTest(testWebhook)
 
-    val webhook = workos.webhooks.constructEvent(
-      testWebhook,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        testWebhook,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertEquals(webhook.id, testWebhookId)
     assertTrue(webhook.data is User)
@@ -146,11 +148,12 @@ class WebhooksApiTest : TestBase() {
     val workos = createWorkOSClient()
     val testData = prepareTest(testWebhookWithUnknownProperties)
 
-    val webhook = workos.webhooks.constructEvent(
-      testWebhookWithUnknownProperties,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        testWebhookWithUnknownProperties,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertEquals(webhook.id, testWebhookId)
     assertTrue(webhook.data is User)
@@ -165,7 +168,6 @@ class WebhooksApiTest : TestBase() {
       val testData = prepareTest(testWebhook)
 
       workos.webhooks.constructEvent(
-
         "wrong payload",
         testData["signature"] as String,
         "secret"
@@ -252,11 +254,12 @@ class WebhooksApiTest : TestBase() {
     val splitHeader = stringData.split(",")
     val timestamp = splitHeader[0].split("=")[1]
     val signatureHash = splitHeader[1].split("=")[1]
-    val expectedSignature: String = workos.webhooks.createSignature(
-      timestamp,
-      testWebhook,
-      testData["secret"] as String
-    )
+    val expectedSignature: String =
+      workos.webhooks.createSignature(
+        timestamp,
+        testWebhook,
+        testData["secret"] as String
+      )
     assertEquals(expectedSignature, signatureHash)
   }
 }

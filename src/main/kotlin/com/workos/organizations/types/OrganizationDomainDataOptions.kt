@@ -6,8 +6,9 @@ package com.workos.organizations.types
  * @param domain The domain of the organization.
  * @param state The verificaction state of the domain.
  */
-class OrganizationDomainDataOptions @JvmOverloads constructor(
-  val domain: String,
-
-  val state: OrganizationDomainDataState
-)
+class OrganizationDomainDataOptions
+  @JvmOverloads
+  constructor(
+    val domain: String,
+    val state: OrganizationDomainDataState
+  )

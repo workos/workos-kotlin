@@ -2,7 +2,9 @@ package com.workos.usermanagement.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum class AuthenticationEventTypeEnumType(val type: String) {
+enum class AuthenticationEventTypeEnumType(
+  val type: String
+) {
   /**
    * Email Verification
    */
@@ -43,5 +45,5 @@ enum class AuthenticationEventTypeEnumType(val type: String) {
    * SSO
    */
   @JsonProperty("sso")
-  SSO("sso"),
+  SSO("sso")
 }

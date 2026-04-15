@@ -12,37 +12,41 @@ import com.workos.fga.types.CreateWarrantOptions
  * @param subject (see [Subject]) The resource with the specified `relation` to the resource provided by resourceType and resourceId.
  * @param policy A boolean expression that must evaluate to true for this warrant to apply. The expression can reference variables provided in the context attribute of access check requests.
  */
-class CreateWarrantOptionsBuilder @JvmOverloads constructor(
-  private var resourceType: String,
-  private var resourceId: String,
-  private var relation: String,
-  private var subject: Subject,
-  private var policy: String? = null,
-) {
-  fun resourceType(value: String) = apply { resourceType = value }
+class CreateWarrantOptionsBuilder
+  @JvmOverloads
+  constructor(
+    private var resourceType: String,
+    private var resourceId: String,
+    private var relation: String,
+    private var subject: Subject,
+    private var policy: String? = null
+  ) {
+    fun resourceType(value: String) = apply { resourceType = value }
 
-  fun resourceId(value: String) = apply { resourceId = value }
+    fun resourceId(value: String) = apply { resourceId = value }
 
-  fun relation(value: String) = apply { relation = value }
+    fun relation(value: String) = apply { relation = value }
 
-  fun subject(value: Subject) = apply { subject = value }
+    fun subject(value: Subject) = apply { subject = value }
 
-  fun policy(value: String) = apply { policy = value }
+    fun policy(value: String) = apply { policy = value }
 
-  fun build(): CreateWarrantOptions {
-    return CreateWarrantOptions(
-      resourceType = this.resourceType,
-      resourceId = this.resourceId,
-      relation = this.relation,
-      subject = this.subject,
-      policy = this.policy,
-    )
-  }
+    fun build(): CreateWarrantOptions =
+      CreateWarrantOptions(
+        resourceType = this.resourceType,
+        resourceId = this.resourceId,
+        relation = this.relation,
+        subject = this.subject,
+        policy = this.policy
+      )
 
-  companion object {
-    @JvmStatic
-    fun create(resourceType: String, resourceId: String, relation: String, subject: Subject): CreateWarrantOptionsBuilder {
-      return CreateWarrantOptionsBuilder(resourceType, resourceId, relation, subject)
+    companion object {
+      @JvmStatic
+      fun create(
+        resourceType: String,
+        resourceId: String,
+        relation: String,
+        subject: Subject
+      ): CreateWarrantOptionsBuilder = CreateWarrantOptionsBuilder(resourceType, resourceId, relation, subject)
     }
   }
-}

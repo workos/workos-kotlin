@@ -1,6 +1,5 @@
 package com.workos.sso.models
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -17,36 +16,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @param createdAt The timestamp of when the Connection was created.
  * @param updatedAt The timestamp of when the Connection was updated.
  */
-data class Connection
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+data class Connection(
   @JvmField
   @JsonProperty("object")
   val obj: String = "connection",
-
   @JvmField
   val id: String,
-
   @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
-
   @JvmField
   @JsonProperty("connection_type")
   val connectionType: String,
-
   @JvmField
   val domains: List<ConnectionDomain>?,
-
   @JvmField
   val name: String,
-
   @JvmField
   val state: ConnectionState,
-
   @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
-
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String

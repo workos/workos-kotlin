@@ -1,18 +1,19 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.workos.test.webhooks
 
 import com.workos.test.TestBase
-import com.workos.webhooks.models.* // ktlint-disable no-wildcard-imports
-import org.junit.Test
+import com.workos.webhooks.models.*
 import org.junit.jupiter.api.Assertions.assertTrue
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrganizationRoleWebhookTests : TestBase() {
-
   private val roleSlug = "admin"
   private val webhookId = "wh_01FMXKE185HQ2DQ84BH33HMF99"
 
-  private fun generateOrganizationRoleWebhookEvent(eventType: EventType): String {
-    return """
+  private fun generateOrganizationRoleWebhookEvent(eventType: EventType): String =
+    """
     {
       "id": "$webhookId",
       "data": {
@@ -30,7 +31,6 @@ class OrganizationRoleWebhookTests : TestBase() {
       "created_at": "2024-07-20T10:15:23.713Z"
     }
     """
-  }
 
   @Test
   fun constructOrganizationRoleCreatedEvent() {
@@ -38,11 +38,12 @@ class OrganizationRoleWebhookTests : TestBase() {
     val webhookData = generateOrganizationRoleWebhookEvent(EventType.OrganizationRoleCreated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is OrganizationRoleWebhookEvent)
     assertEquals(webhook.id, webhookId)
@@ -56,11 +57,12 @@ class OrganizationRoleWebhookTests : TestBase() {
     val webhookData = generateOrganizationRoleWebhookEvent(EventType.OrganizationRoleDeleted)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is OrganizationRoleWebhookEvent)
     assertEquals(webhook.id, webhookId)
@@ -73,11 +75,12 @@ class OrganizationRoleWebhookTests : TestBase() {
     val webhookData = generateOrganizationRoleWebhookEvent(EventType.OrganizationRoleUpdated)
     val testData = WebhooksApiTest.prepareTest(webhookData)
 
-    val webhook = workos.webhooks.constructEvent(
-      webhookData,
-      testData["signature"] as String,
-      testData["secret"] as String
-    )
+    val webhook =
+      workos.webhooks.constructEvent(
+        webhookData,
+        testData["signature"] as String,
+        testData["secret"] as String
+      )
 
     assertTrue(webhook is OrganizationRoleWebhookEvent)
     assertEquals(webhook.id, webhookId)

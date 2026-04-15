@@ -27,19 +27,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithSsoShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "sso",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.Sso)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.Sso)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -50,19 +53,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithDsyncShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "dsync",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.DirectorySync)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.DirectorySync)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -73,19 +79,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithAuditLogsShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "audit_logs",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.AuditLogs)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.AuditLogs)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -96,19 +105,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithLogStreamsShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "log_streams",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.LogStreams)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.LogStreams)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -119,19 +131,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithDomainVerificationShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "domain_verification",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.DomainVerification)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.DomainVerification)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -142,19 +157,22 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithCertificateRenewalShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "certificate_renewal",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions.builder()
-      .organization("organizationId")
-      .intent(Intent.CertificateRenewal)
-      .returnUrl("returnUrl")
-      .build()
+    val options =
+      PortalApi.GeneratePortalLinkOptions
+        .builder()
+        .organization("organizationId")
+        .intent(Intent.CertificateRenewal)
+        .returnUrl("returnUrl")
+        .build()
 
     val response = workos.portal.generateLink(options)
 
@@ -165,19 +183,21 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithRawOptionsShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "sso",
         "return_url": "returnUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions(
-      organization = "organizationId",
-      intent = Intent.Sso,
-      returnUrl = "returnUrl"
-    )
+    val options =
+      PortalApi.GeneratePortalLinkOptions(
+        organization = "organizationId",
+        intent = Intent.Sso,
+        returnUrl = "returnUrl"
+      )
 
     val response = workos.portal.generateLink(options)
 
@@ -188,21 +208,23 @@ class PortalApiTest : TestBase() {
   fun createPortalLinkWithSuccessUrlShouldReturnPayload() {
     val workos = createWorkOSClient()
 
-    val portalLink = prepareGeneratePortalLinkTest(
-      """{
+    val portalLink =
+      prepareGeneratePortalLinkTest(
+        """{
         "organization": "organizationId",
         "intent": "sso",
         "return_url": "returnUrl",
         "success_url": "successUrl"
       }"""
-    )
+      )
 
-    val options = PortalApi.GeneratePortalLinkOptions(
-      organization = "organizationId",
-      intent = Intent.Sso,
-      returnUrl = "returnUrl",
-      successUrl = "successUrl"
-    )
+    val options =
+      PortalApi.GeneratePortalLinkOptions(
+        organization = "organizationId",
+        intent = Intent.Sso,
+        returnUrl = "returnUrl",
+        successUrl = "successUrl"
+      )
 
     val response = workos.portal.generateLink(options)
 

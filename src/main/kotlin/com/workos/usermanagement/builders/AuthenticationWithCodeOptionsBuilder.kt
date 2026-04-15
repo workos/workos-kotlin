@@ -20,25 +20,27 @@ class AuthenticationWithCodeOptionsBuilder(
   /**
    * Generates the AuthenticationWithCodeOptions object.
    */
-  fun build(): AuthenticationWithCodeOptions {
-    return AuthenticationWithCodeOptions(
+  fun build(): AuthenticationWithCodeOptions =
+    AuthenticationWithCodeOptions(
       clientId = this.clientId,
       clientSecret = this.clientSecret,
       grantType = "authorization_code",
       code = this.code,
       invitationToken = this.options?.invitationToken,
       ipAddress = this.options?.ipAddress,
-      userAgent = this.options?.userAgent,
+      userAgent = this.options?.userAgent
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(clientId: String, clientSecret: String, code: String, options: AuthenticationAdditionalOptions? = null): AuthenticationWithCodeOptionsBuilder {
-      return AuthenticationWithCodeOptionsBuilder(clientId, clientSecret, code, options)
-    }
+    fun create(
+      clientId: String,
+      clientSecret: String,
+      code: String,
+      options: AuthenticationAdditionalOptions? = null
+    ): AuthenticationWithCodeOptionsBuilder = AuthenticationWithCodeOptionsBuilder(clientId, clientSecret, code, options)
   }
 }

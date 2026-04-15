@@ -10,25 +10,25 @@ import com.workos.usermanagement.types.SendPasswordResetEmailOptions
  */
 class SendPasswordResetEmailOptionsBuilder(
   private var email: String,
-  private var passwordResetUrl: String,
+  private var passwordResetUrl: String
 ) {
   /**
    * Generates the SendPasswordResetEmailOptions object.
    */
-  fun build(): SendPasswordResetEmailOptions {
-    return SendPasswordResetEmailOptions(
+  fun build(): SendPasswordResetEmailOptions =
+    SendPasswordResetEmailOptions(
       email = this.email,
       passwordResetUrl = this.passwordResetUrl
     )
-  }
 
   /**
    * @suppress
    */
   companion object {
     @JvmStatic
-    fun create(email: String, passwordResetUrl: String): SendPasswordResetEmailOptionsBuilder {
-      return SendPasswordResetEmailOptionsBuilder(email, passwordResetUrl)
-    }
+    fun create(
+      email: String,
+      passwordResetUrl: String
+    ): SendPasswordResetEmailOptionsBuilder = SendPasswordResetEmailOptionsBuilder(email, passwordResetUrl)
   }
 }
