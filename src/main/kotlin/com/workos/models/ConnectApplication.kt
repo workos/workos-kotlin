@@ -42,7 +42,11 @@ data class ConnectApplication(
   /** The type of the application. */
   @JvmField
   @JsonProperty("application_type")
-  val applicationType: String = "oauth",
+  val applicationType: String = "m2m",
+  /** The ID of the organization the application belongs to. */
+  @JvmField
+  @JsonProperty("organization_id")
+  val organizationId: String? = null,
   /** The redirect URIs configured for this application. */
   @JvmField
   @JsonProperty("redirect_uris")
@@ -58,9 +62,5 @@ data class ConnectApplication(
   /** Whether the application was dynamically registered. */
   @JvmField
   @JsonProperty("was_dynamically_registered")
-  val wasDynamicallyRegistered: Boolean = false,
-  /** The ID of the organization the application belongs to. */
-  @JvmField
-  @JsonProperty("organization_id")
-  val organizationId: String? = null
+  val wasDynamicallyRegistered: Boolean = false
 )

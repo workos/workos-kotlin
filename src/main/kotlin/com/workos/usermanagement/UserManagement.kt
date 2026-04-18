@@ -35,6 +35,48 @@ import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
 
+sealed class Password {
+  data class Plaintext(
+    val password: String
+  ) : Password()
+
+  data class Hashed(
+    val hash: String,
+    val hashType: String
+  ) : Password()
+}
+
+sealed class Password {
+  data class Plaintext(
+    val password: String
+  ) : Password()
+
+  data class Hashed(
+    val hash: String,
+    val hashType: String
+  ) : Password()
+}
+
+sealed class Role {
+  data class Single(
+    val slug: String
+  ) : Role()
+
+  data class Multiple(
+    val slugs: String
+  ) : Role()
+}
+
+sealed class Role {
+  data class Single(
+    val slug: String
+  ) : Role()
+
+  data class Multiple(
+    val slugs: String
+  ) : Role()
+}
+
 /** API accessor for UserManagement. */
 class UserManagement(
   internal val workos: WorkOS
@@ -108,11 +150,19 @@ class UserManagement(
   /**
    * Authenticate
    *
+   * @param code The authorization code received from the redirect.
+   * @param codeVerifier The PKCE code verifier used to derive the code challenge passed to the authorization URL.
+   * @param invitationToken An invitation token to accept during authentication.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @return the AuthenticateResponse
    */
   @JvmOverloads
   fun authenticateWithCode(
     code: String,
+    codeVerifier: String? = null,
+    invitationToken: String? = null,
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
@@ -121,6 +171,8 @@ class UserManagement(
     val body =
       bodyOf(
         "code" to code,
+        "code_verifier" to codeVerifier,
+        "invitation_token" to invitationToken,
         "ip_address" to ipAddress,
         "device_id" to deviceId,
         "user_agent" to userAgent,
@@ -223,7 +275,7 @@ class UserManagement(
   @JvmOverloads
   fun authenticateWithEmailVerification(
     code: String,
-    pendingAuthenticationToken: String? = null,
+    pendingAuthenticationToken: String,
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
@@ -597,46 +649,58 @@ class UserManagement(
    * Create a new user in the current environment.
    *
    * @param email The email address of the user.
-   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
-   * @param passwordHash The hashed password to set for the user. Mutually exclusive with `password`.
-   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`.
    * @param firstName The first name of the user.
    * @param lastName The last name of the user.
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
+   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+   * @param passwordHash The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
+   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
    *
    * @return the User
    */
   @JvmOverloads
   fun create(
+    password: Password? = null,
     email: String,
-    password: String? = null,
-    passwordHash: String? = null,
-    passwordHashType: CreateUserPasswordHashType? = null,
     firstName: String? = null,
     lastName: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
+    password: String? = null,
+    passwordHash: String? = null,
+    passwordHashType: CreateUserPasswordHashType? = null,
     requestOptions: RequestOptions? = null
   ): User {
+    val params = mutableListOf<Pair<String, String>>()
+    if (password != null) {
+      when (password) {
+        is Password.Plaintext -> params += "password" to password.password
+        is Password.Hashed -> {
+          params += "password_hash" to password.hash
+          params += "password_hash_type" to password.hashType
+        }
+      }
+    }
     val body =
       bodyOf(
         "email" to email,
-        "password" to password,
-        "password_hash" to passwordHash,
-        "password_hash_type" to passwordHashType,
         "first_name" to firstName,
         "last_name" to lastName,
         "email_verified" to emailVerified,
         "metadata" to metadata,
-        "external_id" to externalId
+        "external_id" to externalId,
+        "password" to password,
+        "password_hash" to passwordHash,
+        "password_hash_type" to passwordHashType
       )
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -699,47 +763,59 @@ class UserManagement(
    * @param firstName The first name of the user.
    * @param lastName The last name of the user.
    * @param emailVerified Whether the user's email has been verified.
-   * @param password The password to set for the user.
-   * @param passwordHash The hashed password to set for the user. Mutually exclusive with `password`.
-   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
    * @param locale The user's preferred locale.
+   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
+   * @param passwordHash The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
+   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
    *
    * @return the User
    */
   @JvmOverloads
   fun update(
     id: String,
+    password: Password? = null,
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
     emailVerified: Boolean? = null,
-    password: String? = null,
-    passwordHash: String? = null,
-    passwordHashType: CreateUserPasswordHashType? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
     locale: String? = null,
+    password: String? = null,
+    passwordHash: String? = null,
+    passwordHashType: CreateUserPasswordHashType? = null,
     requestOptions: RequestOptions? = null
   ): User {
+    val params = mutableListOf<Pair<String, String>>()
+    if (password != null) {
+      when (password) {
+        is Password.Plaintext -> params += "password" to password.password
+        is Password.Hashed -> {
+          params += "password_hash" to password.hash
+          params += "password_hash_type" to password.hashType
+        }
+      }
+    }
     val body =
       bodyOf(
         "email" to email,
         "first_name" to firstName,
         "last_name" to lastName,
         "email_verified" to emailVerified,
-        "password" to password,
-        "password_hash" to passwordHash,
-        "password_hash_type" to passwordHashType,
         "metadata" to metadata,
         "external_id" to externalId,
-        "locale" to locale
+        "locale" to locale,
+        "password" to password,
+        "password_hash" to passwordHash,
+        "password_hash_type" to passwordHashType
       )
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/users/$id",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1304,12 +1380,20 @@ class UserManagement(
    */
   @JvmOverloads
   fun createOrganizationMembership(
+    role: Role? = null,
     userId: String,
     organizationId: String,
     roleSlug: String? = null,
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
+    val params = mutableListOf<Pair<String, String>>()
+    if (role != null) {
+      when (role) {
+        is Role.Single -> params += "role_slug" to role.slug
+        is Role.Multiple -> params += "role_slugs" to role.slugs
+      }
+    }
     val body =
       bodyOf(
         "user_id" to userId,
@@ -1321,6 +1405,7 @@ class UserManagement(
       RequestConfig(
         method = "POST",
         path = "/user_management/organization_memberships",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1364,10 +1449,18 @@ class UserManagement(
   @JvmOverloads
   fun updateOrganizationMembership(
     id: String,
+    role: Role? = null,
     roleSlug: String? = null,
     roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
+    val params = mutableListOf<Pair<String, String>>()
+    if (role != null) {
+      when (role) {
+        is Role.Single -> params += "role_slug" to role.slug
+        is Role.Multiple -> params += "role_slugs" to role.slugs
+      }
+    }
     val body =
       bodyOf(
         "role_slug" to roleSlug,
@@ -1377,6 +1470,7 @@ class UserManagement(
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )

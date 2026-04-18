@@ -26,15 +26,15 @@ data class CreateAuthorizationResource(
   @JvmField
   @JsonProperty("description")
   val description: String? = null,
-  /** The ID of the parent resource. */
+  /** The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`. */
   @JvmField
   @JsonProperty("parent_resource_id")
   val parentResourceId: String? = null,
-  /** The external ID of the parent resource. */
+  /** The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`. */
   @JvmField
   @JsonProperty("parent_resource_external_id")
   val parentResourceExternalId: String? = null,
-  /** The resource type slug of the parent resource. */
+  /** The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`. */
   @JvmField
   @JsonProperty("parent_resource_type_slug")
   val parentResourceTypeSlug: String? = null

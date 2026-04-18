@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-14T16:40:33.389Z",
+  "generatedAt": "2026-04-18T22:33:55.299Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -248,6 +248,14 @@
     "src/main/kotlin/com/workos/models/FlagUpdatedData.kt",
     "src/main/kotlin/com/workos/models/FlagUpdatedDataOwner.kt",
     "src/main/kotlin/com/workos/models/GenerateLink.kt",
+    "src/main/kotlin/com/workos/models/Group.kt",
+    "src/main/kotlin/com/workos/models/GroupCreated.kt",
+    "src/main/kotlin/com/workos/models/GroupDeleted.kt",
+    "src/main/kotlin/com/workos/models/GroupMemberAdded.kt",
+    "src/main/kotlin/com/workos/models/GroupMemberAddedData.kt",
+    "src/main/kotlin/com/workos/models/GroupMemberRemoved.kt",
+    "src/main/kotlin/com/workos/models/GroupMemberRemovedData.kt",
+    "src/main/kotlin/com/workos/models/GroupUpdated.kt",
     "src/main/kotlin/com/workos/models/IntentOptions.kt",
     "src/main/kotlin/com/workos/models/Invitation.kt",
     "src/main/kotlin/com/workos/models/InvitationAccepted.kt",

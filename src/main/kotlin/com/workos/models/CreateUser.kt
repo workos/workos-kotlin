@@ -11,18 +11,6 @@ data class CreateUser(
   @JvmField
   @JsonProperty("email")
   val email: String,
-  /** The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`. */
-  @JvmField
-  @JsonProperty("password")
-  val password: String? = null,
-  /** The hashed password to set for the user. Mutually exclusive with `password`. */
-  @JvmField
-  @JsonProperty("password_hash")
-  val passwordHash: String? = null,
-  /** The algorithm originally used to hash the password, used when providing a `password_hash`. */
-  @JvmField
-  @JsonProperty("password_hash_type")
-  val passwordHashType: CreateUserPasswordHashType? = null,
   /** The first name of the user. */
   @JvmField
   @JsonProperty("first_name")
@@ -42,5 +30,17 @@ data class CreateUser(
   /** The external ID of the user. */
   @JvmField
   @JsonProperty("external_id")
-  val externalId: String? = null
+  val externalId: String? = null,
+  /** The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`. */
+  @JvmField
+  @JsonProperty("password")
+  val password: String? = null,
+  /** The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`. */
+  @JvmField
+  @JsonProperty("password_hash")
+  val passwordHash: String? = null,
+  /** The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`. */
+  @JvmField
+  @JsonProperty("password_hash_type")
+  val passwordHashType: CreateUserPasswordHashType? = null
 )

@@ -8,6 +8,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
+import com.workos.authorization.Parent
+import com.workos.authorization.ParentResource
+import com.workos.authorization.ResourceTarget
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
@@ -24,7 +27,7 @@ class AuthorizationTest : TestBase() {
   @Test
   fun `check returns a typed response`() {
     stubResponse("POST", "/authorization/organization_memberships/sample-arg/check", 200, "{\"authorized\": false}")
-    val result = api().check("sample-arg", "sample-arg")
+    val result = api().check("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)
     assertEquals(false, result.authorized)
     wireMockRule.verify(
@@ -41,12 +44,36 @@ class AuthorizationTest : TestBase() {
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listOrganizationMembershipResources("sample-arg", "sample-arg")
+    val result = api().listOrganizationMembershipResources("sample-arg", "sample-arg", parentResource = ParentResource.ById("sample-arg"))
     assertNotNull(result)
     wireMockRule.verify(
       getRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/resources"))
         .withQueryParam("permission_slug", matching("sample-arg"))
     )
+  }
+
+  @Test
+  fun `listResourcePermissions returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/organization_memberships/sample-arg/resources/sample-arg/permissions",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listResourcePermissions("sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `listEffectivePermissionsByExternalId returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/organization_memberships/sample-arg/resources/sample-arg/sample-arg/permissions",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listEffectivePermissionsByExternalId("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
   }
 
   @Test
@@ -71,7 +98,7 @@ class AuthorizationTest : TestBase() {
         "\"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().assignRole("sample-arg", "sample-arg")
+    val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)
     assertEquals("role_assignment", result.`object`)
     assertEquals("sample", result.id)
@@ -84,7 +111,7 @@ class AuthorizationTest : TestBase() {
   @Test
   fun `removeRole completes without throwing`() {
     stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments", 204)
-    api().removeRole("sample-arg", "sample-arg")
+    api().removeRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     wireMockRule.verify(
       deleteRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
         .withRequestBody(matchingJsonPath("$.role_slug"))
@@ -249,7 +276,13 @@ class AuthorizationTest : TestBase() {
         "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().updateOrganizationResource("sample-arg", "sample-arg", "sample-arg")
+    val result =
+      api().updateOrganizationResource(
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        parentResource = ParentResource.ById("sample-arg")
+      )
     assertNotNull(result)
     assertEquals("authorization_resource", result.`object`)
     assertEquals("sample", result.name)
@@ -283,7 +316,7 @@ class AuthorizationTest : TestBase() {
   @Test
   fun `listResources returns a typed response`() {
     stubResponse("GET", "/authorization/resources", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().listResources()
+    val result = api().listResources(parent = Parent.ById("sample-arg"))
     assertNotNull(result)
   }
 
@@ -297,7 +330,14 @@ class AuthorizationTest : TestBase() {
         "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createResource("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    val result =
+      api().createResource(
+        parentResource = ParentResource.ById("sample-arg"),
+        "sample-arg",
+        "sample-arg",
+        "sample-arg",
+        "sample-arg"
+      )
     assertNotNull(result)
     assertEquals("authorization_resource", result.`object`)
     assertEquals("sample", result.name)
@@ -342,7 +382,7 @@ class AuthorizationTest : TestBase() {
         "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().updateResource("sample-arg")
+    val result = api().updateResource("sample-arg", parentResource = ParentResource.ById("sample-arg"))
     assertNotNull(result)
     assertEquals("authorization_resource", result.`object`)
     assertEquals("sample", result.name)
@@ -561,7 +601,7 @@ class AuthorizationTest : TestBase() {
   fun `listResources translates 401 to UnauthorizedException`() {
     stubResponse("GET", "/authorization/resources", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().listResources()
+      api().listResources(parent = Parent.ById("sample-arg"))
     }
   }
 
@@ -569,7 +609,7 @@ class AuthorizationTest : TestBase() {
   fun `listResources translates 404 to NotFoundException`() {
     stubResponse("GET", "/authorization/resources", 404)
     assertThrows(NotFoundException::class.java) {
-      api().listResources()
+      api().listResources(parent = Parent.ById("sample-arg"))
     }
   }
 
@@ -577,7 +617,7 @@ class AuthorizationTest : TestBase() {
   fun `listResources translates 429 to RateLimitException`() {
     stubResponse("GET", "/authorization/resources", 429)
     assertThrows(RateLimitException::class.java) {
-      api().listResources()
+      api().listResources(parent = Parent.ById("sample-arg"))
     }
   }
 
@@ -585,7 +625,7 @@ class AuthorizationTest : TestBase() {
   fun `listResources translates 500 to GenericServerException`() {
     stubResponse("GET", "/authorization/resources", 500)
     assertThrows(GenericServerException::class.java) {
-      api().listResources()
+      api().listResources(parent = Parent.ById("sample-arg"))
     }
   }
 }

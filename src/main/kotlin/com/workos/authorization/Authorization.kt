@@ -21,6 +21,94 @@ import com.workos.models.UserOrganizationMembershipBaseListData
 import com.workos.types.AuthorizationAssignment
 import com.workos.types.EventsOrder
 
+sealed class ResourceTarget {
+  data class ById(
+    val resourceId: String
+  ) : ResourceTarget()
+
+  data class ByExternalId(
+    val resourceExternalId: String,
+    val resourceTypeSlug: String
+  ) : ResourceTarget()
+}
+
+sealed class ParentResource {
+  data class ById(
+    val id: String
+  ) : ParentResource()
+
+  data class ByExternalId(
+    val typeSlug: String,
+    val externalId: String
+  ) : ParentResource()
+}
+
+sealed class ResourceTarget {
+  data class ById(
+    val resourceId: String
+  ) : ResourceTarget()
+
+  data class ByExternalId(
+    val resourceExternalId: String,
+    val resourceTypeSlug: String
+  ) : ResourceTarget()
+}
+
+sealed class ResourceTarget {
+  data class ById(
+    val resourceId: String
+  ) : ResourceTarget()
+
+  data class ByExternalId(
+    val resourceExternalId: String,
+    val resourceTypeSlug: String
+  ) : ResourceTarget()
+}
+
+sealed class ParentResource {
+  data class ById(
+    val id: String
+  ) : ParentResource()
+
+  data class ByExternalId(
+    val externalId: String,
+    val typeSlug: String
+  ) : ParentResource()
+}
+
+sealed class Parent {
+  data class ById(
+    val resourceId: String
+  ) : Parent()
+
+  data class ByExternalId(
+    val resourceTypeSlug: String,
+    val externalId: String
+  ) : Parent()
+}
+
+sealed class ParentResource {
+  data class ById(
+    val id: String
+  ) : ParentResource()
+
+  data class ByExternalId(
+    val externalId: String,
+    val typeSlug: String
+  ) : ParentResource()
+}
+
+sealed class ParentResource {
+  data class ById(
+    val id: String
+  ) : ParentResource()
+
+  data class ByExternalId(
+    val externalId: String,
+    val typeSlug: String
+  ) : ParentResource()
+}
+
 /** API accessor for Authorization. */
 class Authorization(
   internal val workos: WorkOS
@@ -32,21 +120,30 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership to check.
    * @param permissionSlug The slug of the permission to check.
-   * @param resourceId The ID of the resource.
-   * @param resourceExternalId The external ID of the resource.
-   * @param resourceTypeSlug The slug of the resource type.
+   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
+   * @param resourceTypeSlug The slug of the resource type. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    *
    * @return the AuthorizationCheck
    */
   @JvmOverloads
   fun check(
     organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
     permissionSlug: String,
     resourceId: String? = null,
     resourceExternalId: String? = null,
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationCheck {
+    val params = mutableListOf<Pair<String, String>>()
+    when (resourceTarget) {
+      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        params += "resource_external_id" to resourceTarget.resourceExternalId
+        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
+      }
+    }
     val body =
       bodyOf(
         "permission_slug" to permissionSlug,
@@ -58,6 +155,7 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/check",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -77,9 +175,6 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
-   * @param parentResourceId The WorkOS ID of the parent resource. Provide this or both `parent_resource_external_id` and `parent_resource_type_slug`, but not both.
-   * @param parentResourceTypeSlug The slug of the parent resource type. Must be provided together with `parent_resource_external_id`.
-   * @param parentResourceExternalId The application-specific external identifier of the parent resource. Must be provided together with `parent_resource_type_slug`.
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -91,9 +186,7 @@ class Authorization(
     after: String? = null,
     limit: Long? = null,
     order: EventsOrder? = null,
-    parentResourceId: String? = null,
-    parentResourceTypeSlug: String? = null,
-    parentResourceExternalId: String? = null,
+    parentResource: ParentResource,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -102,9 +195,13 @@ class Authorization(
       if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
-      if (parentResourceId != null) params += "parent_resource_id" to parentResourceId.toString()
-      if (parentResourceTypeSlug != null) params += "parent_resource_type_slug" to parentResourceTypeSlug.toString()
-      if (parentResourceExternalId != null) params += "parent_resource_external_id" to parentResourceExternalId.toString()
+      when (parentResource) {
+        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
+        is ParentResource.ByExternalId -> {
+          params += "parent_resource_type_slug" to parentResource.typeSlug
+          params += "parent_resource_external_id" to parentResource.externalId
+        }
+      }
       val effectiveAfter = afterCursor ?: after
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
@@ -115,6 +212,92 @@ class Authorization(
       )
     }
     val itemType = object : TypeReference<AuthorizationResource>() {}
+    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+  }
+
+  /**
+   * List effective permissions for an organization membership on a resource
+   *
+   * Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param resourceId The ID of the authorization resource.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listResourcePermissions(
+    organizationMembershipId: String,
+    resourceId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Long? = null,
+    order: EventsOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationPermission> {
+    fun configFor(afterCursor: String? = null): RequestConfig {
+      val params = mutableListOf<Pair<String, String>>()
+      if (before != null) params += "before" to before.toString()
+      if (limit != null) params += "limit" to limit.toString()
+      if (order != null) params += "order" to order.value
+      val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter != null) params += "after" to effectiveAfter
+      return RequestConfig(
+        method = "GET",
+        path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceId/permissions",
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    }
+    val itemType = object : TypeReference<AuthorizationPermission>() {}
+    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+  }
+
+  /**
+   * List effective permissions for an organization membership on a resource by external ID
+   *
+   * Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listEffectivePermissionsByExternalId(
+    organizationMembershipId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Long? = null,
+    order: EventsOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationPermission> {
+    fun configFor(afterCursor: String? = null): RequestConfig {
+      val params = mutableListOf<Pair<String, String>>()
+      if (before != null) params += "before" to before.toString()
+      if (limit != null) params += "limit" to limit.toString()
+      if (order != null) params += "order" to order.value
+      val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter != null) params += "after" to effectiveAfter
+      return RequestConfig(
+        method = "GET",
+        path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceTypeSlug/$externalId/permissions",
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    }
+    val itemType = object : TypeReference<AuthorizationPermission>() {}
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
@@ -165,21 +348,30 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to assign.
-   * @param resourceId The ID of the resource. Use either this or `resource_external_id` and `resource_type_slug`.
-   * @param resourceExternalId The external ID of the resource. Requires `resource_type_slug`.
-   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`.
+   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
+   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    *
    * @return the RoleAssignment
    */
   @JvmOverloads
   fun assignRole(
     organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
     roleSlug: String,
     resourceId: String? = null,
     resourceExternalId: String? = null,
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): RoleAssignment {
+    val params = mutableListOf<Pair<String, String>>()
+    when (resourceTarget) {
+      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        params += "resource_external_id" to resourceTarget.resourceExternalId
+        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
+      }
+    }
     val body =
       bodyOf(
         "role_slug" to roleSlug,
@@ -191,6 +383,7 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -204,19 +397,28 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to remove.
-   * @param resourceId The ID of the resource. Use either this or `resource_external_id` and `resource_type_slug`.
-   * @param resourceExternalId The external ID of the resource. Requires `resource_type_slug`.
-   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`.
+   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
+   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    */
   @JvmOverloads
   fun removeRole(
     organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
     roleSlug: String,
     resourceId: String? = null,
     resourceExternalId: String? = null,
     resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ) {
+    val params = mutableListOf<Pair<String, String>>()
+    when (resourceTarget) {
+      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        params += "resource_external_id" to resourceTarget.resourceExternalId
+        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
+      }
+    }
     val body =
       bodyOf(
         "role_slug" to roleSlug,
@@ -228,6 +430,7 @@ class Authorization(
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -258,9 +461,9 @@ class Authorization(
   }
 
   /**
-   * List organization roles
+   * List custom roles
    *
-   * Get a list of all roles that apply to an organization. This includes both environment roles and organization-specific roles, returned in priority order.
+   * Get a list of all roles that apply to an organization. This includes both environment roles and custom roles, returned in priority order.
    *
    * @param organizationId The ID of the organization.
    *
@@ -281,9 +484,9 @@ class Authorization(
   }
 
   /**
-   * Create a custom organization role
+   * Create a custom role
    *
-   * Create a new custom organization role. When slug is omitted, it is auto-generated from the role name.
+   * Create a new custom role for this organization.
    *
    * @param organizationId The ID of the organization.
    * @param name A descriptive name for the role.
@@ -320,9 +523,9 @@ class Authorization(
   }
 
   /**
-   * Get an organization role
+   * Get a custom role
    *
-   * Retrieve a role that applies to an organization by its slug. This can return either an environment role or an organization-specific role.
+   * Retrieve a role that applies to an organization by its slug. This can return either an environment role or a custom role.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -345,9 +548,9 @@ class Authorization(
   }
 
   /**
-   * Update an organization role
+   * Update a custom role
    *
-   * Update an existing custom organization role. Only the fields provided in the request body will be updated.
+   * Update an existing custom role. Only the fields provided in the request body will be updated.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -380,9 +583,9 @@ class Authorization(
   }
 
   /**
-   * Delete a custom organization role
+   * Delete a custom role
    *
-   * Delete an existing custom organization role.
+   * Delete an existing custom role.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -403,9 +606,9 @@ class Authorization(
   }
 
   /**
-   * Add a permission to an organization role
+   * Add a permission to a custom role
    *
-   * Add a single permission to an organization role. If the permission is already assigned to the role, this operation has no effect.
+   * Add a single permission to a custom role. If the permission is already assigned to the role, this operation has no effect.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -435,9 +638,9 @@ class Authorization(
   }
 
   /**
-   * Set permissions for a role
+   * Set permissions for a custom role
    *
-   * Replace all permissions on a role with the provided list.
+   * Replace all permissions on a custom role with the provided list.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -467,9 +670,9 @@ class Authorization(
   }
 
   /**
-   * Remove a permission from an organization role
+   * Remove a permission from a custom role
    *
-   * Remove a single permission from an organization role by its slug.
+   * Remove a single permission from a custom role by its slug.
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
@@ -528,9 +731,9 @@ class Authorization(
    * @param externalId An identifier you provide to reference the resource in your system.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource.
-   * @param parentResourceExternalId The external ID of the parent resource.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
+   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
@@ -539,6 +742,7 @@ class Authorization(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
+    parentResource: ParentResource? = null,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     parentResourceId: PatchField<String> = PatchField.Absent,
@@ -546,6 +750,16 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
+    val params = mutableListOf<Pair<String, String>>()
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
+        is ParentResource.ByExternalId -> {
+          params += "parent_resource_external_id" to parentResource.externalId
+          params += "parent_resource_type_slug" to parentResource.typeSlug
+        }
+      }
+    }
     val body =
       patchBodyOf(
         "name" to name,
@@ -558,6 +772,7 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -655,9 +870,6 @@ class Authorization(
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param organizationId Filter resources by organization ID.
    * @param resourceTypeSlug Filter resources by resource type slug.
-   * @param parentResourceId Filter resources by parent resource ID.
-   * @param parentResourceTypeSlug Filter resources by parent resource type slug.
-   * @param parentExternalId Filter resources by parent external ID.
    * @param search Search resources by name.
    *
    * @return a [com.workos.common.http.Page] of results
@@ -670,10 +882,8 @@ class Authorization(
     order: EventsOrder? = null,
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
-    parentResourceId: String? = null,
-    parentResourceTypeSlug: String? = null,
-    parentExternalId: String? = null,
     search: String? = null,
+    parent: Parent? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
     fun configFor(afterCursor: String? = null): RequestConfig {
@@ -683,10 +893,16 @@ class Authorization(
       if (order != null) params += "order" to order.value
       if (organizationId != null) params += "organization_id" to organizationId.toString()
       if (resourceTypeSlug != null) params += "resource_type_slug" to resourceTypeSlug.toString()
-      if (parentResourceId != null) params += "parent_resource_id" to parentResourceId.toString()
-      if (parentResourceTypeSlug != null) params += "parent_resource_type_slug" to parentResourceTypeSlug.toString()
-      if (parentExternalId != null) params += "parent_external_id" to parentExternalId.toString()
       if (search != null) params += "search" to search.toString()
+      if (parent != null) {
+        when (parent) {
+          is Parent.ById -> params += "parent_resource_id" to parent.resourceId
+          is Parent.ByExternalId -> {
+            params += "parent_resource_type_slug" to parent.resourceTypeSlug
+            params += "parent_external_id" to parent.externalId
+          }
+        }
+      }
       val effectiveAfter = afterCursor ?: after
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
@@ -710,14 +926,15 @@ class Authorization(
    * @param resourceTypeSlug The slug of the resource type.
    * @param organizationId The ID of the organization this resource belongs to.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource.
-   * @param parentResourceExternalId The external ID of the parent resource.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
+   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
   @JvmOverloads
   fun createResource(
+    parentResource: ParentResource? = null,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
@@ -728,6 +945,16 @@ class Authorization(
     parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
+    val params = mutableListOf<Pair<String, String>>()
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
+        is ParentResource.ByExternalId -> {
+          params += "parent_resource_external_id" to parentResource.externalId
+          params += "parent_resource_type_slug" to parentResource.typeSlug
+        }
+      }
+    }
     val body =
       bodyOf(
         "external_id" to externalId,
@@ -743,6 +970,7 @@ class Authorization(
       RequestConfig(
         method = "POST",
         path = "/authorization/resources",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -780,15 +1008,16 @@ class Authorization(
    * @param resourceId The ID of the authorization resource.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource.
-   * @param parentResourceExternalId The external ID of the parent resource.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource.
+   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
+   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
+   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
   @JvmOverloads
   fun updateResource(
     resourceId: String,
+    parentResource: ParentResource? = null,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     parentResourceId: PatchField<String> = PatchField.Absent,
@@ -796,6 +1025,16 @@ class Authorization(
     parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
+    val params = mutableListOf<Pair<String, String>>()
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
+        is ParentResource.ByExternalId -> {
+          params += "parent_resource_external_id" to parentResource.externalId
+          params += "parent_resource_type_slug" to parentResource.typeSlug
+        }
+      }
+    }
     val body =
       patchBodyOf(
         "name" to name,
@@ -808,6 +1047,7 @@ class Authorization(
       RequestConfig(
         method = "PATCH",
         path = "/authorization/resources/$resourceId",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1098,7 +1338,7 @@ class Authorization(
   /**
    * Create a permission
    *
-   * Create a new permission in your WorkOS environment. The permission can then be assigned to environment roles and organization roles.
+   * Create a new permission in your WorkOS environment. The permission can then be assigned to environment roles and custom roles.
    *
    * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
    * @param name A descriptive name for the Permission.

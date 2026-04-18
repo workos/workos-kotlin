@@ -24,7 +24,7 @@ data class Role(
   @JvmField
   @JsonProperty("description")
   val description: String?,
-  /** Whether the role is scoped to the environment or an organization. */
+  /** Whether the role is scoped to the environment or an organization (custom role). */
   @JvmField
   @JsonProperty("type")
   val type: RoleType,

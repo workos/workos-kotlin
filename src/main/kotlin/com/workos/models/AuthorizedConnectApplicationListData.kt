@@ -20,5 +20,9 @@ data class AuthorizedConnectApplicationListData(
   /** Distinguishes the authorized connect application object. */
   @JvmField
   @JsonProperty("object")
-  val `object`: String = "authorized_connect_application"
+  val `object`: String = "authorized_connect_application",
+  /** The OAuth resource associated with the authorized connect application, if one was requested. */
+  @JvmField
+  @JsonProperty("oauth_resource")
+  val oauthResource: String? = null
 )

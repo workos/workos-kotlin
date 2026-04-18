@@ -23,18 +23,6 @@ data class UpdateUser(
   @JvmField
   @JsonProperty("email_verified")
   val emailVerified: Boolean? = null,
-  /** The password to set for the user. */
-  @JvmField
-  @JsonProperty("password")
-  val password: String? = null,
-  /** The hashed password to set for the user. Mutually exclusive with `password`. */
-  @JvmField
-  @JsonProperty("password_hash")
-  val passwordHash: String? = null,
-  /** The algorithm originally used to hash the password, used when providing a `password_hash`. */
-  @JvmField
-  @JsonProperty("password_hash_type")
-  val passwordHashType: UpdateUserPasswordHashType? = null,
   /** Object containing metadata key/value pairs associated with the user. */
   @JvmField
   @JsonProperty("metadata")
@@ -46,5 +34,17 @@ data class UpdateUser(
   /** The user's preferred locale. */
   @JvmField
   @JsonProperty("locale")
-  val locale: String? = null
+  val locale: String? = null,
+  /** The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`. */
+  @JvmField
+  @JsonProperty("password")
+  val password: String? = null,
+  /** The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`. */
+  @JvmField
+  @JsonProperty("password_hash")
+  val passwordHash: String? = null,
+  /** The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`. */
+  @JvmField
+  @JsonProperty("password_hash_type")
+  val passwordHashType: UpdateUserPasswordHashType? = null
 )

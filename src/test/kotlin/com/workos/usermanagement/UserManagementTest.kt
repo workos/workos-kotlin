@@ -6,6 +6,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
+import com.workos.authorization.Password
+import com.workos.authorization.Role
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
@@ -105,7 +107,7 @@ class UserManagementTest : TestBase() {
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": " +
         "\"sample\"}"
     )
-    val result = api().authenticateWithEmailVerification("sample-arg")
+    val result = api().authenticateWithEmailVerification("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.accessToken)
     assertEquals("sample", result.refreshToken)
@@ -309,7 +311,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().create("sample-arg")
+    val result = api().create(password = Password.Plaintext("sample-arg"), "sample-arg")
     assertNotNull(result)
     assertEquals("user", result.`object`)
     assertEquals("sample", result.id)
@@ -367,7 +369,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().update("sample-arg")
+    val result = api().update("sample-arg", password = Password.Plaintext("sample-arg"))
     assertNotNull(result)
     assertEquals("user", result.`object`)
     assertEquals("sample", result.id)
@@ -692,7 +694,7 @@ class UserManagementTest : TestBase() {
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
     )
-    val result = api().createOrganizationMembership("sample-arg", "sample-arg")
+    val result = api().createOrganizationMembership(role = Role.Single("sample-arg"), "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("organization_membership", result.`object`)
     assertEquals("sample", result.id)
@@ -735,7 +737,7 @@ class UserManagementTest : TestBase() {
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
     )
-    val result = api().updateOrganizationMembership("sample-arg")
+    val result = api().updateOrganizationMembership("sample-arg", role = Role.Single("sample-arg"))
     assertNotNull(result)
     assertEquals("organization_membership", result.`object`)
     assertEquals("sample", result.id)

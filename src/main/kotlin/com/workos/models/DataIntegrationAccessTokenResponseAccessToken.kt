@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** The [access token](/reference/pipes/access-token) object, present when `active` is `true`. */
+/** The [access token](https://workos.com/docs/reference/pipes/access-token) object, present when `active` is `true`. */
 data class DataIntegrationAccessTokenResponseAccessToken(
   /** The OAuth access token for the connected integration. */
   @JvmField

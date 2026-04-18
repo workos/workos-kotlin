@@ -11,7 +11,7 @@ data class DataIntegrationAccessTokenResponse(
   @JvmField
   @JsonProperty("active")
   val active: Boolean = true,
-  /** The [access token](/reference/pipes/access-token) object, present when `active` is `true`. */
+  /** The [access token](https://workos.com/docs/reference/pipes/access-token) object, present when `active` is `true`. */
   @JvmField
   @JsonProperty("access_token")
   val accessToken: DataIntegrationAccessTokenResponseAccessToken? = null,

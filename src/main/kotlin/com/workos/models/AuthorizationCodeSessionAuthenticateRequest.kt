@@ -22,6 +22,14 @@ data class AuthorizationCodeSessionAuthenticateRequest(
   @JvmField
   @JsonProperty("grant_type")
   val grantType: String = "authorization_code",
+  /** The PKCE code verifier used to derive the code challenge passed to the authorization URL. */
+  @JvmField
+  @JsonProperty("code_verifier")
+  val codeVerifier: String? = null,
+  /** An invitation token to accept during authentication. */
+  @JvmField
+  @JsonProperty("invitation_token")
+  val invitationToken: String? = null,
   /** The IP address of the user's request. */
   @JvmField
   @JsonProperty("ip_address")
