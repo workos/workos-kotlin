@@ -46,27 +46,6 @@ sealed class Password {
   ) : Password()
 }
 
-sealed class Password {
-  data class Plaintext(
-    val password: String
-  ) : Password()
-
-  data class Hashed(
-    val hash: String,
-    val hashType: String
-  ) : Password()
-}
-
-sealed class Role {
-  data class Single(
-    val slug: String
-  ) : Role()
-
-  data class Multiple(
-    val slugs: String
-  ) : Role()
-}
-
 sealed class Role {
   data class Single(
     val slug: String
@@ -662,7 +641,7 @@ class UserManagement(
    */
   @JvmOverloads
   fun create(
-    password: Password? = null,
+    groupPassword: Password? = null,
     email: String,
     firstName: String? = null,
     lastName: String? = null,
@@ -675,12 +654,12 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): User {
     val params = mutableListOf<Pair<String, String>>()
-    if (password != null) {
-      when (password) {
-        is Password.Plaintext -> params += "password" to password.password
+    if (groupPassword != null) {
+      when (groupPassword) {
+        is Password.Plaintext -> params += "password" to groupPassword.password
         is Password.Hashed -> {
-          params += "password_hash" to password.hash
-          params += "password_hash_type" to password.hashType
+          params += "password_hash" to groupPassword.hash
+          params += "password_hash_type" to groupPassword.hashType
         }
       }
     }
@@ -775,7 +754,7 @@ class UserManagement(
   @JvmOverloads
   fun update(
     id: String,
-    password: Password? = null,
+    groupPassword: Password? = null,
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
@@ -789,12 +768,12 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): User {
     val params = mutableListOf<Pair<String, String>>()
-    if (password != null) {
-      when (password) {
-        is Password.Plaintext -> params += "password" to password.password
+    if (groupPassword != null) {
+      when (groupPassword) {
+        is Password.Plaintext -> params += "password" to groupPassword.password
         is Password.Hashed -> {
-          params += "password_hash" to password.hash
-          params += "password_hash_type" to password.hashType
+          params += "password_hash" to groupPassword.hash
+          params += "password_hash_type" to groupPassword.hashType
         }
       }
     }

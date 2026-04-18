@@ -43,39 +43,6 @@ sealed class ParentResource {
   ) : ParentResource()
 }
 
-sealed class ResourceTarget {
-  data class ById(
-    val resourceId: String
-  ) : ResourceTarget()
-
-  data class ByExternalId(
-    val resourceExternalId: String,
-    val resourceTypeSlug: String
-  ) : ResourceTarget()
-}
-
-sealed class ResourceTarget {
-  data class ById(
-    val resourceId: String
-  ) : ResourceTarget()
-
-  data class ByExternalId(
-    val resourceExternalId: String,
-    val resourceTypeSlug: String
-  ) : ResourceTarget()
-}
-
-sealed class ParentResource {
-  data class ById(
-    val id: String
-  ) : ParentResource()
-
-  data class ByExternalId(
-    val externalId: String,
-    val typeSlug: String
-  ) : ParentResource()
-}
-
 sealed class Parent {
   data class ById(
     val resourceId: String
@@ -85,28 +52,6 @@ sealed class Parent {
     val resourceTypeSlug: String,
     val externalId: String
   ) : Parent()
-}
-
-sealed class ParentResource {
-  data class ById(
-    val id: String
-  ) : ParentResource()
-
-  data class ByExternalId(
-    val externalId: String,
-    val typeSlug: String
-  ) : ParentResource()
-}
-
-sealed class ParentResource {
-  data class ById(
-    val id: String
-  ) : ParentResource()
-
-  data class ByExternalId(
-    val externalId: String,
-    val typeSlug: String
-  ) : ParentResource()
 }
 
 /** API accessor for Authorization. */

@@ -6,13 +6,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
-import com.workos.authorization.Password
-import com.workos.authorization.Role
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import com.workos.usermanagement.Password
+import com.workos.usermanagement.Role
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -311,7 +311,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().create(password = Password.Plaintext("sample-arg"), "sample-arg")
+    val result = api().create(groupPassword = Password.Plaintext("sample-arg"), "sample-arg")
     assertNotNull(result)
     assertEquals("user", result.`object`)
     assertEquals("sample", result.id)
@@ -369,7 +369,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().update("sample-arg", password = Password.Plaintext("sample-arg"))
+    val result = api().update("sample-arg", groupPassword = Password.Plaintext("sample-arg"))
     assertNotNull(result)
     assertEquals("user", result.`object`)
     assertEquals("sample", result.id)
