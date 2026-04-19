@@ -8,11 +8,9 @@ import com.workos.types.OrganizationDomainVerificationFailedDataReason
 /** The event payload. */
 data class OrganizationDomainVerificationFailedData(
   /** The reason the domain verification failed. */
-  @JvmField
   @JsonProperty("reason")
   val reason: OrganizationDomainVerificationFailedDataReason,
   /** The organization domain that failed verification. */
-  @JvmField
   @JsonProperty("organization_domain")
   val organizationDomain: OrganizationDomainVerificationFailedDataOrganizationDomain
 )

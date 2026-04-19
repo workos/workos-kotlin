@@ -2,10 +2,12 @@
 
 package com.workos.authorization
 
+import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
+import com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.authorization.Parent
@@ -33,6 +35,9 @@ class AuthorizationTest : TestBase() {
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/check"))
         .withRequestBody(matchingJsonPath("$.permission_slug"))
+        .withQueryParam("resource_id", absent())
+        .withQueryParam("resource_external_id", absent())
+        .withQueryParam("resource_type_slug", absent())
     )
   }
 
@@ -100,11 +105,14 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)
-    assertEquals("role_assignment", result.`object`)
+    assertEquals("role_assignment", result.objectType)
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
         .withRequestBody(matchingJsonPath("$.role_slug"))
+        .withQueryParam("resource_id", absent())
+        .withQueryParam("resource_external_id", absent())
+        .withQueryParam("resource_type_slug", absent())
     )
   }
 
@@ -129,7 +137,7 @@ class AuthorizationTest : TestBase() {
     stubResponse("GET", "/authorization/organizations/sample-arg/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listOrganizationRoles("sample-arg")
     assertNotNull(result)
-    assertEquals("list", result.`object`)
+    assertEquals("list", result.objectType)
   }
 
   @Test
@@ -145,7 +153,7 @@ class AuthorizationTest : TestBase() {
     val result = api().createOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -168,7 +176,7 @@ class AuthorizationTest : TestBase() {
     val result = api().getOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -187,7 +195,7 @@ class AuthorizationTest : TestBase() {
     val result = api().updateOrganizationRole("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -212,7 +220,7 @@ class AuthorizationTest : TestBase() {
     val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -235,7 +243,7 @@ class AuthorizationTest : TestBase() {
     val result = api().updateRolePermissions("sample-arg", "sample-arg", emptyList<String>())
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -259,7 +267,7 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getOrganizationResource("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
-    assertEquals("authorization_resource", result.`object`)
+    assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
     assertEquals("sample", result.organizationId)
     assertEquals("sample", result.id)
@@ -284,11 +292,17 @@ class AuthorizationTest : TestBase() {
         parentResource = ParentResource.ById("sample-arg")
       )
     assertNotNull(result)
-    assertEquals("authorization_resource", result.`object`)
+    assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
     assertEquals("sample", result.organizationId)
     assertEquals("sample", result.id)
     assertEquals("sample", result.externalId)
+    wireMockRule.verify(
+      patchRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg"))
+        .withQueryParam("parent_resource_id", absent())
+        .withQueryParam("parent_resource_external_id", absent())
+        .withQueryParam("parent_resource_type_slug", absent())
+    )
   }
 
   @Test
@@ -339,7 +353,7 @@ class AuthorizationTest : TestBase() {
         "sample-arg"
       )
     assertNotNull(result)
-    assertEquals("authorization_resource", result.`object`)
+    assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
     assertEquals("sample", result.organizationId)
     assertEquals("sample", result.id)
@@ -350,6 +364,9 @@ class AuthorizationTest : TestBase() {
         .withRequestBody(matchingJsonPath("$.name"))
         .withRequestBody(matchingJsonPath("$.resource_type_slug"))
         .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withQueryParam("parent_resource_id", absent())
+        .withQueryParam("parent_resource_external_id", absent())
+        .withQueryParam("parent_resource_type_slug", absent())
     )
   }
 
@@ -365,7 +382,7 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getResource("sample-arg")
     assertNotNull(result)
-    assertEquals("authorization_resource", result.`object`)
+    assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
     assertEquals("sample", result.organizationId)
     assertEquals("sample", result.id)
@@ -384,11 +401,17 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updateResource("sample-arg", parentResource = ParentResource.ById("sample-arg"))
     assertNotNull(result)
-    assertEquals("authorization_resource", result.`object`)
+    assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
     assertEquals("sample", result.organizationId)
     assertEquals("sample", result.id)
     assertEquals("sample", result.externalId)
+    wireMockRule.verify(
+      patchRequestedFor(urlPathMatching("/authorization/resources/sample-arg"))
+        .withQueryParam("parent_resource_id", absent())
+        .withQueryParam("parent_resource_external_id", absent())
+        .withQueryParam("parent_resource_type_slug", absent())
+    )
   }
 
   @Test
@@ -418,7 +441,7 @@ class AuthorizationTest : TestBase() {
     stubResponse("GET", "/authorization/roles", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listEnvironmentRoles()
     assertNotNull(result)
-    assertEquals("list", result.`object`)
+    assertEquals("list", result.objectType)
   }
 
   @Test
@@ -434,7 +457,7 @@ class AuthorizationTest : TestBase() {
     val result = api().createEnvironmentRole("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -458,7 +481,7 @@ class AuthorizationTest : TestBase() {
     val result = api().getEnvironmentRole("sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -477,7 +500,7 @@ class AuthorizationTest : TestBase() {
     val result = api().updateEnvironmentRole("sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -496,7 +519,7 @@ class AuthorizationTest : TestBase() {
     val result = api().addEnvironmentRolePermission("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -519,7 +542,7 @@ class AuthorizationTest : TestBase() {
     val result = api().setEnvironmentRolePermissions("sample-arg", emptyList<String>())
     assertNotNull(result)
     assertEquals("sample", result.slug)
-    assertEquals("role", result.`object`)
+    assertEquals("role", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.resourceTypeSlug)
@@ -543,7 +566,7 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().createPermission("sample-arg", "sample-arg")
     assertNotNull(result)
-    assertEquals("permission", result.`object`)
+    assertEquals("permission", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.slug)
     assertEquals("sample", result.name)
@@ -566,7 +589,7 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().getPermission("sample-arg")
     assertNotNull(result)
-    assertEquals("permission", result.`object`)
+    assertEquals("permission", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.slug)
     assertEquals("sample", result.name)
@@ -584,7 +607,7 @@ class AuthorizationTest : TestBase() {
     )
     val result = api().updatePermission("sample-arg")
     assertNotNull(result)
-    assertEquals("permission", result.`object`)
+    assertEquals("permission", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.slug)
     assertEquals("sample", result.name)

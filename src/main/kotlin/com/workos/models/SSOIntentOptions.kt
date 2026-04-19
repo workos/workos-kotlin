@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSOIntentOptions model. */
 data class SSOIntentOptions(
   /** The bookmark slug to use for SSO. */
-  @JvmField
   @JsonProperty("bookmark_slug")
   val bookmarkSlug: String? = null,
   /** The SSO provider type to configure. */
-  @JvmField
   @JsonProperty("provider_type")
   val providerType: String = "GoogleSAML"
 )

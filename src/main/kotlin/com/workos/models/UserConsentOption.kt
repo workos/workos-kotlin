@@ -7,19 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UserConsentOption model. */
 data class UserConsentOption(
   /** The claim name for this consent option. */
-  @JvmField
   @JsonProperty("claim")
   val claim: String,
   /** A human-readable label for this consent option. */
-  @JvmField
   @JsonProperty("label")
   val label: String,
   /** The available choices for this consent option. */
-  @JvmField
   @JsonProperty("choices")
   val choices: List<UserConsentOptionChoice>,
   /** The type of consent option. */
-  @JvmField
   @JsonProperty("type")
   val type: String = "enum"
 )

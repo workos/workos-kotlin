@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DsyncActivatedDataDomain model. */
 data class DsyncActivatedDataDomain(
   /** Unique identifier of the organization domain. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The domain value. */
-  @JvmField
   @JsonProperty("domain")
   val domain: String,
   /** Distinguishes the organization domain object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "organization_domain"
+  val objectType: String = "organization_domain"
 )

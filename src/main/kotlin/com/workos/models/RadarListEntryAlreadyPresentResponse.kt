@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** RadarListEntryAlreadyPresentResponse model. */
 data class RadarListEntryAlreadyPresentResponse(
   /** A message indicating the entry already exists. */
-  @JvmField
   @JsonProperty("message")
   val message: String
 )

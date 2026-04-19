@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The primary role assigned to the user. */
 data class SlimRole(
   /** The slug of the assigned role. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String
 )

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** ExternalAuthCompleteResponse model. */
 data class ExternalAuthCompleteResponse(
   /** URI to redirect the user back to AuthKit to complete the OAuth flow. */
-  @JvmField
   @JsonProperty("redirect_uri")
   val redirectUri: String
 )

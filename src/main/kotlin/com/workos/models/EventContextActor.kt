@@ -8,15 +8,12 @@ import com.workos.types.EventContextActorSource
 /** The actor who performed the action. */
 data class EventContextActor(
   /** Unique identifier of the actor. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The source of the actor that performed the action. */
-  @JvmField
   @JsonProperty("source")
   val source: EventContextActorSource,
   /** The name of the actor. */
-  @JvmField
   @JsonProperty("name")
   val name: String?
 )

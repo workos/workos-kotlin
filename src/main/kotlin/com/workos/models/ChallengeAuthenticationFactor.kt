@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** ChallengeAuthenticationFactor model. */
 data class ChallengeAuthenticationFactor(
   /** A custom template for the SMS message. Use the {{code}} placeholder to include the verification code. */
-  @JvmField
   @JsonProperty("sms_template")
   val smsTemplate: String? = null
 )

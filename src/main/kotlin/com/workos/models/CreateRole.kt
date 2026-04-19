@@ -7,19 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateRole model. */
 data class CreateRole(
   /** A unique slug for the role. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String,
   /** A descriptive name for the role. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An optional description of the role. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The slug of the resource type the role is scoped to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String? = null
 )

@@ -10,43 +10,33 @@ import java.time.OffsetDateTime
 /** OrganizationDomain model. */
 data class OrganizationDomain(
   /** Unique identifier of the organization domain. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** ID of the parent Organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** Domain for the organization domain. */
-  @JvmField
   @JsonProperty("domain")
   val domain: String,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the organization domain object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "organization_domain",
+  val objectType: String = "organization_domain",
   /** Verification state of the domain. */
-  @JvmField
   @JsonProperty("state")
   val state: OrganizationDomainState? = null,
   /** The prefix used in DNS verification. */
-  @JvmField
   @JsonProperty("verification_prefix")
   val verificationPrefix: String? = null,
   /** Validation token to be used in DNS TXT record. */
-  @JvmField
   @JsonProperty("verification_token")
   val verificationToken: String? = null,
   /** Strategy used to verify the domain. */
-  @JvmField
   @JsonProperty("verification_strategy")
   val verificationStrategy: OrganizationDomainVerificationStrategy? = null
 )

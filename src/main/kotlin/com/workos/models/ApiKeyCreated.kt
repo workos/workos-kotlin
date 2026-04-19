@@ -12,7 +12,6 @@ data class ApiKeyCreated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: ApiKeyCreatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class ApiKeyCreated(
   /** Always `"api_key.created"`. */
   @JsonProperty("event")
   override val event: String = "api_key.created",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

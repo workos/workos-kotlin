@@ -7,23 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateAuthorizationResource model. */
 data class UpdateAuthorizationResource(
   /** A display name for the resource. */
-  @JvmField
   @JsonProperty("name")
   val name: String? = null,
   /** An optional description of the resource. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`. */
-  @JvmField
   @JsonProperty("parent_resource_id")
   val parentResourceId: String? = null,
   /** The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`. */
-  @JvmField
   @JsonProperty("parent_resource_external_id")
   val parentResourceExternalId: String? = null,
   /** The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`. */
-  @JvmField
   @JsonProperty("parent_resource_type_slug")
   val parentResourceTypeSlug: String? = null
 )

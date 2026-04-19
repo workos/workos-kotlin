@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** TOTP-based authentication factor details. */
 data class AuthenticationFactorTotp(
   /** Your application or company name displayed in the user's authenticator app. Defaults to your WorkOS team name. */
-  @JvmField
   @JsonProperty("issuer")
   val issuer: String,
   /** The user's account name displayed in their authenticator app. Defaults to the user's email. */
-  @JvmField
   @JsonProperty("user")
   val user: String
 )

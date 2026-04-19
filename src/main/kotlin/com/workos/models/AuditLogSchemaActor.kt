@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogSchemaActor model. */
 data class AuditLogSchemaActor(
   /** JSON schema for actor metadata. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, Any>
 )

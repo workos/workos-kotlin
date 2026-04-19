@@ -7,32 +7,25 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateOrganization model. */
 data class UpdateOrganization(
   /** The name of the organization. */
-  @JvmField
   @JsonProperty("name")
   val name: String? = null,
   /** Whether the organization allows profiles from outside the organization to sign in. */
-  @JvmField
   @JsonProperty("allow_profiles_outside_organization")
   val allowProfilesOutsideOrganization: Boolean? = null,
   /** The domains associated with the organization. Deprecated in favor of `domain_data`. */
-  @JvmField
   @JsonProperty("domains")
   @Deprecated("Deprecated field")
   val domains: List<String>? = null,
   /** The domains associated with the organization, including verification state. */
-  @JvmField
   @JsonProperty("domain_data")
   val domainData: List<OrganizationDomainData>? = null,
   /** The Stripe customer ID associated with the organization. */
-  @JvmField
   @JsonProperty("stripe_customer_id")
   val stripeCustomerId: String? = null,
   /** Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null,
   /** An external identifier for the Organization. */
-  @JvmField
   @JsonProperty("external_id")
   val externalId: String? = null
 )

@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Additional context about the event. */
 data class FlagUpdatedContext(
   /** The client ID associated with the flag event. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The actor who performed the action. */
-  @JvmField
   @JsonProperty("actor")
   val actor: FlagUpdatedContextActor,
   /** Attributes that changed from their previous values. */
-  @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: FlagUpdatedContextPreviousAttribute? = null
 )

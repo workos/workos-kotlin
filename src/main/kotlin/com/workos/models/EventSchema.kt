@@ -15,18 +15,15 @@ data class EventSchema(
   @JsonProperty("event")
   override val event: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: Map<String, Any>,
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event",
+  val objectType: String = "event",
   /** Additional context about the event. */
-  @JvmField
   @JsonProperty("context")
   val context: Map<String, Any>? = null
 ) : WorkOSEvent

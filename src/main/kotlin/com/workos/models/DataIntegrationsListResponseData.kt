@@ -8,51 +8,39 @@ import com.workos.types.DataIntegrationsListResponseDataOwnership
 /** DataIntegrationsListResponseData model. */
 data class DataIntegrationsListResponseData(
   /** The unique identifier of the provider. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The display name of the provider (e.g., "GitHub", "Slack"). */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** A description of the provider explaining how it will be used, if configured. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** The slug identifier used in API calls (e.g., `github`, `slack`, `notion`). */
-  @JvmField
   @JsonProperty("slug")
   val slug: String,
   /** The type of integration (e.g., `github`, `slack`). */
-  @JvmField
   @JsonProperty("integration_type")
   val integrationType: String,
   /** The type of credentials used by the provider (e.g., `oauth2`). */
-  @JvmField
   @JsonProperty("credentials_type")
   val credentialsType: String,
   /** The OAuth scopes configured for this provider, or `null` if none are configured. */
-  @JvmField
   @JsonProperty("scopes")
   val scopes: List<String>?,
   /** Whether the provider is owned by a user or organization. */
-  @JvmField
   @JsonProperty("ownership")
   val ownership: DataIntegrationsListResponseDataOwnership,
   /** The timestamp when the provider was created. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
   /** The timestamp when the provider was last updated. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String,
   /** The user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` if the user has not connected. */
-  @JvmField
   @JsonProperty("connected_account")
   val connectedAccount: DataIntegrationsListResponseDataConnectedAccount?,
   /** Distinguishes the data provider object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "data_provider"
+  val objectType: String = "data_provider"
 )

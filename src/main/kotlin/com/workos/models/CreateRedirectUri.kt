@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateRedirectUri model. */
 data class CreateRedirectUri(
   /** The redirect URI to create. */
-  @JvmField
   @JsonProperty("uri")
   val uri: String
 )

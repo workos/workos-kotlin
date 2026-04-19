@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** PortalLinkResponse model. */
 data class PortalLinkResponse(
   /** An ephemeral link to initiate the Admin Portal. */
-  @JvmField
   @JsonProperty("link")
   val link: String
 )

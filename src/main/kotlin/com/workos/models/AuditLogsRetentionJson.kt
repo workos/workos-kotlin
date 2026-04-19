@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogsRetentionJson model. */
 data class AuditLogsRetentionJson(
   /** The number of days Audit Log events will be retained before being permanently deleted. Valid values are 30 and 365. */
-  @JvmField
   @JsonProperty("retention_period_in_days")
   val retentionPeriodInDays: Long?
 )

@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** EmailChangeConfirmation model. */
 data class EmailChangeConfirmation(
   /** The user object. */
-  @JvmField
   @JsonProperty("user")
   val user: EmailChangeConfirmationUser,
   /** Distinguishes the email change confirmation object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "email_change_confirmation"
+  val objectType: String = "email_change_confirmation"
 )

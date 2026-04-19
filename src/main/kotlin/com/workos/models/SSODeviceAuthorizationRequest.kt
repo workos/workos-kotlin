@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSODeviceAuthorizationRequest model. */
 data class SSODeviceAuthorizationRequest(
   /** The WorkOS client ID for your application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String
 )

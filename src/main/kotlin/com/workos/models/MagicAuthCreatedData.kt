@@ -8,31 +8,24 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class MagicAuthCreatedData(
   /** The unique ID of the Magic Auth code. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The unique ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The timestamp when the Magic Auth code expires. */
-  @JvmField
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Magic Auth object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "magic_auth"
+  val objectType: String = "magic_auth"
 )

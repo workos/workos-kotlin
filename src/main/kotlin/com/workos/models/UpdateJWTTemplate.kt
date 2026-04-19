@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateJWTTemplate model. */
 data class UpdateJWTTemplate(
   /** The JWT template content as a Liquid template string. */
-  @JvmField
   @JsonProperty("content")
   val content: String
 )

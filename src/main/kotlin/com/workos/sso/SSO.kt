@@ -49,7 +49,6 @@ class SSO(
   ): Page<Connection> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (connectionType != null) params += "connection_type" to connectionType.value
@@ -57,6 +56,7 @@ class SSO(
       if (organizationId != null) params += "organization_id" to organizationId.toString()
       if (search != null) params += "search" to search.toString()
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",

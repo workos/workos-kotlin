@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** FlagRuleUpdatedContextConfiguredTargetUser model. */
 data class FlagRuleUpdatedContextConfiguredTargetUser(
   /** The ID of the user. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The email of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String
 )

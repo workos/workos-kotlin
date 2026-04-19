@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UserManagementLoginRequest model. */
 data class UserManagementLoginRequest(
   /** Identifier provided when AuthKit redirected to your login page. */
-  @JvmField
   @JsonProperty("external_auth_id")
   val externalAuthId: String,
   /** The user to create or update in AuthKit. */
-  @JvmField
   @JsonProperty("user")
   val user: UserObject,
   /** Array of [User Consent Options](https://workos.com/docs/reference/workos-connect/standalone/user-consent-options) to store with the session. */
-  @JvmField
   @JsonProperty("user_consent_options")
   val userConsentOptions: List<UserConsentOption>? = null
 )

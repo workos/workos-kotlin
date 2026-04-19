@@ -8,23 +8,18 @@ import com.workos.types.AuthenticationFactorsCreateRequestType
 /** AuthenticationFactorsCreateRequest model. */
 data class AuthenticationFactorsCreateRequest(
   /** The type of factor to enroll. */
-  @JvmField
   @JsonProperty("type")
   val type: AuthenticationFactorsCreateRequestType,
   /** Required when type is 'sms'. */
-  @JvmField
   @JsonProperty("phone_number")
   val phoneNumber: String? = null,
   /** Required when type is 'totp'. */
-  @JvmField
   @JsonProperty("totp_issuer")
   val totpIssuer: String? = null,
   /** Required when type is 'totp'. */
-  @JvmField
   @JsonProperty("totp_user")
   val totpUser: String? = null,
   /** The ID of the user to associate the factor with. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String? = null
 )

@@ -7,19 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateOAuthApplication model. */
 data class UpdateOAuthApplication(
   /** The name of the application. */
-  @JvmField
   @JsonProperty("name")
   val name: String? = null,
   /** A description for the application. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The OAuth scopes granted to the application. */
-  @JvmField
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
   /** Updated redirect URIs for the application. OAuth applications only. */
-  @JvmField
   @JsonProperty("redirect_uris")
   val redirectUris: List<RedirectUriInput>? = null
 )

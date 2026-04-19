@@ -8,11 +8,9 @@ import com.workos.types.FlagRuleUpdatedContextPreviousAttributeContextAccessType
 /** The previous context attributes of the flag rule. */
 data class FlagRuleUpdatedContextPreviousAttributeContext(
   /** The previous access type of the flag rule. */
-  @JvmField
   @JsonProperty("access_type")
   val accessType: FlagRuleUpdatedContextPreviousAttributeContextAccessType? = null,
   /** The previous configured targets for the flag rule. */
-  @JvmField
   @JsonProperty("configured_targets")
   val configuredTargets: FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget? = null
 )

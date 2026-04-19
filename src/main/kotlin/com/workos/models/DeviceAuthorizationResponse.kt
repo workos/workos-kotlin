@@ -7,27 +7,21 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DeviceAuthorizationResponse model. */
 data class DeviceAuthorizationResponse(
   /** The device verification code. */
-  @JvmField
   @JsonProperty("device_code")
   val deviceCode: String,
   /** The end-user verification code. */
-  @JvmField
   @JsonProperty("user_code")
   val userCode: String,
   /** The end-user verification URI. */
-  @JvmField
   @JsonProperty("verification_uri")
   val verificationUri: String,
   /** Lifetime in seconds of the codes. */
-  @JvmField
   @JsonProperty("expires_in")
   val expiresIn: Double,
   /** Verification URI that includes the user code. */
-  @JvmField
   @JsonProperty("verification_uri_complete")
   val verificationUriComplete: String? = null,
   /** Minimum polling interval in seconds. */
-  @JvmField
   @JsonProperty("interval")
   val interval: Double? = null
 )

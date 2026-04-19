@@ -7,23 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSOTokenResponse model. */
 data class SSOTokenResponse(
   /** An access token that can be exchanged for a user profile. Access tokens are short-lived — see the `expires_in` field for the exact lifetime. */
-  @JvmField
   @JsonProperty("access_token")
   val accessToken: String,
   /** The lifetime of the access token in seconds. */
-  @JvmField
   @JsonProperty("expires_in")
   val expiresIn: Long,
   /** The user profile returned by the identity provider. */
-  @JvmField
   @JsonProperty("profile")
   val profile: Profile,
   /** The type of token issued. */
-  @JvmField
   @JsonProperty("token_type")
   val tokenType: String = "Bearer",
   /** OAuth tokens issued by the identity provider, if available. */
-  @JvmField
   @JsonProperty("oauth_tokens")
   val oauthTokens: SSOTokenResponseOAuthToken? = null
 )

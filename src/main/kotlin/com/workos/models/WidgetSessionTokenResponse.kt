@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** WidgetSessionTokenResponse model. */
 data class WidgetSessionTokenResponse(
   /** The widget session token. */
-  @JvmField
   @JsonProperty("token")
   val token: String
 )

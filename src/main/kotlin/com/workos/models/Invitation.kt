@@ -9,59 +9,45 @@ import java.time.OffsetDateTime
 /** Invitation model. */
 data class Invitation(
   /** The unique ID of the invitation. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The email address of the recipient. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The state of the invitation. */
-  @JvmField
   @JsonProperty("state")
   val state: InvitationState,
   /** The timestamp when the invitation was accepted, or null if not yet accepted. */
-  @JvmField
   @JsonProperty("accepted_at")
   val acceptedAt: OffsetDateTime?,
   /** The timestamp when the invitation was revoked, or null if not revoked. */
-  @JvmField
   @JsonProperty("revoked_at")
   val revokedAt: OffsetDateTime?,
   /** The timestamp when the invitation expires. */
-  @JvmField
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
   /** The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
   /** The ID of the user who invited the recipient, if provided. */
-  @JvmField
   @JsonProperty("inviter_user_id")
   val inviterUserId: String?,
   /** The ID of the user who accepted the invitation, once accepted. */
-  @JvmField
   @JsonProperty("accepted_user_id")
   val acceptedUserId: String?,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** The token used to accept the invitation. */
-  @JvmField
   @JsonProperty("token")
   val token: String,
   /** The URL where the recipient can accept the invitation. */
-  @JvmField
   @JsonProperty("accept_invitation_url")
   val acceptInvitationUrl: String,
   /** Distinguishes the invitation object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "invitation"
+  val objectType: String = "invitation"
 )

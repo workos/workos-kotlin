@@ -8,59 +8,45 @@ import java.time.OffsetDateTime
 /** ConnectApplication model. */
 data class ConnectApplication(
   /** The unique ID of the connect application. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The client ID of the connect application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** A description of the connect application. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** The name of the connect application. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The scopes available for this application. */
-  @JvmField
   @JsonProperty("scopes")
   val scopes: List<String>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the connect application object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connect_application",
+  val objectType: String = "connect_application",
   /** The type of the application. */
-  @JvmField
   @JsonProperty("application_type")
   val applicationType: String = "m2m",
   /** The ID of the organization the application belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null,
   /** The redirect URIs configured for this application. */
-  @JvmField
   @JsonProperty("redirect_uris")
   val redirectUris: List<ConnectApplicationRedirectUri>? = null,
   /** Whether the application uses PKCE for authorization. */
-  @JvmField
   @JsonProperty("uses_pkce")
   val usesPkce: Boolean? = null,
   /** Whether the application is a first-party application. */
-  @JvmField
   @JsonProperty("is_first_party")
   val isFirstParty: Boolean = true,
   /** Whether the application was dynamically registered. */
-  @JvmField
   @JsonProperty("was_dynamically_registered")
   val wasDynamicallyRegistered: Boolean = false
 )

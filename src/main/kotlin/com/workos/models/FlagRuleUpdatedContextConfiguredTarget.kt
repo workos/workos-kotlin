@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The configured targets for the flag rule. */
 data class FlagRuleUpdatedContextConfiguredTarget(
   /** The organizations targeted by the flag rule. */
-  @JvmField
   @JsonProperty("organizations")
   val organizations: List<FlagRuleUpdatedContextConfiguredTargetOrganization>,
   /** The users targeted by the flag rule. */
-  @JvmField
   @JsonProperty("users")
   val users: List<FlagRuleUpdatedContextConfiguredTargetUser>
 )

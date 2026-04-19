@@ -7,22 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuthorizedConnectApplicationListData model. */
 data class AuthorizedConnectApplicationListData(
   /** The unique ID of the authorized connect application. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The scopes granted by the user to the application. */
-  @JvmField
   @JsonProperty("granted_scopes")
   val grantedScopes: List<String>,
-  @JvmField
   @JsonProperty("application")
   val application: ConnectApplication,
   /** Distinguishes the authorized connect application object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "authorized_connect_application",
+  val objectType: String = "authorized_connect_application",
   /** The OAuth resource associated with the authorized connect application, if one was requested. */
-  @JvmField
   @JsonProperty("oauth_resource")
   val oauthResource: String? = null
 )

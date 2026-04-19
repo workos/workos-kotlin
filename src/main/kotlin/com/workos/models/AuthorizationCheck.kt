@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuthorizationCheck model. */
 data class AuthorizationCheck(
   /** Whether the organization membership has the specified permission on the resource. */
-  @JvmField
   @JsonProperty("authorized")
   val authorized: Boolean
 )

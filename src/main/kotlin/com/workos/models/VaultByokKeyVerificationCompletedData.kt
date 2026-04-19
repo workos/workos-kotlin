@@ -8,15 +8,12 @@ import com.workos.types.VaultByokKeyVerificationCompletedDataKeyProvider
 /** The event payload. */
 data class VaultByokKeyVerificationCompletedData(
   /** The unique identifier of the organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The external key provider used for BYOK. */
-  @JvmField
   @JsonProperty("key_provider")
   val keyProvider: VaultByokKeyVerificationCompletedDataKeyProvider,
   /** Whether the BYOK key verification completed successfully. */
-  @JvmField
   @JsonProperty("verified")
   val verified: Boolean
 )

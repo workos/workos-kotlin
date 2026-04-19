@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UserConsentOptionChoice model. */
 data class UserConsentOptionChoice(
   /** The value of this choice. */
-  @JvmField
   @JsonProperty("value")
   val value: String? = null,
   /** A human-readable label for this choice. */
-  @JvmField
   @JsonProperty("label")
   val label: String? = null
 )

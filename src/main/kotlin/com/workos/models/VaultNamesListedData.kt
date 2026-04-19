@@ -8,14 +8,11 @@ import com.workos.types.VaultNamesListedDataActorSource
 /** The event payload. */
 data class VaultNamesListedData(
   /** The unique identifier of the actor. */
-  @JvmField
   @JsonProperty("actor_id")
   val actorId: String,
-  @JvmField
   @JsonProperty("actor_source")
   val actorSource: VaultNamesListedDataActorSource,
   /** The name of the actor. */
-  @JvmField
   @JsonProperty("actor_name")
   val actorName: String
 )

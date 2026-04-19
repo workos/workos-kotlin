@@ -51,7 +51,7 @@ class MultiFactorAuthTest : TestBase() {
         AuthenticationFactorsCreateRequestType.values().first { it != AuthenticationFactorsCreateRequestType.Unknown }
       )
     assertNotNull(result)
-    assertEquals("authentication_factor", result.`object`)
+    assertEquals("authentication_factor", result.objectType)
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/factors/enroll"))
@@ -70,7 +70,7 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().getFactor("sample-arg")
     assertNotNull(result)
-    assertEquals("authentication_factor", result.`object`)
+    assertEquals("authentication_factor", result.objectType)
     assertEquals("sample", result.id)
   }
 
@@ -91,7 +91,7 @@ class MultiFactorAuthTest : TestBase() {
     )
     val result = api().challengeFactor("sample-arg")
     assertNotNull(result)
-    assertEquals("authentication_challenge", result.`object`)
+    assertEquals("authentication_challenge", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.authenticationFactorId)
   }

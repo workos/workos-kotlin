@@ -31,7 +31,6 @@ import com.workos.models.UserOrganizationMembership
 import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
-import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
 
@@ -603,13 +602,13 @@ class UserManagement(
   ): Page<User> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (organization != null) params += "organization" to organization.toString()
       if (organizationId != null) params += "organization_id" to organizationId.toString()
       if (email != null) params += "email" to email.toString()
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -633,36 +632,20 @@ class UserManagement(
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
-   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
-   * @param passwordHash The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
-   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
    *
    * @return the User
    */
   @JvmOverloads
   fun create(
-    groupPassword: Password? = null,
+    password: Password? = null,
     email: String,
     firstName: String? = null,
     lastName: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
-    password: String? = null,
-    passwordHash: String? = null,
-    passwordHashType: CreateUserPasswordHashType? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
-    if (groupPassword != null) {
-      when (groupPassword) {
-        is Password.Plaintext -> params += "password" to groupPassword.password
-        is Password.Hashed -> {
-          params += "password_hash" to groupPassword.hash
-          params += "password_hash_type" to groupPassword.hashType
-        }
-      }
-    }
     val body =
       bodyOf(
         "email" to email,
@@ -670,16 +653,21 @@ class UserManagement(
         "last_name" to lastName,
         "email_verified" to emailVerified,
         "metadata" to metadata,
-        "external_id" to externalId,
-        "password" to password,
-        "password_hash" to passwordHash,
-        "password_hash_type" to passwordHashType
+        "external_id" to externalId
       )
+    if (password != null) {
+      when (password) {
+        is Password.Plaintext -> body["password"] = password.password
+        is Password.Hashed -> {
+          body["password_hash"] = password.hash
+          body["password_hash_type"] = password.hashType
+        }
+      }
+    }
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -745,16 +733,13 @@ class UserManagement(
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
    * @param locale The user's preferred locale.
-   * @param password The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`.
-   * @param passwordHash The hashed password to set for the user. Required with `password_hash_type`. Mutually exclusive with `password`.
-   * @param passwordHashType The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`.
    *
    * @return the User
    */
   @JvmOverloads
   fun update(
     id: String,
-    groupPassword: Password? = null,
+    password: Password? = null,
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
@@ -762,21 +747,8 @@ class UserManagement(
     metadata: Map<String, String>? = null,
     externalId: String? = null,
     locale: String? = null,
-    password: String? = null,
-    passwordHash: String? = null,
-    passwordHashType: CreateUserPasswordHashType? = null,
     requestOptions: RequestOptions? = null
   ): User {
-    val params = mutableListOf<Pair<String, String>>()
-    if (groupPassword != null) {
-      when (groupPassword) {
-        is Password.Plaintext -> params += "password" to groupPassword.password
-        is Password.Hashed -> {
-          params += "password_hash" to groupPassword.hash
-          params += "password_hash_type" to groupPassword.hashType
-        }
-      }
-    }
     val body =
       bodyOf(
         "email" to email,
@@ -785,16 +757,21 @@ class UserManagement(
         "email_verified" to emailVerified,
         "metadata" to metadata,
         "external_id" to externalId,
-        "locale" to locale,
-        "password" to password,
-        "password_hash" to passwordHash,
-        "password_hash_type" to passwordHashType
+        "locale" to locale
       )
+    if (password != null) {
+      when (password) {
+        is Password.Plaintext -> body["password"] = password.password
+        is Password.Hashed -> {
+          body["password_hash"] = password.hash
+          body["password_hash_type"] = password.hashType
+        }
+      }
+    }
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/users/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -985,10 +962,10 @@ class UserManagement(
   ): Page<UserSessionsListItem> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -1027,12 +1004,12 @@ class UserManagement(
   ): Page<UserInvite> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (organizationId != null) params += "organization_id" to organizationId.toString()
       if (email != null) params += "email" to email.toString()
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -1324,13 +1301,13 @@ class UserManagement(
   ): Page<UserOrganizationMembership> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (organizationId != null) params += "organization_id" to organizationId.toString()
       if (statuses != null) params += "statuses" to statuses.joinToString(",") { it.value }
       if (userId != null) params += "user_id" to userId.toString()
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -1352,8 +1329,6 @@ class UserManagement(
    *
    * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
-   * @param roleSlug A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
-   * @param roleSlugs An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
    *
    * @return the OrganizationMembership
    */
@@ -1362,29 +1337,23 @@ class UserManagement(
     role: Role? = null,
     userId: String,
     organizationId: String,
-    roleSlug: String? = null,
-    roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
-    if (role != null) {
-      when (role) {
-        is Role.Single -> params += "role_slug" to role.slug
-        is Role.Multiple -> params += "role_slugs" to role.slugs
-      }
-    }
     val body =
       bodyOf(
         "user_id" to userId,
-        "organization_id" to organizationId,
-        "role_slug" to roleSlug,
-        "role_slugs" to roleSlugs
+        "organization_id" to organizationId
       )
+    if (role != null) {
+      when (role) {
+        is Role.Single -> body["role_slug"] = role.slug
+        is Role.Multiple -> body["role_slugs"] = role.slugs
+      }
+    }
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/organization_memberships",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1420,8 +1389,6 @@ class UserManagement(
    * Update the details of an existing organization membership.
    *
    * @param id The unique ID of the organization membership.
-   * @param roleSlug A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`.
-   * @param roleSlugs An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`.
    *
    * @return the UserOrganizationMembership
    */
@@ -1429,27 +1396,19 @@ class UserManagement(
   fun updateOrganizationMembership(
     id: String,
     role: Role? = null,
-    roleSlug: String? = null,
-    roleSlugs: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val params = mutableListOf<Pair<String, String>>()
+    val body = linkedMapOf<String, Any?>()
     if (role != null) {
       when (role) {
-        is Role.Single -> params += "role_slug" to role.slug
-        is Role.Multiple -> params += "role_slugs" to role.slugs
+        is Role.Single -> body["role_slug"] = role.slug
+        is Role.Multiple -> body["role_slugs"] = role.slugs
       }
     }
-    val body =
-      bodyOf(
-        "role_slug" to roleSlug,
-        "role_slugs" to roleSlugs
-      )
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/$id",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1589,10 +1548,10 @@ class UserManagement(
   ): Page<AuthorizedConnectApplicationListData> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",

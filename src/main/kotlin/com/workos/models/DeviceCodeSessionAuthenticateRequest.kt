@@ -7,27 +7,21 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DeviceCodeSessionAuthenticateRequest model. */
 data class DeviceCodeSessionAuthenticateRequest(
   /** The client ID of the application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The device verification code. */
-  @JvmField
   @JsonProperty("device_code")
   val deviceCode: String,
   /** Always `"urn:ietf:params:oauth:grant-type:device_code"`. */
-  @JvmField
   @JsonProperty("grant_type")
   val grantType: String = "urn:ietf:params:oauth:grant-type:device_code",
   /** The IP address of the user's request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
   /** A unique identifier for the device. */
-  @JvmField
   @JsonProperty("device_id")
   val deviceId: String? = null,
   /** The user agent string from the user's browser. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String? = null
 )

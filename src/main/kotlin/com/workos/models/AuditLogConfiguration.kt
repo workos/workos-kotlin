@@ -8,19 +8,15 @@ import com.workos.types.AuditLogConfigurationState
 /** AuditLogConfiguration model. */
 data class AuditLogConfiguration(
   /** Unique identifier of the Organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The number of days Audit Log events will be retained before being permanently deleted. */
-  @JvmField
   @JsonProperty("retention_period_in_days")
   val retentionPeriodInDays: Long,
   /** The current state of the audit log configuration for the organization. */
-  @JvmField
   @JsonProperty("state")
   val state: AuditLogConfigurationState,
   /** The Audit Log Stream currently configured for the organization, if any. */
-  @JvmField
   @JsonProperty("log_stream")
   val logStream: AuditLogConfigurationLogStream? = null
 )

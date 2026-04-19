@@ -7,35 +7,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** EmailVerificationCodeSessionAuthenticateRequest model. */
 data class EmailVerificationCodeSessionAuthenticateRequest(
   /** The client ID of the application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The client secret of the application. */
-  @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
   /** The email verification code. */
-  @JvmField
   @JsonProperty("code")
   val code: String,
   /** The pending authentication token from a previous authentication attempt. */
-  @JvmField
   @JsonProperty("pending_authentication_token")
   val pendingAuthenticationToken: String,
   /** Always `"urn:workos:oauth:grant-type:email-verification:code"`. */
-  @JvmField
   @JsonProperty("grant_type")
   val grantType: String = "urn:workos:oauth:grant-type:email-verification:code",
   /** The IP address of the user's request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
   /** A unique identifier for the device. */
-  @JvmField
   @JsonProperty("device_id")
   val deviceId: String? = null,
   /** The user agent string from the user's browser. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String? = null
 )

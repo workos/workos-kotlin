@@ -12,21 +12,18 @@ data class FlagCreated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: FlagCreatedData,
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
   /** Additional context about the event. */
-  @JvmField
   @JsonProperty("context")
   val context: FlagCreatedContext,
   /** Always `"flag.created"`. */
   @JsonProperty("event")
   override val event: String = "flag.created",
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

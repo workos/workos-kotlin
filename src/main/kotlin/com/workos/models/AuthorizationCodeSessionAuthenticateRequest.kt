@@ -7,39 +7,30 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuthorizationCodeSessionAuthenticateRequest model. */
 data class AuthorizationCodeSessionAuthenticateRequest(
   /** The client ID of the application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The client secret of the application. */
-  @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
   /** The authorization code received from the redirect. */
-  @JvmField
   @JsonProperty("code")
   val code: String,
   /** Always `"authorization_code"`. */
-  @JvmField
   @JsonProperty("grant_type")
   val grantType: String = "authorization_code",
   /** The PKCE code verifier used to derive the code challenge passed to the authorization URL. */
-  @JvmField
   @JsonProperty("code_verifier")
   val codeVerifier: String? = null,
   /** An invitation token to accept during authentication. */
-  @JvmField
   @JsonProperty("invitation_token")
   val invitationToken: String? = null,
   /** The IP address of the user's request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
   /** A unique identifier for the device. */
-  @JvmField
   @JsonProperty("device_id")
   val deviceId: String? = null,
   /** The user agent string from the user's browser. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String? = null
 )

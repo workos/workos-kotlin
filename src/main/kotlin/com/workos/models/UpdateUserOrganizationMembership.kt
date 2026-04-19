@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateUserOrganizationMembership model. */
 data class UpdateUserOrganizationMembership(
   /** A single role identifier. Defaults to `member` or the explicit default role. Mutually exclusive with `role_slugs`. */
-  @JvmField
   @JsonProperty("role_slug")
   val roleSlug: String? = null,
   /** An array of role identifiers. Limited to one role when Multiple Roles is disabled. Mutually exclusive with `role_slug`. */
-  @JvmField
   @JsonProperty("role_slugs")
   val roleSlugs: List<String>? = null
 )

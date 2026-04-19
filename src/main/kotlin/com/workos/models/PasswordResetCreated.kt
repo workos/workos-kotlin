@@ -12,7 +12,6 @@ data class PasswordResetCreated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: PasswordResetCreatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class PasswordResetCreated(
   /** Always `"password_reset.created"`. */
   @JsonProperty("event")
   override val event: String = "password_reset.created",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

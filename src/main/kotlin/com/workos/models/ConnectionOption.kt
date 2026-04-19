@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Configuration options for SAML connections. Only present for SAML connection types. */
 data class ConnectionOption(
   /** The signing certificate of the SAML connection. */
-  @JvmField
   @JsonProperty("signing_cert")
   val signingCert: String?
 )

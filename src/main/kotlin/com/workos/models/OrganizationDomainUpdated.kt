@@ -12,7 +12,6 @@ data class OrganizationDomainUpdated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: OrganizationDomainUpdatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class OrganizationDomainUpdated(
   /** Always `"organization_domain.updated"`. */
   @JsonProperty("event")
   override val event: String = "organization_domain.updated",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

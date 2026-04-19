@@ -12,7 +12,6 @@ data class VaultNamesListed(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: VaultNamesListedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class VaultNamesListed(
   /** Always `"vault.names.listed"`. */
   @JsonProperty("event")
   override val event: String = "vault.names.listed",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

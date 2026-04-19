@@ -8,43 +8,33 @@ import java.time.OffsetDateTime
 /** AuthorizationResource model. */
 data class AuthorizationResource(
   /** A human-readable name for the Resource. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An optional description of the Resource. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** The ID of the organization that owns the resource. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The ID of the parent resource, if this resource is nested. */
-  @JvmField
   @JsonProperty("parent_resource_id")
   val parentResourceId: String?,
   /** The unique ID of the Resource. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** An identifier you provide to reference the resource in your system. */
-  @JvmField
   @JsonProperty("external_id")
   val externalId: String,
   /** The slug of the resource type this resource belongs to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Resource object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "authorization_resource"
+  val objectType: String = "authorization_resource"
 )

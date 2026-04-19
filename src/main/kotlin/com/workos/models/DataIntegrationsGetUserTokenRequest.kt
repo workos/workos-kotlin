@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DataIntegrationsGetUserTokenRequest model. */
 data class DataIntegrationsGetUserTokenRequest(
   /** A [User](https://workos.com/docs/reference/authkit/user) identifier. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null
 )

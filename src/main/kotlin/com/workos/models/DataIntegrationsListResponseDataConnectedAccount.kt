@@ -8,40 +8,31 @@ import com.workos.types.DataIntegrationsListResponseDataConnectedAccountState
 /** DataIntegrationsListResponseDataConnectedAccount model. */
 data class DataIntegrationsListResponseDataConnectedAccount(
   /** The unique identifier of the connected account. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The [User](https://workos.com/docs/reference/authkit/user) identifier associated with this connection. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String?,
   /** The [Organization](https://workos.com/docs/reference/organization) identifier associated with this connection, or `null` if not scoped to an organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
   /** The OAuth scopes granted for this connection. */
-  @JvmField
   @JsonProperty("scopes")
   val scopes: List<String>,
   /** The state of the connected account: */
-  @JvmField
   @JsonProperty("state")
   val state: DataIntegrationsListResponseDataConnectedAccountState,
   /** The timestamp when the connection was created. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: String,
   /** The timestamp when the connection was last updated. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String,
   /** Use `user_id` instead. */
-  @JvmField
   @JsonProperty("userlandUserId")
   @Deprecated("Deprecated field")
   val userlandUserId: String?,
   /** Distinguishes the connected account object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connected_account"
+  val objectType: String = "connected_account"
 )

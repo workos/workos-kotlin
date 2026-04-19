@@ -8,39 +8,30 @@ import java.time.OffsetDateTime
 /** The API Key object if the value is valid, or `null` if invalid. */
 data class ApiKey(
   /** Unique identifier of the API Key. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The entity that owns the API Key. */
-  @JvmField
   @JsonProperty("owner")
   val owner: ApiKeyOwner,
   /** A descriptive name for the API Key. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An obfuscated representation of the API Key value. */
-  @JvmField
   @JsonProperty("obfuscated_value")
   val obfuscatedValue: String,
   /** Timestamp of when the API Key was last used. */
-  @JvmField
   @JsonProperty("last_used_at")
   val lastUsedAt: OffsetDateTime?,
   /** The permission slugs assigned to the API Key. */
-  @JvmField
   @JsonProperty("permissions")
   val permissions: List<String>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the API Key object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "api_key"
+  val objectType: String = "api_key"
 )

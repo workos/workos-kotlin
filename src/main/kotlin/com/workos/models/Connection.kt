@@ -11,48 +11,37 @@ import java.time.OffsetDateTime
 /** Connection model. */
 data class Connection(
   /** Unique identifier for the Connection. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The type of the SSO Connection used to authenticate the user. The Connection type may be used to dynamically generate authorization URLs. */
-  @JvmField
   @JsonProperty("connection_type")
   val connectionType: ConnectionType,
   /** A human-readable name for the Connection. This will most commonly be the organization's name. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** Indicates whether a Connection is able to authenticate users. */
-  @JvmField
   @JsonProperty("state")
   val state: ConnectionState,
   /** Deprecated. Use `state` instead. */
-  @JvmField
   @JsonProperty("status")
   @Deprecated("Deprecated field")
   val status: ConnectionStatus,
   /** List of Organization Domains. */
-  @JvmField
   @JsonProperty("domains")
   val domains: List<ConnectionDomain>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Connection object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connection",
+  val objectType: String = "connection",
   /** Unique identifier for the Organization in which the Connection resides. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null,
   /** Configuration options for SAML connections. Only present for SAML connection types. */
-  @JvmField
   @JsonProperty("options")
   val options: ConnectionOption? = null
 )

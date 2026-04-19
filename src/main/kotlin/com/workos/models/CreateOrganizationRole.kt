@@ -7,19 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateOrganizationRole model. */
 data class CreateOrganizationRole(
   /** A descriptive name for the role. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** A unique identifier for the role within the organization. When provided, must begin with 'org-' and contain only lowercase letters, numbers, hyphens, and underscores. When omitted, a slug is auto-generated from the role name and a random suffix. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String? = null,
   /** An optional description of the role's purpose. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The slug of the resource type the role is scoped to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String? = null
 )

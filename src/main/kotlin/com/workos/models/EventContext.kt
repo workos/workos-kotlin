@@ -7,26 +7,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Additional context about the event. */
 data class EventContext(
   /** The Google Analytics client ID. */
-  @JvmField
   @JsonProperty("google_analytics_client_id")
   val googleAnalyticsClientId: String? = null,
   /** The Google Analytics sessions associated with the event. */
-  @JvmField
   @JsonProperty("google_analytics_sessions")
   val googleAnalyticsSessions: List<EventContextGoogleAnalyticsSession>? = null,
   /** The anonymous ID from analytics. */
-  @JvmField
   @JsonProperty("ajs_anonymous_id")
   val ajsAnonymousId: String? = null,
   /** The client ID associated with the event. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String? = null,
-  @JvmField
   @JsonProperty("actor")
   val actor: EventContextActor? = null,
   /** Attributes that changed from their previous values. */
-  @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>? = null
 )

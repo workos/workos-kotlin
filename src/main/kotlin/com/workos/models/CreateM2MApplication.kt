@@ -7,23 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateM2MApplication model. */
 data class CreateM2MApplication(
   /** The name of the application. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The organization ID this application belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The type of application to create. */
-  @JvmField
   @JsonProperty("application_type")
   val applicationType: String = "m2m",
   /** A description for the application. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The OAuth scopes granted to the application. */
-  @JvmField
   @JsonProperty("scopes")
   val scopes: List<String>? = null
 )

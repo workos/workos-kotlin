@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The resource to which the role is assigned. */
 data class RoleAssignmentResource(
   /** The unique ID of the Resource. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** An identifier you provide to reference the resource in your system. */
-  @JvmField
   @JsonProperty("external_id")
   val externalId: String,
   /** The slug of the resource type this resource belongs to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String
 )

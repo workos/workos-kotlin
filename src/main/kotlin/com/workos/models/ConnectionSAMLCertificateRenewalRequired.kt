@@ -12,7 +12,6 @@ data class ConnectionSAMLCertificateRenewalRequired(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: ConnectionSAMLCertificateRenewalRequiredData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class ConnectionSAMLCertificateRenewalRequired(
   /** Always `"connection.saml_certificate_renewal_required"`. */
   @JsonProperty("event")
   override val event: String = "connection.saml_certificate_renewal_required",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

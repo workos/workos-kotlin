@@ -10,47 +10,36 @@ import java.time.OffsetDateTime
 /** Directory model. */
 data class Directory(
   /** Unique identifier for the Directory. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The unique identifier for the Organization in which the directory resides. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** External Key for the Directory. */
-  @JvmField
   @JsonProperty("external_key")
   val externalKey: String,
   /** The type of external Directory Provider integrated with. */
-  @JvmField
   @JsonProperty("type")
   val type: DirectoryType,
   /** Describes whether the Directory has been successfully connected to an external provider. */
-  @JvmField
   @JsonProperty("state")
   val state: DirectoryState,
   /** The name of the directory. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Directory object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "directory",
+  val objectType: String = "directory",
   /** The URL associated with an Enterprise Client. */
-  @JvmField
   @JsonProperty("domain")
   val domain: String? = null,
   /** Aggregate counts of directory users and groups synced from the provider. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: DirectoryMetadata? = null
 )

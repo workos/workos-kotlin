@@ -11,47 +11,36 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class ConnectionActivatedData(
   /** Unique identifier of the connection. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The current state of the connection. */
-  @JvmField
   @JsonProperty("state")
   val state: ConnectionActivatedDataState,
   /** The name of the connection. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The type of the connection. */
-  @JvmField
   @JsonProperty("connection_type")
   val connectionType: ConnectionActivatedDataConnectionType,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** The external key of the connection. */
-  @JvmField
   @JsonProperty("external_key")
   val externalKey: String,
   /** Deprecated. Use state instead. */
-  @JvmField
   @JsonProperty("status")
   val status: ConnectionActivatedDataStatus,
   /** The domains associated with the connection. */
-  @JvmField
   @JsonProperty("domains")
   val domains: List<ConnectionActivatedDataDomain>,
   /** Distinguishes the connection object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connection",
+  val objectType: String = "connection",
   /** The ID of the organization the connection belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null
 )

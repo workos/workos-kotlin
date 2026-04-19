@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogEventContext model. */
 data class AuditLogEventContext(
   /** IP Address or some other geolocation identifier. */
-  @JvmField
   @JsonProperty("location")
   val location: String,
   /** User agent string. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String? = null
 )

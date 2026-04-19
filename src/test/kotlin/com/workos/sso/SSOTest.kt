@@ -38,7 +38,7 @@ class SSOTest : TestBase() {
     )
     val result = api().getConnection("sample-arg")
     assertNotNull(result)
-    assertEquals("connection", result.`object`)
+    assertEquals("connection", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
   }
@@ -73,7 +73,7 @@ class SSOTest : TestBase() {
     )
     val result = api().getProfile()
     assertNotNull(result)
-    assertEquals("profile", result.`object`)
+    assertEquals("profile", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.connectionId)
     assertEquals("sample", result.idpId)

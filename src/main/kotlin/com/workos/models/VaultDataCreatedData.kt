@@ -8,25 +8,19 @@ import com.workos.types.VaultDataCreatedDataActorSource
 /** The event payload. */
 data class VaultDataCreatedData(
   /** The unique identifier of the actor. */
-  @JvmField
   @JsonProperty("actor_id")
   val actorId: String,
-  @JvmField
   @JsonProperty("actor_source")
   val actorSource: VaultDataCreatedDataActorSource,
   /** The name of the actor. */
-  @JvmField
   @JsonProperty("actor_name")
   val actorName: String,
   /** The name of the key-value store. */
-  @JvmField
   @JsonProperty("kv_name")
   val kvName: String,
   /** The unique identifier of the encryption key. */
-  @JvmField
   @JsonProperty("key_id")
   val keyId: String,
-  @JvmField
   @JsonProperty("key_context")
   val keyContext: Map<String, String>
 )

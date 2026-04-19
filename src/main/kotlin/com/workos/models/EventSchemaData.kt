@@ -7,39 +7,30 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The event payload. */
 data class EventSchemaData(
   /** The ID of the action endpoint. */
-  @JvmField
   @JsonProperty("action_endpoint_id")
   val actionEndpointId: String,
   /** The ID of the action execution. */
-  @JvmField
   @JsonProperty("action_execution_id")
   val actionExecutionId: String,
   /** The ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The ID of the organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The IP address of the request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String?,
   /** The user agent of the request. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String?,
   /** The type of action that was denied. */
-  @JvmField
   @JsonProperty("type")
   val type: String = "authentication",
   /** The verdict of the action. */
-  @JvmField
   @JsonProperty("verdict")
   val verdict: String = "Deny"
 )

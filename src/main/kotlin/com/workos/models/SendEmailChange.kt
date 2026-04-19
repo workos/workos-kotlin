@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SendEmailChange model. */
 data class SendEmailChange(
   /** The new email address to change to. */
-  @JvmField
   @JsonProperty("new_email")
   val newEmail: String
 )

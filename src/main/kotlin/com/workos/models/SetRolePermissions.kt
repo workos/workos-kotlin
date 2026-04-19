@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SetRolePermissions model. */
 data class SetRolePermissions(
   /** The permission slugs to assign to the role. */
-  @JvmField
   @JsonProperty("permissions")
   val permissions: List<String>
 )

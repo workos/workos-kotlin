@@ -8,27 +8,21 @@ import java.time.OffsetDateTime
 /** RoleAssignment model. */
 data class RoleAssignment(
   /** Unique identifier of the role assignment. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The role included in the assignment. */
-  @JvmField
   @JsonProperty("role")
   val role: SlimRole,
   /** The resource to which the role is assigned. */
-  @JvmField
   @JsonProperty("resource")
   val resource: RoleAssignmentResource,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the role assignment object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "role_assignment"
+  val objectType: String = "role_assignment"
 )

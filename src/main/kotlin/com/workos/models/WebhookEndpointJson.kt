@@ -9,35 +9,27 @@ import java.time.OffsetDateTime
 /** WebhookEndpointJson model. */
 data class WebhookEndpointJson(
   /** Unique identifier of the Webhook Endpoint. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The URL to which webhooks are sent. */
-  @JvmField
   @JsonProperty("endpoint_url")
   val endpointUrl: String,
   /** The secret used to sign webhook payloads. */
-  @JvmField
   @JsonProperty("secret")
   val secret: String,
   /** Whether the Webhook Endpoint is enabled or disabled. */
-  @JvmField
   @JsonProperty("status")
   val status: WebhookEndpointJsonStatus,
   /** The events that the Webhook Endpoint is subscribed to. */
-  @JvmField
   @JsonProperty("events")
   val events: List<String>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Webhook Endpoint object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "webhook_endpoint"
+  val objectType: String = "webhook_endpoint"
 )

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** JwksResponse model. */
 data class JwksResponse(
   /** The public keys used for verifying access tokens. */
-  @JvmField
   @JsonProperty("keys")
   val keys: List<JwksResponseKeys>
 )

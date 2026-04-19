@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSO connection details. */
 data class AuthenticationSSOFailedDataSSO(
   /** The ID of the organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String?,
   /** The ID of the SSO connection. */
-  @JvmField
   @JsonProperty("connection_id")
   val connectionId: String?,
   /** The ID of the SSO session. */
-  @JvmField
   @JsonProperty("session_id")
   val sessionId: String?
 )

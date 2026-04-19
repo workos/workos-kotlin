@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateMagicCodeAndReturn model. */
 data class CreateMagicCodeAndReturn(
   /** The email address to send the magic code to. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The invitation token to associate with this magic code. */
-  @JvmField
   @JsonProperty("invitation_token")
   val invitationToken: String? = null
 )

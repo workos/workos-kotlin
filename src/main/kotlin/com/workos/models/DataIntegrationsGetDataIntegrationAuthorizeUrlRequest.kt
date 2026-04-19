@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DataIntegrationsGetDataIntegrationAuthorizeUrlRequest model. */
 data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
   /** The ID of the user to authorize. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** An organization ID to scope the authorization to a specific organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null,
   /** The URL to redirect the user to after authorization. */
-  @JvmField
   @JsonProperty("return_to")
   val returnTo: String? = null
 )

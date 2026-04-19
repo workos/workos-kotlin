@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreatePasswordReset model. */
 data class CreatePasswordReset(
   /** The password reset token. */
-  @JvmField
   @JsonProperty("token")
   val token: String,
   /** The new password to set for the user. */
-  @JvmField
   @JsonProperty("new_password")
   val newPassword: String
 )

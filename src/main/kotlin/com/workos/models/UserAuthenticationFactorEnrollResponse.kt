@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UserAuthenticationFactorEnrollResponse model. */
 data class UserAuthenticationFactorEnrollResponse(
   /** The [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor) object that represents the additional authentication method used on top of the existing authentication strategy. */
-  @JvmField
   @JsonProperty("authentication_factor")
   val authenticationFactor: AuthenticationFactorEnrolled,
   /** The [authentication challenge](https://workos.com/docs/reference/authkit/mfa/authentication-challenge) object that is used to complete the authentication process. */
-  @JvmField
   @JsonProperty("authentication_challenge")
   val authenticationChallenge: AuthenticationChallenge
 )

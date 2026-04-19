@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** ConnectionDomain model. */
 data class ConnectionDomain(
   /** Unique identifier for the Connection Domain. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The domain value. */
-  @JvmField
   @JsonProperty("domain")
   val domain: String,
   /** Distinguishes the Connection Domain object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connection_domain"
+  val objectType: String = "connection_domain"
 )

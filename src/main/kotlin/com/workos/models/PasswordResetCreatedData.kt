@@ -8,27 +8,21 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class PasswordResetCreatedData(
   /** The unique ID of the password reset object. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The unique ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The timestamp when the password reset token expires. */
-  @JvmField
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
   /** The timestamp when the password reset token was created. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** Distinguishes the password reset object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "password_reset"
+  val objectType: String = "password_reset"
 )

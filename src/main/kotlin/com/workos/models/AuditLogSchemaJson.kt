@@ -8,27 +8,21 @@ import java.time.OffsetDateTime
 /** AuditLogSchemaJson model. */
 data class AuditLogSchemaJson(
   /** The version of the schema. */
-  @JvmField
   @JsonProperty("version")
   val version: Long,
   /** The list of targets for the schema. */
-  @JvmField
   @JsonProperty("targets")
   val targets: List<AuditLogSchemaJsonTarget>,
   /** The timestamp when the Audit Log Schema was created. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** Distinguishes the Audit Log Schema object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "audit_log_schema",
+  val objectType: String = "audit_log_schema",
   /** The metadata schema for the actor. */
-  @JvmField
   @JsonProperty("actor")
   val actor: AuditLogSchemaJsonActor? = null,
   /** Additional data associated with the event or entity. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null
 )

@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSOLogoutAuthorizeResponse model. */
 data class SSOLogoutAuthorizeResponse(
   /** The URL to redirect the user to in order to log out ([Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint ready to use). */
-  @JvmField
   @JsonProperty("logout_url")
   val logoutUrl: String,
   /** The logout token to be used in the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint. */
-  @JvmField
   @JsonProperty("logout_token")
   val logoutToken: String
 )

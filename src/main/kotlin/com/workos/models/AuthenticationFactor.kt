@@ -9,35 +9,27 @@ import java.time.OffsetDateTime
 /** AuthenticationFactor model. */
 data class AuthenticationFactor(
   /** The unique ID of the factor. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The type of the factor to enroll. */
-  @JvmField
   @JsonProperty("type")
   val type: AuthenticationFactorType,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the authentication factor object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "authentication_factor",
+  val objectType: String = "authentication_factor",
   /** The ID of the [user](https://workos.com/docs/reference/authkit/user). */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String? = null,
   /** SMS-based authentication factor details. */
-  @JvmField
   @JsonProperty("sms")
   val sms: AuthenticationFactorSms? = null,
   /** TOTP-based authentication factor details. */
-  @JvmField
   @JsonProperty("totp")
   val totp: AuthenticationFactorTotp? = null
 )

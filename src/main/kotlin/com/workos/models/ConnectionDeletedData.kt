@@ -10,35 +10,27 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class ConnectionDeletedData(
   /** Unique identifier of the connection. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The current state of the connection. */
-  @JvmField
   @JsonProperty("state")
   val state: ConnectionDeletedDataState,
   /** The name of the connection. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The type of the connection. */
-  @JvmField
   @JsonProperty("connection_type")
   val connectionType: ConnectionDeletedDataConnectionType,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the connection object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "connection",
+  val objectType: String = "connection",
   /** The ID of the organization the connection belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null
 )

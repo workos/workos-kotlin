@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DataIntegrationAuthorizeUrlResponse model. */
 data class DataIntegrationAuthorizeUrlResponse(
   /** The OAuth authorization URL to redirect the user to. */
-  @JvmField
   @JsonProperty("url")
   val url: String
 )

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SMS-based authentication factor details. */
 data class AuthenticationFactorSms(
   /** The user's phone number for SMS-based authentication. */
-  @JvmField
   @JsonProperty("phone_number")
   val phoneNumber: String
 )

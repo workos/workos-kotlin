@@ -8,35 +8,27 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class PermissionCreatedData(
   /** Unique identifier of the permission. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The slug identifier of the permission. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String,
   /** The name of the permission. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** A description of the permission. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** Whether the permission is a system permission. */
-  @JvmField
   @JsonProperty("system")
   val system: Boolean,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the permission object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "permission"
+  val objectType: String = "permission"
 )

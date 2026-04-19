@@ -10,23 +10,18 @@ import java.time.OffsetDateTime
 /** The Audit Log Stream currently configured for the organization, if any. */
 data class AuditLogConfigurationLogStream(
   /** Unique identifier of the Audit Log Stream. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The type of the Audit Log Stream destination. */
-  @JvmField
   @JsonProperty("type")
   val type: AuditLogConfigurationLogStreamType,
   /** The current state of the Audit Log Stream. */
-  @JvmField
   @JsonProperty("state")
   val state: AuditLogConfigurationLogStreamState,
   /** ISO-8601 timestamp of when the last event was successfully synced, or null if no events have been synced. */
-  @JvmField
   @JsonProperty("last_synced_at")
   val lastSyncedAt: String?,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime
 )

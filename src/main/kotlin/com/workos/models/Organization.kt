@@ -8,43 +8,33 @@ import java.time.OffsetDateTime
 /** Organization model. */
 data class Organization(
   /** Unique identifier of the Organization. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** A descriptive name for the Organization. This field does not need to be unique. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** List of Organization Domains. */
-  @JvmField
   @JsonProperty("domains")
   val domains: List<OrganizationDomain>,
   /** Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, String>,
   /** The external ID of the Organization. */
-  @JvmField
   @JsonProperty("external_id")
   val externalId: String?,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Organization object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "organization",
+  val objectType: String = "organization",
   /** The Stripe customer ID of the Organization. */
-  @JvmField
   @JsonProperty("stripe_customer_id")
   val stripeCustomerId: String? = null,
   /** Whether the Organization allows profiles outside of its managed domains. */
-  @JvmField
   @JsonProperty("allow_profiles_outside_organization")
   @Deprecated("Deprecated field")
   val allowProfilesOutsideOrganization: Boolean? = null

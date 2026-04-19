@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** DataIntegrationsListResponse model. */
 data class DataIntegrationsListResponse(
   /** A list of [providers](https://workos.com/docs/reference/pipes/provider), each including a [`connected_account`](https://workos.com/docs/reference/pipes/connected-account) field with the user's connection status. */
-  @JvmField
   @JsonProperty("data")
   val data: List<DataIntegrationsListResponseData>,
   /** Indicates this is a list response. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "list"
+  val objectType: String = "list"
 )

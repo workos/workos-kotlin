@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogEventIngestion model. */
 data class AuditLogEventIngestion(
   /** The unique ID of the Organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The audit log event to create. */
-  @JvmField
   @JsonProperty("event")
   val event: AuditLogEvent
 )

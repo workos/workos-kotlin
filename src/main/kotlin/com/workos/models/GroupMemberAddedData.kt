@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The event payload. */
 data class GroupMemberAddedData(
   /** The ID of the Group. */
-  @JvmField
   @JsonProperty("group_id")
   val groupId: String,
   /** The ID of the OrganizationMembership. */
-  @JvmField
   @JsonProperty("organization_membership_id")
   val organizationMembershipId: String
 )

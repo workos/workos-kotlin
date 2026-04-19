@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** FlagRuleUpdatedContextConfiguredTargetOrganization model. */
 data class FlagRuleUpdatedContextConfiguredTargetOrganization(
   /** The ID of the organization. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The name of the organization. */
-  @JvmField
   @JsonProperty("name")
   val name: String
 )

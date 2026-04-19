@@ -7,15 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The event payload. */
 data class DsyncGroupUserAddedData(
   /** The ID of the directory. */
-  @JvmField
   @JsonProperty("directory_id")
   val directoryId: String,
   /** The directory user added to the group. */
-  @JvmField
   @JsonProperty("user")
   val user: DirectoryUser,
   /** The directory group the user was added to. */
-  @JvmField
   @JsonProperty("group")
   val group: DirectoryGroup
 )

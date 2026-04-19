@@ -8,34 +8,26 @@ import com.workos.types.AuthenticationRadarRiskDetectedDataAction
 /** The event payload. */
 data class AuthenticationRadarRiskDetectedData(
   /** The authentication method used. */
-  @JvmField
   @JsonProperty("auth_method")
   val authMethod: String,
-  @JvmField
   @JsonProperty("action")
   val action: AuthenticationRadarRiskDetectedDataAction,
   /** The control action taken for the detected risk. */
-  @JvmField
   @JsonProperty("control")
   val control: String?,
   /** The type of blocklist that triggered the risk detection. */
-  @JvmField
   @JsonProperty("blocklist_type")
   val blocklistType: String?,
   /** The IP address of the request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String?,
   /** The user agent of the request. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String?,
   /** The ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String
 )

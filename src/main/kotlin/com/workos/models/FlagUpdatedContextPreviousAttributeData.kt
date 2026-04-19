@@ -7,23 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The previous data attributes of the flag. */
 data class FlagUpdatedContextPreviousAttributeData(
   /** The previous name of the flag. */
-  @JvmField
   @JsonProperty("name")
   val name: String? = null,
   /** The previous description of the flag. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null,
   /** The previous tags of the flag. */
-  @JvmField
   @JsonProperty("tags")
   val tags: List<String>? = null,
   /** Whether the flag was previously enabled. */
-  @JvmField
   @JsonProperty("enabled")
   val enabled: Boolean? = null,
   /** The previous default value of the flag. */
-  @JvmField
   @JsonProperty("default_value")
   val defaultValue: Boolean? = null
 )

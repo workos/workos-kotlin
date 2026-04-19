@@ -7,23 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UserObject model. */
 data class UserObject(
   /** Your application's user identifier, which will be stored as an [`external_id`](https://workos.com/docs/authkit/metadata/external-identifiers). Used for upserting and deduplication. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The user's email address. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The user's first name. */
-  @JvmField
   @JsonProperty("first_name")
   val firstName: String? = null,
   /** The user's last name. */
-  @JvmField
   @JsonProperty("last_name")
   val lastName: String? = null,
   /** A set of key-value pairs to attach to the user. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null
 )

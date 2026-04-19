@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogSchemaTarget model. */
 data class AuditLogSchemaTarget(
   /** The type of the target resource. */
-  @JvmField
   @JsonProperty("type")
   val type: String,
   /** Optional JSON schema for target metadata. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null
 )

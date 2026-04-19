@@ -9,15 +9,12 @@ import java.time.OffsetDateTime
 /** The SAML certificate details. */
 data class ConnectionSAMLCertificateRenewalRequiredDataCertificate(
   /** The type of the SAML certificate. */
-  @JvmField
   @JsonProperty("certificate_type")
   val certificateType: ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("expiry_date")
   val expiryDate: OffsetDateTime,
   /** Whether the certificate has already expired. */
-  @JvmField
   @JsonProperty("is_expired")
   val isExpired: Boolean
 )

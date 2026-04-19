@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** ValidateApiKey model. */
 data class ValidateApiKey(
   /** The value for an API key. */
-  @JvmField
   @JsonProperty("value")
   val value: String
 )

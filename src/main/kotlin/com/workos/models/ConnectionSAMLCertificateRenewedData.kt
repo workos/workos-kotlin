@@ -8,15 +8,12 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class ConnectionSAMLCertificateRenewedData(
   /** The connection with the renewed certificate. */
-  @JvmField
   @JsonProperty("connection")
   val connection: ConnectionSAMLCertificateRenewedDataConnection,
   /** The renewed SAML certificate details. */
-  @JvmField
   @JsonProperty("certificate")
   val certificate: ConnectionSAMLCertificateRenewedDataCertificate,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("renewed_at")
   val renewedAt: OffsetDateTime
 )

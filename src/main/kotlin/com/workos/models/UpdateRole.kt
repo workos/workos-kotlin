@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** UpdateRole model. */
 data class UpdateRole(
   /** A descriptive name for the role. */
-  @JvmField
   @JsonProperty("name")
   val name: String? = null,
   /** An optional description of the role. */
-  @JvmField
   @JsonProperty("description")
   val description: String? = null
 )

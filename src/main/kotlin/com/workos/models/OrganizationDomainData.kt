@@ -8,11 +8,9 @@ import com.workos.types.OrganizationDomainDataState
 /** OrganizationDomainData model. */
 data class OrganizationDomainData(
   /** The domain value. */
-  @JvmField
   @JsonProperty("domain")
   val domain: String,
   /** The verification state of the domain. */
-  @JvmField
   @JsonProperty("state")
   val state: OrganizationDomainDataState
 )

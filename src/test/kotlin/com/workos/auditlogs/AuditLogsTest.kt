@@ -67,7 +67,7 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTarget>())
     assertNotNull(result)
-    assertEquals("audit_log_schema", result.`object`)
+    assertEquals("audit_log_schema", result.objectType)
     assertEquals(0L, result.version)
   }
 
@@ -82,7 +82,7 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
-    assertEquals("audit_log_export", result.`object`)
+    assertEquals("audit_log_export", result.objectType)
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/audit_logs/exports"))
@@ -103,7 +103,7 @@ class AuditLogsTest : TestBase() {
     )
     val result = api().getExport("sample-arg")
     assertNotNull(result)
-    assertEquals("audit_log_export", result.`object`)
+    assertEquals("audit_log_export", result.objectType)
     assertEquals("sample", result.id)
   }
 

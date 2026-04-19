@@ -12,7 +12,6 @@ data class OrganizationDomainDeleted(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: OrganizationDomainDeletedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class OrganizationDomainDeleted(
   /** Always `"organization_domain.deleted"`. */
   @JsonProperty("event")
   override val event: String = "organization_domain.deleted",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

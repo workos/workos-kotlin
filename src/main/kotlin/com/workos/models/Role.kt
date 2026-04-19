@@ -9,43 +9,33 @@ import java.time.OffsetDateTime
 /** Role model. */
 data class Role(
   /** A unique slug for the role. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String,
   /** Unique identifier of the role. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** A descriptive name for the role. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An optional description of the role. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** Whether the role is scoped to the environment or an organization (custom role). */
-  @JvmField
   @JsonProperty("type")
   val type: RoleType,
   /** The slug of the resource type the role is scoped to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String,
   /** The permission slugs assigned to the role. */
-  @JvmField
   @JsonProperty("permissions")
   val permissions: List<String>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the role object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "role"
+  val objectType: String = "role"
 )

@@ -7,39 +7,30 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** MagicAuthCodeSessionAuthenticateRequest model. */
 data class MagicAuthCodeSessionAuthenticateRequest(
   /** The client ID of the application. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The client secret of the application. */
-  @JvmField
   @JsonProperty("client_secret")
   val clientSecret: String,
   /** The one-time code for Magic Auth authentication. */
-  @JvmField
   @JsonProperty("code")
   val code: String,
   /** The user's email address. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** Always `"urn:workos:oauth:grant-type:magic-auth:code"`. */
-  @JvmField
   @JsonProperty("grant_type")
   val grantType: String = "urn:workos:oauth:grant-type:magic-auth:code",
   /** An invitation token to accept during authentication. */
-  @JvmField
   @JsonProperty("invitation_token")
   val invitationToken: String? = null,
   /** The IP address of the user's request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
   /** A unique identifier for the device. */
-  @JvmField
   @JsonProperty("device_id")
   val deviceId: String? = null,
   /** The user agent string from the user's browser. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String? = null
 )

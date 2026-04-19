@@ -7,27 +7,21 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** The event payload. */
 data class AuthenticationEmailVerificationSucceededData(
   /** The IP address of the request. */
-  @JvmField
   @JsonProperty("ip_address")
   val ipAddress: String?,
   /** The user agent of the request. */
-  @JvmField
   @JsonProperty("user_agent")
   val userAgent: String?,
   /** The ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** Always `"email_verification"`. */
-  @JvmField
   @JsonProperty("type")
   val type: String = "email_verification",
   /** Always `"succeeded"`. */
-  @JvmField
   @JsonProperty("status")
   val status: String = "succeeded"
 )

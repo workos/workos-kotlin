@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuthenticationChallengeVerifyResponse model. */
 data class AuthenticationChallengeVerifyResponse(
   /** The authentication challenge object. */
-  @JvmField
   @JsonProperty("challenge")
   val challenge: AuthenticationChallenge,
   /** Whether the code was valid. */
-  @JvmField
   @JsonProperty("valid")
   val valid: Boolean
 )

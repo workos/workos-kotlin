@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSOLogoutAuthorizeRequest model. */
 data class SSOLogoutAuthorizeRequest(
   /** The unique ID of the profile to log out. */
-  @JvmField
   @JsonProperty("profile_id")
   val profileId: String
 )

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogEventCreateResponse model. */
 data class AuditLogEventCreateResponse(
   /** Whether the Audit Log event was created successfully. */
-  @JvmField
   @JsonProperty("success")
   val success: Boolean
 )

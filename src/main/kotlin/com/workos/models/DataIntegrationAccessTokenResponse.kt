@@ -8,15 +8,12 @@ import com.workos.types.DataIntegrationAccessTokenResponseError
 /** DataIntegrationAccessTokenResponse model. */
 data class DataIntegrationAccessTokenResponse(
   /** Indicates whether the access token is valid and ready for use, or if reauthorization is required. */
-  @JvmField
   @JsonProperty("active")
   val active: Boolean = true,
   /** The [access token](https://workos.com/docs/reference/pipes/access-token) object, present when `active` is `true`. */
-  @JvmField
   @JsonProperty("access_token")
   val accessToken: DataIntegrationAccessTokenResponseAccessToken? = null,
   /** - `"not_installed"`: The user does not have the integration installed. */
-  @JvmField
   @JsonProperty("error")
   val error: DataIntegrationAccessTokenResponseError? = null
 )

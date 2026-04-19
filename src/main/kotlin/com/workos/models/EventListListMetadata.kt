@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Pagination cursor for navigating to the next page of results. */
 data class EventListListMetadata(
   /** An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. */
-  @JvmField
   @JsonProperty("after")
   val after: String?
 )

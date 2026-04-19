@@ -9,47 +9,36 @@ import java.time.OffsetDateTime
 /** OrganizationMembership model. */
 data class OrganizationMembership(
   /** The unique ID of the organization membership. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The ID of the organization which the user belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The status of the organization membership. One of `active`, `inactive`, or `pending`. */
-  @JvmField
   @JsonProperty("status")
   val status: OrganizationMembershipStatus,
   /** Whether this organization membership is managed by a directory sync connection. */
-  @JvmField
   @JsonProperty("directory_managed")
   val directoryManaged: Boolean,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** The primary role assigned to the user within the organization. */
-  @JvmField
   @JsonProperty("role")
   val role: SlimRole,
   /** Distinguishes the organization membership object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "organization_membership",
+  val objectType: String = "organization_membership",
   /** The name of the organization which the user belongs to. */
-  @JvmField
   @JsonProperty("organization_name")
   val organizationName: String? = null,
   /** An object containing IdP-sourced attributes from the linked [Directory User](https://workos.com/docs/reference/directory-sync/directory-user) or [SSO Profile](https://workos.com/docs/reference/sso/profile). Directory User attributes take precedence when both are linked. */
-  @JvmField
   @JsonProperty("custom_attributes")
   val customAttributes: Map<String, Any>? = null
 )

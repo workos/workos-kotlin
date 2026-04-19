@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** RedirectUriInput model. */
 data class RedirectUriInput(
   /** The redirect URI. */
-  @JvmField
   @JsonProperty("uri")
   val uri: String,
   /** Whether this is the default redirect URI. */
-  @JvmField
   @JsonProperty("default")
   val default: Boolean? = null
 )

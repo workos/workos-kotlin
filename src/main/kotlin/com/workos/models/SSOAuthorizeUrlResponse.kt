@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** SSOAuthorizeUrlResponse model. */
 data class SSOAuthorizeUrlResponse(
   /** An OAuth 2.0 authorization URL. */
-  @JvmField
   @JsonProperty("url")
   val url: String
 )

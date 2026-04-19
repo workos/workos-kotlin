@@ -7,36 +7,28 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuditLogExportCreation model. */
 data class AuditLogExportCreation(
   /** The unique ID of the Organization. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** ISO-8601 value for start of the export range. */
-  @JvmField
   @JsonProperty("range_start")
   val rangeStart: String,
   /** ISO-8601 value for end of the export range. */
-  @JvmField
   @JsonProperty("range_end")
   val rangeEnd: String,
   /** List of actions to filter against. */
-  @JvmField
   @JsonProperty("actions")
   val actions: List<String>? = null,
   /** Deprecated. Use `actor_names` instead. */
-  @JvmField
   @JsonProperty("actors")
   @Deprecated("Deprecated field")
   val actors: List<String>? = null,
   /** List of actor names to filter against. */
-  @JvmField
   @JsonProperty("actor_names")
   val actorNames: List<String>? = null,
   /** List of actor IDs to filter against. */
-  @JvmField
   @JsonProperty("actor_ids")
   val actorIds: List<String>? = null,
   /** List of target types to filter against. */
-  @JvmField
   @JsonProperty("targets")
   val targets: List<String>? = null
 )

@@ -8,15 +8,12 @@ import com.workos.types.UserIdentitiesGetItemProvider
 /** UserIdentitiesGetItem model. */
 data class UserIdentitiesGetItem(
   /** The unique ID of the user in the external identity provider. */
-  @JvmField
   @JsonProperty("idp_id")
   val idpId: String,
   /** The type of OAuth provider for the identity. */
-  @JvmField
   @JsonProperty("provider")
   val provider: UserIdentitiesGetItemProvider,
   /** The type of the identity. */
-  @JvmField
   @JsonProperty("type")
   val type: String = "OAuth"
 )

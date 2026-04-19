@@ -12,7 +12,6 @@ data class PermissionUpdated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: PermissionUpdatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class PermissionUpdated(
   /** Always `"permission.updated"`. */
   @JsonProperty("event")
   override val event: String = "permission.updated",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

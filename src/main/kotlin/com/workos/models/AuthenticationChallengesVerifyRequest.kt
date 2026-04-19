@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** AuthenticationChallengesVerifyRequest model. */
 data class AuthenticationChallengesVerifyRequest(
   /** The one-time code to verify. */
-  @JvmField
   @JsonProperty("code")
   val code: String
 )

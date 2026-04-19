@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Counts of active and inactive directory users. */
 data class DirectoryMetadataUser(
   /** Count of active directory users. */
-  @JvmField
   @JsonProperty("active")
   val active: Long,
   /** Count of inactive directory users. */
-  @JvmField
   @JsonProperty("inactive")
   val inactive: Long
 )

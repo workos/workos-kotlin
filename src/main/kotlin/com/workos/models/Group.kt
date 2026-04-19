@@ -8,31 +8,24 @@ import java.time.OffsetDateTime
 /** Group model. */
 data class Group(
   /** The unique ID of the Group. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The ID of the Organization the Group belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The name of the Group. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An optional description of the Group. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** The Group object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "group"
+  val objectType: String = "group"
 )

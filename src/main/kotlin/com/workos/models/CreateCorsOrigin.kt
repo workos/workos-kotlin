@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateCorsOrigin model. */
 data class CreateCorsOrigin(
   /** The origin URL to allow for CORS requests. */
-  @JvmField
   @JsonProperty("origin")
   val origin: String
 )

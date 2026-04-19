@@ -10,23 +10,18 @@ import com.workos.types.RadarStandaloneResponseVerdict
 /** RadarStandaloneResponse model. */
 data class RadarStandaloneResponse(
   /** The verdict of the risk assessment. */
-  @JvmField
   @JsonProperty("verdict")
   val verdict: RadarStandaloneResponseVerdict,
   /** A human-readable reason for the verdict. */
-  @JvmField
   @JsonProperty("reason")
   val reason: String,
   /** Unique identifier of the authentication attempt. */
-  @JvmField
   @JsonProperty("attempt_id")
   val attemptId: String,
   /** The Radar control that triggered the verdict. Only present if the verdict is `block` or `challenge`. */
-  @JvmField
   @JsonProperty("control")
   val control: RadarStandaloneResponseControl? = null,
   /** The type of blocklist entry that triggered the verdict. Only present if the control is `restriction`. */
-  @JvmField
   @JsonProperty("blocklist_type")
   val blocklistType: RadarStandaloneResponseBlocklistType? = null
 )

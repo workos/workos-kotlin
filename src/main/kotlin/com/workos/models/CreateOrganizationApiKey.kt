@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** CreateOrganizationApiKey model. */
 data class CreateOrganizationApiKey(
   /** The name for the API key. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The permission slugs to assign to the API key. */
-  @JvmField
   @JsonProperty("permissions")
   val permissions: List<String>? = null
 )

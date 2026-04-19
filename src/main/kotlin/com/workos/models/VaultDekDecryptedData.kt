@@ -8,18 +8,14 @@ import com.workos.types.VaultDekDecryptedDataActorSource
 /** The event payload. */
 data class VaultDekDecryptedData(
   /** The unique identifier of the actor. */
-  @JvmField
   @JsonProperty("actor_id")
   val actorId: String,
-  @JvmField
   @JsonProperty("actor_source")
   val actorSource: VaultDekDecryptedDataActorSource,
   /** The name of the actor. */
-  @JvmField
   @JsonProperty("actor_name")
   val actorName: String,
   /** The unique identifier of the data encryption key. */
-  @JvmField
   @JsonProperty("key_id")
   val keyId: String
 )

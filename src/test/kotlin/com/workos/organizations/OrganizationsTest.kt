@@ -36,7 +36,7 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().create("sample-arg")
     assertNotNull(result)
-    assertEquals("organization", result.`object`)
+    assertEquals("organization", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     wireMockRule.verify(
@@ -56,7 +56,7 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().getByExternalId("sample-arg")
     assertNotNull(result)
-    assertEquals("organization", result.`object`)
+    assertEquals("organization", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
   }
@@ -72,7 +72,7 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().get("sample-arg")
     assertNotNull(result)
-    assertEquals("organization", result.`object`)
+    assertEquals("organization", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
   }
@@ -88,7 +88,7 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().update("sample-arg")
     assertNotNull(result)
-    assertEquals("organization", result.`object`)
+    assertEquals("organization", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
   }

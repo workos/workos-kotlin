@@ -8,23 +8,18 @@ import com.workos.types.FlagRuleUpdatedContextAccessType
 /** Additional context about the event. */
 data class FlagRuleUpdatedContext(
   /** The client ID associated with the flag event. */
-  @JvmField
   @JsonProperty("client_id")
   val clientId: String,
   /** The actor who performed the action. */
-  @JvmField
   @JsonProperty("actor")
   val actor: FlagRuleUpdatedContextActor,
   /** The access type of the flag rule. */
-  @JvmField
   @JsonProperty("access_type")
   val accessType: FlagRuleUpdatedContextAccessType,
   /** The configured targets for the flag rule. */
-  @JvmField
   @JsonProperty("configured_targets")
   val configuredTargets: FlagRuleUpdatedContextConfiguredTarget,
   /** Attributes that changed from their previous values. */
-  @JvmField
   @JsonProperty("previous_attributes")
   val previousAttributes: FlagRuleUpdatedContextPreviousAttribute
 )

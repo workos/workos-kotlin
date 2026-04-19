@@ -52,7 +52,7 @@ class PipesTest : TestBase() {
     )
     val result = api().getUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
-    assertEquals("connected_account", result.`object`)
+    assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
@@ -69,7 +69,7 @@ class PipesTest : TestBase() {
     stubResponse("GET", "/user_management/users/sample-arg/data_providers", 200, "{\"object\": \"list\", \"data\": []}")
     val result = api().listUserDataProviders("sample-arg")
     assertNotNull(result)
-    assertEquals("list", result.`object`)
+    assertEquals("list", result.objectType)
   }
 
   @Test

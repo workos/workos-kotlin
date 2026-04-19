@@ -9,78 +9,60 @@ import java.time.OffsetDateTime
 /** DirectoryUser model. */
 data class DirectoryUser(
   /** Unique identifier for the Directory User. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The identifier of the Directory the Directory User belongs to. */
-  @JvmField
   @JsonProperty("directory_id")
   val directoryId: String,
   /** The identifier for the Organization in which the Directory resides. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** Unique identifier for the user, assigned by the Directory Provider. Different Directory Providers use different ID formats. */
-  @JvmField
   @JsonProperty("idp_id")
   val idpId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String?,
   /** The state of the user. */
-  @JvmField
   @JsonProperty("state")
   val state: DirectoryUserState,
   /** The raw attributes received from the directory provider. */
-  @JvmField
   @JsonProperty("raw_attributes")
   @Deprecated("Deprecated field")
   val rawAttributes: Map<String, Any>,
   /** An object containing the custom attribute mapping for the Directory Provider. */
-  @JvmField
   @JsonProperty("custom_attributes")
   val customAttributes: Map<String, Any>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Directory User object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "directory_user",
+  val objectType: String = "directory_user",
   /** The first name of the user. */
-  @JvmField
   @JsonProperty("first_name")
   val firstName: String? = null,
   /** The last name of the user. */
-  @JvmField
   @JsonProperty("last_name")
   val lastName: String? = null,
   /** A list of email addresses for the user. */
-  @JvmField
   @JsonProperty("emails")
   @Deprecated("Deprecated field")
   val emails: List<DirectoryUserEmail>? = null,
   /** The job title of the user. */
-  @JvmField
   @JsonProperty("job_title")
   @Deprecated("Deprecated field")
   val jobTitle: String? = null,
   /** The username of the user. */
-  @JvmField
   @JsonProperty("username")
   @Deprecated("Deprecated field")
   val username: String? = null,
-  @JvmField
   @JsonProperty("role")
   val role: SlimRole? = null,
   /** All roles assigned to the user. */
-  @JvmField
   @JsonProperty("roles")
   val roles: List<SlimRole>? = null
 )

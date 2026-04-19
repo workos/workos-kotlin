@@ -41,10 +41,10 @@ class Webhooks(
   ): Page<WebhookEndpointJson> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",

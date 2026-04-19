@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** VerifyEmailResponse model. */
 data class VerifyEmailResponse(
   /** The user whose email was verified. */
-  @JvmField
   @JsonProperty("user")
   val user: User
 )

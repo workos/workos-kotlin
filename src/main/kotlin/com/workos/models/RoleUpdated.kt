@@ -12,7 +12,6 @@ data class RoleUpdated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: RoleUpdatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class RoleUpdated(
   /** Always `"role.updated"`. */
   @JsonProperty("event")
   override val event: String = "role.updated",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

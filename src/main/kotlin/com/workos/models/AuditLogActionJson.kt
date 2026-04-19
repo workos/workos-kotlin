@@ -8,23 +8,18 @@ import java.time.OffsetDateTime
 /** AuditLogActionJson model. */
 data class AuditLogActionJson(
   /** Identifier of what action was taken. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** The schema associated with the action. */
-  @JvmField
   @JsonProperty("schema")
   val schema: AuditLogSchemaJson,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the Audit Log Action object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "audit_log_action"
+  val objectType: String = "audit_log_action"
 )

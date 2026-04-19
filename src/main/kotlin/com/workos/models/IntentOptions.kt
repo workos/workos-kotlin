@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** IntentOptions model. */
 data class IntentOptions(
   /** SSO-specific options for the Admin Portal. */
-  @JvmField
   @JsonProperty("sso")
   val sso: SSOIntentOptions
 )

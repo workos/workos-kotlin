@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Attributes that changed from their previous values. */
 data class FlagUpdatedContextPreviousAttribute(
   /** The previous data attributes of the flag. */
-  @JvmField
   @JsonProperty("data")
   val data: FlagUpdatedContextPreviousAttributeData? = null
 )

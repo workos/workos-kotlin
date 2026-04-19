@@ -65,9 +65,6 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership to check.
    * @param permissionSlug The slug of the permission to check.
-   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
-   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
-   * @param resourceTypeSlug The slug of the resource type. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    *
    * @return the AuthorizationCheck
    */
@@ -76,31 +73,23 @@ class Authorization(
     organizationMembershipId: String,
     resourceTarget: ResourceTarget,
     permissionSlug: String,
-    resourceId: String? = null,
-    resourceExternalId: String? = null,
-    resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationCheck {
-    val params = mutableListOf<Pair<String, String>>()
-    when (resourceTarget) {
-      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
-      is ResourceTarget.ByExternalId -> {
-        params += "resource_external_id" to resourceTarget.resourceExternalId
-        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
-      }
-    }
     val body =
       bodyOf(
-        "permission_slug" to permissionSlug,
-        "resource_id" to resourceId,
-        "resource_external_id" to resourceExternalId,
-        "resource_type_slug" to resourceTypeSlug
+        "permission_slug" to permissionSlug
       )
+    when (resourceTarget) {
+      is ResourceTarget.ById -> body["resource_id"] = resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        body["resource_external_id"] = resourceTarget.resourceExternalId
+        body["resource_type_slug"] = resourceTarget.resourceTypeSlug
+      }
+    }
     val config =
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/check",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -137,7 +126,6 @@ class Authorization(
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
       params += "permission_slug" to permissionSlug.toString()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       when (parentResource) {
@@ -148,6 +136,7 @@ class Authorization(
         }
       }
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -186,10 +175,10 @@ class Authorization(
   ): Page<AuthorizationPermission> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -230,10 +219,10 @@ class Authorization(
   ): Page<AuthorizationPermission> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -270,10 +259,10 @@ class Authorization(
   ): Page<RoleAssignment> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -293,9 +282,6 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to assign.
-   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
-   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
-   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    *
    * @return the RoleAssignment
    */
@@ -304,31 +290,23 @@ class Authorization(
     organizationMembershipId: String,
     resourceTarget: ResourceTarget,
     roleSlug: String,
-    resourceId: String? = null,
-    resourceExternalId: String? = null,
-    resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): RoleAssignment {
-    val params = mutableListOf<Pair<String, String>>()
-    when (resourceTarget) {
-      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
-      is ResourceTarget.ByExternalId -> {
-        params += "resource_external_id" to resourceTarget.resourceExternalId
-        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
-      }
-    }
     val body =
       bodyOf(
-        "role_slug" to roleSlug,
-        "resource_id" to resourceId,
-        "resource_external_id" to resourceExternalId,
-        "resource_type_slug" to resourceTypeSlug
+        "role_slug" to roleSlug
       )
+    when (resourceTarget) {
+      is ResourceTarget.ById -> body["resource_id"] = resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        body["resource_external_id"] = resourceTarget.resourceExternalId
+        body["resource_type_slug"] = resourceTarget.resourceTypeSlug
+      }
+    }
     val config =
       RequestConfig(
         method = "POST",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -342,40 +320,29 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to remove.
-   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
-   * @param resourceExternalId The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`.
-   * @param resourceTypeSlug The resource type slug. Required with `resource_external_id`. Mutually exclusive with `resource_id`.
    */
   @JvmOverloads
   fun removeRole(
     organizationMembershipId: String,
     resourceTarget: ResourceTarget,
     roleSlug: String,
-    resourceId: String? = null,
-    resourceExternalId: String? = null,
-    resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ) {
-    val params = mutableListOf<Pair<String, String>>()
-    when (resourceTarget) {
-      is ResourceTarget.ById -> params += "resource_id" to resourceTarget.resourceId
-      is ResourceTarget.ByExternalId -> {
-        params += "resource_external_id" to resourceTarget.resourceExternalId
-        params += "resource_type_slug" to resourceTarget.resourceTypeSlug
-      }
-    }
     val body =
       bodyOf(
-        "role_slug" to roleSlug,
-        "resource_id" to resourceId,
-        "resource_external_id" to resourceExternalId,
-        "resource_type_slug" to resourceTypeSlug
+        "role_slug" to roleSlug
       )
+    when (resourceTarget) {
+      is ResourceTarget.ById -> body["resource_id"] = resourceTarget.resourceId
+      is ResourceTarget.ByExternalId -> {
+        body["resource_external_id"] = resourceTarget.resourceExternalId
+        body["resource_type_slug"] = resourceTarget.resourceTypeSlug
+      }
+    }
     val config =
       RequestConfig(
         method = "DELETE",
         path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -676,9 +643,6 @@ class Authorization(
    * @param externalId An identifier you provide to reference the resource in your system.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
-   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
@@ -690,34 +654,26 @@ class Authorization(
     parentResource: ParentResource? = null,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
-    parentResourceId: PatchField<String> = PatchField.Absent,
-    parentResourceExternalId: PatchField<String> = PatchField.Absent,
-    parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
-    if (parentResource != null) {
-      when (parentResource) {
-        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
-        is ParentResource.ByExternalId -> {
-          params += "parent_resource_external_id" to parentResource.externalId
-          params += "parent_resource_type_slug" to parentResource.typeSlug
-        }
-      }
-    }
     val body =
       patchBodyOf(
         "name" to name,
-        "description" to description,
-        "parent_resource_id" to parentResourceId,
-        "parent_resource_external_id" to parentResourceExternalId,
-        "parent_resource_type_slug" to parentResourceTypeSlug
+        "description" to description
       )
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
+        is ParentResource.ByExternalId -> {
+          body["parent_resource_external_id"] = parentResource.externalId
+          body["parent_resource_type_slug"] = parentResource.typeSlug
+        }
+      }
+    }
     val config =
       RequestConfig(
         method = "PATCH",
         path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -787,11 +743,11 @@ class Authorization(
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
       params += "permission_slug" to permissionSlug.toString()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (assignment != null) params += "assignment" to assignment.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -833,7 +789,6 @@ class Authorization(
   ): Page<AuthorizationResource> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (organizationId != null) params += "organization_id" to organizationId.toString()
@@ -849,6 +804,7 @@ class Authorization(
         }
       }
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -871,9 +827,6 @@ class Authorization(
    * @param resourceTypeSlug The slug of the resource type.
    * @param organizationId The ID of the organization this resource belongs to.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
-   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
@@ -885,37 +838,29 @@ class Authorization(
     resourceTypeSlug: String,
     organizationId: String,
     description: String? = null,
-    parentResourceId: String? = null,
-    parentResourceExternalId: String? = null,
-    parentResourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
-    if (parentResource != null) {
-      when (parentResource) {
-        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
-        is ParentResource.ByExternalId -> {
-          params += "parent_resource_external_id" to parentResource.externalId
-          params += "parent_resource_type_slug" to parentResource.typeSlug
-        }
-      }
-    }
     val body =
       bodyOf(
         "external_id" to externalId,
         "name" to name,
         "resource_type_slug" to resourceTypeSlug,
         "organization_id" to organizationId,
-        "description" to description,
-        "parent_resource_id" to parentResourceId,
-        "parent_resource_external_id" to parentResourceExternalId,
-        "parent_resource_type_slug" to parentResourceTypeSlug
+        "description" to description
       )
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
+        is ParentResource.ByExternalId -> {
+          body["parent_resource_external_id"] = parentResource.externalId
+          body["parent_resource_type_slug"] = parentResource.typeSlug
+        }
+      }
+    }
     val config =
       RequestConfig(
         method = "POST",
         path = "/authorization/resources",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -953,9 +898,6 @@ class Authorization(
    * @param resourceId The ID of the authorization resource.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
-   * @param parentResourceId The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`.
-   * @param parentResourceExternalId The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`.
-   * @param parentResourceTypeSlug The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`.
    *
    * @return the AuthorizationResource
    */
@@ -965,34 +907,26 @@ class Authorization(
     parentResource: ParentResource? = null,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
-    parentResourceId: PatchField<String> = PatchField.Absent,
-    parentResourceExternalId: PatchField<String> = PatchField.Absent,
-    parentResourceTypeSlug: PatchField<String> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
-    val params = mutableListOf<Pair<String, String>>()
-    if (parentResource != null) {
-      when (parentResource) {
-        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
-        is ParentResource.ByExternalId -> {
-          params += "parent_resource_external_id" to parentResource.externalId
-          params += "parent_resource_type_slug" to parentResource.typeSlug
-        }
-      }
-    }
     val body =
       patchBodyOf(
         "name" to name,
-        "description" to description,
-        "parent_resource_id" to parentResourceId,
-        "parent_resource_external_id" to parentResourceExternalId,
-        "parent_resource_type_slug" to parentResourceTypeSlug
+        "description" to description
       )
+    if (parentResource != null) {
+      when (parentResource) {
+        is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
+        is ParentResource.ByExternalId -> {
+          body["parent_resource_external_id"] = parentResource.externalId
+          body["parent_resource_type_slug"] = parentResource.typeSlug
+        }
+      }
+    }
     val config =
       RequestConfig(
         method = "PATCH",
         path = "/authorization/resources/$resourceId",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -1054,11 +988,11 @@ class Authorization(
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
       params += "permission_slug" to permissionSlug.toString()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       if (assignment != null) params += "assignment" to assignment.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",
@@ -1264,10 +1198,10 @@ class Authorization(
   ): Page<AuthorizationPermission> {
     fun configFor(afterCursor: String? = null): RequestConfig {
       val params = mutableListOf<Pair<String, String>>()
-      if (before != null) params += "before" to before.toString()
       if (limit != null) params += "limit" to limit.toString()
       if (order != null) params += "order" to order.value
       val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
       if (effectiveAfter != null) params += "after" to effectiveAfter
       return RequestConfig(
         method = "GET",

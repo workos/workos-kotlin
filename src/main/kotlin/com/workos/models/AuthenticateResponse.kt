@@ -8,35 +8,27 @@ import com.workos.types.AuthenticateResponseAuthenticationMethod
 /** AuthenticateResponse model. */
 data class AuthenticateResponse(
   /** The corresponding [user](https://workos.com/docs/reference/authkit/user) object. */
-  @JvmField
   @JsonProperty("user")
   val user: User,
   /** A JWT containing information about the current session. */
-  @JvmField
   @JsonProperty("access_token")
   val accessToken: String,
   /** [Exchange this token](https://workos.com/docs/reference/authkit/authentication/refresh-token) for a new access token. */
-  @JvmField
   @JsonProperty("refresh_token")
   val refreshToken: String,
   /** The ID of the organization the user selected to sign in to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null,
   /** An authorization code that can be exchanged for tokens by a different application. */
-  @JvmField
   @JsonProperty("authkit_authorization_code")
   val authkitAuthorizationCode: String? = null,
   /** The authentication method used to initiate the session. */
-  @JvmField
   @JsonProperty("authentication_method")
   val authenticationMethod: AuthenticateResponseAuthenticationMethod? = null,
   /** Information about the impersonator if this session was created via impersonation. */
-  @JvmField
   @JsonProperty("impersonator")
   val impersonator: AuthenticateResponseImpersonator? = null,
   /** The OAuth tokens from the identity provider, if applicable. */
-  @JvmField
   @JsonProperty("oauth_tokens")
   val oauthTokens: AuthenticateResponseOAuthToken? = null
 )

@@ -8,39 +8,30 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class OrganizationRoleCreatedData(
   /** The ID of the organization the role belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String,
   /** The slug identifier of the role. */
-  @JvmField
   @JsonProperty("slug")
   val slug: String,
   /** The name of the role. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** A description of the role. */
-  @JvmField
   @JsonProperty("description")
   val description: String?,
   /** The slug of the resource type the role applies to. */
-  @JvmField
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String,
   /** The permissions granted by the role. */
-  @JvmField
   @JsonProperty("permissions")
   val permissions: List<String>,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the organization role object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "organization_role"
+  val objectType: String = "organization_role"
 )

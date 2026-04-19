@@ -8,31 +8,24 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class EmailVerificationCreatedData(
   /** The unique ID of the email verification code. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The unique ID of the user. */
-  @JvmField
   @JsonProperty("user_id")
   val userId: String,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** The timestamp when the email verification code expires. */
-  @JvmField
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the email verification object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "email_verification"
+  val objectType: String = "email_verification"
 )

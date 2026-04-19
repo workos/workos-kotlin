@@ -8,55 +8,42 @@ import java.time.OffsetDateTime
 /** The user object. */
 data class User(
   /** The unique ID of the user. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The first name of the user. */
-  @JvmField
   @JsonProperty("first_name")
   val firstName: String?,
   /** The last name of the user. */
-  @JvmField
   @JsonProperty("last_name")
   val lastName: String?,
   /** A URL reference to an image representing the user. */
-  @JvmField
   @JsonProperty("profile_picture_url")
   val profilePictureUrl: String?,
   /** The email address of the user. */
-  @JvmField
   @JsonProperty("email")
   val email: String,
   /** Whether the user's email has been verified. */
-  @JvmField
   @JsonProperty("email_verified")
   val emailVerified: Boolean,
   /** The external ID of the user. */
-  @JvmField
   @JsonProperty("external_id")
   val externalId: String?,
   /** The timestamp when the user last signed in. */
-  @JvmField
   @JsonProperty("last_sign_in_at")
   val lastSignInAt: OffsetDateTime?,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the user object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "user",
+  val objectType: String = "user",
   /** Object containing metadata key/value pairs associated with the user. */
-  @JvmField
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null,
   /** The user's preferred locale. */
-  @JvmField
   @JsonProperty("locale")
   val locale: String? = null
 )

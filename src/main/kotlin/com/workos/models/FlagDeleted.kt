@@ -12,21 +12,18 @@ data class FlagDeleted(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: FlagDeletedData,
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
   /** Additional context about the event. */
-  @JvmField
   @JsonProperty("context")
   val context: FlagDeletedContext,
   /** Always `"flag.deleted"`. */
   @JsonProperty("event")
   override val event: String = "flag.deleted",
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

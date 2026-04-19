@@ -10,35 +10,27 @@ import java.time.OffsetDateTime
 /** The event payload. */
 data class DsyncDeletedData(
   /** Unique identifier of the directory. */
-  @JvmField
   @JsonProperty("id")
   val id: String,
   /** The type of the directory. */
-  @JvmField
   @JsonProperty("type")
   val type: DsyncDeletedDataType,
   /** The current state of the directory. */
-  @JvmField
   @JsonProperty("state")
   val state: DsyncDeletedDataState,
   /** The name of the directory. */
-  @JvmField
   @JsonProperty("name")
   val name: String,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
   /** An ISO 8601 timestamp. */
-  @JvmField
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
   /** Distinguishes the directory object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "directory",
+  val objectType: String = "directory",
   /** The ID of the organization the directory belongs to. */
-  @JvmField
   @JsonProperty("organization_id")
   val organizationId: String? = null
 )

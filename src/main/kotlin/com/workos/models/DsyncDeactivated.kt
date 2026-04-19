@@ -12,7 +12,6 @@ data class DsyncDeactivated(
   @JsonProperty("id")
   override val id: String,
   /** The event payload. */
-  @JvmField
   @JsonProperty("data")
   val data: DsyncDeactivatedData,
   /** An ISO 8601 timestamp. */
@@ -21,11 +20,9 @@ data class DsyncDeactivated(
   /** Always `"dsync.deactivated"`. */
   @JsonProperty("event")
   override val event: String = "dsync.deactivated",
-  @JvmField
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */
-  @JvmField
   @JsonProperty("object")
-  val `object`: String = "event"
+  val objectType: String = "event"
 ) : WorkOSEvent

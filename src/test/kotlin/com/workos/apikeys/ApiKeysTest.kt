@@ -54,7 +54,7 @@ class ApiKeysTest : TestBase() {
     )
     val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
     assertNotNull(result)
-    assertEquals("api_key", result.`object`)
+    assertEquals("api_key", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.name)
     assertEquals("sample", result.obfuscatedValue)

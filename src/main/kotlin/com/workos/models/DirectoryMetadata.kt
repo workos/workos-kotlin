@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 /** Aggregate counts of directory users and groups synced from the provider. */
 data class DirectoryMetadata(
   /** Counts of active and inactive directory users. */
-  @JvmField
   @JsonProperty("users")
   val users: DirectoryMetadataUser,
   /** Count of directory groups. */
-  @JvmField
   @JsonProperty("groups")
   val groups: Long
 )
