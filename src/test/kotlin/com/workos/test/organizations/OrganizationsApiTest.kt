@@ -1,6 +1,6 @@
 package com.workos.test.organizations
 
-import com.github.tomakehurst.wiremock.client.WireMock.* // ktlint-disable no-wildcard-imports
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.organizations.OrganizationsApi
 import com.workos.organizations.OrganizationsApi.CreateOrganizationOptions
@@ -14,12 +14,14 @@ import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class OrganizationsApiTest : TestBase() {
   private fun prepareCreateOrganizationTest(body: String): Map<String, String> {
     val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
     val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
     val organizationDomainName = "Test Organization"
+    val organizationExternalId = "external_12345"
 
     stubResponse(
       url = "/organizations",
@@ -37,7 +39,11 @@ class OrganizationsApiTest : TestBase() {
             "id": "$organizationDomainId",
             "organization_id": "$organizationId"
           }
-        ]
+        ],
+        "external_id": "$organizationExternalId",
+        "metadata": {
+          "tier": "pro"
+        }
       }""",
       requestBody = body
     )
@@ -45,7 +51,9 @@ class OrganizationsApiTest : TestBase() {
     return mapOf(
       "organizationId" to organizationId,
       "organizationDomainId" to organizationDomainId,
-      "organizationDomainName" to organizationDomainName
+      "organizationDomainName" to organizationDomainName,
+      "externalId" to organizationExternalId,
+      "metadataTier" to "pro",
     )
   }
 
@@ -58,10 +66,13 @@ class OrganizationsApiTest : TestBase() {
     )
 
     val organization = workos.organizations.createOrganization()
+    val metadata = organization.metadata
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["externalId"], organization.externalId)
+    assertEquals(data["metadataTier"], metadata?.get("tier"))
   }
 
   @Test
@@ -77,7 +88,11 @@ class OrganizationsApiTest : TestBase() {
             "domain": "example.com",
             "state": "pending"
           }
-        ]
+        ],
+        "external_id": "external_12345",
+        "metadata": {
+          "tier": "pro"
+        }
       }"""
     )
 
@@ -92,13 +107,18 @@ class OrganizationsApiTest : TestBase() {
           )
         )
       )
+      .externalId("external_12345")
+      .metadata(mapOf("tier" to "pro"))
       .build()
 
     val organization = workos.organizations.createOrganization(config)
+    val metadata = organization.metadata
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["externalId"], organization.externalId)
+    assertEquals(data["metadataTier"], metadata?.get("tier"))
   }
 
   @Test
@@ -120,10 +140,13 @@ class OrganizationsApiTest : TestBase() {
       .build()
 
     val organization = workos.organizations.createOrganization(config)
+    val metadata = organization.metadata
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["externalId"], organization.externalId)
+    assertEquals(data["metadataTier"], metadata?.get("tier"))
   }
 
   @Test
@@ -164,10 +187,13 @@ class OrganizationsApiTest : TestBase() {
         null
       )
     )
+    val metadata = organization.metadata
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["externalId"], organization.externalId)
+    assertEquals(data["metadataTier"], metadata?.get("tier"))
   }
 
   @Test
@@ -208,6 +234,8 @@ class OrganizationsApiTest : TestBase() {
     )
 
     assertEquals("Organization Name", organization.name)
+    assertNull(organization.externalId)
+    assertNull(organization.metadata)
   }
 
   @Test
@@ -270,7 +298,8 @@ class OrganizationsApiTest : TestBase() {
             "verification_strategy": "dns",
             "verification_token": "rqURsMUCuiaSggGyed8ZAnMk"
           }
-        ]
+        ],
+        "external_id": "external_12345"
       }"""
     )
 
@@ -282,6 +311,7 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(OrganizationDomainState.Verified, organization.domains[0].state)
     assertEquals(OrganizationDomainVerificationStrategy.Dns, organization.domains[0].verificationStrategy)
     assertEquals("rqURsMUCuiaSggGyed8ZAnMk", organization.domains[0].verificationToken)
+    assertEquals("external_12345", organization.externalId)
   }
 
   @Test
@@ -331,6 +361,7 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(OrganizationDomainState.Verified, organizations.get(0).domains[0].state)
     assertEquals(OrganizationDomainVerificationStrategy.Dns, organizations.get(0).domains[0].verificationStrategy)
     assertEquals("rqURsMUCuiaSggGyed8ZAnMk", organizations.get(0).domains[0].verificationToken)
+    assertNull(organizations.get(0).externalId)
   }
 
   @Test
@@ -436,6 +467,8 @@ class OrganizationsApiTest : TestBase() {
     val organizationId = "org_01FJYCNTB6VC4K5R8BTF86286Q"
     val organizationDomainId = "org_domain_01EHT88Z8WZEFWYPM6EC9BX2R8"
     val organizationDomainName = "Test Organization"
+    val organizationStripeCustomerId = "cus_R9qWAGMQ6nGE7V"
+    val organizationExternalId = "external_12345"
 
     stubResponse(
       url = "/organizations/$organizationId",
@@ -453,7 +486,9 @@ class OrganizationsApiTest : TestBase() {
             "id": "$organizationDomainId",
             "organization_id": "$organizationId"
           }
-        ]
+        ],
+        "stripe_customer_id": "cus_R9qWAGMQ6nGE7V",
+        "external_id": "$organizationExternalId"
       }""",
       requestBody = body
     )
@@ -461,7 +496,9 @@ class OrganizationsApiTest : TestBase() {
     return mapOf(
       "organizationId" to organizationId,
       "organizationDomainId" to organizationDomainId,
-      "organizationDomainName" to organizationDomainName
+      "organizationDomainName" to organizationDomainName,
+      "organizationStripeCustomerId" to organizationStripeCustomerId,
+      "organizationExternalId" to organizationExternalId,
     )
   }
 
@@ -478,6 +515,8 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["organizationStripeCustomerId"], organization.stripeCustomerId)
+    assertEquals(data["organizationExternalId"], organization.externalId)
   }
 
   @Test
@@ -493,7 +532,9 @@ class OrganizationsApiTest : TestBase() {
             "domain": "example.com",
             "state": "verified"
           }
-        ]
+        ],
+        "stripe_customer_id": "cus_R9qWAGMQ6nGE7V",
+        "external_id": "external_12345"
       }"""
     )
 
@@ -508,6 +549,8 @@ class OrganizationsApiTest : TestBase() {
           )
         )
       )
+      .stripeCustomerId("cus_R9qWAGMQ6nGE7V")
+      .externalId("external_12345")
       .build()
 
     val organization = workos.organizations.updateOrganization(data["organizationId"]!!, config)
@@ -515,6 +558,8 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["organizationStripeCustomerId"], organization.stripeCustomerId)
+    assertEquals(data["organizationExternalId"], organization.externalId)
   }
 
   @Test
@@ -536,6 +581,8 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["organizationStripeCustomerId"], organization.stripeCustomerId)
+    assertEquals(data["organizationExternalId"], organization.externalId)
   }
 
   @Test
@@ -555,7 +602,9 @@ class OrganizationsApiTest : TestBase() {
             "domain": "bar.com",
             "state": "verified"
           }
-        ]
+        ],
+        "stripe_customer_id": "cus_R9qWAGMQ6nGE7V",
+        "external_id": "external_12345"
       }"""
     )
 
@@ -575,12 +624,16 @@ class OrganizationsApiTest : TestBase() {
           )
         ),
         null,
+        "cus_R9qWAGMQ6nGE7V",
+        "external_12345"
       )
     )
 
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["organizationStripeCustomerId"], organization.stripeCustomerId)
+    assertEquals(data["organizationExternalId"], organization.externalId)
   }
 
   @Test
@@ -608,6 +661,8 @@ class OrganizationsApiTest : TestBase() {
     assertEquals(data["organizationId"], organization.id)
     assertEquals(data["organizationDomainName"], organization.name)
     assertEquals(data["organizationDomainId"], organization.domains[0].id)
+    assertEquals(data["organizationStripeCustomerId"], organization.stripeCustomerId)
+    assertEquals(data["organizationExternalId"], organization.externalId)
   }
 
   @Test
