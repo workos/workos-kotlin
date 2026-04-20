@@ -23,7 +23,7 @@ import kotlin.jvm.Throws
 class Webhook
   @JvmOverloads
   constructor(
-    private val objectMapper: ObjectMapper = ObjectMapperFactory.create()
+    private val objectMapper: ObjectMapper = ObjectMapperFactory.default
   ) {
     /**
      * Validate the `WorkOS-Signature` header against [payload] and return the

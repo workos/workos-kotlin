@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-class WebhooksTest : TestBase() {
+class WebhooksServiceTest : TestBase() {
   private fun api() = Webhooks(createWorkOSClient())
 
   @Test

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import java.security.SignatureException
 import java.time.Instant
 
-class WebhookTest {
+class WebhookVerifierTest {
   private val webhooks = Webhook()
   private val secret = "test_secret"
   private val payload =

@@ -18,6 +18,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
  *    converting to epoch milliseconds.
  */
 object ObjectMapperFactory {
+  /** Cached default instance. Thread-safe because ObjectMapper is immutable once configured. */
+  @JvmField
+  val default: ObjectMapper = create()
+
   @JvmStatic
   fun create(): ObjectMapper =
     jacksonMapperBuilder()

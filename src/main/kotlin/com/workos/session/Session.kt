@@ -363,7 +363,7 @@ class Session internal constructor(
 val WorkOS.session: Session
   get() = service(Session::class) { Session(this) }
 
-internal fun defaultObjectMapper(): ObjectMapper = ObjectMapperFactory.create()
+internal fun defaultObjectMapper(): ObjectMapper = ObjectMapperFactory.default
 
 internal fun unsealSessionData(
   sealed: String,

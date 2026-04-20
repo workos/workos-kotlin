@@ -47,7 +47,7 @@ data class SignedActionResponse(
 class Actions
   @JvmOverloads
   constructor(
-    private val objectMapper: ObjectMapper = ObjectMapperFactory.create()
+    private val objectMapper: ObjectMapper = ObjectMapperFactory.default
   ) {
     /**
      * Verify the signature header on an incoming AuthKit action request and

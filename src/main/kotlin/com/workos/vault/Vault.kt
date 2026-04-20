@@ -7,6 +7,7 @@ package com.workos.vault
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
+import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import java.security.SecureRandom
@@ -84,28 +85,26 @@ class Vault(
 
   @JvmOverloads
   fun listObjects(
-    limit: Int = DEFAULT_RESPONSE_LIMIT,
     before: String? = null,
     after: String? = null,
+    limit: Long? = null,
     requestOptions: RequestOptions? = null
-  ): List<ObjectDigest> {
-    val params = mutableListOf<Pair<String, String>>()
-    params += "limit" to limit.toString()
-    if (before != null) params += "before" to before
-    if (after != null) params += "after" to after
-    val config =
-      RequestConfig(
+  ): Page<ObjectDigest> {
+    fun configFor(afterCursor: String? = null): RequestConfig {
+      val params = mutableListOf<Pair<String, String>>()
+      if (limit != null) params += "limit" to limit.toString()
+      val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
+      if (effectiveAfter != null) params += "after" to effectiveAfter
+      return RequestConfig(
         method = "GET",
         path = "/vault/v1/kv",
         queryParams = params,
         requestOptions = requestOptions
       )
-    val wrapper =
-      workos.baseClient.request(
-        config,
-        object : TypeReference<ListResponse<ObjectDigest>>() {}
-      )
-    return wrapper.data
+    }
+    val itemType = object : TypeReference<ObjectDigest>() {}
+    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
   @JvmOverloads
@@ -208,20 +207,26 @@ class Vault(
   @JvmOverloads
   fun listObjectVersions(
     objectId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Long? = null,
     requestOptions: RequestOptions? = null
-  ): List<ObjectVersion> {
-    val config =
-      RequestConfig(
+  ): Page<ObjectVersion> {
+    fun configFor(afterCursor: String? = null): RequestConfig {
+      val params = mutableListOf<Pair<String, String>>()
+      if (limit != null) params += "limit" to limit.toString()
+      val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) params += "before" to before
+      if (effectiveAfter != null) params += "after" to effectiveAfter
+      return RequestConfig(
         method = "GET",
         path = "/vault/v1/kv/$objectId/versions",
+        queryParams = params,
         requestOptions = requestOptions
       )
-    val wrapper =
-      workos.baseClient.request(
-        config,
-        object : TypeReference<ListResponse<ObjectVersion>>() {}
-      )
-    return wrapper.data
+    }
+    val itemType = object : TypeReference<ObjectVersion>() {}
+    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
   // -- Key operations --
@@ -340,12 +345,6 @@ class Vault(
     val ciphertext: ByteArray
   )
 
-  private data class ListResponse<T>
-    @JvmOverloads
-    constructor(
-      val data: List<T> = emptyList()
-    )
-
   private data class CreateDataKeyResponse(
     val context: KeyContext,
     @JsonProperty("data_key") val dataKey: String,
@@ -417,7 +416,6 @@ class Vault(
   }
 
   companion object {
-    const val DEFAULT_RESPONSE_LIMIT: Int = 10
     private const val IV_LENGTH_BYTES = 12
     private const val TAG_LENGTH_BYTES = 16
     private const val GCM_TAG_BITS = 128

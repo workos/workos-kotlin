@@ -46,7 +46,7 @@ class VaultTest : TestBase() {
   private fun api() = Vault(createWorkOSClient())
 
   @Test
-  fun `listObjects unwraps the data array`() {
+  fun `listObjects returns a Page of ObjectDigest`() {
     wireMockRule.stubFor(
       get(urlPathEqualTo("/vault/v1/kv"))
         .willReturn(
@@ -54,13 +54,13 @@ class VaultTest : TestBase() {
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
             .withBody(
-              """{"data":[{"id":"vo_1","name":"a","updated_at":"2024-01-01T00:00:00Z"}]}"""
+              """{"data":[{"id":"vo_1","name":"a","updated_at":"2024-01-01T00:00:00Z"}],"list_metadata":{"after":null,"before":null}}"""
             )
         )
     )
     val result = api().listObjects()
-    assertEquals(1, result.size)
-    assertEquals("vo_1", result[0].id)
+    assertEquals(1, result.data.size)
+    assertEquals("vo_1", result.data[0].id)
   }
 
   @Test
@@ -157,13 +157,13 @@ class VaultTest : TestBase() {
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
             .withBody(
-              """{"data":[{"id":"v_1","created_at":"2024-01-01T00:00:00Z","current_version":true}]}"""
+              """{"data":[{"id":"v_1","created_at":"2024-01-01T00:00:00Z","current_version":true}],"list_metadata":{"after":null,"before":null}}"""
             )
         )
     )
     val result = api().listObjectVersions("vo_1")
-    assertEquals(1, result.size)
-    assertEquals(true, result[0].currentVersion)
+    assertEquals(1, result.data.size)
+    assertEquals(true, result.data[0].currentVersion)
   }
 
   @Test

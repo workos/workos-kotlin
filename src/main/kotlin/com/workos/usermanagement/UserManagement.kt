@@ -31,6 +31,7 @@ import com.workos.models.UserOrganizationMembership
 import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
+import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
 
@@ -41,7 +42,7 @@ sealed class Password {
 
   data class Hashed(
     val hash: String,
-    val hashType: String
+    val hashType: CreateUserPasswordHashType
   ) : Password()
 }
 
@@ -51,7 +52,7 @@ sealed class Role {
   ) : Role()
 
   data class Multiple(
-    val slugs: String
+    val slugs: List<String>
   ) : Role()
 }
 

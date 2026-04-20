@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-19T04:23:58.110Z",
+  "generatedAt": "2026-04-20T07:30:38.097Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -422,6 +422,7 @@
     "src/main/kotlin/com/workos/models/WebhookEndpointJson.kt",
     "src/main/kotlin/com/workos/models/WidgetSessionToken.kt",
     "src/main/kotlin/com/workos/models/WidgetSessionTokenResponse.kt",
+    "src/main/kotlin/com/workos/models/WorkOSEvent.kt",
     "src/main/kotlin/com/workos/multifactorauth/MultiFactorAuth.kt",
     "src/main/kotlin/com/workos/organizationdomains/OrganizationDomains.kt",
     "src/main/kotlin/com/workos/organizations/Organizations.kt",

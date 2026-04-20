@@ -46,7 +46,7 @@ dependencies {
 
 ## Compatibility
 
-- JDK 11+
+- JDK 17+
 - Kotlin 2.1.x or newer
 
 ## Configuration
@@ -130,13 +130,11 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 
 ```kotlin
 import com.workos.WorkOS
-import com.workos.organizations.organizations
 
 val workos = WorkOS(System.getenv("WORKOS_API_KEY"))
 
-val org = workos.organizations.createOrganization(
+val org = workos.organizations.create(
   name = "Foo Corp",
-  domainData = emptyList(),
 )
 println("Created ${org.id}")
 
@@ -172,7 +170,7 @@ server provides one.
 import com.workos.common.exceptions.NotFoundException
 
 try {
-  workos.organizations.getOrganization("org_nope")
+  workos.organizations.get("org_nope")
 } catch (e: NotFoundException) {
   println("Not found: ${e.message}")
 }
@@ -180,13 +178,13 @@ try {
 
 ## Webhook signatures
 
-`workos.webhooks` ships a Webhook helper for validating signatures on
-inbound webhook payloads.
+The standalone `Webhook` helper validates signatures on inbound webhook
+payloads.
 
 ```kotlin
-val event = workos.webhooks.constructEvent(
+val event = com.workos.webhooks.Webhook().constructEvent(
   payload = rawRequestBody,
-  sigHeader = request.getHeader("WorkOS-Signature"),
+  signatureHeader = request.getHeader("WorkOS-Signature"),
   secret = System.getenv("WORKOS_WEBHOOK_SECRET"),
 )
 ```
@@ -212,9 +210,8 @@ per-call overrides:
 ```kotlin
 import com.workos.common.http.RequestOptions
 
-workos.organizations.createOrganization(
+workos.organizations.create(
   name = "Foo Corp",
-  domainData = emptyList(),
   requestOptions = RequestOptions(
     idempotencyKey = java.util.UUID.randomUUID().toString(),
     maxRetries = 0,

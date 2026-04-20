@@ -3,7 +3,6 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.common.http.WorkOSEvent
 import java.time.OffsetDateTime
 
 /** DsyncDeleted model. */

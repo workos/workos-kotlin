@@ -8,7 +8,7 @@ package com.workos.common.exceptions
  * of [WorkOSException], so callers can write a single `catch (e: WorkOSException)`
  * block instead of leaking OkHttp / Jackson exceptions.
  */
-open class WorkOSException(
+sealed class WorkOSException(
   @JvmField val status: Int,
   @JvmField val requestId: String?,
   @JvmField val code: String?,

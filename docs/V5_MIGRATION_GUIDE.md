@@ -364,7 +364,50 @@ val profile = workos.sso.getProfile(
 )
 ```
 
-## 11. Error Handling And Retries Changed
+## 11. Retries Are On By Default
+
+v4 did not retry failed requests. v5 retries automatically with exponential
+backoff (up to 3 attempts by default). This affects all SDK methods.
+
+If a v4 caller was retrying manually, remove the retry loop — the SDK
+handles it now. To disable retries or tune the policy:
+
+```kotlin
+import com.workos.common.http.RetryConfig
+
+// Disable retries entirely
+val workos = WorkOS(
+  apiKey = apiKey,
+  retryConfig = RetryConfig.DISABLED,
+)
+
+// Or customize
+val workos = WorkOS(
+  apiKey = apiKey,
+  retryConfig = RetryConfig(maxRetries = 5),
+)
+
+// Per-request override
+workos.organizations.create(
+  name = "Acme",
+  requestOptions = RequestOptions.builder().maxRetries(0).build(),
+)
+```
+
+For retried POST requests that do not already carry an `Idempotency-Key`
+header, the SDK auto-generates one so the server can deduplicate. You can
+supply your own via `RequestOptions`:
+
+```kotlin
+workos.organizations.create(
+  name = "Acme",
+  requestOptions = RequestOptions.builder()
+    .idempotencyKey(java.util.UUID.randomUUID().toString())
+    .build(),
+)
+```
+
+## 12. Error Handling Changed
 
 All SDK errors now inherit from `com.workos.common.exceptions.WorkOSException`.
 
@@ -380,14 +423,13 @@ Typed subclasses include:
 
 New behavior to be aware of:
 
-- retries are now handled centrally instead of only on specific endpoints
 - `Retry-After` is honored for retryable responses
 - `RateLimitException` exposes `retryAfterSeconds`
 - `WorkOSException` includes `status`, `requestId`, `code`, `errors`, and `rawBody`
 
 If you previously caught generic transport exceptions from Fuel, update those catch blocks to catch `WorkOSException` or the specific typed subclass you care about.
 
-## 12. Public-Client Flows Have A Dedicated Client
+## 13. Public-Client Flows Have A Dedicated Client
 
 If you support browser, mobile, CLI, or desktop PKCE flows, v5 adds `PublicClient`.
 
@@ -406,7 +448,40 @@ val authUrl = publicClient.getAuthorizationUrlWithPKCE(
 
 Use `PublicClient` when you do not want to send a `client_secret` on the wire.
 
-## 13. Common Before/After Rewrites
+## 14. Session Cookies With Iron Encryption
+
+v5 adds `Session` helpers for managing sealed AuthKit session cookies.
+These use Iron Fe26.2 encryption (the same format used by the Node SDK's
+`iron-webcrypto` package) so session cookies are interoperable across
+SDKs.
+
+```kotlin
+import com.workos.session.Session
+
+val session = Session.create(
+  workos = workos,
+  cookiePassword = System.getenv("WORKOS_COOKIE_PASSWORD"),
+)
+
+// Seal an auth response into a cookie value
+val sealed = session.sealAuthResponse(authResponse)
+
+// Read session data from a cookie
+val data = session.unsealData(cookieValue)
+```
+
+Key points:
+
+- `cookiePassword` must be at least 32 characters; security rests on
+  password entropy, not iteration count.
+- `sealData` / `unsealData` let you store arbitrary JSON in Iron-sealed
+  cookies.
+- `sealAuthResponse` produces a cookie value compatible with the Node
+  and Go SDK session helpers.
+- If the seal is malformed or the password doesn't match, `unsealData`
+  returns an empty map rather than throwing (matches Node SDK semantics).
+
+## 15. Common Before/After Rewrites
 
 ### Organizations
 
@@ -470,7 +545,7 @@ val url = workos.sso.getAuthorizationUrl(
 )
 ```
 
-## 14. Notable Additions In V5
+## 16. Notable Additions In V5
 
 In addition to the breaking changes above, this branch adds or expands:
 
