@@ -5,6 +5,7 @@ package com.workos.pipes
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.models.ConnectedAccount
 import com.workos.models.DataIntegrationAccessTokenResponse
@@ -103,7 +104,7 @@ class Pipes(
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
-    if (organizationId != null) params += "organization_id" to organizationId.toString()
+    params.addIfNotNull("organization_id", organizationId)
     val config =
       RequestConfig(
         method = "GET",
@@ -131,7 +132,7 @@ class Pipes(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
-    if (organizationId != null) params += "organization_id" to organizationId.toString()
+    params.addIfNotNull("organization_id", organizationId)
     val config =
       RequestConfig(
         method = "DELETE",
@@ -159,7 +160,7 @@ class Pipes(
     requestOptions: RequestOptions? = null
   ): DataIntegrationsListResponse {
     val params = mutableListOf<Pair<String, String>>()
-    if (organizationId != null) params += "organization_id" to organizationId.toString()
+    params.addIfNotNull("organization_id", organizationId)
     val config =
       RequestConfig(
         method = "GET",

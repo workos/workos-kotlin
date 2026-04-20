@@ -56,4 +56,32 @@ class WebhookVerifierTest {
       webhooks.verifyHeader(payload, "bogus", secret, 60_000)
     }
   }
+
+  @Test
+  fun `reordered header fields are accepted`() {
+    val timestamp = Instant.now().toEpochMilli().toString()
+    val signature = webhooks.createSignature(timestamp, payload, secret)
+    val header = "v1=$signature, t=$timestamp"
+    webhooks.verifyHeader(payload, header, secret, 60_000)
+  }
+
+  @Test
+  fun `wrong secret is rejected`() {
+    val timestamp = Instant.now().toEpochMilli().toString()
+    val signature = webhooks.createSignature(timestamp, payload, secret)
+    val header = "t=$timestamp, v1=$signature"
+    assertThrows(SignatureException::class.java) {
+      webhooks.verifyHeader(payload, header, "wrong_secret", 60_000)
+    }
+  }
+
+  @Test
+  fun `tampered payload is rejected`() {
+    val timestamp = Instant.now().toEpochMilli().toString()
+    val signature = webhooks.createSignature(timestamp, payload, secret)
+    val header = "t=$timestamp, v1=$signature"
+    assertThrows(SignatureException::class.java) {
+      webhooks.verifyHeader("""{"tampered":true}""", header, secret, 60_000)
+    }
+  }
 }

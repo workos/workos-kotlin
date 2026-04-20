@@ -5,8 +5,9 @@ package com.workos.events
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
 import com.workos.common.http.Page
-import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
+import com.workos.common.http.addJoinedIfNotNull
 import com.workos.models.EventSchema
 import com.workos.types.EventsOrder
 
@@ -34,7 +35,7 @@ class Events(
   fun list(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     events: List<String>? = null,
     rangeStart: String? = null,
@@ -42,25 +43,22 @@ class Events(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<EventSchema> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (events != null) params += "events" to events.joinToString(",") { it.toString() }
-      if (rangeStart != null) params += "range_start" to rangeStart.toString()
-      if (rangeEnd != null) params += "range_end" to rangeEnd.toString()
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/events",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<EventSchema>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/events",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addJoinedIfNotNull("events", events?.map { it })
+      params.addIfNotNull("range_start", rangeStart)
+      params.addIfNotNull("range_end", rangeEnd)
+      params.addIfNotNull("organization_id", organizationId)
+    }
   }
 }

@@ -1,6 +1,7 @@
 // @oagen-ignore-file
 package com.workos.common.http
 
+import java.security.MessageDigest
 import java.time.Instant
 import java.time.format.DateTimeParseException
 import java.util.concurrent.ThreadLocalRandom
@@ -54,9 +55,14 @@ class RetryPolicy(
   }
 
   /** Generate an idempotency key for an otherwise unkeyed POST retry. */
-  fun generateIdempotencyKey(): String {
-    // UUIDs are pretty much unguessable and cheap to produce.
-    return "retry-${java.util.UUID.randomUUID()}"
+  fun generateIdempotencyKey(seed: String? = null): String {
+    val material =
+      seed ?: java.util.UUID
+        .randomUUID()
+        .toString()
+    val digest = MessageDigest.getInstance("SHA-256").digest(material.toByteArray(Charsets.UTF_8))
+    val token = digest.joinToString("") { "%02x".format(it) }
+    return "retry-$token"
   }
 
   private fun backoffMs(attempt: Int): Long {

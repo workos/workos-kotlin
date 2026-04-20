@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "kotlin",
-  "generatedAt": "2026-04-20T07:30:38.097Z",
+  "generatedAt": "2026-04-20T18:03:02.067Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -428,7 +428,7 @@
     "src/main/kotlin/com/workos/organizations/Organizations.kt",
     "src/main/kotlin/com/workos/pipes/Pipes.kt",
     "src/main/kotlin/com/workos/radar/Radar.kt",
-    "src/main/kotlin/com/workos/sso/SSO.kt",
+    "src/main/kotlin/com/workos/sso/Sso.kt",
     "src/main/kotlin/com/workos/types/ApplicationsOrder.kt",
     "src/main/kotlin/com/workos/types/AuditLogConfigurationLogStreamState.kt",
     "src/main/kotlin/com/workos/types/AuditLogConfigurationLogStreamType.kt",
@@ -588,7 +588,7 @@
     "src/test/kotlin/com/workos/organizations/OrganizationsTest.kt",
     "src/test/kotlin/com/workos/pipes/PipesTest.kt",
     "src/test/kotlin/com/workos/radar/RadarTest.kt",
-    "src/test/kotlin/com/workos/sso/SSOTest.kt",
+    "src/test/kotlin/com/workos/sso/SsoTest.kt",
     "src/test/kotlin/com/workos/usermanagement/UserManagementTest.kt",
     "src/test/kotlin/com/workos/webhooks/WebhooksTest.kt",
     "src/test/kotlin/com/workos/widgets/WidgetsTest.kt"

@@ -182,26 +182,23 @@ class MultiFactorAuth(
     userlandUserId: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthenticationFactor> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/users/$userlandUserId/auth_factors",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuthenticationFactor>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/users/$userlandUserId/auth_factors",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**

@@ -25,4 +25,8 @@ data class RequestConfig
     val formBody: Map<String, String>? = null,
     val accessToken: String? = null,
     val requestOptions: RequestOptions? = null
-  )
+  ) {
+    init {
+      require(path.startsWith("/")) { "RequestConfig.path must start with '/'" }
+    }
+  }

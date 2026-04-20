@@ -1,3 +1,4 @@
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -42,8 +43,6 @@ dependencies {
 
   implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-  implementation("commons-codec:commons-codec:1.17.1")
-
   // JWT verification + JWKS handling for session helpers (hand-maintained).
   implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
 
@@ -60,8 +59,6 @@ dependencies {
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
   testImplementation("org.wiremock:wiremock:3.13.2")
-
-  api("org.apache.commons:commons-math3:3.6.1")
 }
 
 val generatedVersionDir = layout.buildDirectory.dir("generated-version")
@@ -101,11 +98,16 @@ tasks.named("javadoc") {
 dokka {
   dokkaPublications.javadoc {
     outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+    failOnWarning.set(true)
   }
 
   dokkaSourceSets.configureEach {
     reportUndocumented.set(true)
   }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+  failOnWarning.set(true)
 }
 
 tasks.jar {

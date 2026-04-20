@@ -5,6 +5,7 @@ The WorkOS Kotlin library provides convenient access to the WorkOS API from appl
 ## Documentation
 
 See the [API Reference](https://workos.com/docs/reference/client-libraries) for Kotlin/Java usage examples.
+See the [v5 migration guide](./docs/V5_MIGRATION_GUIDE.md) when upgrading from the pre-generated SDK surface.
 
 ## Installation
 
@@ -164,7 +165,9 @@ Each exception exposes the response `code`, human-readable `message`, and
 any structured validation `errors` returned by the API.
 `RateLimitException` additionally exposes `retryAfterSeconds` parsed from
 the `Retry-After` response header (delta-seconds or HTTP-date) when the
-server provides one.
+server provides one. `WorkOSException.rawBody` also preserves the raw HTTP
+response body for debugging; treat it as sensitive because it can contain
+PII or secrets that should be redacted before logging.
 
 ```kotlin
 import com.workos.common.exceptions.NotFoundException
@@ -212,10 +215,11 @@ import com.workos.common.http.RequestOptions
 
 workos.organizations.create(
   name = "Foo Corp",
-  requestOptions = RequestOptions(
-    idempotencyKey = java.util.UUID.randomUUID().toString(),
-    maxRetries = 0,
-  ),
+  requestOptions =
+    RequestOptions.builder()
+      .idempotencyKey(java.util.UUID.randomUUID().toString())
+      .maxRetries(0)
+      .build(),
 )
 ```
 

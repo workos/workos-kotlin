@@ -68,4 +68,11 @@ class IronTest {
     val ex = assertThrows(IronException::class.java) { Iron.unseal(sealed, password) }
     assert(ex.message!!.contains("Expired"))
   }
+
+  @Test
+  fun `unseal accepts a fixed iron-webcrypto fixture from workos-node`() {
+    val sealed =
+      "Fe26.2*1*570ef110e7801942ced24e79800baeb86d4f803120fa48b1c057bfb083ee16d6*M5mIO8mKHP8wFo5VxgIC_g*cKhTnmvcPkxH6euF9Bn5TvhrlOvOwQMb92PbnaVMiOs**248b6fba3acd1ab0d31c5a2698a057dd0df62e319dce60fae2d4ddd8420e25f6*pV7Ipp4YGGBlIdhYCEidU4coZiSLrgyb4qlWXCxDcqk"
+    assertEquals("""{"user":"alice"}""", Iron.unseal(sealed, password))
+  }
 }

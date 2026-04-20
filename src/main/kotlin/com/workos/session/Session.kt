@@ -22,16 +22,28 @@ import java.util.concurrent.ConcurrentHashMap
 
 /** Reason an `authenticate()` call failed. */
 enum class AuthenticateSessionFailureReason {
+  /** No sealed session cookie was provided by the caller. */
   NO_SESSION_COOKIE_PROVIDED,
+
+  /** The cookie was missing, malformed, expired, or could not be unsealed. */
   INVALID_SESSION_COOKIE,
+
+  /** The access token inside the cookie failed JWKS verification. */
   INVALID_JWT
 }
 
 /** Reason a `refresh()` call failed. */
 enum class RefreshSessionFailureReason {
+  /** The cookie was missing, malformed, expired, or could not be unsealed. */
   INVALID_SESSION_COOKIE,
+
+  /** The refresh token exchange was rejected by WorkOS as invalid. */
   INVALID_GRANT,
+
+  /** The refresh flow requires the user to complete MFA enrollment first. */
   MFA_ENROLLMENT,
+
+  /** The refresh flow requires an SSO re-authentication step. */
   SSO_REQUIRED
 }
 
@@ -57,29 +69,54 @@ data class AuthenticateSessionSuccess(
   val authenticationMethod: String? = null,
   val impersonator: Map<String, Any?>? = null,
   val accessToken: String
-) {
-  val authenticated: Boolean get() = true
-}
+)
 
 /** Failed `authenticate()` response. */
 data class AuthenticateSessionFailure(
   val reason: AuthenticateSessionFailureReason
-) {
-  val authenticated: Boolean get() = false
-}
+)
 
 /** Sum type returned by [SessionCookie.authenticate]. */
 sealed class AuthenticateSessionResult {
   data class Success(
-    val value: AuthenticateSessionSuccess
+    val sessionId: String,
+    val organizationId: String? = null,
+    val role: String? = null,
+    val roles: List<String>? = null,
+    val permissions: List<String>? = null,
+    val entitlements: List<String>? = null,
+    val featureFlags: List<String>? = null,
+    val user: Map<String, Any?>? = null,
+    val authenticationMethod: String? = null,
+    val impersonator: Map<String, Any?>? = null,
+    val accessToken: String
   ) : AuthenticateSessionResult()
 
   data class Failure(
-    val value: AuthenticateSessionFailure
+    val reason: AuthenticateSessionFailureReason
   ) : AuthenticateSessionResult()
 
   val authenticated: Boolean
     get() = this is Success
+
+  fun getSuccess(): AuthenticateSessionSuccess? =
+    (this as? Success)?.let {
+      AuthenticateSessionSuccess(
+        sessionId = it.sessionId,
+        organizationId = it.organizationId,
+        role = it.role,
+        roles = it.roles,
+        permissions = it.permissions,
+        entitlements = it.entitlements,
+        featureFlags = it.featureFlags,
+        user = it.user,
+        authenticationMethod = it.authenticationMethod,
+        impersonator = it.impersonator,
+        accessToken = it.accessToken
+      )
+    }
+
+  fun getFailure(): AuthenticateSessionFailure? = (this as? Failure)?.let { AuthenticateSessionFailure(it.reason) }
 }
 
 /** Successful `refresh()` response. */
@@ -141,48 +178,38 @@ class SessionCookie
     fun authenticate(): AuthenticateSessionResult {
       val data = sessionData
       if (data.isNullOrEmpty()) {
-        return AuthenticateSessionResult.Failure(
-          AuthenticateSessionFailure(AuthenticateSessionFailureReason.NO_SESSION_COOKIE_PROVIDED)
-        )
+        return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.NO_SESSION_COOKIE_PROVIDED)
       }
 
       val session =
         try {
           unsealSessionData(data, cookiePassword, objectMapper)
         } catch (_: IronException) {
-          return AuthenticateSessionResult.Failure(
-            AuthenticateSessionFailure(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE)
-          )
+          return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE)
         }
 
       if (session.accessToken.isEmpty()) {
-        return AuthenticateSessionResult.Failure(
-          AuthenticateSessionFailure(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE)
-        )
+        return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE)
       }
 
       if (!Jwks.isValidJwt(userManagement.workos, session.accessToken)) {
-        return AuthenticateSessionResult.Failure(
-          AuthenticateSessionFailure(AuthenticateSessionFailureReason.INVALID_JWT)
-        )
+        return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.INVALID_JWT)
       }
 
       val claims = SignedJWT.parse(session.accessToken).jwtClaimsSet
       @Suppress("UNCHECKED_CAST")
       return AuthenticateSessionResult.Success(
-        AuthenticateSessionSuccess(
-          sessionId = claims.getStringClaim("sid") ?: "",
-          organizationId = claims.getStringClaim("org_id"),
-          role = claims.getStringClaim("role"),
-          roles = claims.getStringListClaim("roles"),
-          permissions = claims.getStringListClaim("permissions"),
-          entitlements = claims.getStringListClaim("entitlements"),
-          featureFlags = claims.getStringListClaim("feature_flags"),
-          user = session.user,
-          authenticationMethod = session.authenticationMethod,
-          impersonator = session.impersonator,
-          accessToken = session.accessToken
-        )
+        sessionId = claims.getStringClaim("sid") ?: "",
+        organizationId = claims.getStringClaim("org_id"),
+        role = claims.getStringClaim("role"),
+        roles = claims.getStringListClaim("roles"),
+        permissions = claims.getStringListClaim("permissions"),
+        entitlements = claims.getStringListClaim("entitlements"),
+        featureFlags = claims.getStringListClaim("feature_flags"),
+        user = session.user,
+        authenticationMethod = session.authenticationMethod,
+        impersonator = session.impersonator,
+        accessToken = session.accessToken
       )
     }
 
@@ -266,9 +293,9 @@ class SessionCookie
       val auth = authenticate()
       val success =
         when (auth) {
-          is AuthenticateSessionResult.Success -> auth.value
+          is AuthenticateSessionResult.Success -> auth
           is AuthenticateSessionResult.Failure ->
-            throw IllegalStateException("Failed to extract session ID for logout URL: ${auth.value.reason}")
+            throw IllegalStateException("Failed to extract session ID for logout URL: ${auth.reason}")
         }
       return userManagement.getLogoutUrl(
         AuthKitLogoutUrlOptions(sessionId = success.sessionId, returnTo = returnTo)

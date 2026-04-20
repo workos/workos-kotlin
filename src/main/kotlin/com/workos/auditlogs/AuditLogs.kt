@@ -91,26 +91,23 @@ class AuditLogs(
   fun listActions(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogActionJson> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/audit_logs/actions",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuditLogActionJson>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/audit_logs/actions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**
@@ -131,26 +128,23 @@ class AuditLogs(
     actionName: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogSchemaJson> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/audit_logs/actions/$actionName/schemas",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuditLogSchemaJson>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/audit_logs/actions/$actionName/schemas",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**

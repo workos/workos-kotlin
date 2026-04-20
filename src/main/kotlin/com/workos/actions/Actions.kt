@@ -8,8 +8,10 @@ package com.workos.actions
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.workos.WorkOS
+import com.workos.common.crypto.decodeHexOrNull
+import com.workos.common.crypto.toHex
+import com.workos.common.http.parseSignatureHeader
 import com.workos.common.json.ObjectMapperFactory
-import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest
 import java.security.SignatureException
 import java.time.Instant
@@ -79,15 +81,20 @@ class Actions
       secret: String,
       toleranceMillis: Long = DEFAULT_TOLERANCE_MILLIS
     ) {
-      val (timestamp, signatureHash) = parseHeader(sigHeader)
+      val (timestamp, signatureHash) = parseSignatureHeader(sigHeader, setOf("v1"))
       val timestampMs =
         timestamp.toLongOrNull()
           ?: throw SignatureException("Timestamp is not a valid long value")
       if (timestampMs < Instant.now().toEpochMilli() - toleranceMillis) {
         throw SignatureException("Timestamp outside the tolerance zone")
       }
-      val expected = computeSignature(timestamp, payload, secret)
-      if (!MessageDigest.isEqual(expected.toByteArray(), signatureHash.toByteArray())) {
+      val expected =
+        computeSignature(timestamp, payload, secret).decodeHexOrNull()
+          ?: throw SignatureException("Generated signature was not valid hex")
+      val provided =
+        signatureHash.decodeHexOrNull()
+          ?: throw SignatureException("Signature hash was not valid hex")
+      if (expected.size != provided.size || !MessageDigest.isEqual(expected, provided)) {
         throw SignatureException("Signature hash does not match")
       }
     }
@@ -130,18 +137,7 @@ class Actions
     ): String {
       val mac = Mac.getInstance("HmacSHA256")
       mac.init(SecretKeySpec(secret.toByteArray(), "HmacSHA256"))
-      return Hex.encodeHexString(mac.doFinal("$timestamp.$payload".toByteArray()))
-    }
-
-    private fun parseHeader(sigHeader: String): Pair<String, String> {
-      val parts = sigHeader.split(",")
-      if (parts.size < 2) throw SignatureException("Signature or timestamp missing")
-      val timestamp = parts[0].substringAfter("t=", missingDelimiterValue = "")
-      val signatureHash = parts[1].substringAfter("v1=", missingDelimiterValue = "")
-      if (timestamp.isEmpty() || signatureHash.isEmpty()) {
-        throw SignatureException("No signature hash found with expected scheme v1")
-      }
-      return timestamp to signatureHash
+      return mac.doFinal("$timestamp.$payload".toByteArray()).toHex()
     }
 
     companion object {

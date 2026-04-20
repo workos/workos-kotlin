@@ -8,6 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.patchBodyOf
 import com.workos.models.AuthorizationCheck
@@ -118,16 +119,24 @@ class Authorization(
     permissionSlug: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     parentResource: ParentResource,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      params += "permission_slug" to permissionSlug.toString()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
+    val itemType = object : TypeReference<AuthorizationResource>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organization_memberships/$organizationMembershipId/resources",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      params += "permission_slug" to permissionSlug
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
       when (parentResource) {
         is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
         is ParentResource.ByExternalId -> {
@@ -135,18 +144,7 @@ class Authorization(
           params += "parent_resource_external_id" to parentResource.externalId
         }
       }
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/organization_memberships/$organizationMembershipId/resources",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
     }
-    val itemType = object : TypeReference<AuthorizationResource>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
   /**
@@ -169,26 +167,23 @@ class Authorization(
     resourceId: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceId/permissions",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuthorizationPermission>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceId/permissions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**
@@ -213,26 +208,23 @@ class Authorization(
     externalId: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceTypeSlug/$externalId/permissions",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuthorizationPermission>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceTypeSlug/$externalId/permissions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**
@@ -253,26 +245,23 @@ class Authorization(
     organizationMembershipId: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<RoleAssignment> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<RoleAssignment>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**
@@ -699,7 +688,7 @@ class Authorization(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
-    if (cascadeDelete != null) params += "cascade_delete" to cascadeDelete.toString()
+    cascadeDelete?.let { params += "cascade_delete" to it.toString() }
     val config =
       RequestConfig(
         method = "DELETE",
@@ -735,29 +724,26 @@ class Authorization(
     permissionSlug: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      params += "permission_slug" to permissionSlug.toString()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (assignment != null) params += "assignment" to assignment.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId/organization_memberships",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId/organization_memberships",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      params += "permission_slug" to permissionSlug
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      assignment?.let { params += "assignment" to it.value }
+    }
   }
 
   /**
@@ -779,7 +765,7 @@ class Authorization(
   fun listResources(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
@@ -787,13 +773,21 @@ class Authorization(
     parent: Parent? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (resourceTypeSlug != null) params += "resource_type_slug" to resourceTypeSlug.toString()
-      if (search != null) params += "search" to search.toString()
+    val itemType = object : TypeReference<AuthorizationResource>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/resources",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+      params.addIfNotNull("resource_type_slug", resourceTypeSlug)
+      params.addIfNotNull("search", search)
       if (parent != null) {
         when (parent) {
           is Parent.ById -> params += "parent_resource_id" to parent.resourceId
@@ -803,18 +797,7 @@ class Authorization(
           }
         }
       }
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/resources",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
     }
-    val itemType = object : TypeReference<AuthorizationResource>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
   /**
@@ -948,7 +931,7 @@ class Authorization(
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
-    if (cascadeDelete != null) params += "cascade_delete" to cascadeDelete.toString()
+    cascadeDelete?.let { params += "cascade_delete" to it.toString() }
     val config =
       RequestConfig(
         method = "DELETE",
@@ -980,29 +963,26 @@ class Authorization(
     permissionSlug: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      params += "permission_slug" to permissionSlug.toString()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (assignment != null) params += "assignment" to assignment.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/resources/$resourceId/organization_memberships",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/resources/$resourceId/organization_memberships",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      params += "permission_slug" to permissionSlug
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      assignment?.let { params += "assignment" to it.value }
+    }
   }
 
   /**
@@ -1192,26 +1172,23 @@ class Authorization(
   fun listPermissions(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/authorization/permissions",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuthorizationPermission>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/permissions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**

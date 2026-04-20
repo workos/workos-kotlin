@@ -101,10 +101,7 @@ open class BaseClient(
               ArrayList::class.java,
               objectMapper.typeFactory.constructType(itemType)
             )
-          objectMapper.readValue<ArrayList<T>>(
-            objectMapper.writeValueAsBytes(dataNode),
-            collectionType
-          )
+          objectMapper.convertValue<ArrayList<T>>(dataNode, collectionType)
         }
       }
     val metadata = parseListMetadata(tree)
@@ -112,6 +109,42 @@ open class BaseClient(
       requestPage(nextPageConfig(after), itemType, nextPageConfig)
     }
     return Page(items, metadata, fetcher)
+  }
+
+  /**
+   * Execute a paginated request while keeping the cursor plumbing in one
+   * place. Generated service methods only need to contribute the stable
+   * query parameters for the first page.
+   */
+  @JvmOverloads
+  fun <T> requestPage(
+    method: String,
+    path: String,
+    itemType: TypeReference<T>,
+    requestOptions: RequestOptions? = null,
+    before: String? = null,
+    after: String? = null,
+    buildQueryParams: MutableList<Pair<String, String>>.() -> Unit = {}
+  ): Page<T> {
+    fun configFor(afterCursor: String? = null): RequestConfig {
+      val params = mutableListOf<Pair<String, String>>()
+      params.buildQueryParams()
+      val effectiveAfter = afterCursor ?: after
+      if (effectiveAfter == null && before != null) {
+        params += "before" to before
+      }
+      if (effectiveAfter != null) {
+        params += "after" to effectiveAfter
+      }
+      return RequestConfig(
+        method = method,
+        path = path,
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    }
+
+    return requestPage(configFor(), itemType) { cursor -> configFor(cursor) }
   }
 
   /**
@@ -127,9 +160,11 @@ open class BaseClient(
 
     val effectiveIdempotencyKey =
       config.requestOptions?.idempotencyKey
-        ?: if (needsAutoIdempotency) retryPolicy.generateIdempotencyKey() else null
+        ?: if (needsAutoIdempotency) retryPolicy.generateIdempotencyKey(buildRetrySeed(config)) else null
 
     var attempt = 0
+    val requestStartedAt = System.nanoTime()
+    val timeoutBudgetMs = config.requestOptions?.timeoutMillis
     while (true) {
       val request = buildRequest(config, effectiveIdempotencyKey)
       val effectiveClient = applyPerRequestTimeout(config.requestOptions)
@@ -145,7 +180,7 @@ open class BaseClient(
       } catch (e: IOException) {
         val delay = retryPolicy.nextDelay(attempt, AttemptOutcome.TransportFailure(e), maxRetries)
         if (delay == null) throw translateTransportFailure(e)
-        sleep(delay)
+        sleep(coerceDelay(delay, timeoutBudgetMs, requestStartedAt) ?: throw translateTransportFailure(e))
         attempt += 1
         continue
       }
@@ -164,7 +199,10 @@ open class BaseClient(
         if (delay == null) {
           throw translateHttpFailure(status, requestId, bodyString, request.url.toString(), retryAfterHeader)
         }
-        sleep(delay)
+        sleep(
+          coerceDelay(delay, timeoutBudgetMs, requestStartedAt)
+            ?: throw translateHttpFailure(status, requestId, bodyString, request.url.toString(), retryAfterHeader)
+        )
       }
       attempt += 1
     }
@@ -229,7 +267,7 @@ open class BaseClient(
       .build()
   }
 
-  /** Hook for tests to suppress real sleeps. */
+  /** Hook for tests to suppress real sleeps. Visible for testing subclasses only. */
   protected open fun sleep(millis: Long) {
     if (millis > 0) Thread.sleep(millis)
   }
@@ -281,7 +319,7 @@ open class BaseClient(
       val errors =
         if (errorsNode.isArray) {
           val typeRef = object : TypeReference<List<Map<String, Any?>>>() {}
-          objectMapper.readValue(objectMapper.writeValueAsBytes(errorsNode), typeRef)
+          objectMapper.convertValue(errorsNode, typeRef)
         } else {
           null
         }
@@ -294,4 +332,33 @@ open class BaseClient(
   }
 
   private fun urlEncode(value: String): String = java.net.URLEncoder.encode(value, Charsets.UTF_8)
+
+  private fun buildRetrySeed(config: RequestConfig): String {
+    val querySeed = config.queryParams.joinToString("&") { (key, value) -> "$key=$value" }
+    val formSeed =
+      config.formBody
+        ?.entries
+        ?.joinToString("&") { (key, value) -> "$key=$value" }
+        .orEmpty()
+    val bodySeed =
+      when (val body = config.body) {
+        null -> ""
+        is String -> body
+        is ByteArray -> body.decodeToString()
+        else -> objectMapper.writeValueAsString(body)
+      }
+    return "${config.method.uppercase()}|${config.path}|$querySeed|$formSeed|$bodySeed"
+  }
+
+  private fun coerceDelay(
+    delayMs: Long,
+    timeoutBudgetMs: Long?,
+    requestStartedAt: Long
+  ): Long? {
+    if (timeoutBudgetMs == null) return delayMs
+    val elapsedMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - requestStartedAt)
+    val remainingMs = timeoutBudgetMs - elapsedMs
+    if (remainingMs <= 0) return null
+    return delayMs.coerceAtMost(remainingMs)
+  }
 }

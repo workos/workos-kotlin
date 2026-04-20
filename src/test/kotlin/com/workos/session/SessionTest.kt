@@ -59,7 +59,7 @@ class SessionTest : TestBase() {
   fun `authenticate returns NO_SESSION_COOKIE_PROVIDED when cookie is empty`() {
     val workos = workOSForTest()
     val result = workos.session.authenticateWithSessionCookie(null, cookiePassword)
-    val failure = (result as AuthenticateSessionResult.Failure).value
+    val failure = result as AuthenticateSessionResult.Failure
     assertEquals(AuthenticateSessionFailureReason.NO_SESSION_COOKIE_PROVIDED, failure.reason)
   }
 
@@ -67,7 +67,7 @@ class SessionTest : TestBase() {
   fun `authenticate returns INVALID_SESSION_COOKIE for a malformed seal`() {
     val workos = workOSForTest()
     val result = workos.session.authenticateWithSessionCookie("not-a-seal", cookiePassword)
-    val failure = (result as AuthenticateSessionResult.Failure).value
+    val failure = result as AuthenticateSessionResult.Failure
     assertEquals(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE, failure.reason)
   }
 
@@ -89,10 +89,11 @@ class SessionTest : TestBase() {
     val sealed = Iron.seal(cookieJson, cookiePassword)
 
     val result = workos.session.authenticateWithSessionCookie(sealed, cookiePassword)
-    val success = (result as AuthenticateSessionResult.Success).value
+    val success = result as AuthenticateSessionResult.Success
     assertEquals("sess_123", success.sessionId)
     assertEquals("org_1", success.organizationId)
     assertEquals(accessToken, success.accessToken)
+    assertNotNull(result.getSuccess())
   }
 
   @Test
@@ -109,8 +110,9 @@ class SessionTest : TestBase() {
       )
     val sealed = Iron.seal(cookieJson, cookiePassword)
     val result = workos.session.authenticateWithSessionCookie(sealed, cookiePassword)
-    val failure = (result as AuthenticateSessionResult.Failure).value
+    val failure = result as AuthenticateSessionResult.Failure
     assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
+    assertNotNull(result.getFailure())
   }
 
   @Test

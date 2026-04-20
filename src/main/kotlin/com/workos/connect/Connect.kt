@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.models.ApplicationCredentialsListItem
 import com.workos.models.ConnectApplication
@@ -81,28 +82,25 @@ class Connect(
   fun listApplications(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<ConnectApplication> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/connect/applications",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<ConnectApplication>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/connect/applications",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+    }
   }
 
   /**

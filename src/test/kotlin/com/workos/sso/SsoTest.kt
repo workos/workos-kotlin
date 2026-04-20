@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-class SSOTest : TestBase() {
-  private fun api() = SSO(createWorkOSClient())
+class SsoTest : TestBase() {
+  private fun api() = Sso(createWorkOSClient())
 
   @Test
   fun `listConnections returns a typed response`() {
@@ -90,14 +90,13 @@ class SSOTest : TestBase() {
         "\"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", " +
         "\"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}"
     )
-    val result = api().getProfileAndToken("sample-arg", "sample-arg")
+    val result = api().getProfileAndToken("sample-arg")
     assertNotNull(result)
     assertEquals("Bearer", result.tokenType)
     assertEquals("sample", result.accessToken)
     assertEquals(0L, result.expiresIn)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/sso/token"))
-        .withRequestBody(matchingJsonPath("$.code"))
         .withQueryParam("code", matching("sample-arg"))
     )
   }

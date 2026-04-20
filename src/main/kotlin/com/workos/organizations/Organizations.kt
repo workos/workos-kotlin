@@ -7,6 +7,8 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
+import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
@@ -35,30 +37,27 @@ class Organizations(
   fun list(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     domains: List<String>? = null,
     search: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<Organization> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (domains != null) params += "domains" to domains.joinToString(",") { it.toString() }
-      if (search != null) params += "search" to search.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/organizations",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<Organization>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/organizations",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addJoinedIfNotNull("domains", domains?.map { it })
+      params.addIfNotNull("search", search)
+    }
   }
 
   /**

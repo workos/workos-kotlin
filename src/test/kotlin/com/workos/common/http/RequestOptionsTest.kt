@@ -39,6 +39,20 @@ class RequestOptionsTest {
   }
 
   @Test
+  fun `Kotlin named-argument constructor remains callable`() {
+    val options =
+      RequestOptions(
+        idempotencyKey = "constructor-key",
+        maxRetries = 0,
+        additionalHeaders = mapOf("X-Trace-Id" to "from-constructor")
+      )
+
+    assertEquals("constructor-key", options.idempotencyKey)
+    assertEquals(0, options.maxRetries)
+    assertEquals("from-constructor", options.additionalHeaders["X-Trace-Id"])
+  }
+
+  @Test
   fun `idempotencyKey override is honored`() {
     wireMockRule.stubFor(
       post(urlPathEqualTo("/things"))

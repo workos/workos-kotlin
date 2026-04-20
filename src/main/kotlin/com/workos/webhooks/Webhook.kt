@@ -3,8 +3,10 @@ package com.workos.webhooks
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.workos.common.crypto.decodeHexOrNull
+import com.workos.common.crypto.toHex
+import com.workos.common.http.parseSignatureHeader
 import com.workos.common.json.ObjectMapperFactory
-import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest
 import java.security.SignatureException
 import java.time.Instant
@@ -56,16 +58,7 @@ class Webhook
       secret: String,
       toleranceMillis: Long
     ) {
-      val parts = signatureHeader.split(",")
-      if (parts.size < 2) throw SignatureException("Malformed WorkOS-Signature header")
-      val timestamp = parts[0].substringAfter("t=", missingDelimiterValue = "")
-      val signatureHash =
-        parts[1].substringAfter("v1=", missingDelimiterValue = "").ifEmpty {
-          parts[1].substringAfter("s=", missingDelimiterValue = "")
-        }
-      if (timestamp.isEmpty() || signatureHash.isEmpty()) {
-        throw SignatureException("Missing timestamp or signature component in WorkOS-Signature header")
-      }
+      val (timestamp, signatureHash) = parseSignatureHeader(signatureHeader, setOf("v1", "s"))
 
       val timestampMs = timestamp.toLongOrNull() ?: throw SignatureException("Timestamp is not a valid long value")
       val oldestAcceptable = Instant.now().toEpochMilli() - toleranceMillis
@@ -73,8 +66,13 @@ class Webhook
         throw SignatureException("Timestamp outside the tolerance zone")
       }
 
-      val expectedSignature = createSignature(timestamp, payload, secret)
-      if (!MessageDigest.isEqual(expectedSignature.toByteArray(), signatureHash.toByteArray())) {
+      val expectedSignature =
+        createSignature(timestamp, payload, secret).decodeHexOrNull()
+          ?: throw SignatureException("Generated signature was not valid hex")
+      val providedSignature =
+        signatureHash.decodeHexOrNull()
+          ?: throw SignatureException("Signature was not valid hex")
+      if (expectedSignature.size != providedSignature.size || !MessageDigest.isEqual(expectedSignature, providedSignature)) {
         throw SignatureException("Signatures do not match")
       }
     }
@@ -87,7 +85,7 @@ class Webhook
     ): String {
       val mac = Mac.getInstance("HmacSHA256")
       mac.init(SecretKeySpec(key.toByteArray(), "HmacSHA256"))
-      return Hex.encodeHexString(mac.doFinal("$timestamp.$data".toByteArray()))
+      return mac.doFinal("$timestamp.$data".toByteArray()).toHex()
     }
 
     companion object {

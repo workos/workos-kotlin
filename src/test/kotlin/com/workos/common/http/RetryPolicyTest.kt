@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class RetryPolicyTest {
   @Test
@@ -33,6 +36,14 @@ class RetryPolicyTest {
   fun `Retry-After invalid values return null`() {
     assertNull(RetryPolicy.parseRetryAfter("not-a-number"))
     assertNull(RetryPolicy.parseRetryAfter(""))
+  }
+
+  @Test
+  fun `Retry-After RFC-1123 dates parse to milliseconds`() {
+    val future = DateTimeFormatter.RFC_1123_DATE_TIME.format(Instant.now().plusSeconds(5).atOffset(ZoneOffset.UTC))
+    val parsed = RetryPolicy.parseRetryAfter(future)
+    assertNotNull(parsed)
+    assertTrue(parsed!! in 1_000L..5_500L)
   }
 
   @Test
@@ -81,12 +92,14 @@ class RetryPolicyTest {
   }
 
   @Test
-  fun `generateIdempotencyKey produces distinct non-empty values`() {
+  fun `generateIdempotencyKey is deterministic for the same seed and distinct for different seeds`() {
     val policy = RetryPolicy()
-    val a = policy.generateIdempotencyKey()
-    val b = policy.generateIdempotencyKey()
+    val a = policy.generateIdempotencyKey("POST|/things|body-a")
+    val b = policy.generateIdempotencyKey("POST|/things|body-a")
+    val c = policy.generateIdempotencyKey("POST|/things|body-b")
     assertEquals(true, a.isNotBlank())
     assertEquals(true, b.isNotBlank())
-    assertTrue(a != b, "generated keys should differ")
+    assertEquals(a, b)
+    assertTrue(a != c, "different seeds should produce different keys")
   }
 }

@@ -7,6 +7,8 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
+import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.models.AuthenticateResponse
 import com.workos.models.AuthorizedConnectApplicationListData
@@ -35,31 +37,53 @@ import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
 
-sealed class Password {
+sealed class CreateUserPassword {
   data class Plaintext(
     val password: String
-  ) : Password()
+  ) : CreateUserPassword()
 
   data class Hashed(
     val hash: String,
     val hashType: CreateUserPasswordHashType
-  ) : Password()
+  ) : CreateUserPassword()
 }
 
-sealed class Role {
+sealed class CreateUserRole {
   data class Single(
     val slug: String
-  ) : Role()
+  ) : CreateUserRole()
 
   data class Multiple(
     val slugs: List<String>
-  ) : Role()
+  ) : CreateUserRole()
 }
 
 /** API accessor for UserManagement. */
 class UserManagement(
   internal val workos: WorkOS
 ) {
+  private fun authenticate(
+    grantType: String,
+    requestOptions: RequestOptions?,
+    vararg entries: Pair<String, Any?>
+  ): AuthenticateResponse {
+    val body =
+      bodyOf(
+        *entries,
+        "grant_type" to grantType,
+        "client_id" to workos.clientId,
+        "client_secret" to workos.apiKey
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/authenticate",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AuthenticateResponse::class.java)
+  }
+
   /**
    * Get JWKS
    *
@@ -594,32 +618,29 @@ class UserManagement(
   fun list(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organization: String? = null,
     organizationId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<User> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organization != null) params += "organization" to organization.toString()
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (email != null) params += "email" to email.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/users",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<User>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/users",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization", organization)
+      params.addIfNotNull("organization_id", organizationId)
+      params.addIfNotNull("email", email)
+    }
   }
 
   /**
@@ -638,7 +659,7 @@ class UserManagement(
    */
   @JvmOverloads
   fun create(
-    password: Password? = null,
+    createUserPassword: CreateUserPassword? = null,
     email: String,
     firstName: String? = null,
     lastName: String? = null,
@@ -656,12 +677,12 @@ class UserManagement(
         "metadata" to metadata,
         "external_id" to externalId
       )
-    if (password != null) {
-      when (password) {
-        is Password.Plaintext -> body["password"] = password.password
-        is Password.Hashed -> {
-          body["password_hash"] = password.hash
-          body["password_hash_type"] = password.hashType
+    if (createUserPassword != null) {
+      when (createUserPassword) {
+        is CreateUserPassword.Plaintext -> body["password"] = createUserPassword.password
+        is CreateUserPassword.Hashed -> {
+          body["password_hash"] = createUserPassword.hash
+          body["password_hash_type"] = createUserPassword.hashType
         }
       }
     }
@@ -740,7 +761,7 @@ class UserManagement(
   @JvmOverloads
   fun update(
     id: String,
-    password: Password? = null,
+    createUserPassword: CreateUserPassword? = null,
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
@@ -760,12 +781,12 @@ class UserManagement(
         "external_id" to externalId,
         "locale" to locale
       )
-    if (password != null) {
-      when (password) {
-        is Password.Plaintext -> body["password"] = password.password
-        is Password.Hashed -> {
-          body["password_hash"] = password.hash
-          body["password_hash_type"] = password.hashType
+    if (createUserPassword != null) {
+      when (createUserPassword) {
+        is CreateUserPassword.Plaintext -> body["password"] = createUserPassword.password
+        is CreateUserPassword.Hashed -> {
+          body["password_hash"] = createUserPassword.hash
+          body["password_hash_type"] = createUserPassword.hashType
         }
       }
     }
@@ -957,26 +978,23 @@ class UserManagement(
     id: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserSessionsListItem> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/users/$id/sessions",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<UserSessionsListItem>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/users/$id/sessions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**
@@ -997,30 +1015,27 @@ class UserManagement(
   fun listInvitations(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organizationId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserInvite> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (email != null) params += "email" to email.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/invitations",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<UserInvite>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/invitations",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+      params.addIfNotNull("email", email)
+    }
   }
 
   /**
@@ -1293,32 +1308,29 @@ class UserManagement(
   fun listOrganizationMemberships(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organizationId: String? = null,
     statuses: List<OrganizationMembershipStatus>? = null,
     userId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembership> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (statuses != null) params += "statuses" to statuses.joinToString(",") { it.value }
-      if (userId != null) params += "user_id" to userId.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/organization_memberships",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<UserOrganizationMembership>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/organization_memberships",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+      params.addJoinedIfNotNull("statuses", statuses?.map { it.value })
+      params.addIfNotNull("user_id", userId)
+    }
   }
 
   /**
@@ -1335,7 +1347,7 @@ class UserManagement(
    */
   @JvmOverloads
   fun createOrganizationMembership(
-    role: Role? = null,
+    createUserRole: CreateUserRole? = null,
     userId: String,
     organizationId: String,
     requestOptions: RequestOptions? = null
@@ -1345,10 +1357,10 @@ class UserManagement(
         "user_id" to userId,
         "organization_id" to organizationId
       )
-    if (role != null) {
-      when (role) {
-        is Role.Single -> body["role_slug"] = role.slug
-        is Role.Multiple -> body["role_slugs"] = role.slugs
+    if (createUserRole != null) {
+      when (createUserRole) {
+        is CreateUserRole.Single -> body["role_slug"] = createUserRole.slug
+        is CreateUserRole.Multiple -> body["role_slugs"] = createUserRole.slugs
       }
     }
     val config =
@@ -1396,14 +1408,14 @@ class UserManagement(
   @JvmOverloads
   fun updateOrganizationMembership(
     id: String,
-    role: Role? = null,
+    createUserRole: CreateUserRole? = null,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
     val body = linkedMapOf<String, Any?>()
-    if (role != null) {
-      when (role) {
-        is Role.Single -> body["role_slug"] = role.slug
-        is Role.Multiple -> body["role_slugs"] = role.slugs
+    if (createUserRole != null) {
+      when (createUserRole) {
+        is CreateUserRole.Single -> body["role_slug"] = createUserRole.slug
+        is CreateUserRole.Multiple -> body["role_slugs"] = createUserRole.slugs
       }
     }
     val config =
@@ -1543,26 +1555,23 @@ class UserManagement(
     userId: String,
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizedConnectApplicationListData> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/user_management/users/$userId/authorized_applications",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<AuthorizedConnectApplicationListData>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/users/$userId/authorized_applications",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
   }
 
   /**

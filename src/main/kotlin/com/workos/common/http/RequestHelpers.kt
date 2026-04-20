@@ -39,3 +39,27 @@ fun patchBodyOf(vararg entries: Pair<String, Any?>): LinkedHashMap<String, Any?>
   }
   return map
 }
+
+/** Append a query parameter only when [value] is non-null. */
+fun MutableList<Pair<String, String>>.addIfNotNull(
+  name: String,
+  value: String?
+) {
+  if (value != null) add(name to value)
+}
+
+/** Append repeated query parameters for each serialized entry. */
+fun MutableList<Pair<String, String>>.addEach(
+  name: String,
+  values: Iterable<String>
+) {
+  for (value in values) add(name to value)
+}
+
+/** Append a comma-joined query parameter when [values] is non-null. */
+fun MutableList<Pair<String, String>>.addJoinedIfNotNull(
+  name: String,
+  values: Iterable<String>?
+) {
+  if (values != null) add(name to values.joinToString(","))
+}

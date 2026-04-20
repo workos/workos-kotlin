@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectoryUserWithGroups
@@ -35,32 +36,29 @@ class DirectorySync(
   fun list(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     organizationId: String? = null,
     search: String? = null,
     domain: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<Directory> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (search != null) params += "search" to search.toString()
-      if (domain != null) params += "domain" to domain.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/directories",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<Directory>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/directories",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+      params.addIfNotNull("search", search)
+      params.addIfNotNull("domain", domain)
+    }
   }
 
   /**
@@ -125,30 +123,27 @@ class DirectorySync(
   fun listGroups(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     directory: String? = null,
     user: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryGroup> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (directory != null) params += "directory" to directory.toString()
-      if (user != null) params += "user" to user.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/directory_groups",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<DirectoryGroup>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/directory_groups",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("directory", directory)
+      params.addIfNotNull("user", user)
+    }
   }
 
   /**
@@ -192,30 +187,27 @@ class DirectorySync(
   fun listUsers(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     directory: String? = null,
     group: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryUserWithGroups> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (directory != null) params += "directory" to directory.toString()
-      if (group != null) params += "group" to group.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/directory_users",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<DirectoryUserWithGroups>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/directory_users",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("directory", directory)
+      params.addIfNotNull("group", group)
+    }
   }
 
   /**

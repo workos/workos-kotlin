@@ -7,6 +7,9 @@ package com.workos
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.models.AuthenticateResponse
+import com.workos.models.DeviceAuthorizationResponse
+import com.workos.models.JwksResponse
+import com.workos.models.SSOTokenResponse
 import com.workos.pkce.PKCE
 import com.workos.pkce.pkce
 import com.workos.sso.SSOAuthorizationUrlOptions
@@ -18,7 +21,6 @@ import com.workos.usermanagement.AuthKitAuthorizationUrlOptions
 import com.workos.usermanagement.DeviceAuthenticationResponse
 import com.workos.usermanagement.PKCEAuthorizationUrlResult
 import com.workos.usermanagement.PollDeviceAuthorizationOptions
-import com.workos.usermanagement.UserManagement
 import com.workos.usermanagement.getAuthorizationUrl
 import com.workos.usermanagement.getAuthorizationUrlWithPKCE
 import com.workos.usermanagement.pollDeviceAuthorization
@@ -44,23 +46,18 @@ class PublicClient private constructor(
   val pkce: PKCE get() = workos.pkce
 
   /** Build an AuthKit authorization URL. */
-  fun getAuthorizationUrl(options: AuthKitAuthorizationUrlOptions): String = UserManagement(workos).getAuthorizationUrl(options)
+  fun getAuthorizationUrl(options: AuthKitAuthorizationUrlOptions): String = workos.userManagement.getAuthorizationUrl(options)
 
   /** Build an AuthKit authorization URL with auto-generated PKCE params and state. */
   fun getAuthorizationUrlWithPKCE(options: AuthKitAuthorizationUrlOptions): PKCEAuthorizationUrlResult =
-    UserManagement(workos).getAuthorizationUrlWithPKCE(options)
+    workos.userManagement.getAuthorizationUrlWithPKCE(options)
 
   /** Build an SSO authorization URL. */
-  fun getSSOAuthorizationUrl(options: SSOAuthorizationUrlOptions): String =
-    com.workos.sso
-      .SSO(workos)
-      .getAuthorizationUrl(options)
+  fun getSSOAuthorizationUrl(options: SSOAuthorizationUrlOptions): String = workos.sso.getAuthorizationUrl(options)
 
   /** Build an SSO authorization URL with auto-generated PKCE params and state. */
   fun getSSOAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKCEAuthorizationUrlResult =
-    com.workos.sso
-      .SSO(workos)
-      .getAuthorizationUrlWithPKCE(options)
+    workos.sso.getAuthorizationUrlWithPKCE(options)
 
   /**
    * Exchange an AuthKit authorization code + PKCE code verifier for tokens.
@@ -102,22 +99,21 @@ class PublicClient private constructor(
     code: String,
     codeVerifier: String,
     requestOptions: RequestOptions? = null
-  ) = com.workos.sso
-    .SSO(workos)
-    .getProfileAndTokenWithPKCE(code, codeVerifier, requestOptions)
+  ): SSOTokenResponse = workos.sso.getProfileAndTokenWithPKCE(code, codeVerifier, requestOptions)
 
   /** Begin a device-authorization grant (returns the user code + verification URIs). */
   @JvmOverloads
-  fun createDevice(requestOptions: RequestOptions? = null) =
-    UserManagement(workos).createDevice(clientId = clientId, requestOptions = requestOptions)
+  fun createDevice(requestOptions: RequestOptions? = null): DeviceAuthorizationResponse =
+    workos.userManagement.createDevice(clientId = clientId, requestOptions = requestOptions)
 
   /** Poll the token-exchange endpoint until the device is authorized. */
   fun pollDeviceAuthorization(options: PollDeviceAuthorizationOptions): DeviceAuthenticationResponse =
-    UserManagement(workos).pollDeviceAuthorization(options)
+    workos.userManagement.pollDeviceAuthorization(options)
 
   /** Fetch the JWKS for this client (used for access-token verification). */
   @JvmOverloads
-  fun getJwks(requestOptions: RequestOptions? = null) = UserManagement(workos).getJwks(clientId = clientId, requestOptions = requestOptions)
+  fun getJwks(requestOptions: RequestOptions? = null): JwksResponse =
+    workos.userManagement.getJwks(clientId = clientId, requestOptions = requestOptions)
 
   companion object {
     /**

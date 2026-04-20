@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.models.Connection
 import com.workos.models.Profile
@@ -16,7 +17,7 @@ import com.workos.types.ConnectionsConnectionType
 import com.workos.types.EventsOrder
 
 /** API accessor for SSO. */
-class SSO(
+class Sso(
   internal val workos: WorkOS
 ) {
   /**
@@ -39,7 +40,7 @@ class SSO(
   fun listConnections(
     before: String? = null,
     after: String? = null,
-    limit: Long? = null,
+    limit: Int? = null,
     order: EventsOrder? = null,
     connectionType: ConnectionsConnectionType? = null,
     domain: String? = null,
@@ -47,26 +48,23 @@ class SSO(
     search: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<Connection> {
-    fun configFor(afterCursor: String? = null): RequestConfig {
-      val params = mutableListOf<Pair<String, String>>()
-      if (limit != null) params += "limit" to limit.toString()
-      if (order != null) params += "order" to order.value
-      if (connectionType != null) params += "connection_type" to connectionType.value
-      if (domain != null) params += "domain" to domain.toString()
-      if (organizationId != null) params += "organization_id" to organizationId.toString()
-      if (search != null) params += "search" to search.toString()
-      val effectiveAfter = afterCursor ?: after
-      if (effectiveAfter == null && before != null) params += "before" to before
-      if (effectiveAfter != null) params += "after" to effectiveAfter
-      return RequestConfig(
-        method = "GET",
-        path = "/connections",
-        queryParams = params,
-        requestOptions = requestOptions
-      )
-    }
     val itemType = object : TypeReference<Connection>() {}
-    return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/connections",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      connectionType?.let { params += "connection_type" to it.value }
+      params.addIfNotNull("domain", domain)
+      params.addIfNotNull("organization_id", organizationId)
+      params.addIfNotNull("search", search)
+    }
   }
 
   /**
@@ -165,21 +163,19 @@ class SSO(
    * Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
    *
    * @param code The authorization code received from the authorization callback.
-   * @param bodyCode The authorization code received from the authorization callback.
    *
    * @return the SSOTokenResponse
    */
   @JvmOverloads
   fun getProfileAndToken(
     code: String,
-    bodyCode: String,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse {
     val params = mutableListOf<Pair<String, String>>()
-    params += "code" to code.toString()
+    params += "code" to code
     val body =
       bodyOf(
-        "code" to bodyCode,
+        "code" to code,
         "grant_type" to "authorization_code",
         "client_id" to workos.clientId,
         "client_secret" to workos.apiKey
