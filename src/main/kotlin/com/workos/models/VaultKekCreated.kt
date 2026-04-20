@@ -19,6 +19,7 @@ data class VaultKekCreated(
   /** Always `"vault.kek.created"`. */
   @JsonProperty("event")
   override val event: String = "vault.kek.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -19,6 +19,7 @@ data class PasswordResetSucceeded(
   /** Always `"password_reset.succeeded"`. */
   @JsonProperty("event")
   override val event: String = "password_reset.succeeded",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

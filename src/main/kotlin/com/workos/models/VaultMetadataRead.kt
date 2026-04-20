@@ -19,6 +19,7 @@ data class VaultMetadataRead(
   /** Always `"vault.metadata.read"`. */
   @JsonProperty("event")
   override val event: String = "vault.metadata.read",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /** Enumeration of valid DsyncDeletedDataState values returned or accepted by the API. */
 enum class DsyncDeletedDataState(
+  /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue

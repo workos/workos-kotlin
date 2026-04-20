@@ -19,6 +19,7 @@ data class ConnectionDeleted(
   /** Always `"connection.deleted"`. */
   @JsonProperty("event")
   override val event: String = "connection.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -19,6 +19,7 @@ data class ConnectionSAMLCertificateRenewed(
   /** Always `"connection.saml_certificate_renewed"`. */
   @JsonProperty("event")
   override val event: String = "connection.saml_certificate_renewed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

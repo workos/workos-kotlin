@@ -10,6 +10,7 @@ data class VaultKekCreatedData(
   /** The unique identifier of the actor. */
   @JsonProperty("actor_id")
   val actorId: String,
+  /** The actor source. */
   @JsonProperty("actor_source")
   val actorSource: VaultKekCreatedDataActorSource,
   /** The name of the actor. */

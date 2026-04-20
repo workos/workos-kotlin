@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
  * instead of emitting its wire value.
  */
 object UnknownEnumGuardModule {
+  /** Build a [SimpleModule] that throws on serialization of `@JsonEnumDefaultValue` members. */
   fun create(): SimpleModule {
     val module = SimpleModule("UnknownEnumGuard")
     module.setSerializerModifier(

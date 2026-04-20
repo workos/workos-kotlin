@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [UserSessionsImpersonator]. */
 typealias SessionRevokedDataImpersonator = UserSessionsImpersonator

@@ -19,6 +19,7 @@ data class ApiKeyRevoked(
   /** Always `"api_key.revoked"`. */
   @JsonProperty("event")
   override val event: String = "api_key.revoked",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

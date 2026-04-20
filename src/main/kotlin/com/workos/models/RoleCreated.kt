@@ -19,6 +19,7 @@ data class RoleCreated(
   /** Always `"role.created"`. */
   @JsonProperty("event")
   override val event: String = "role.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

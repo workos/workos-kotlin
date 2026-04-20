@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [CreateRole]. */
 typealias CreateAuthorizationPermission = CreateRole

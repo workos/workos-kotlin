@@ -19,6 +19,7 @@ data class VaultDataRead(
   /** Always `"vault.data.read"`. */
   @JsonProperty("event")
   override val event: String = "vault.data.read",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

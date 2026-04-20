@@ -12,12 +12,17 @@ import kotlin.math.pow
  * Outcome of a single request attempt, consumed by [RetryPolicy.nextDelay].
  */
 sealed class AttemptOutcome {
+  /** The server returned an HTTP response. */
   data class Response(
+    /** HTTP status code of the response. */
     val statusCode: Int,
+    /** Raw value of the `Retry-After` header, or `null` if absent. */
     val retryAfter: String?
   ) : AttemptOutcome()
 
+  /** The request failed before an HTTP response was received. */
   data class TransportFailure(
+    /** The underlying I/O exception that caused the failure. */
     val error: Throwable
   ) : AttemptOutcome()
 }
@@ -73,7 +78,9 @@ class RetryPolicy(
     return (capped + jitter).toLong().coerceAtLeast(0L)
   }
 
+  /** Static retry helpers. */
   companion object {
+    /** Return `true` if [status] is 429 (rate-limited) or a 5xx server error. */
     @JvmStatic
     fun isRetryableStatus(status: Int): Boolean = status == 429 || status in 500..599
 

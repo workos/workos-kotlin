@@ -19,6 +19,7 @@ data class OrganizationDomainCreated(
   /** Always `"organization_domain.created"`. */
   @JsonProperty("event")
   override val event: String = "organization_domain.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

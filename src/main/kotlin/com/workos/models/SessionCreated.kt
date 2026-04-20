@@ -19,6 +19,7 @@ data class SessionCreated(
   /** Always `"session.created"`. */
   @JsonProperty("event")
   override val event: String = "session.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -19,6 +19,7 @@ data class GroupMemberRemoved(
   /** Always `"group.member_removed"`. */
   @JsonProperty("event")
   override val event: String = "group.member_removed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

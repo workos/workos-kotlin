@@ -22,33 +22,42 @@ import com.workos.models.UserOrganizationMembershipBaseListData
 import com.workos.types.AuthorizationAssignment
 import com.workos.types.EventsOrder
 
+/** Mutually exclusive resource target parameter variants. */
 sealed class ResourceTarget {
+  /** Variant: by id. */
   data class ById(
     val resourceId: String
   ) : ResourceTarget()
 
+  /** Variant: by external id. */
   data class ByExternalId(
     val resourceExternalId: String,
     val resourceTypeSlug: String
   ) : ResourceTarget()
 }
 
+/** Mutually exclusive parent resource parameter variants. */
 sealed class ParentResource {
+  /** Variant: by id. */
   data class ById(
     val id: String
   ) : ParentResource()
 
+  /** Variant: by external id. */
   data class ByExternalId(
     val typeSlug: String,
     val externalId: String
   ) : ParentResource()
 }
 
+/** Mutually exclusive parent parameter variants. */
 sealed class Parent {
+  /** Variant: by id. */
   data class ById(
     val resourceId: String
   ) : Parent()
 
+  /** Variant: by external id. */
   data class ByExternalId(
     val resourceTypeSlug: String,
     val externalId: String

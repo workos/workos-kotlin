@@ -10,6 +10,7 @@ data class VaultNamesListedData(
   /** The unique identifier of the actor. */
   @JsonProperty("actor_id")
   val actorId: String,
+  /** The actor source. */
   @JsonProperty("actor_source")
   val actorSource: VaultNamesListedDataActorSource,
   /** The name of the actor. */

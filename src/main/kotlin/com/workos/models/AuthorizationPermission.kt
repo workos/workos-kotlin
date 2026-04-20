@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [Permission]. */
 typealias AuthorizationPermission = Permission

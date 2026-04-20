@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [FlagRuleUpdatedContextConfiguredTargetUser]. */
 typealias FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetUser = FlagRuleUpdatedContextConfiguredTargetUser

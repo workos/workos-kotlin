@@ -10,6 +10,7 @@ data class AuthenticationRadarRiskDetectedData(
   /** The authentication method used. */
   @JsonProperty("auth_method")
   val authMethod: String,
+  /** The action. */
   @JsonProperty("action")
   val action: AuthenticationRadarRiskDetectedDataAction,
   /** The control action taken for the detected risk. */

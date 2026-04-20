@@ -19,6 +19,7 @@ data class PermissionDeleted(
   /** Always `"permission.deleted"`. */
   @JsonProperty("event")
   override val event: String = "permission.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

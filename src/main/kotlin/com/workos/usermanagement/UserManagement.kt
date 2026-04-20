@@ -37,22 +37,28 @@ import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
 
+/** Mutually exclusive password parameter variants. */
 sealed class CreateUserPassword {
+  /** Variant: plaintext. */
   data class Plaintext(
     val password: String
   ) : CreateUserPassword()
 
+  /** Variant: hashed. */
   data class Hashed(
     val hash: String,
     val hashType: CreateUserPasswordHashType
   ) : CreateUserPassword()
 }
 
+/** Mutually exclusive role parameter variants. */
 sealed class CreateUserRole {
+  /** Variant: single. */
   data class Single(
     val slug: String
   ) : CreateUserRole()
 
+  /** Variant: multiple. */
   data class Multiple(
     val slugs: List<String>
   ) : CreateUserRole()

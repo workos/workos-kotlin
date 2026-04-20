@@ -22,6 +22,7 @@ object ObjectMapperFactory {
   @JvmField
   val default: ObjectMapper = create()
 
+  /** Create a new, fully-configured [ObjectMapper] instance. */
   @JvmStatic
   fun create(): ObjectMapper =
     jacksonMapperBuilder()

@@ -19,6 +19,7 @@ data class OrganizationRoleUpdated(
   /** Always `"organization_role.updated"`. */
   @JsonProperty("event")
   override val event: String = "organization_role.updated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

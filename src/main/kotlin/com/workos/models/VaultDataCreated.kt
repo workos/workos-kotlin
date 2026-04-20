@@ -19,6 +19,7 @@ data class VaultDataCreated(
   /** Always `"vault.data.created"`. */
   @JsonProperty("event")
   override val event: String = "vault.data.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

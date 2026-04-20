@@ -19,6 +19,7 @@ data class GroupUpdated(
   /** Always `"group.updated"`. */
   @JsonProperty("event")
   override val event: String = "group.updated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

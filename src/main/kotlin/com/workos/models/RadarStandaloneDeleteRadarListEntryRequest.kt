@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [RadarStandaloneUpdateRadarListRequest]. */
 typealias RadarStandaloneDeleteRadarListEntryRequest = RadarStandaloneUpdateRadarListRequest

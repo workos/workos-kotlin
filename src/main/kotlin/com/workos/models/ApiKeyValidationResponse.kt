@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** ApiKeyValidationResponse model. */
 data class ApiKeyValidationResponse(
+  /** The api key. */
   @JsonProperty("api_key")
   val apiKey: ApiKey?
 )

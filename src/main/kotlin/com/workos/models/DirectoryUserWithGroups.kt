@@ -63,6 +63,7 @@ data class DirectoryUserWithGroups(
   @JsonProperty("username")
   @Deprecated("Deprecated field")
   val username: String? = null,
+  /** The role. */
   @JsonProperty("role")
   val role: SlimRole? = null,
   /** All roles assigned to the user. */

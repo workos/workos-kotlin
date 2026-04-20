@@ -19,6 +19,7 @@ data class VaultByokKeyVerificationCompleted(
   /** Always `"vault.byok_key.verification_completed"`. */
   @JsonProperty("event")
   override val event: String = "vault.byok_key.verification_completed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

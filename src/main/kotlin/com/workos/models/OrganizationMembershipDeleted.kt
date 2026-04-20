@@ -19,6 +19,7 @@ data class OrganizationMembershipDeleted(
   /** Always `"organization_membership.deleted"`. */
   @JsonProperty("event")
   override val event: String = "organization_membership.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

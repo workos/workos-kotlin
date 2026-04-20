@@ -49,56 +49,89 @@ enum class RefreshSessionFailureReason {
 
 /** Payload persisted in a sealed session cookie. */
 data class SessionCookieData(
+  /** JWT access token for authenticating API requests. */
   val accessToken: String,
+  /** Refresh token used to obtain a new access token. */
   val refreshToken: String,
+  /** User profile data associated with this session. */
   val user: Map<String, Any?>? = null,
+  /** Method used to authenticate the user (e.g. `"SSO"`, `"Password"`). */
   val authenticationMethod: String? = null,
+  /** Details of the admin impersonating this user, if any. */
   val impersonator: Map<String, Any?>? = null
 )
 
 /** Successful `authenticate()` response. */
 data class AuthenticateSessionSuccess(
+  /** Unique session identifier from the JWT `sid` claim. */
   val sessionId: String,
+  /** Organization the user authenticated into, if any. */
   val organizationId: String? = null,
+  /** Primary role slug for the user in this organization. */
   val role: String? = null,
+  /** All role slugs assigned to the user. */
   val roles: List<String>? = null,
+  /** Permission slugs granted to the user. */
   val permissions: List<String>? = null,
+  /** Entitlement slugs the user holds. */
   val entitlements: List<String>? = null,
+  /** Feature flag keys enabled for the user. */
   val featureFlags: List<String>? = null,
+  /** User profile data from the session cookie. */
   val user: Map<String, Any?>? = null,
+  /** Method used to authenticate the user. */
   val authenticationMethod: String? = null,
+  /** Details of the admin impersonating this user, if any. */
   val impersonator: Map<String, Any?>? = null,
+  /** Raw JWT access token. */
   val accessToken: String
 )
 
 /** Failed `authenticate()` response. */
 data class AuthenticateSessionFailure(
+  /** Why authentication failed. */
   val reason: AuthenticateSessionFailureReason
 )
 
 /** Sum type returned by [SessionCookie.authenticate]. */
 sealed class AuthenticateSessionResult {
+  /** A successful authentication containing decoded JWT claims. */
   data class Success(
+    /** Unique session identifier from the JWT `sid` claim. */
     val sessionId: String,
+    /** Organization the user authenticated into, if any. */
     val organizationId: String? = null,
+    /** Primary role slug for the user in this organization. */
     val role: String? = null,
+    /** All role slugs assigned to the user. */
     val roles: List<String>? = null,
+    /** Permission slugs granted to the user. */
     val permissions: List<String>? = null,
+    /** Entitlement slugs the user holds. */
     val entitlements: List<String>? = null,
+    /** Feature flag keys enabled for the user. */
     val featureFlags: List<String>? = null,
+    /** User profile data from the session cookie. */
     val user: Map<String, Any?>? = null,
+    /** Method used to authenticate the user. */
     val authenticationMethod: String? = null,
+    /** Details of the admin impersonating this user, if any. */
     val impersonator: Map<String, Any?>? = null,
+    /** Raw JWT access token. */
     val accessToken: String
   ) : AuthenticateSessionResult()
 
+  /** A failed authentication attempt. */
   data class Failure(
+    /** Why authentication failed. */
     val reason: AuthenticateSessionFailureReason
   ) : AuthenticateSessionResult()
 
+  /** `true` when this result is a [Success]. */
   val authenticated: Boolean
     get() = this is Success
 
+  /** Returns an [AuthenticateSessionSuccess] if this is a [Success], or `null` otherwise. */
   fun getSuccess(): AuthenticateSessionSuccess? =
     (this as? Success)?.let {
       AuthenticateSessionSuccess(
@@ -116,39 +149,57 @@ sealed class AuthenticateSessionResult {
       )
     }
 
+  /** Returns an [AuthenticateSessionFailure] if this is a [Failure], or `null` otherwise. */
   fun getFailure(): AuthenticateSessionFailure? = (this as? Failure)?.let { AuthenticateSessionFailure(it.reason) }
 }
 
 /** Successful `refresh()` response. */
 data class RefreshSessionSuccess(
+  /** Newly sealed session cookie value to persist on the client. */
   val sealedSession: String,
+  /** Unique session identifier from the refreshed JWT `sid` claim. */
   val sessionId: String,
+  /** Organization the user is authenticated into, if any. */
   val organizationId: String? = null,
+  /** Primary role slug for the user in this organization. */
   val role: String? = null,
+  /** All role slugs assigned to the user. */
   val roles: List<String>? = null,
+  /** Permission slugs granted to the user. */
   val permissions: List<String>? = null,
+  /** Entitlement slugs the user holds. */
   val entitlements: List<String>? = null,
+  /** Feature flag keys enabled for the user. */
   val featureFlags: List<String>? = null,
+  /** User profile data from the session cookie. */
   val user: Map<String, Any?>? = null,
+  /** Method used to authenticate the user. */
   val authenticationMethod: String? = null,
+  /** Details of the admin impersonating this user, if any. */
   val impersonator: Map<String, Any?>? = null
 )
 
 /** Failed `refresh()` response. */
 data class RefreshSessionFailure(
+  /** Why the refresh failed. */
   val reason: RefreshSessionFailureReason
 )
 
 /** Sum type returned by [SessionCookie.refresh]. */
 sealed class RefreshSessionResult {
+  /** A successful refresh containing the new sealed session and decoded claims. */
   data class Success(
+    /** The successful refresh payload. */
     val value: RefreshSessionSuccess
   ) : RefreshSessionResult()
 
+  /** A failed refresh attempt. */
   data class Failure(
+    /** The failure payload describing why the refresh was rejected. */
     val value: RefreshSessionFailure
   ) : RefreshSessionResult()
 
+  /** `true` when this result is a [Success]. */
   val authenticated: Boolean
     get() = this is Success
 }

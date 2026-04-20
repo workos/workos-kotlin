@@ -19,6 +19,7 @@ data class RoleDeleted(
   /** Always `"role.deleted"`. */
   @JsonProperty("event")
   override val event: String = "role.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

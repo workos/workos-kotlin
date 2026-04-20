@@ -19,6 +19,7 @@ data class AuthenticationMfaFailed(
   /** Always `"authentication.mfa_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.mfa_failed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

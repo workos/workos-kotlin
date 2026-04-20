@@ -19,6 +19,7 @@ data class PermissionCreated(
   /** Always `"permission.created"`. */
   @JsonProperty("event")
   override val event: String = "permission.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

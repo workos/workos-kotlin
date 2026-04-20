@@ -19,6 +19,7 @@ enum class DeviceFlowFailureReason {
 
 /** Thrown when the user denies the device or the code expires. */
 class DeviceFlowException(
+  /** The category of failure that ended the device-flow poll. */
   val reason: DeviceFlowFailureReason,
   message: String
 ) : RuntimeException(message)
@@ -33,8 +34,11 @@ data class PollDeviceAuthorizationOptions
     val intervalSeconds: Int = 5,
     /** Maximum total time to poll, in seconds (typically from `expires_in`). */
     val expiresInSeconds: Int = 300,
+    /** IP address of the device, forwarded to the authentication endpoint. */
     val ipAddress: String? = null,
+    /** An identifier for the device, forwarded to the authentication endpoint. */
     val deviceId: String? = null,
+    /** The user-agent string of the device, forwarded to the authentication endpoint. */
     val userAgent: String? = null
   )
 

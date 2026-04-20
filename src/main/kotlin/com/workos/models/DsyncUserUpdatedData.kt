@@ -60,11 +60,13 @@ data class DsyncUserUpdatedData(
   @JsonProperty("username")
   @Deprecated("Deprecated field")
   val username: String? = null,
+  /** The role. */
   @JsonProperty("role")
   val role: SlimRole? = null,
   /** All roles assigned to the user. */
   @JsonProperty("roles")
   val roles: List<SlimRole>? = null,
+  /** The previous attributes. */
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>? = null
 )

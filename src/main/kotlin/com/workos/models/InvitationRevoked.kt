@@ -19,6 +19,7 @@ data class InvitationRevoked(
   /** Always `"invitation.revoked"`. */
   @JsonProperty("event")
   override val event: String = "invitation.revoked",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

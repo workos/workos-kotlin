@@ -19,6 +19,7 @@ data class DsyncUserDeleted(
   /** Always `"dsync.user.deleted"`. */
   @JsonProperty("event")
   override val event: String = "dsync.user.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

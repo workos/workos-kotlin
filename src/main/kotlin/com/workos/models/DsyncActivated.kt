@@ -19,6 +19,7 @@ data class DsyncActivated(
   /** Always `"dsync.activated"`. */
   @JsonProperty("event")
   override val event: String = "dsync.activated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

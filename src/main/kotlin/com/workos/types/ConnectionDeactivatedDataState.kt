@@ -2,4 +2,5 @@
 
 package com.workos.types
 
+/** Alias for [ConnectionDeletedDataState]. */
 typealias ConnectionDeactivatedDataState = ConnectionDeletedDataState

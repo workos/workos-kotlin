@@ -19,6 +19,7 @@ data class ActionUserRegistrationDenied(
   /** Always `"action.user_registration.denied"`. */
   @JsonProperty("event")
   override val event: String = "action.user_registration.denied",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -19,6 +19,7 @@ data class UserUpdated(
   /** Always `"user.updated"`. */
   @JsonProperty("event")
   override val event: String = "user.updated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

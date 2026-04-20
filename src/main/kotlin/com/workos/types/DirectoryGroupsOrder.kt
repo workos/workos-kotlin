@@ -2,4 +2,5 @@
 
 package com.workos.types
 
+/** Alias for [EventsOrder]. */
 typealias DirectoryGroupsOrder = EventsOrder

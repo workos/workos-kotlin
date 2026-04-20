@@ -2,4 +2,5 @@
 
 package com.workos.types
 
+/** Alias for [InvitationState]. */
 typealias InvitationCreatedDataState = InvitationState

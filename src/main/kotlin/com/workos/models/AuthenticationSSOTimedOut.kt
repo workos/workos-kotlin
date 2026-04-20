@@ -19,6 +19,7 @@ data class AuthenticationSSOTimedOut(
   /** Always `"authentication.sso_timed_out"`. */
   @JsonProperty("event")
   override val event: String = "authentication.sso_timed_out",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

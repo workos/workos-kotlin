@@ -21,6 +21,7 @@ import kotlin.jvm.Throws
 
 /** Whether an action was approved or denied. */
 enum class ActionVerdict(
+  /** The wire value sent in the signed response payload. */
   val value: String
 ) {
   ALLOW("Allow"),
@@ -29,6 +30,7 @@ enum class ActionVerdict(
 
 /** Type of action whose response is being signed. */
 enum class ActionResponseType(
+  /** The `object` discriminator string sent in the signed response. */
   val objectName: String
 ) {
   AUTHENTICATION("authentication_action_response"),
@@ -37,8 +39,11 @@ enum class ActionResponseType(
 
 /** A signed response payload ready to be sent back to AuthKit. */
 data class SignedActionResponse(
+  /** The object type discriminator (e.g. `"authentication_action_response"`). */
   val `object`: String,
+  /** The response payload containing timestamp, verdict, and optional error. */
   val payload: Map<String, Any?>,
+  /** The HMAC-SHA-256 hex signature of the payload. */
   val signature: String
 )
 
@@ -140,6 +145,7 @@ class Actions
       return mac.doFinal("$timestamp.$payload".toByteArray()).toHex()
     }
 
+    /** Constants for the Actions helper. */
     companion object {
       /** 30 seconds, matching workos-node's `constructAction` default. */
       const val DEFAULT_TOLERANCE_MILLIS: Long = 30_000L

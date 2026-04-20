@@ -4,4 +4,5 @@
 
 package com.workos.types
 
+/** Alias for [ConnectionSAMLCertificateRenewedDataCertificateCertificateType]. */
 typealias ConnectionSAMLCertificateRenewalRequiredDataCertificateCertificateType = ConnectionSAMLCertificateRenewedDataCertificateCertificateType

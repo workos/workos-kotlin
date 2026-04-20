@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /** Enumeration of valid AuditLogConfigurationLogStreamType values returned or accepted by the API. */
 enum class AuditLogConfigurationLogStreamType(
+  /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue

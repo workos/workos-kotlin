@@ -19,6 +19,7 @@ data class ConnectionDeactivated(
   /** Always `"connection.deactivated"`. */
   @JsonProperty("event")
   override val event: String = "connection.deactivated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

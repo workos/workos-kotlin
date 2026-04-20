@@ -19,6 +19,7 @@ data class AuthenticationSSOStarted(
   /** Always `"authentication.sso_started"`. */
   @JsonProperty("event")
   override val event: String = "authentication.sso_started",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

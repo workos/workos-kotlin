@@ -34,6 +34,7 @@ data class DsyncGroupUpdatedData(
   /** The raw attributes received from the directory provider. */
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>? = null,
+  /** The previous attributes. */
   @JsonProperty("previous_attributes")
   val previousAttributes: Map<String, Any>? = null
 )

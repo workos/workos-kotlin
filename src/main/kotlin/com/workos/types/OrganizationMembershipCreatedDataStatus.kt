@@ -2,4 +2,5 @@
 
 package com.workos.types
 
+/** Alias for [OrganizationMembershipStatus]. */
 typealias OrganizationMembershipCreatedDataStatus = OrganizationMembershipStatus

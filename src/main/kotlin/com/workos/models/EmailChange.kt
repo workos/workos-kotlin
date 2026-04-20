@@ -7,6 +7,7 @@ import java.time.OffsetDateTime
 
 /** EmailChange model. */
 data class EmailChange(
+  /** The user. */
   @JsonProperty("user")
   val user: User,
   /** The new email address the user is changing to. */

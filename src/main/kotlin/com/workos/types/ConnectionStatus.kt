@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /** Enumeration of valid ConnectionStatus values returned or accepted by the API. */
 enum class ConnectionStatus(
+  /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue

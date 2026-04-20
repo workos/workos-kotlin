@@ -88,6 +88,7 @@ class Webhook
       return mac.doFinal("$timestamp.$data".toByteArray()).toHex()
     }
 
+    /** Constants for webhook signature verification. */
     companion object {
       /** 3 minutes, matching the legacy SDK default. */
       const val DEFAULT_TOLERANCE_MILLIS: Long = 180_000L

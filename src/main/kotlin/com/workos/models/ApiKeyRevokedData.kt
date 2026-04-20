@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [ApiKeyCreatedData]. */
 typealias ApiKeyRevokedData = ApiKeyCreatedData

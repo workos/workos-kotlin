@@ -12,6 +12,7 @@ data class AuthorizedConnectApplicationListData(
   /** The scopes granted by the user to the application. */
   @JsonProperty("granted_scopes")
   val grantedScopes: List<String>,
+  /** The application. */
   @JsonProperty("application")
   val application: ConnectApplication,
   /** Distinguishes the authorized connect application object. */

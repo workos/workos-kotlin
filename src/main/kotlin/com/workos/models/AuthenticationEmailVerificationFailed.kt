@@ -19,6 +19,7 @@ data class AuthenticationEmailVerificationFailed(
   /** Always `"authentication.email_verification_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.email_verification_failed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

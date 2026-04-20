@@ -19,6 +19,7 @@ data class VaultDataDeleted(
   /** Always `"vault.data.deleted"`. */
   @JsonProperty("event")
   override val event: String = "vault.data.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

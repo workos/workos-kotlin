@@ -19,6 +19,7 @@ data class UserCreated(
   /** Always `"user.created"`. */
   @JsonProperty("event")
   override val event: String = "user.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

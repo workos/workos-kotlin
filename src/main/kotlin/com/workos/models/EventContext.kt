@@ -18,6 +18,7 @@ data class EventContext(
   /** The client ID associated with the event. */
   @JsonProperty("client_id")
   val clientId: String? = null,
+  /** The actor. */
   @JsonProperty("actor")
   val actor: EventContextActor? = null,
   /** Attributes that changed from their previous values. */

@@ -19,6 +19,7 @@ data class AuthenticationRadarRiskDetected(
   /** Always `"authentication.radar_risk_detected"`. */
   @JsonProperty("event")
   override val event: String = "authentication.radar_risk_detected",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

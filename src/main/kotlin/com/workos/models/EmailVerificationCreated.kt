@@ -19,6 +19,7 @@ data class EmailVerificationCreated(
   /** Always `"email_verification.created"`. */
   @JsonProperty("event")
   override val event: String = "email_verification.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

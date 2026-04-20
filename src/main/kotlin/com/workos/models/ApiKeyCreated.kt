@@ -19,6 +19,7 @@ data class ApiKeyCreated(
   /** Always `"api_key.created"`. */
   @JsonProperty("event")
   override val event: String = "api_key.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -13,27 +13,45 @@ import java.net.URLEncoder
 data class AuthKitAuthorizationUrlOptions
   @JvmOverloads
   constructor(
+    /** The URI to redirect the user to after authorization. */
     val redirectUri: String,
+    /** The WorkOS client ID. Falls back to the value on [com.workos.WorkOS] if omitted. */
     val clientId: String? = null,
+    /** The authentication provider (e.g. "authkit", "GoogleOAuth"). */
     val provider: String? = null,
+    /** The ID of the connection to authenticate through. */
     val connectionId: String? = null,
+    /** The ID of the organization to authenticate into. */
     val organizationId: String? = null,
+    /** An opaque state value for CSRF protection, returned in the callback. */
     val state: String? = null,
+    /** The PKCE code challenge derived from the code verifier. */
     val codeChallenge: String? = null,
+    /** The method used to derive the code challenge (typically "S256"). */
     val codeChallengeMethod: String? = null,
+    /** A hint for the identity provider domain to pre-select. */
     val domainHint: String? = null,
+    /** A hint for the user's login identifier (e.g. email). */
     val loginHint: String? = null,
+    /** Hint for the AuthKit screen to show ("sign-up" or "sign-in"). Only valid when provider is "authkit". */
     val screenHint: String? = null,
+    /** The prompt parameter to pass to the authorization endpoint. */
     val prompt: String? = null,
+    /** Additional OAuth scopes to request from the identity provider. */
     val providerScopes: List<String>? = null,
+    /** Additional query parameters to forward to the identity provider. */
     val providerQueryParams: Map<String, String>? = null,
+    /** A token from an invitation, used to link the new user to an organization. */
     val invitationToken: String? = null
   )
 
 /** Result of [UserManagement.getAuthorizationUrlWithPKCE]. */
 data class PKCEAuthorizationUrlResult(
+  /** The fully constructed authorization URL to redirect the user to. */
   val url: String,
+  /** The random state value included in the URL for CSRF protection. */
   val state: String,
+  /** The PKCE code verifier to use when exchanging the authorization code. */
   val codeVerifier: String
 )
 
@@ -106,7 +124,9 @@ fun UserManagement.getAuthorizationUrlWithPKCE(options: AuthKitAuthorizationUrlO
 data class AuthKitLogoutUrlOptions
   @JvmOverloads
   constructor(
+    /** The ID of the session to terminate. */
     val sessionId: String,
+    /** The URL to redirect the user to after logout. */
     val returnTo: String? = null
   )
 

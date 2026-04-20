@@ -19,6 +19,7 @@ data class AuthenticationSSOSucceeded(
   /** Always `"authentication.sso_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.sso_succeeded",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

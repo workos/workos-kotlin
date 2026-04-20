@@ -19,6 +19,7 @@ data class UserDeleted(
   /** Always `"user.deleted"`. */
   @JsonProperty("event")
   override val event: String = "user.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

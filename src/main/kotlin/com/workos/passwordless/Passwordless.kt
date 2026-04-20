@@ -10,20 +10,31 @@ import com.workos.common.http.RequestOptions
 data class CreatePasswordlessSessionOptions
   @JvmOverloads
   constructor(
+    /** The email address of the user requesting a magic link. */
     val email: String,
+    /** URL to redirect the user to after clicking the magic link. */
     val redirectUri: String? = null,
+    /** Opaque state parameter returned in the redirect callback. */
     val state: String? = null,
+    /** Connection ID to associate with this passwordless session. */
     val connection: String? = null,
+    /** Number of seconds before the magic link expires. */
     val expiresIn: Int? = null,
+    /** Type of passwordless session (defaults to `"MagicLink"`). */
     val type: String = "MagicLink"
   )
 
 /** Passwordless session object returned by `create_session`. */
 data class PasswordlessSession(
+  /** Unique identifier for this passwordless session. */
   val id: String,
+  /** Email address the magic link was sent to. */
   val email: String,
+  /** ISO 8601 timestamp when the magic link expires. */
   @JsonProperty("expires_at") val expiresAt: String,
+  /** The magic-link URL the user clicks to authenticate. */
   val link: String,
+  /** Object type identifier (always `"passwordless_session"`). */
   val `object`: String = "passwordless_session"
 )
 
@@ -31,7 +42,9 @@ data class PasswordlessSession(
 data class SendSessionResponse
   @JvmOverloads
   constructor(
+    /** Human-readable status message from the API. */
     val message: String? = null,
+    /** Whether the magic-link email was sent successfully. */
     val success: Boolean? = null
   )
 

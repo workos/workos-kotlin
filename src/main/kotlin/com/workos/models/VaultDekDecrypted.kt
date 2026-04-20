@@ -19,6 +19,7 @@ data class VaultDekDecrypted(
   /** Always `"vault.dek.decrypted"`. */
   @JsonProperty("event")
   override val event: String = "vault.dek.decrypted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

@@ -9,7 +9,9 @@ package com.workos.common.http
  * item across every page without managing cursors themselves.
  */
 class Page<T> internal constructor(
+  /** Items on this page. */
   @JvmField val data: List<T>,
+  /** Pagination cursors for fetching adjacent pages. */
   @JvmField val listMetadata: ListMetadata,
   private val nextPageFetcher: ((after: String) -> Page<T>)?
 ) {
@@ -39,7 +41,9 @@ class Page<T> internal constructor(
       }
     }
 
+  /** Factory methods for constructing [Page] instances outside of [BaseClient]. */
   companion object {
+    /** Create a [Page] from pre-fetched data, an optional [nextPageFetcher] for auto-pagination. */
     @JvmStatic
     fun <T> of(
       data: List<T>,

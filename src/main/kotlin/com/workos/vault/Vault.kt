@@ -21,31 +21,45 @@ typealias KeyContext = Map<String, String>
 
 /** Plaintext data key material returned by the Vault data-key APIs. */
 data class DataKey(
+  /** The identifier of the data key. */
   val id: String,
+  /** Base64-encoded plaintext key material. */
   val key: String
 )
 
 /** A data key pair (plaintext + encrypted form) returned by [Vault.createDataKey]. */
 data class DataKeyPair(
+  /** The key context used to derive this data key. */
   val context: KeyContext,
+  /** The plaintext data key. */
   val dataKey: DataKey,
+  /** Base64-encoded encrypted key blob for storage alongside ciphertext. */
   val encryptedKeys: String
 )
 
 /** Who last updated a Vault object. */
 data class ObjectUpdateBy(
+  /** The identifier of the user or entity that performed the update. */
   val id: String,
+  /** Display name of the user or entity that performed the update. */
   val name: String
 )
 
 /** Metadata block for a Vault object (no decrypted value). */
 data class ObjectMetadata(
+  /** The key context associated with this object's encryption key. */
   val context: KeyContext,
+  /** The WorkOS environment this object belongs to. */
   @JsonProperty("environment_id") val environmentId: String,
+  /** Unique identifier of the Vault object. */
   val id: String,
+  /** The encryption key ID used for this object. */
   @JsonProperty("key_id") val keyId: String,
+  /** ISO 8601 timestamp of the last update. */
   @JsonProperty("updated_at") val updatedAt: String,
+  /** The user or entity that last updated this object. */
   @JsonProperty("updated_by") val updatedBy: ObjectUpdateBy,
+  /** The current version identifier of this object. */
   @JsonProperty("version_id") val versionId: String
 )
 
@@ -53,23 +67,33 @@ data class ObjectMetadata(
 data class VaultObject
   @JvmOverloads
   constructor(
+    /** Unique identifier of the Vault object. */
     val id: String,
+    /** Metadata associated with this object (key context, version, timestamps). */
     val metadata: ObjectMetadata,
+    /** The user-assigned name of the Vault object. */
     val name: String,
+    /** The decrypted value, present only when the object is read (not in metadata-only responses). */
     val value: String? = null
   )
 
 /** A summary entry returned by list operations. */
 data class ObjectDigest(
+  /** Unique identifier of the Vault object. */
   val id: String,
+  /** The user-assigned name of the Vault object. */
   val name: String,
+  /** ISO 8601 timestamp of the last update. */
   @JsonProperty("updated_at") val updatedAt: String
 )
 
 /** A single revision entry of a Vault object. */
 data class ObjectVersion(
+  /** ISO 8601 timestamp when this version was created. */
   @JsonProperty("created_at") val createdAt: String,
+  /** Whether this version is the current (latest) version of the object. */
   @JsonProperty("current_version") val currentVersion: Boolean,
+  /** Unique identifier of this version. */
   val id: String
 )
 
@@ -83,6 +107,7 @@ class Vault(
 
   // -- KV operations --
 
+  /** List all Vault objects, returning a paginated list of [ObjectDigest] summaries. */
   @JvmOverloads
   fun listObjects(
     before: String? = null,
@@ -107,6 +132,7 @@ class Vault(
     return workos.baseClient.requestPage(configFor(), itemType) { afterCursor -> configFor(afterCursor) }
   }
 
+  /** Create a new Vault object with the given [name], [value], and [keyContext]. */
   @JvmOverloads
   fun createObject(
     name: String,
@@ -128,6 +154,7 @@ class Vault(
     return workos.baseClient.request(config, ObjectMetadata::class.java)
   }
 
+  /** Read a Vault object by its [objectId], returning the decrypted value. */
   @JvmOverloads
   fun readObject(
     objectId: String,
@@ -142,6 +169,7 @@ class Vault(
     return workos.baseClient.request(config, VaultObject::class.java)
   }
 
+  /** Read a Vault object by its unique [name], returning the decrypted value. */
   @JvmOverloads
   fun readObjectByName(
     name: String,
@@ -156,6 +184,7 @@ class Vault(
     return workos.baseClient.request(config, VaultObject::class.java)
   }
 
+  /** Retrieve only the metadata for a Vault object (no decrypted value). */
   @JvmOverloads
   fun getObjectMetadata(
     objectId: String,
@@ -170,6 +199,7 @@ class Vault(
     return workos.baseClient.request(config, VaultObject::class.java)
   }
 
+  /** Update the value of an existing Vault object, optionally with a version check. */
   @JvmOverloads
   fun updateObject(
     objectId: String,
@@ -190,6 +220,7 @@ class Vault(
     return workos.baseClient.request(config, VaultObject::class.java)
   }
 
+  /** Delete a Vault object by its [objectId]. */
   @JvmOverloads
   fun deleteObject(
     objectId: String,
@@ -204,6 +235,7 @@ class Vault(
     workos.baseClient.requestVoid(config)
   }
 
+  /** List all versions of a Vault object, returning a paginated list of [ObjectVersion] entries. */
   @JvmOverloads
   fun listObjectVersions(
     objectId: String,
@@ -231,6 +263,7 @@ class Vault(
 
   // -- Key operations --
 
+  /** Create a new data key pair scoped to the given [keyContext]. Returns plaintext and encrypted forms. */
   @JvmOverloads
   fun createDataKey(
     keyContext: KeyContext,
@@ -253,6 +286,7 @@ class Vault(
     )
   }
 
+  /** Decrypt an encrypted key blob, returning the plaintext [DataKey]. */
   @JvmOverloads
   fun decryptDataKey(
     keys: String,
@@ -415,6 +449,7 @@ class Vault(
     return out
   }
 
+  /** Internal constants for AES-GCM encryption. */
   companion object {
     private const val IV_LENGTH_BYTES = 12
     private const val TAG_LENGTH_BYTES = 16

@@ -19,6 +19,7 @@ data class VaultNamesListed(
   /** Always `"vault.names.listed"`. */
   @JsonProperty("event")
   override val event: String = "vault.names.listed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

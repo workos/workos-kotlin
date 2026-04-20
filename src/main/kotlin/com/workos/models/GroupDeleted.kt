@@ -19,6 +19,7 @@ data class GroupDeleted(
   /** Always `"group.deleted"`. */
   @JsonProperty("event")
   override val event: String = "group.deleted",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

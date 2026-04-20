@@ -18,12 +18,19 @@ package com.workos.common.http
 data class RequestConfig
   @JvmOverloads
   constructor(
+    /** Upper-case HTTP verb (`GET`, `POST`, etc.). */
     val method: String,
+    /** URL path starting with `/`, with path parameters already substituted. */
     val path: String,
+    /** Serialized query-string parameters (repeated entries represent lists). */
     val queryParams: List<Pair<String, String>> = emptyList(),
+    /** Request body, serialized as JSON unless it is a [String] or [ByteArray]. */
     val body: Any? = null,
+    /** Form-encoded body sent as `application/x-www-form-urlencoded`, mutually exclusive with [body]. */
     val formBody: Map<String, String>? = null,
+    /** Overrides the default `Authorization` header for per-operation bearer auth. */
     val accessToken: String? = null,
+    /** Per-request overrides from the caller. */
     val requestOptions: RequestOptions? = null
   ) {
     init {

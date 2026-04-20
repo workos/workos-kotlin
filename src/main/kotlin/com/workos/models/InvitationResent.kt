@@ -19,6 +19,7 @@ data class InvitationResent(
   /** Always `"invitation.resent"`. */
   @JsonProperty("event")
   override val event: String = "invitation.resent",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

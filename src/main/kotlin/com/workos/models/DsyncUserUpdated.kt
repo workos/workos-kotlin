@@ -19,6 +19,7 @@ data class DsyncUserUpdated(
   /** Always `"dsync.user.updated"`. */
   @JsonProperty("event")
   override val event: String = "dsync.user.updated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

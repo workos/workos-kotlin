@@ -19,6 +19,7 @@ data class ActionAuthenticationDenied(
   /** Always `"action.authentication.denied"`. */
   @JsonProperty("event")
   override val event: String = "action.authentication.denied",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

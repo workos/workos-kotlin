@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /** Enumeration of valid DataIntegrationsListResponseDataOwnership values returned or accepted by the API. */
 enum class DataIntegrationsListResponseDataOwnership(
+  /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue

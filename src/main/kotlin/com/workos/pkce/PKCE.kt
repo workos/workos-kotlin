@@ -8,8 +8,11 @@ import java.util.Base64
 
 /** A PKCE (RFC 7636) code verifier and challenge pair. */
 data class PKCEPair(
+  /** The plain-text code verifier (43-128 characters, RFC 7636 S4.1). */
   val codeVerifier: String,
+  /** Base64url-encoded SHA-256 hash of the code verifier. */
   val codeChallenge: String,
+  /** Challenge derivation method (always `"S256"`). */
   val codeChallengeMethod: String = "S256"
 )
 

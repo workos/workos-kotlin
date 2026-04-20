@@ -2,4 +2,5 @@
 
 package com.workos.models
 
+/** Alias for [User]. */
 typealias EmailChangeConfirmationUser = User

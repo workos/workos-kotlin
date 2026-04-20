@@ -2,4 +2,5 @@
 
 package com.workos.types
 
+/** Alias for [CreateUserPasswordHashType]. */
 typealias UpdateUserPasswordHashType = CreateUserPasswordHashType

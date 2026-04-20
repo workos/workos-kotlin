@@ -19,6 +19,7 @@ data class ConnectionActivated(
   /** Always `"connection.activated"`. */
   @JsonProperty("event")
   override val event: String = "connection.activated",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

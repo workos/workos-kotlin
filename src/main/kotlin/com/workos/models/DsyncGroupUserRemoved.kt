@@ -19,6 +19,7 @@ data class DsyncGroupUserRemoved(
   /** Always `"dsync.group.user_removed"`. */
   @JsonProperty("event")
   override val event: String = "dsync.group.user_removed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

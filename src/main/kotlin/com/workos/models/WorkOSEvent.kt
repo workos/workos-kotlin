@@ -120,7 +120,12 @@ import java.time.OffsetDateTime
   JsonSubTypes.Type(value = VaultNamesListed::class, name = "vault.names.listed")
 )
 sealed interface WorkOSEvent {
+  /** Unique identifier for this event. */
   val id: String
+
+  /** The event type identifier. */
   val event: String
+
+  /** Timestamp when the event was created. */
   val createdAt: OffsetDateTime
 }

@@ -19,6 +19,7 @@ data class SessionRevoked(
   /** Always `"session.revoked"`. */
   @JsonProperty("event")
   override val event: String = "session.revoked",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

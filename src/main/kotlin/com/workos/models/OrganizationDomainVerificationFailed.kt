@@ -19,6 +19,7 @@ data class OrganizationDomainVerificationFailed(
   /** Always `"organization_domain.verification_failed"`. */
   @JsonProperty("event")
   override val event: String = "organization_domain.verification_failed",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

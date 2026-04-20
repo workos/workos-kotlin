@@ -19,6 +19,7 @@ data class MagicAuthCreated(
   /** Always `"magic_auth.created"`. */
   @JsonProperty("event")
   override val event: String = "magic_auth.created",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

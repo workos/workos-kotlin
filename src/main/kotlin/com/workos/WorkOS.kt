@@ -22,18 +22,24 @@ import kotlin.reflect.KClass
 open class WorkOS
   @JvmOverloads
   constructor(
+    /** The WorkOS API key used to authenticate requests. */
     @JvmField val apiKey: String,
+    /** Optional WorkOS client ID, required for OAuth/PKCE flows. */
     @JvmField val clientId: String? = null,
     apiBaseUrl: String = DEFAULT_BASE_URL,
+    /** The OkHttp client used for all HTTP requests. */
     @JvmField val httpClient: OkHttpClient = defaultHttpClient(),
     retryConfig: RetryConfig = RetryConfig.DEFAULT
   ) {
+    /** Base URL for all API requests (defaults to [DEFAULT_BASE_URL]). */
     @JvmField
     val apiBaseUrl: String = apiBaseUrl
 
+    /** SDK version string loaded from `version.properties` at build time. */
     @JvmField
     val version: String = loadVersion()
 
+    /** Low-level HTTP client shared by all service accessors. */
     @JvmField
     val baseClient: BaseClient =
       BaseClient(
@@ -54,7 +60,9 @@ open class WorkOS
       factory: () -> T
     ): T = serviceCache.computeIfAbsent(cls) { factory() } as T
 
+    /** Constants and factory helpers for the WorkOS SDK client. */
     companion object {
+      /** Default base URL for the WorkOS API. */
       const val DEFAULT_BASE_URL: String = "https://api.workos.com"
 
       private fun defaultHttpClient(): OkHttpClient =

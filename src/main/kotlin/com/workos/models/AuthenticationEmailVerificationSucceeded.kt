@@ -19,6 +19,7 @@ data class AuthenticationEmailVerificationSucceeded(
   /** Always `"authentication.email_verification_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.email_verification_succeeded",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

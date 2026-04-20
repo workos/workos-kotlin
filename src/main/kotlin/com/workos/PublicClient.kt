@@ -41,8 +41,10 @@ import okhttp3.OkHttpClient
 class PublicClient private constructor(
   internal val workos: WorkOS
 ) {
+  /** The WorkOS client ID used for public/PKCE flows. */
   val clientId: String get() = workos.clientId!!
 
+  /** PKCE helper for generating code verifiers and challenges. */
   val pkce: PKCE get() = workos.pkce
 
   /** Build an AuthKit authorization URL. */
@@ -115,6 +117,7 @@ class PublicClient private constructor(
   fun getJwks(requestOptions: RequestOptions? = null): JwksResponse =
     workos.userManagement.getJwks(clientId = clientId, requestOptions = requestOptions)
 
+  /** Factory methods for creating a [PublicClient]. */
   companion object {
     /**
      * Create a PKCE-only WorkOS client.

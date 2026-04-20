@@ -40,11 +40,16 @@ private val FORM_MEDIA_TYPE = "application/x-www-form-urlencoded".toMediaType()
  *  - response deserialization and error translation into [WorkOSException] subclasses
  */
 open class BaseClient(
+  /** API key used for the `Authorization: Bearer` header. */
   @JvmField val apiKey: String,
+  /** Base URL (scheme + host) for all API requests, e.g. `https://api.workos.com`. */
   @JvmField val apiBaseUrl: String,
   private val httpClient: OkHttpClient,
+  /** Jackson [ObjectMapper] used for request/response serialization. */
   @JvmField val objectMapper: ObjectMapper = ObjectMapperFactory.create(),
+  /** Client-wide retry configuration; individual requests may override via [RequestOptions]. */
   @JvmField val retryConfig: RetryConfig = RetryConfig.DEFAULT,
+  /** Value sent in the `User-Agent` header on every request. */
   @JvmField val userAgent: String = "workos-kotlin"
 ) {
   private val retryPolicy = RetryPolicy(retryConfig)

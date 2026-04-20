@@ -19,6 +19,7 @@ data class AuthenticationMfaSucceeded(
   /** Always `"authentication.mfa_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.mfa_succeeded",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

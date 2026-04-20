@@ -19,6 +19,7 @@ data class AuthenticationMagicAuthSucceeded(
   /** Always `"authentication.magic_auth_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.magic_auth_succeeded",
+  /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
   /** Distinguishes the Event object. */

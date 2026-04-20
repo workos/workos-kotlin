@@ -8,32 +8,50 @@ import com.workos.WorkOS
 import com.workos.pkce.PKCE
 import java.net.URLEncoder
 
+/** Convenience alias so callers can write `SSO` instead of `Sso`. */
 typealias SSO = Sso
 
 /** Options accepted by [Sso.getAuthorizationUrl]. */
 data class SSOAuthorizationUrlOptions
   @JvmOverloads
   constructor(
+    /** The URI to redirect the user to after authorization. */
     val redirectUri: String,
+    /** The WorkOS client ID. Falls back to the value on [com.workos.WorkOS] if omitted. */
     val clientId: String? = null,
+    /** The domain of the organization to filter the connection by. */
     val domain: String? = null,
+    /** The ID of the connection to initiate SSO for. */
     val connection: String? = null,
+    /** The ID of the organization to initiate SSO for. */
     val organization: String? = null,
+    /** The identity provider to use (e.g. "GoogleOAuth", "MicrosoftOAuth"). */
     val provider: String? = null,
+    /** An opaque state value for CSRF protection, returned in the callback. */
     val state: String? = null,
+    /** The PKCE code challenge derived from the code verifier. */
     val codeChallenge: String? = null,
+    /** The method used to derive the code challenge (typically "S256"). */
     val codeChallengeMethod: String? = null,
+    /** A hint for the identity provider domain to pre-select. */
     val domainHint: String? = null,
+    /** A hint for the user's login identifier (e.g. email). */
     val loginHint: String? = null,
+    /** An opaque nonce value for replay protection. */
     val nonce: String? = null,
+    /** Additional OAuth scopes to request from the identity provider. */
     val providerScopes: List<String>? = null,
+    /** Additional query parameters to forward to the identity provider. */
     val providerQueryParams: Map<String, String>? = null
   )
 
 /** Result of [Sso.getAuthorizationUrlWithPKCE]. */
 data class SSOPKCEAuthorizationUrlResult(
+  /** The fully constructed SSO authorization URL to redirect the user to. */
   val url: String,
+  /** The random state value included in the URL for CSRF protection. */
   val state: String,
+  /** The PKCE code verifier to use when exchanging the authorization code. */
   val codeVerifier: String
 )
 
@@ -105,6 +123,7 @@ fun Sso.getAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKC
 
 /** Options accepted by [SSO.getLogoutUrl]. */
 data class SSOLogoutUrlOptions(
+  /** The logout token obtained from [Sso.authorizeLogout]. */
   val token: String
 )
 
