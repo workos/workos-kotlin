@@ -79,43 +79,43 @@ open class WorkOS
       }
     }
 
-    /** Lazily-constructed [AdminPortal] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.adminportal.AdminPortal] accessor for this [WorkOS] client. */
     val adminPortal: com.workos.adminportal.AdminPortal
       get() = service(com.workos.adminportal.AdminPortal::class) { com.workos.adminportal.AdminPortal(this) }
 
-    /** Lazily-constructed [ApiKeys] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.apikeys.ApiKeys] accessor for this [WorkOS] client. */
     val apiKeys: com.workos.apikeys.ApiKeys
       get() = service(com.workos.apikeys.ApiKeys::class) { com.workos.apikeys.ApiKeys(this) }
 
-    /** Lazily-constructed [AuditLogs] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.auditlogs.AuditLogs] accessor for this [WorkOS] client. */
     val auditLogs: com.workos.auditlogs.AuditLogs
       get() = service(com.workos.auditlogs.AuditLogs::class) { com.workos.auditlogs.AuditLogs(this) }
 
-    /** Lazily-constructed [Authorization] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.authorization.Authorization] accessor for this [WorkOS] client. */
     val authorization: com.workos.authorization.Authorization
       get() = service(com.workos.authorization.Authorization::class) { com.workos.authorization.Authorization(this) }
 
-    /** Lazily-constructed [Connect] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.connect.Connect] accessor for this [WorkOS] client. */
     val connect: com.workos.connect.Connect
       get() = service(com.workos.connect.Connect::class) { com.workos.connect.Connect(this) }
 
-    /** Lazily-constructed [DirectorySync] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.directorysync.DirectorySync] accessor for this [WorkOS] client. */
     val directorySync: com.workos.directorysync.DirectorySync
       get() = service(com.workos.directorysync.DirectorySync::class) { com.workos.directorysync.DirectorySync(this) }
 
-    /** Lazily-constructed [Events] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.events.Events] accessor for this [WorkOS] client. */
     val events: com.workos.events.Events
       get() = service(com.workos.events.Events::class) { com.workos.events.Events(this) }
 
-    /** Lazily-constructed [FeatureFlags] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.featureflags.FeatureFlags] accessor for this [WorkOS] client. */
     val featureFlags: com.workos.featureflags.FeatureFlags
       get() = service(com.workos.featureflags.FeatureFlags::class) { com.workos.featureflags.FeatureFlags(this) }
 
-    /** Lazily-constructed [MultiFactorAuth] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.multifactorauth.MultiFactorAuth] accessor for this [WorkOS] client. */
     val multiFactorAuth: com.workos.multifactorauth.MultiFactorAuth
       get() = service(com.workos.multifactorauth.MultiFactorAuth::class) { com.workos.multifactorauth.MultiFactorAuth(this) }
 
-    /** Lazily-constructed [OrganizationDomains] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.organizationdomains.OrganizationDomains] accessor for this [WorkOS] client. */
     val organizationDomains: com.workos.organizationdomains.OrganizationDomains
       get() =
         service(
@@ -124,31 +124,31 @@ open class WorkOS
           com.workos.organizationdomains.OrganizationDomains(this)
         }
 
-    /** Lazily-constructed [Organizations] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.organizations.Organizations] accessor for this [WorkOS] client. */
     val organizations: com.workos.organizations.Organizations
       get() = service(com.workos.organizations.Organizations::class) { com.workos.organizations.Organizations(this) }
 
-    /** Lazily-constructed [Pipes] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.pipes.Pipes] accessor for this [WorkOS] client. */
     val pipes: com.workos.pipes.Pipes
       get() = service(com.workos.pipes.Pipes::class) { com.workos.pipes.Pipes(this) }
 
-    /** Lazily-constructed [Radar] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.radar.Radar] accessor for this [WorkOS] client. */
     val radar: com.workos.radar.Radar
       get() = service(com.workos.radar.Radar::class) { com.workos.radar.Radar(this) }
 
-    /** Lazily-constructed [Sso] accessor for this [WorkOS] client. */
-    val sso: com.workos.sso.Sso
-      get() = service(com.workos.sso.Sso::class) { com.workos.sso.Sso(this) }
+    /** Lazily-constructed [com.workos.sso.SSO] accessor for this [WorkOS] client. */
+    val sso: com.workos.sso.SSO
+      get() = service(com.workos.sso.SSO::class) { com.workos.sso.SSO(this) }
 
-    /** Lazily-constructed [UserManagement] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.usermanagement.UserManagement] accessor for this [WorkOS] client. */
     val userManagement: com.workos.usermanagement.UserManagement
       get() = service(com.workos.usermanagement.UserManagement::class) { com.workos.usermanagement.UserManagement(this) }
 
-    /** Lazily-constructed [Webhooks] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.webhooks.Webhooks] accessor for this [WorkOS] client. */
     val webhooks: com.workos.webhooks.Webhooks
       get() = service(com.workos.webhooks.Webhooks::class) { com.workos.webhooks.Webhooks(this) }
 
-    /** Lazily-constructed [Widgets] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.widgets.Widgets] accessor for this [WorkOS] client. */
     val widgets: com.workos.widgets.Widgets
       get() = service(com.workos.widgets.Widgets::class) { com.workos.widgets.Widgets(this) }
   }

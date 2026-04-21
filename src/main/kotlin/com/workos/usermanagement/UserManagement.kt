@@ -41,12 +41,15 @@ import com.workos.types.OrganizationMembershipStatus
 sealed class CreateUserPassword {
   /** Variant: plaintext. */
   data class Plaintext(
+    /** The password. */
     val password: String
   ) : CreateUserPassword()
 
   /** Variant: hashed. */
   data class Hashed(
+    /** The password hash. */
     val hash: String,
+    /** The password hash type. */
     val hashType: CreateUserPasswordHashType
   ) : CreateUserPassword()
 }
@@ -55,11 +58,13 @@ sealed class CreateUserPassword {
 sealed class CreateUserRole {
   /** Variant: single. */
   data class Single(
+    /** The role slug. */
     val slug: String
   ) : CreateUserRole()
 
   /** Variant: multiple. */
   data class Multiple(
+    /** The role slugs. */
     val slugs: List<String>
   ) : CreateUserRole()
 }

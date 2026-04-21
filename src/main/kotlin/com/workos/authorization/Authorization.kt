@@ -26,12 +26,15 @@ import com.workos.types.EventsOrder
 sealed class ResourceTarget {
   /** Variant: by id. */
   data class ById(
+    /** The resource id. */
     val resourceId: String
   ) : ResourceTarget()
 
   /** Variant: by external id. */
   data class ByExternalId(
+    /** The resource external id. */
     val resourceExternalId: String,
+    /** The resource type slug. */
     val resourceTypeSlug: String
   ) : ResourceTarget()
 }
@@ -40,12 +43,15 @@ sealed class ResourceTarget {
 sealed class ParentResource {
   /** Variant: by id. */
   data class ById(
+    /** The parent resource id. */
     val id: String
   ) : ParentResource()
 
   /** Variant: by external id. */
   data class ByExternalId(
+    /** The parent resource type slug. */
     val typeSlug: String,
+    /** The parent resource external id. */
     val externalId: String
   ) : ParentResource()
 }
@@ -54,12 +60,15 @@ sealed class ParentResource {
 sealed class Parent {
   /** Variant: by id. */
   data class ById(
+    /** The parent resource id. */
     val resourceId: String
   ) : Parent()
 
   /** Variant: by external id. */
   data class ByExternalId(
+    /** The parent resource type slug. */
     val resourceTypeSlug: String,
+    /** The parent external id. */
     val externalId: String
   ) : Parent()
 }

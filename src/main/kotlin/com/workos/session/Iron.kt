@@ -25,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec
  *
  * The format is:
  *   `Fe26.2*<passwordId>*<encSalt>*<iv>*<ciphertext>*<expiration>*<intSalt>*<hmac>`
- * Each field is base64url-encoded (no padding); [expiration] is empty when
+ * Each field is base64url-encoded (no padding); `expiration` is empty when
  * `ttl = 0`. Passwords must be at least 32 characters.
  */
 object Iron {
