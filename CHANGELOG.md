@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.23.0](https://github.com/workos/workos-kotlin/compare/workos-v4.22.0...workos-v4.23.0) (2026-04-23)
+
+
+### Features
+
+* Add resourceExternalId optional filter param for listAuthorizationResources ([#368](https://github.com/workos/workos-kotlin/issues/368)) ([2219cf6](https://github.com/workos/workos-kotlin/commit/2219cf65024422ee1c7886a3fe6f670c3d81d0fe))
+
+
+### Bug Fixes
+
+* Remove extractVersion from matchUpdateTypes rules ([#366](https://github.com/workos/workos-kotlin/issues/366)) ([581225c](https://github.com/workos/workos-kotlin/commit/581225c304328d5529cf4a42d3ba9a51adec1c38))
+
 ## [4.22.0](https://github.com/workos/workos-kotlin/compare/workos-v4.21.0...workos-v4.22.0) (2026-04-08)
 
 
