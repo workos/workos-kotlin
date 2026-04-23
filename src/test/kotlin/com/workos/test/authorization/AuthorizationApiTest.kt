@@ -7,6 +7,7 @@ import com.workos.authorization.types.CreateAuthorizationResourceOptions
 import com.workos.authorization.types.CreateOrganizationRoleOptions
 import com.workos.authorization.types.CreatePermissionOptions
 import com.workos.authorization.types.CreateRoleOptions
+import com.workos.authorization.types.ListAuthorizationResourcesOptions
 import com.workos.authorization.types.ListOrganizationMembershipsForResourceOptions
 import com.workos.authorization.types.ListResourcesForOrganizationMembershipOptions
 import com.workos.authorization.types.RemoveRoleOptions
@@ -103,6 +104,39 @@ class AuthorizationApiTest : TestBase() {
     assertEquals("proj-456", result.data[0].externalId)
     assertEquals("Website Redesign", result.data[0].name)
     assertEquals("project", result.data[0].resourceTypeSlug)
+  }
+
+  @Test
+  fun listResourcesWithResourceExternalIdShouldFilterResults() {
+    stubResponse(
+      url = "/authorization/resources",
+      params = mapOf("resource_external_id" to "proj-456"),
+      responseBody = """{
+        "data": [
+          {
+            "id": "authz_resource_01ABC",
+            "object": "authorization_resource",
+            "external_id": "proj-456",
+            "name": "Website Redesign",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+            "resource_type_slug": "project",
+            "created_at": "2026-01-15T12:00:00.000Z",
+            "updated_at": "2026-01-15T12:00:00.000Z"
+          }
+        ],
+        "list_metadata": {
+          "after": null,
+          "before": null
+        }
+      }"""
+    )
+
+    val result = workos.authorization.listResources(
+      ListAuthorizationResourcesOptions(resourceExternalId = "proj-456")
+    )
+
+    assertEquals(1, result.data.size)
+    assertEquals("proj-456", result.data[0].externalId)
   }
 
   @Test
