@@ -12,6 +12,9 @@ class ListAuthorizationResourcesOptions @JvmOverloads constructor(
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String? = null,
 
+  @JsonProperty("resource_external_id")
+  val resourceExternalId: String? = null,
+
   @JsonProperty("parent_resource_id")
   val parentResourceId: String? = null,
 
