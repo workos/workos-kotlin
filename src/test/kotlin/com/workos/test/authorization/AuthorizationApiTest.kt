@@ -1,5 +1,6 @@
 package com.workos.test.authorization
 
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.workos.authorization.types.AddRolePermissionOptions
 import com.workos.authorization.types.AssignRoleOptions
 import com.workos.authorization.types.CheckAuthorizationOptions
@@ -110,7 +111,7 @@ class AuthorizationApiTest : TestBase() {
   fun listResourcesWithResourceExternalIdShouldFilterResults() {
     stubResponse(
       url = "/authorization/resources",
-      params = mapOf("resource_external_id" to "proj-456"),
+      params = mapOf("resource_external_id" to equalTo("proj-456")),
       responseBody = """{
         "data": [
           {
