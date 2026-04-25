@@ -85,5 +85,8 @@ enum class CreateWebhookEndpointEvents(
   PermissionDeleted("permission.deleted"),
   PermissionUpdated("permission.updated"),
   SessionCreated("session.created"),
-  SessionRevoked("session.revoked")
+  SessionRevoked("session.revoked"),
+  WaitlistUserApproved("waitlist_user.approved"),
+  WaitlistUserCreated("waitlist_user.created"),
+  WaitlistUserDenied("waitlist_user.denied")
 }

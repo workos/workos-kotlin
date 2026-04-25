@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [EventSchemaContext]. */
-typealias FlagDeletedContext = EventSchemaContext
+/** Alias for [FlagCreatedContext]. */
+typealias FlagDeletedContext = FlagCreatedContext

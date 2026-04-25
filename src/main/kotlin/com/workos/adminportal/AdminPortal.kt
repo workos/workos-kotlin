@@ -24,7 +24,7 @@ class AdminPortal(
    * @param successUrl The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
    * @param intent The intent of the Admin Portal.
    * @param intentOptions Options to configure the Admin Portal based on the intent.
-   * @param adminEmails The email addresses of the IT admins to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
+   * @param itContactEmails The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
    *
    * @return the PortalLinkResponse
    */
@@ -35,7 +35,7 @@ class AdminPortal(
     successUrl: String? = null,
     intent: GenerateLinkIntent? = null,
     intentOptions: IntentOptions? = null,
-    adminEmails: List<String>? = null,
+    itContactEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse {
     val body =
@@ -45,7 +45,7 @@ class AdminPortal(
         "success_url" to successUrl,
         "intent" to intent,
         "intent_options" to intentOptions,
-        "admin_emails" to adminEmails
+        "it_contact_emails" to itContactEmails
       )
     val config =
       RequestConfig(

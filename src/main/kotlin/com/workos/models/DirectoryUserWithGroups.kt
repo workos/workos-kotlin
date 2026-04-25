@@ -39,8 +39,9 @@ data class DirectoryUserWithGroups(
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
-  /** The directory groups the user belongs to. */
+  /** The directory groups the user belongs to. Use the List Directory Groups endpoint with a user filter instead. */
   @JsonProperty("groups")
+  @Deprecated("Deprecated field")
   val groups: List<DirectoryGroup>,
   /** Distinguishes the Directory User object. */
   @JsonProperty("object")

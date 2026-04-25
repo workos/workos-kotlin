@@ -70,6 +70,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `CreateGroupMembership round-trips through Jackson`() {
+    val json = "{\"organization_membership_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, CreateGroupMembership::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `UpdateJWTTemplate round-trips through Jackson`() {
     val json = "{\"content\": \"sample\"}"
     val parsed = mapper.readValue(json, UpdateJWTTemplate::class.java)
@@ -1190,18 +1200,6 @@ class GeneratedModelRoundTripTest {
   fun `ConnectApplicationRedirectUri round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\", \"default\": false}"
     val parsed = mapper.readValue(json, ConnectApplicationRedirectUri::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
-  fun `EventSchemaData round-trips through Jackson`() {
-    val json =
-      "{\"action_endpoint_id\": \"sample\", \"action_execution_id\": \"sample\", \"type\": \"authentication\", \"verdict\": \"Deny\", " +
-        "\"user_id\": \"sample\", \"organization_id\": null, \"email\": \"sample\", \"ip_address\": null, \"user_agent\": null}"
-    val parsed = mapper.readValue(json, EventSchemaData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

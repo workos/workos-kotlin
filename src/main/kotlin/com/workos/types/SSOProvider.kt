@@ -13,7 +13,16 @@ enum class SSOProvider(
   @JsonEnumDefaultValue
   Unknown("unknown"),
   AppleOAuth("AppleOAuth"),
+  BitbucketOAuth("BitbucketOAuth"),
   GitHubOAuth("GitHubOAuth"),
+  GitLabOAuth("GitLabOAuth"),
   GoogleOAuth("GoogleOAuth"),
-  MicrosoftOAuth("MicrosoftOAuth")
+  IntuitOAuth("IntuitOAuth"),
+  LinkedInOAuth("LinkedInOAuth"),
+  MicrosoftOAuth("MicrosoftOAuth"),
+  SalesforceOAuth("SalesforceOAuth"),
+  SlackOAuth("SlackOAuth"),
+  VercelMarketplaceOAuth("VercelMarketplaceOAuth"),
+  VercelOAuth("VercelOAuth"),
+  XeroOAuth("XeroOAuth")
 }

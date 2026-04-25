@@ -504,8 +504,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().sendInvitation("sample-arg")
     assertNotNull(result)
@@ -528,8 +528,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().findInvitationByToken("sample-arg")
     assertNotNull(result)
@@ -548,8 +548,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().getInvitation("sample-arg")
     assertNotNull(result)
@@ -568,8 +568,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().acceptInvitation("sample-arg")
     assertNotNull(result)
@@ -588,8 +588,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().resendInvitation("sample-arg")
     assertNotNull(result)
@@ -608,8 +608,8 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"invitation\", \"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"accepted_at\": null, " +
         "\"revoked_at\": null, \"expires_at\": \"2024-01-01T00:00:00Z\", \"organization_id\": null, \"inviter_user_id\": null, " +
-        "\"accepted_user_id\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"token\": " +
-        "\"sample\", \"accept_invitation_url\": \"sample\"}"
+        "\"accepted_user_id\": null, \"role_slug\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"token\": \"sample\", \"accept_invitation_url\": \"sample\"}"
     )
     val result = api().revokeInvitation("sample-arg")
     assertNotNull(result)

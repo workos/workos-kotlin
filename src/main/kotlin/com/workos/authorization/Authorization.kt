@@ -132,7 +132,7 @@ class Authorization(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listOrganizationMembershipResources(
+  fun listResourcesForMembership(
     organizationMembershipId: String,
     permissionSlug: String,
     before: String? = null,
@@ -180,7 +180,7 @@ class Authorization(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listResourcePermissions(
+  fun listEffectivePermissions(
     organizationMembershipId: String,
     resourceId: String,
     before: String? = null,
@@ -259,7 +259,7 @@ class Authorization(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listOrganizationMembershipRoleAssignments(
+  fun listRoleAssignments(
     organizationMembershipId: String,
     before: String? = null,
     after: String? = null,
@@ -365,7 +365,7 @@ class Authorization(
    * @param roleAssignmentId The ID of the role assignment to remove.
    */
   @JvmOverloads
-  fun deleteOrganizationMembershipRoleAssignment(
+  fun removeRoleAssignment(
     organizationMembershipId: String,
     roleAssignmentId: String,
     requestOptions: RequestOptions? = null
@@ -536,7 +536,7 @@ class Authorization(
    * @return the Role
    */
   @JvmOverloads
-  fun createRolePermission(
+  fun addOrganizationRolePermission(
     organizationId: String,
     slug: String,
     bodySlug: String,
@@ -568,7 +568,7 @@ class Authorization(
    * @return the Role
    */
   @JvmOverloads
-  fun updateRolePermissions(
+  fun setOrganizationRolePermissions(
     organizationId: String,
     slug: String,
     permissions: List<String>,
@@ -598,7 +598,7 @@ class Authorization(
    * @param permissionSlug The slug of the permission to remove.
    */
   @JvmOverloads
-  fun deleteRolePermission(
+  fun removeOrganizationRolePermission(
     organizationId: String,
     slug: String,
     permissionSlug: String,
@@ -625,7 +625,7 @@ class Authorization(
    * @return the AuthorizationResource
    */
   @JvmOverloads
-  fun getOrganizationResource(
+  fun getResourceByExternalId(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
@@ -654,7 +654,7 @@ class Authorization(
    * @return the AuthorizationResource
    */
   @JvmOverloads
-  fun updateOrganizationResource(
+  fun updateResourceByExternalId(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
@@ -698,7 +698,7 @@ class Authorization(
    * @param cascadeDelete If true, deletes all descendant resources and role assignments. If not set and the resource has children or assignments, the request will fail.
    */
   @JvmOverloads
-  fun deleteOrganizationResource(
+  fun deleteResourceByExternalId(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
@@ -735,7 +735,7 @@ class Authorization(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listResourceOrganizationMemberships(
+  fun listMembershipsForResourceByExternalId(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
@@ -775,6 +775,7 @@ class Authorization(
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param organizationId Filter resources by organization ID.
    * @param resourceTypeSlug Filter resources by resource type slug.
+   * @param resourceExternalId Filter resources by external ID.
    * @param search Search resources by name.
    *
    * @return a [com.workos.common.http.Page] of results
@@ -787,6 +788,7 @@ class Authorization(
     order: EventsOrder? = null,
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
     search: String? = null,
     parent: Parent? = null,
     requestOptions: RequestOptions? = null
@@ -805,6 +807,7 @@ class Authorization(
       order?.let { params += "order" to it.value }
       params.addIfNotNull("organization_id", organizationId)
       params.addIfNotNull("resource_type_slug", resourceTypeSlug)
+      params.addIfNotNull("resource_external_id", resourceExternalId)
       params.addIfNotNull("search", search)
       if (parent != null) {
         when (parent) {

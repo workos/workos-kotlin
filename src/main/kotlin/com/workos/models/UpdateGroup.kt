@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** An event emitted by WorkOS. */
-class EventSchema
+/** Alias for [UpdateRole]. */
+typealias UpdateGroup = UpdateRole

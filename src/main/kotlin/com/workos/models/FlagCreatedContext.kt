@@ -2,5 +2,14 @@
 
 package com.workos.models
 
-/** Alias for [EventSchemaContext]. */
-typealias FlagCreatedContext = EventSchemaContext
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** Additional context about the event. */
+data class FlagCreatedContext(
+  /** The client ID associated with the flag event. */
+  @JsonProperty("client_id")
+  val clientId: String,
+  /** The actor who performed the action. */
+  @JsonProperty("actor")
+  val actor: FlagCreatedContextActor
+)

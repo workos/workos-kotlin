@@ -35,6 +35,9 @@ data class Invitation(
   /** The ID of the user who accepted the invitation, once accepted. */
   @JsonProperty("accepted_user_id")
   val acceptedUserId: String?,
+  /** Slug of the role the invitee will be assigned on acceptance. Reflects the current role on the invitee's organization membership. null when the invitation has no associated organization. */
+  @JsonProperty("role_slug")
+  val roleSlug: String?,
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,

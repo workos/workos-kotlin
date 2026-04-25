@@ -117,7 +117,10 @@ import java.time.OffsetDateTime
   JsonSubTypes.Type(value = VaultDekRead::class, name = "vault.dek.read"),
   JsonSubTypes.Type(value = VaultKekCreated::class, name = "vault.kek.created"),
   JsonSubTypes.Type(value = VaultMetadataRead::class, name = "vault.metadata.read"),
-  JsonSubTypes.Type(value = VaultNamesListed::class, name = "vault.names.listed")
+  JsonSubTypes.Type(value = VaultNamesListed::class, name = "vault.names.listed"),
+  JsonSubTypes.Type(value = WaitlistUserApproved::class, name = "waitlist_user.approved"),
+  JsonSubTypes.Type(value = WaitlistUserCreated::class, name = "waitlist_user.created"),
+  JsonSubTypes.Type(value = WaitlistUserDenied::class, name = "waitlist_user.denied")
 )
 sealed interface WorkOSEvent {
   /** Unique identifier for this event. */

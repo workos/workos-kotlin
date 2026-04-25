@@ -42,14 +42,14 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `listOrganizationMembershipResources returns a typed response`() {
+  fun `listResourcesForMembership returns a typed response`() {
     stubResponse(
       "GET",
       "/authorization/organization_memberships/sample-arg/resources",
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listOrganizationMembershipResources("sample-arg", "sample-arg", parentResource = ParentResource.ById("sample-arg"))
+    val result = api().listResourcesForMembership("sample-arg", "sample-arg", parentResource = ParentResource.ById("sample-arg"))
     assertNotNull(result)
     wireMockRule.verify(
       getRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/resources"))
@@ -58,14 +58,14 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `listResourcePermissions returns a typed response`() {
+  fun `listEffectivePermissions returns a typed response`() {
     stubResponse(
       "GET",
       "/authorization/organization_memberships/sample-arg/resources/sample-arg/permissions",
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listResourcePermissions("sample-arg", "sample-arg")
+    val result = api().listEffectivePermissions("sample-arg", "sample-arg")
     assertNotNull(result)
   }
 
@@ -82,14 +82,14 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `listOrganizationMembershipRoleAssignments returns a typed response`() {
+  fun `listRoleAssignments returns a typed response`() {
     stubResponse(
       "GET",
       "/authorization/organization_memberships/sample-arg/role_assignments",
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listOrganizationMembershipRoleAssignments("sample-arg")
+    val result = api().listRoleAssignments("sample-arg")
     assertNotNull(result)
   }
 
@@ -127,9 +127,9 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `deleteOrganizationMembershipRoleAssignment completes without throwing`() {
+  fun `removeRoleAssignment completes without throwing`() {
     stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments/sample-arg", 204)
-    api().deleteOrganizationMembershipRoleAssignment("sample-arg", "sample-arg")
+    api().removeRoleAssignment("sample-arg", "sample-arg")
   }
 
   @Test
@@ -208,7 +208,7 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `createRolePermission returns a typed response`() {
+  fun `addOrganizationRolePermission returns a typed response`() {
     stubResponse(
       "POST",
       "/authorization/organizations/sample-arg/roles/sample-arg/permissions",
@@ -217,7 +217,7 @@ class AuthorizationTest : TestBase() {
         "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createRolePermission("sample-arg", "sample-arg", "sample-arg")
+    val result = api().addOrganizationRolePermission("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.slug)
     assertEquals("role", result.objectType)
@@ -231,7 +231,7 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `updateRolePermissions returns a typed response`() {
+  fun `setOrganizationRolePermissions returns a typed response`() {
     stubResponse(
       "PUT",
       "/authorization/organizations/sample-arg/roles/sample-arg/permissions",
@@ -240,7 +240,7 @@ class AuthorizationTest : TestBase() {
         "\"EnvironmentRole\", \"resource_type_slug\": \"sample\", \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().updateRolePermissions("sample-arg", "sample-arg", emptyList<String>())
+    val result = api().setOrganizationRolePermissions("sample-arg", "sample-arg", emptyList<String>())
     assertNotNull(result)
     assertEquals("sample", result.slug)
     assertEquals("role", result.objectType)
@@ -250,13 +250,13 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `deleteRolePermission completes without throwing`() {
+  fun `removeOrganizationRolePermission completes without throwing`() {
     stubResponse("DELETE", "/authorization/organizations/sample-arg/roles/sample-arg/permissions/sample-arg", 204)
-    api().deleteRolePermission("sample-arg", "sample-arg", "sample-arg")
+    api().removeOrganizationRolePermission("sample-arg", "sample-arg", "sample-arg")
   }
 
   @Test
-  fun `getOrganizationResource returns a typed response`() {
+  fun `getResourceByExternalId returns a typed response`() {
     stubResponse(
       "GET",
       "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg",
@@ -265,7 +265,7 @@ class AuthorizationTest : TestBase() {
         "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().getOrganizationResource("sample-arg", "sample-arg", "sample-arg")
+    val result = api().getResourceByExternalId("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)
@@ -275,7 +275,7 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `updateOrganizationResource returns a typed response`() {
+  fun `updateResourceByExternalId returns a typed response`() {
     stubResponse(
       "PATCH",
       "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg",
@@ -285,7 +285,7 @@ class AuthorizationTest : TestBase() {
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result =
-      api().updateOrganizationResource(
+      api().updateResourceByExternalId(
         "sample-arg",
         "sample-arg",
         "sample-arg",
@@ -306,20 +306,20 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
-  fun `deleteOrganizationResource completes without throwing`() {
+  fun `deleteResourceByExternalId completes without throwing`() {
     stubResponse("DELETE", "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg", 204)
-    api().deleteOrganizationResource("sample-arg", "sample-arg", "sample-arg")
+    api().deleteResourceByExternalId("sample-arg", "sample-arg", "sample-arg")
   }
 
   @Test
-  fun `listResourceOrganizationMemberships returns a typed response`() {
+  fun `listMembershipsForResourceByExternalId returns a typed response`() {
     stubResponse(
       "GET",
       "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/organization_memberships",
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listResourceOrganizationMemberships("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    val result = api().listMembershipsForResourceByExternalId("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
       getRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/organization_memberships"))

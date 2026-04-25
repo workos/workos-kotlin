@@ -8,5 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class IntentOptions(
   /** SSO-specific options for the Admin Portal. */
   @JsonProperty("sso")
-  val sso: SSOIntentOptions
+  val sso: SSOIntentOptions? = null,
+  /** Domain verification-specific options for the Admin Portal. */
+  @JsonProperty("domain_verification")
+  val domainVerification: DomainVerificationIntentOptions? = null
 )
