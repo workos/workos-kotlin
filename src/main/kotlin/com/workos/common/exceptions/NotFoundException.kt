@@ -1,14 +1,12 @@
+// @oagen-ignore-file
 package com.workos.common.exceptions
 
-/**
- * Thrown when a resource is not found.
- *
- * @param path The path of the requested resource.
- * @param requestId  The ID of the correlating request specified in the 'X-Request-ID' header.
- */
+/** Raised for HTTP 404 responses. */
 class NotFoundException(
-  private val path: String,
-  val requestId: String
-) : Exception("NotFoundException") {
-  val status = 404
-}
+  requestId: String?,
+  code: String?,
+  message: String?,
+  /** The request URL path that was not found. */
+  @JvmField val path: String?,
+  rawBody: String?
+) : WorkOSException(404, requestId, code, message, null, rawBody)

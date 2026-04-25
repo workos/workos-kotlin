@@ -1,3 +1,4 @@
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -38,9 +39,12 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
-  implementation("org.apache.httpcomponents:httpclient:4.5.14")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.2")
 
-  implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+  // JWT verification + JWKS handling for session helpers (hand-maintained).
+  implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
 
   implementation(kotlin("reflect"))
 
@@ -55,8 +59,6 @@ dependencies {
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
   testImplementation("org.wiremock:wiremock:3.13.2")
-
-  api("org.apache.commons:commons-math3:3.6.1")
 }
 
 val generatedVersionDir = layout.buildDirectory.dir("generated-version")
@@ -96,11 +98,16 @@ tasks.named("javadoc") {
 dokka {
   dokkaPublications.javadoc {
     outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+    failOnWarning.set(true)
   }
 
   dokkaSourceSets.configureEach {
     reportUndocumented.set(true)
   }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+  failOnWarning.set(true)
 }
 
 tasks.jar {
