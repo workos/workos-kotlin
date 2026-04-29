@@ -438,7 +438,18 @@ class AuthorizationApiTest : TestBase() {
             "status": "active",
             "directory_managed": false,
             "created_at": "2026-01-15T12:00:00.000Z",
-            "updated_at": "2026-01-15T12:00:00.000Z"
+            "updated_at": "2026-01-15T12:00:00.000Z",
+            "user": {
+              "id": "user_01EHQTV6MWP9P1F4ZXGXMC8ABB",
+              "email": "marcelina@example.com",
+              "first_name": "Marcelina",
+              "last_name": "Davis",
+              "email_verified": true,
+              "profile_picture_url": "https://example.com/avatar.png",
+              "last_sign_in_at": "2026-01-15T12:00:00.000Z",
+              "created_at": "2026-01-15T12:00:00.000Z",
+              "updated_at": "2026-01-15T12:00:00.000Z"
+            }
           }
         ],
         "list_metadata": {
@@ -457,6 +468,11 @@ class AuthorizationApiTest : TestBase() {
     assertEquals("om_01HXYZ", result.data[0].id)
     assertEquals("user_01EHQTV6MWP9P1F4ZXGXMC8ABB", result.data[0].userId)
     assertEquals("active", result.data[0].status.type)
+    assertEquals("user_01EHQTV6MWP9P1F4ZXGXMC8ABB", result.data[0].user?.id)
+    assertEquals("marcelina@example.com", result.data[0].user?.email)
+    assertEquals("Marcelina", result.data[0].user?.firstName)
+    assertEquals("Davis", result.data[0].user?.lastName)
+    assertEquals(true, result.data[0].user?.emailVerified)
   }
 
   @Test
@@ -473,7 +489,16 @@ class AuthorizationApiTest : TestBase() {
             "status": "active",
             "directory_managed": false,
             "created_at": "2026-01-15T12:00:00.000Z",
-            "updated_at": "2026-01-15T12:00:00.000Z"
+            "updated_at": "2026-01-15T12:00:00.000Z",
+            "user": {
+              "id": "user_01ABC",
+              "email": "marcelina@example.com",
+              "first_name": "Marcelina",
+              "last_name": "Davis",
+              "email_verified": true,
+              "created_at": "2026-01-15T12:00:00.000Z",
+              "updated_at": "2026-01-15T12:00:00.000Z"
+            }
           }
         ],
         "list_metadata": {
@@ -490,6 +515,8 @@ class AuthorizationApiTest : TestBase() {
 
     assertEquals(1, result.data.size)
     assertEquals("om_01HXYZ", result.data[0].id)
+    assertEquals("user_01ABC", result.data[0].user?.id)
+    assertEquals("marcelina@example.com", result.data[0].user?.email)
   }
 
   // ── Permissions ────────────────────────────────────────────────────────

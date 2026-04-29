@@ -1190,7 +1190,18 @@ class UserManagementApiTest : TestBase() {
         "status": "active",
         "created_at": "2021-06-25T19:07:33.155Z",
         "updated_at": "2021-06-25T19:07:33.155Z",
-        "directory_managed": false
+        "directory_managed": false,
+        "user": {
+          "id": "user_456",
+          "email": "marcelina@example.com",
+          "first_name": "Marcelina",
+          "last_name": "Davis",
+          "email_verified": true,
+          "profile_picture_url": "https://example.com/avatar.png",
+          "last_sign_in_at": "2021-06-25T19:07:33.155Z",
+          "created_at": "2021-06-25T19:07:33.155Z",
+          "updated_at": "2021-06-25T19:07:33.155Z"
+        }
       }"""
     )
 
@@ -1198,14 +1209,25 @@ class UserManagementApiTest : TestBase() {
 
     assertEquals(
       OrganizationMembership(
-        "om_123",
-        "user_456",
-        "org_789",
-        OrganizationMembershipRole("admin"),
-        listOf(OrganizationMembershipRole("admin")),
-        OrganizationMembershipStatusEnumType.Active,
-        "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
+        id = "om_123",
+        userId = "user_456",
+        organizationId = "org_789",
+        role = OrganizationMembershipRole("admin"),
+        roles = listOf(OrganizationMembershipRole("admin")),
+        status = OrganizationMembershipStatusEnumType.Active,
+        createdAt = "2021-06-25T19:07:33.155Z",
+        updatedAt = "2021-06-25T19:07:33.155Z",
+        user = User(
+          id = "user_456",
+          email = "marcelina@example.com",
+          firstName = "Marcelina",
+          lastName = "Davis",
+          emailVerified = true,
+          profilePictureUrl = "https://example.com/avatar.png",
+          lastSignInAt = "2021-06-25T19:07:33.155Z",
+          createdAt = "2021-06-25T19:07:33.155Z",
+          updatedAt = "2021-06-25T19:07:33.155Z"
+        )
       ),
       organizationMembership
     )
