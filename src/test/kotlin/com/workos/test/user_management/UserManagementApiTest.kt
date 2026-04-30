@@ -55,7 +55,8 @@ class UserManagementApiTest : TestBase() {
         "last_name": "User",
         "last_sign_in_at": "2021-06-25T19:07:33.155Z",
         "created_at": "2021-06-25T19:07:33.155Z",
-        "updated_at": "2021-06-25T19:07:33.155Z"
+        "updated_at": "2021-06-25T19:07:33.155Z",
+        "external_id": "external_123"
       }"""
     )
 
@@ -63,15 +64,16 @@ class UserManagementApiTest : TestBase() {
 
     assertEquals(
       User(
-        "user_123",
-        "test01@example.com",
-        "Test",
-        "User",
-        true,
-        "https://example.com/profile_picture.jpg",
-        "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z",
-        "2021-06-25T19:07:33.155Z"
+        id = "user_123",
+        email = "test01@example.com",
+        firstName = "Test",
+        lastName = "User",
+        emailVerified = true,
+        profilePictureUrl = "https://example.com/profile_picture.jpg",
+        lastSignInAt = "2021-06-25T19:07:33.155Z",
+        createdAt = "2021-06-25T19:07:33.155Z",
+        updatedAt = "2021-06-25T19:07:33.155Z",
+        externalId = "external_123"
       ),
       user
     )
