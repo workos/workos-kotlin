@@ -18,13 +18,21 @@ jobs:
         run: |
           ./gradlew test --info
 
-      - name: Publish
+      - name: Decode signing key
         env:
           MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+        run: |
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          echo "::add-mask::$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
+
+      - name: Publish
+        env:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
-
-        run: |
-          ORG_GRADLE_PROJECT_signingInMemoryKey="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)" \
-            ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
