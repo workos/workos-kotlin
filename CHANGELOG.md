@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.25.0](https://github.com/workos/workos-kotlin/compare/v4.24.0...v4.25.0) (2026-04-30)
+
+
+### Features
+
+* Add external_id to User model ([#371](https://github.com/workos/workos-kotlin/issues/371)) ([6355ffc](https://github.com/workos/workos-kotlin/commit/6355ffc0bad787eab90ee9924699883be09405b5))
+
 ## [4.24.0](https://github.com/workos/workos-kotlin/compare/v4.23.0...v4.24.0) (2026-04-30)
 
 
