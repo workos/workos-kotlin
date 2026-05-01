@@ -9,7 +9,7 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "2.1.21"
+  id("org.jetbrains.kotlin.jvm") version "2.3.21"
 
   id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
@@ -17,13 +17,9 @@ plugins {
 
   id("org.jetbrains.dokka-javadoc") version "2.2.0"
 
-  id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
-
-  signing
+  id("com.vanniktech.maven.publish") version "0.36.0"
 
   `java-library`
-
-  `maven-publish`
 }
 
 repositories {
@@ -117,9 +113,6 @@ tasks.jar {
 java {
   sourceCompatibility = JavaVersion.VERSION_17
   targetCompatibility = JavaVersion.VERSION_17
-
-  withSourcesJar()
-  withJavadocJar()
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
@@ -132,65 +125,41 @@ tasks.withType<Test>().configureEach {
   useJUnitPlatform()
 }
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      artifactId = "workos"
+mavenPublishing {
+  publishToMavenCentral(automaticRelease = true)
+  signAllPublications()
 
-      from(components["java"])
+  coordinates("com.workos", "workos", version.toString())
 
-      pom {
-        name.set("WorkOS SDK")
-        description.set(
-          "The WorkOS Kotlin library provides convenient access to the WorkOS API " +
-            "from applications written in JVM compatible languages."
-        )
-        url.set("https://github.com/workos-inc/workos-kotlin")
-        licenses {
-          license {
-            name.set("MIT License")
-            url.set("https://github.com/workos-inc/workos-kotlin/blob/main/LICENSE")
-          }
-        }
-        developers {
-          developer {
-            id.set("rframpton")
-            name.set("Robert Frampton")
-            email.set("rob@workos.com")
-          }
-          developer {
-            id.set("dliu-workos")
-            name.set("David Liu")
-            email.set("david.liu@workos.com")
-          }
-        }
-        scm {
-          connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
-          developerConnection.set("scm:git:git@github.com:workos-inc/workos-kotlin.git")
-          url.set("https://github.com/workos-inc/workos-kotlin")
-        }
+  pom {
+    name.set("WorkOS SDK")
+    description.set(
+      "The WorkOS Kotlin library provides convenient access to the WorkOS API " +
+        "from applications written in JVM compatible languages."
+    )
+    url.set("https://github.com/workos-inc/workos-kotlin")
+    licenses {
+      license {
+        name.set("MIT License")
+        url.set("https://github.com/workos-inc/workos-kotlin/blob/main/LICENSE")
       }
     }
-  }
-}
-
-nexusPublishing {
-  repositories {
-    create("myNexus") {
-      // Central Portal compatibility endpoints (post-OSSRH EOL June 30, 2025)
-      nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+    developers {
+      developer {
+        id.set("rframpton")
+        name.set("Robert Frampton")
+        email.set("rob@workos.com")
+      }
+      developer {
+        id.set("dliu-workos")
+        name.set("David Liu")
+        email.set("david.liu@workos.com")
+      }
     }
-  }
-}
-
-signing {
-  val signingPassword: String? by project
-
-  if (signingPassword != null) {
-    val signingKey = File("signing.key").readText()
-
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications)
+    scm {
+      connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
+      developerConnection.set("scm:git:git@github.com:workos-inc/workos-kotlin.git")
+      url.set("https://github.com/workos-inc/workos-kotlin")
+    }
   }
 }
