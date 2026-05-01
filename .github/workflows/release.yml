@@ -18,20 +18,21 @@ jobs:
         run: |
           ./gradlew test --info
 
-      - name: Publish
+      - name: Decode signing key
         env:
           MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
-          NEXUS_SIGNING_PASSWORD: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
-          MAVEN_USER_NAME: ${{ secrets.MAVEN_USER_NAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-
         run: |
-          echo $MAVEN_SIGNING_KEY | base64 --decode > signing.key
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          echo "::add-mask::$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
 
-          cat << EOF > gradle.properties
-          signingPassword=${NEXUS_SIGNING_PASSWORD}
-          myNexusUsername=${MAVEN_USER_NAME}
-          myNexusPassword=${MAVEN_PASSWORD}
-          EOF
-
-          ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
+      - name: Publish
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
