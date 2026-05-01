@@ -34,4 +34,11 @@ jobs:
           myNexusPassword=${MAVEN_PASSWORD}
           EOF
 
-          ./gradlew publishToMyNexus closeAndReleaseMyNexusStagingRepository -Prelease
+          # Upload first, then give Sonatype's Central Portal compatibility
+          # bridge time to register the artifacts before asking it to close
+          # and release the staging repository.
+          ./gradlew publishToMyNexus -Prelease
+
+          sleep 60
+
+          ./gradlew closeAndReleaseMyNexusStagingRepository -Prelease

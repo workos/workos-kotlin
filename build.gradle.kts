@@ -1,4 +1,5 @@
 import java.io.FileOutputStream
+import java.time.Duration
 import java.util.Properties
 
 group = "com.workos"
@@ -160,6 +161,16 @@ publishing {
 }
 
 nexusPublishing {
+  // Central Portal compatibility bridge can be slow to register uploaded
+  // artifacts; give the close/release polling room to wait it out.
+  clientTimeout.set(Duration.ofMinutes(10))
+  connectTimeout.set(Duration.ofMinutes(5))
+
+  transitionCheckOptions {
+    maxRetries.set(180)
+    delayBetween.set(Duration.ofSeconds(10))
+  }
+
   repositories {
     create("myNexus") {
       // Central Portal compatibility endpoints (post-OSSRH EOL June 30, 2025)
