@@ -1,3 +1,4 @@
+// @oagen-ignore-file
 package com.workos.common.http
 
 import java.net.URLEncoder

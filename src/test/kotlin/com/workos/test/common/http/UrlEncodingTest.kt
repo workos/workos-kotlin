@@ -1,3 +1,4 @@
+// @oagen-ignore-file
 package com.workos.test.common.http
 
 import com.workos.common.http.encodePathSegment
