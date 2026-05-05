@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.encodePathSegment
 import com.workos.models.Group
 import com.workos.types.EventsOrder
 
@@ -38,7 +39,7 @@ class UserManagementOrganizationMembershipGroups(
     val itemType = object : TypeReference<Group>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/user_management/organization_memberships/$omId/groups",
+      path = "/user_management/organization_memberships/${encodePathSegment(omId)}/groups",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,

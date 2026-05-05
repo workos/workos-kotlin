@@ -8,15 +8,86 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
-import com.workos.models.ApiKey
+import com.workos.common.http.encodePathSegment
 import com.workos.models.ApiKeyValidationResponse
-import com.workos.models.ApiKeyWithValue
+import com.workos.models.OrganizationApiKey
+import com.workos.models.OrganizationApiKeyWithValue
 import com.workos.types.EventsOrder
 
 /** API accessor for ApiKeys. */
 class ApiKeys(
   internal val workos: WorkOS
 ) {
+  /**
+   * List API keys for an organization
+   *
+   * Get a list of all API keys for an organization.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listOrganizationApiKeys(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: EventsOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<OrganizationApiKey> {
+    val itemType = object : TypeReference<OrganizationApiKey>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/organizations/${encodePathSegment(organizationId)}/api_keys",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+    }
+  }
+
+  /**
+   * Create an API key for an organization
+   *
+   * Create a new API key for an organization.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param name The name for the API key.
+   * @param permissions The permission slugs to assign to the API key.
+   *
+   * @return the OrganizationApiKeyWithValue
+   */
+  @JvmOverloads
+  fun createOrganizationApiKey(
+    organizationId: String,
+    name: String,
+    permissions: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): OrganizationApiKeyWithValue {
+    val body =
+      bodyOf(
+        "name" to name,
+        "permissions" to permissions
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/organizations/${encodePathSegment(organizationId)}/api_keys",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, OrganizationApiKeyWithValue::class.java)
+  }
+
   /**
    * Validate API key
    *
@@ -60,79 +131,9 @@ class ApiKeys(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/api_keys/$id",
+        path = "/api_keys/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
-  }
-
-  /**
-   * List API keys for an organization
-   *
-   * Get a list of all API keys for an organization.
-   *
-   * @param organizationId Unique identifier of the Organization.
-   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
-   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
-   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time.
-   *
-   * @return a [com.workos.common.http.Page] of results
-   */
-  @JvmOverloads
-  fun listOrganizationApiKeys(
-    organizationId: String,
-    before: String? = null,
-    after: String? = null,
-    limit: Int? = null,
-    order: EventsOrder? = null,
-    requestOptions: RequestOptions? = null
-  ): Page<ApiKey> {
-    val itemType = object : TypeReference<ApiKey>() {}
-    return workos.baseClient.requestPage(
-      method = "GET",
-      path = "/organizations/$organizationId/api_keys",
-      itemType = itemType,
-      requestOptions = requestOptions,
-      before = before,
-      after = after
-    ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-    }
-  }
-
-  /**
-   * Create an API key for an organization
-   *
-   * Create a new API key for an organization.
-   *
-   * @param organizationId Unique identifier of the Organization.
-   * @param name The name for the API key.
-   * @param permissions The permission slugs to assign to the API key.
-   *
-   * @return the ApiKeyWithValue
-   */
-  @JvmOverloads
-  fun createOrganizationApiKey(
-    organizationId: String,
-    name: String,
-    permissions: List<String>? = null,
-    requestOptions: RequestOptions? = null
-  ): ApiKeyWithValue {
-    val body =
-      bodyOf(
-        "name" to name,
-        "permissions" to permissions
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/organizations/$organizationId/api_keys",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, ApiKeyWithValue::class.java)
   }
 }

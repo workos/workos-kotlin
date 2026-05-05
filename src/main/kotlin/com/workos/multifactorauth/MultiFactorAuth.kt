@@ -8,6 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.AuthenticationChallenge
 import com.workos.models.AuthenticationChallengeVerifyResponse
 import com.workos.models.AuthenticationFactor
@@ -43,7 +44,7 @@ class MultiFactorAuth(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/auth/challenges/$id/verify",
+        path = "/auth/challenges/${encodePathSegment(id)}/verify",
         body = body,
         requestOptions = requestOptions
       )
@@ -107,7 +108,7 @@ class MultiFactorAuth(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/auth/factors/$id",
+        path = "/auth/factors/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthenticationFactor::class.java)
@@ -128,7 +129,7 @@ class MultiFactorAuth(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/auth/factors/$id",
+        path = "/auth/factors/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -157,7 +158,7 @@ class MultiFactorAuth(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/auth/factors/$id/challenge",
+        path = "/auth/factors/${encodePathSegment(id)}/challenge",
         body = body,
         requestOptions = requestOptions
       )
@@ -189,7 +190,7 @@ class MultiFactorAuth(
     val itemType = object : TypeReference<AuthenticationFactor>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/user_management/users/$userlandUserId/auth_factors",
+      path = "/user_management/users/${encodePathSegment(userlandUserId)}/auth_factors",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -233,7 +234,7 @@ class MultiFactorAuth(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/users/$userlandUserId/auth_factors",
+        path = "/user_management/users/${encodePathSegment(userlandUserId)}/auth_factors",
         body = body,
         requestOptions = requestOptions
       )

@@ -19,23 +19,6 @@ class ApiKeysTest : TestBase() {
   private fun api() = ApiKeys(createWorkOSClient())
 
   @Test
-  fun `createValidation returns a typed response`() {
-    stubResponse("POST", "/api_keys/validations", 200, "{\"api_key\": null}")
-    val result = api().createValidation("sample-arg")
-    assertNotNull(result)
-    wireMockRule.verify(
-      postRequestedFor(urlPathMatching("/api_keys/validations"))
-        .withRequestBody(matchingJsonPath("$.value"))
-    )
-  }
-
-  @Test
-  fun `delete completes without throwing`() {
-    stubResponse("DELETE", "/api_keys/sample-arg", 204)
-    api().delete("sample-arg")
-  }
-
-  @Test
   fun `listOrganizationApiKeys returns a typed response`() {
     stubResponse("GET", "/organizations/sample-arg/api_keys", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listOrganizationApiKeys("sample-arg")
@@ -63,6 +46,23 @@ class ApiKeysTest : TestBase() {
       postRequestedFor(urlPathMatching("/organizations/sample-arg/api_keys"))
         .withRequestBody(matchingJsonPath("$.name"))
     )
+  }
+
+  @Test
+  fun `createValidation returns a typed response`() {
+    stubResponse("POST", "/api_keys/validations", 200, "{\"api_key\": null}")
+    val result = api().createValidation("sample-arg")
+    assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/api_keys/validations"))
+        .withRequestBody(matchingJsonPath("$.value"))
+    )
+  }
+
+  @Test
+  fun `delete completes without throwing`() {
+    stubResponse("DELETE", "/api_keys/sample-arg", 204)
+    api().delete("sample-arg")
   }
 
   @Test

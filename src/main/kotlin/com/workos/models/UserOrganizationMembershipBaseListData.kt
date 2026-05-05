@@ -29,6 +29,9 @@ data class UserOrganizationMembershipBaseListData(
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+  /** The user that belongs to the organization through this membership. */
+  @JsonProperty("user")
+  val user: User,
   /** Distinguishes the organization membership object. */
   @JsonProperty("object")
   val objectType: String = "organization_membership",

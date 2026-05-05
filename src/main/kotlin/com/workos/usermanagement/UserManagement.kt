@@ -10,6 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.AuthenticateResponse
 import com.workos.models.AuthorizedConnectApplicationListData
 import com.workos.models.CorsOriginResponse
@@ -27,6 +28,8 @@ import com.workos.models.RedirectUri
 import com.workos.models.ResetPasswordResponse
 import com.workos.models.SendVerificationEmailResponse
 import com.workos.models.User
+import com.workos.models.UserApiKey
+import com.workos.models.UserApiKeyWithValue
 import com.workos.models.UserIdentitiesGetItem
 import com.workos.models.UserInvite
 import com.workos.models.UserOrganizationMembership
@@ -112,7 +115,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/sso/jwks/$clientId",
+        path = "/sso/jwks/${encodePathSegment(clientId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, JwksResponse::class.java)
@@ -522,7 +525,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/email_verification/$id",
+        path = "/user_management/email_verification/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, EmailVerification::class.java)
@@ -604,7 +607,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/password_reset/$id",
+        path = "/user_management/password_reset/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, PasswordReset::class.java)
@@ -724,7 +727,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/users/external_id/$externalId",
+        path = "/user_management/users/external_id/${encodePathSegment(externalId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
@@ -747,7 +750,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/users/$id",
+        path = "/user_management/users/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, User::class.java)
@@ -804,7 +807,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/user_management/users/$id",
+        path = "/user_management/users/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -826,7 +829,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/user_management/users/$id",
+        path = "/user_management/users/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -855,7 +858,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/users/$id/email_change/confirm",
+        path = "/user_management/users/${encodePathSegment(id)}/email_change/confirm",
         body = body,
         requestOptions = requestOptions
       )
@@ -885,7 +888,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/users/$id/email_change/send",
+        path = "/user_management/users/${encodePathSegment(id)}/email_change/send",
         body = body,
         requestOptions = requestOptions
       )
@@ -915,7 +918,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/users/$id/email_verification/confirm",
+        path = "/user_management/users/${encodePathSegment(id)}/email_verification/confirm",
         body = body,
         requestOptions = requestOptions
       )
@@ -940,7 +943,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/users/$id/email_verification/send",
+        path = "/user_management/users/${encodePathSegment(id)}/email_verification/send",
         body = body,
         requestOptions = requestOptions
       )
@@ -964,7 +967,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/users/$id/identities",
+        path = "/user_management/users/${encodePathSegment(id)}/identities",
         requestOptions = requestOptions
       )
     val responseType = object : TypeReference<List<UserIdentitiesGetItem>>() {}
@@ -996,7 +999,7 @@ class UserManagement(
     val itemType = object : TypeReference<UserSessionsListItem>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/user_management/users/$id/sessions",
+      path = "/user_management/users/${encodePathSegment(id)}/sessions",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -1109,7 +1112,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/invitations/by_token/$token",
+        path = "/user_management/invitations/by_token/${encodePathSegment(token)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
@@ -1132,7 +1135,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/invitations/$id",
+        path = "/user_management/invitations/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserInvite::class.java)
@@ -1156,7 +1159,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/invitations/$id/accept",
+        path = "/user_management/invitations/${encodePathSegment(id)}/accept",
         body = body,
         requestOptions = requestOptions
       )
@@ -1186,7 +1189,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/invitations/$id/resend",
+        path = "/user_management/invitations/${encodePathSegment(id)}/resend",
         body = body,
         requestOptions = requestOptions
       )
@@ -1211,11 +1214,29 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/user_management/invitations/$id/revoke",
+        path = "/user_management/invitations/${encodePathSegment(id)}/revoke",
         body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
+  }
+
+  /**
+   * Get JWT template
+   *
+   * Get the JWT template for the current environment.
+   *
+   * @return the JWTTemplateResponse
+   */
+  @JvmOverloads
+  fun listJWTTemplate(requestOptions: RequestOptions? = null): JWTTemplateResponse {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/user_management/jwt_template",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, JWTTemplateResponse::class.java)
   }
 
   /**
@@ -1294,7 +1315,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/magic_auth/$id",
+        path = "/user_management/magic_auth/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, MagicAuth::class.java)
@@ -1401,7 +1422,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/organization_memberships/$id",
+        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
@@ -1432,7 +1453,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/user_management/organization_memberships/$id",
+        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -1454,7 +1475,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/user_management/organization_memberships/$id",
+        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -1483,7 +1504,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/user_management/organization_memberships/$id/deactivate",
+        path = "/user_management/organization_memberships/${encodePathSegment(id)}/deactivate",
         body = body,
         requestOptions = requestOptions
       )
@@ -1513,7 +1534,7 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/user_management/organization_memberships/$id/reactivate",
+        path = "/user_management/organization_memberships/${encodePathSegment(id)}/reactivate",
         body = body,
         requestOptions = requestOptions
       )
@@ -1573,7 +1594,7 @@ class UserManagement(
     val itemType = object : TypeReference<AuthorizedConnectApplicationListData>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/user_management/users/$userId/authorized_applications",
+      path = "/user_management/users/${encodePathSegment(userId)}/authorized_applications",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -1602,9 +1623,85 @@ class UserManagement(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/user_management/users/$userId/authorized_applications/$applicationId",
+        path = "/user_management/users/${encodePathSegment(userId)}/authorized_applications/${encodePathSegment(applicationId)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * List API keys for a user
+   *
+   * Get a list of API keys owned by a specific user.
+   *
+   * @param userId Unique identifier of the user.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time.
+   * @param organizationId The ID of the organization to filter user API keys by. When provided, only API keys created against that organization membership are returned.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listApiKeys(
+    userId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: EventsOrder? = null,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserApiKey> {
+    val itemType = object : TypeReference<UserApiKey>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/users/${encodePathSegment(userId)}/api_keys",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
+      params.addIfNotNull("organization_id", organizationId)
+    }
+  }
+
+  /**
+   * Create an API key for a user
+   *
+   * Create a new API key owned by a user. The user must have an active membership in the specified organization.
+   *
+   * @param userId Unique identifier of the user.
+   * @param name A descriptive name for the API key.
+   * @param organizationId The ID of the organization the user API key is associated with. The user must have an active membership in this organization.
+   * @param permissions The permission slugs to assign to the API key. Each permission must be enabled for user API keys.
+   *
+   * @return the UserApiKeyWithValue
+   */
+  @JvmOverloads
+  fun createApiKey(
+    userId: String,
+    name: String,
+    organizationId: String,
+    permissions: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): UserApiKeyWithValue {
+    val body =
+      bodyOf(
+        "name" to name,
+        "organization_id" to organizationId,
+        "permissions" to permissions
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/users/${encodePathSegment(userId)}/api_keys",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, UserApiKeyWithValue::class.java)
   }
 }

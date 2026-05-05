@@ -9,7 +9,7 @@ import com.workos.types.DataIntegrationAccessTokenResponseError
 data class DataIntegrationAccessTokenResponse(
   /** Indicates whether the access token is valid and ready for use, or if reauthorization is required. */
   @JsonProperty("active")
-  val active: Boolean = true,
+  val active: Boolean? = null,
   /** The [access token](https://workos.com/docs/reference/pipes/access-token) object, present when `active` is `true`. */
   @JsonProperty("access_token")
   val accessToken: DataIntegrationAccessTokenResponseAccessToken? = null,

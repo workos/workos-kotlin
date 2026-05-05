@@ -31,6 +31,9 @@ data class Profile(
   /** The user's last name. */
   @JsonProperty("last_name")
   val lastName: String?,
+  /** The user's full name. */
+  @JsonProperty("name")
+  val name: String?,
   /** The complete set of raw attributes returned by the identity provider. */
   @JsonProperty("raw_attributes")
   val rawAttributes: Map<String, Any>,

@@ -9,6 +9,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.Connection
 import com.workos.models.Profile
 import com.workos.models.SSOLogoutAuthorizeResponse
@@ -84,7 +85,7 @@ class Sso(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/connections/$id",
+        path = "/connections/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Connection::class.java)
@@ -105,7 +106,7 @@ class Sso(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/connections/$id",
+        path = "/connections/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

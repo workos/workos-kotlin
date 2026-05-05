@@ -6,6 +6,7 @@ import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.OrganizationDomain
 import com.workos.models.OrganizationDomainStandAlone
 
@@ -61,7 +62,7 @@ class OrganizationDomains(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organization_domains/$id",
+        path = "/organization_domains/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)
@@ -82,7 +83,7 @@ class OrganizationDomains(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/organization_domains/$id",
+        path = "/organization_domains/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -106,7 +107,7 @@ class OrganizationDomains(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/organization_domains/$id/verify",
+        path = "/organization_domains/${encodePathSegment(id)}/verify",
         body = body,
         requestOptions = requestOptions
       )

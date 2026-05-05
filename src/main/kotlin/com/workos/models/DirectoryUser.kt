@@ -48,6 +48,9 @@ data class DirectoryUser(
   /** The last name of the user. */
   @JsonProperty("last_name")
   val lastName: String? = null,
+  /** The full name of the user. */
+  @JsonProperty("name")
+  val name: String? = null,
   /** A list of email addresses for the user. */
   @JsonProperty("emails")
   @Deprecated("Deprecated field")

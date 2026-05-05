@@ -11,5 +11,5 @@ data class SSOIntentOptions(
   val bookmarkSlug: String? = null,
   /** The SSO provider type to configure. */
   @JsonProperty("provider_type")
-  val providerType: String = "GoogleSAML"
+  val providerType: String? = null
 )

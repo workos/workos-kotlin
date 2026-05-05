@@ -32,6 +32,9 @@ data class OrganizationMembership(
   /** The primary role assigned to the user within the organization. */
   @JsonProperty("role")
   val role: SlimRole,
+  /** The user that belongs to the organization through this membership. */
+  @JsonProperty("user")
+  val user: User,
   /** Distinguishes the organization membership object. */
   @JsonProperty("object")
   val objectType: String = "organization_membership",

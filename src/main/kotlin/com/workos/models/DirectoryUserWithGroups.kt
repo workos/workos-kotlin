@@ -39,7 +39,7 @@ data class DirectoryUserWithGroups(
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
-  /** The directory groups the user belongs to. Use the List Directory Groups endpoint with a user filter instead. */
+  /** The directory groups the user belongs to. Deprecated: starting May 1, 2026, this field returns an empty array by default for newly created teams. Existing teams currently depending on this field should migrate to the new access pattern for better throughput performance — the field is unbounded by user, so users with many group memberships produce large, slow response payloads. Use the List Directory Groups endpoint with a `user` filter to fetch a user's group memberships. */
   @JsonProperty("groups")
   @Deprecated("Deprecated field")
   val groups: List<DirectoryGroup>,
@@ -52,6 +52,9 @@ data class DirectoryUserWithGroups(
   /** The last name of the user. */
   @JsonProperty("last_name")
   val lastName: String? = null,
+  /** The full name of the user. */
+  @JsonProperty("name")
+  val name: String? = null,
   /** A list of email addresses for the user. */
   @JsonProperty("emails")
   @Deprecated("Deprecated field")

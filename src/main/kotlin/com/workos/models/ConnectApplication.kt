@@ -33,7 +33,7 @@ data class ConnectApplication(
   val objectType: String = "connect_application",
   /** The type of the application. */
   @JsonProperty("application_type")
-  val applicationType: String = "m2m",
+  val applicationType: String? = null,
   /** The ID of the organization the application belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
@@ -45,8 +45,8 @@ data class ConnectApplication(
   val usesPkce: Boolean? = null,
   /** Whether the application is a first-party application. */
   @JsonProperty("is_first_party")
-  val isFirstParty: Boolean = true,
+  val isFirstParty: Boolean? = null,
   /** Whether the application was dynamically registered. */
   @JsonProperty("was_dynamically_registered")
-  val wasDynamicallyRegistered: Boolean = false
+  val wasDynamicallyRegistered: Boolean? = null
 )

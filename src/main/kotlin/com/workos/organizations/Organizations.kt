@@ -10,6 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
 import com.workos.models.OrganizationDomainData
@@ -120,7 +121,7 @@ class Organizations(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organizations/external_id/$externalId",
+        path = "/organizations/external_id/${encodePathSegment(externalId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
@@ -143,7 +144,7 @@ class Organizations(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organizations/$id",
+        path = "/organizations/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Organization::class.java)
@@ -190,7 +191,7 @@ class Organizations(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/organizations/$id",
+        path = "/organizations/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -212,7 +213,7 @@ class Organizations(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/organizations/$id",
+        path = "/organizations/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -235,7 +236,7 @@ class Organizations(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organizations/$id/audit_log_configuration",
+        path = "/organizations/${encodePathSegment(id)}/audit_log_configuration",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogConfiguration::class.java)

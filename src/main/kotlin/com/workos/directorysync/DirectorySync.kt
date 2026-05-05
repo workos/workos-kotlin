@@ -8,6 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
+import com.workos.common.http.encodePathSegment
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectoryUserWithGroups
@@ -78,7 +79,7 @@ class DirectorySync(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/directories/$id",
+        path = "/directories/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Directory::class.java)
@@ -99,7 +100,7 @@ class DirectorySync(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/directories/$id",
+        path = "/directories/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -163,7 +164,7 @@ class DirectorySync(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/directory_groups/$id",
+        path = "/directory_groups/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DirectoryGroup::class.java)
@@ -227,7 +228,7 @@ class DirectorySync(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/directory_users/$id",
+        path = "/directory_users/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DirectoryUserWithGroups::class.java)

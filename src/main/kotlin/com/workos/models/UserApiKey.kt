@@ -5,14 +5,14 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** ApiKey model. */
-data class ApiKey(
+/** UserApiKey model. */
+data class UserApiKey(
   /** Unique identifier of the API Key. */
   @JsonProperty("id")
   val id: String,
   /** The entity that owns the API Key. */
   @JsonProperty("owner")
-  val owner: ApiKeyOwner,
+  val owner: UserApiKeyOwner,
   /** A descriptive name for the API Key. */
   @JsonProperty("name")
   val name: String,

@@ -315,9 +315,29 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `UserApiKeyCreatedDataOwner round-trips through Jackson`() {
+    val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserApiKeyCreatedDataOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `ApiKeyRevokedDataOwner round-trips through Jackson`() {
     val json = "{\"type\": \"organization\", \"id\": \"sample\"}"
     val parsed = mapper.readValue(json, ApiKeyRevokedDataOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `UserApiKeyRevokedDataOwner round-trips through Jackson`() {
+    val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserApiKeyRevokedDataOwner::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -800,16 +820,6 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `JWTTemplateResponse round-trips through Jackson`() {
-    val json = "{\"object\": \"jwt_template\", \"content\": \"sample\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
-    val parsed = mapper.readValue(json, JWTTemplateResponse::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
   fun `DataIntegrationAuthorizeUrlResponse round-trips through Jackson`() {
     val json = "{\"url\": \"sample\"}"
     val parsed = mapper.readValue(json, DataIntegrationAuthorizeUrlResponse::class.java)
@@ -921,6 +931,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `JWTTemplateResponse round-trips through Jackson`() {
+    val json = "{\"object\": \"jwt_template\", \"content\": \"sample\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    val parsed = mapper.readValue(json, JWTTemplateResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `JwksResponseKeys round-trips through Jackson`() {
     val json =
       "{\"alg\": \"RS256\", \"kty\": \"RSA\", \"use\": \"sig\", \"x5c\": [], \"n\": \"sample\", \"e\": \"sample\", \"kid\": \"sample\"," +
@@ -963,6 +983,26 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `UserApiKeyWithValueOwner round-trips through Jackson`() {
+    val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserApiKeyWithValueOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `UserApiKeyOwner round-trips through Jackson`() {
+    val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserApiKeyOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `DataIntegrationAccessTokenResponseAccessToken round-trips through Jackson`() {
     val json = "{\"object\": \"access_token\", \"access_token\": \"sample\", \"expires_at\": null, \"scopes\": [], \"missing_scopes\": []}"
     val parsed = mapper.readValue(json, DataIntegrationAccessTokenResponseAccessToken::class.java)
@@ -973,9 +1013,19 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `ApiKeyWithValueOwner round-trips through Jackson`() {
+  fun `OrganizationApiKeyWithValueOwner round-trips through Jackson`() {
     val json = "{\"type\": \"organization\", \"id\": \"sample\"}"
-    val parsed = mapper.readValue(json, ApiKeyWithValueOwner::class.java)
+    val parsed = mapper.readValue(json, OrganizationApiKeyWithValueOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `OrganizationApiKeyOwner round-trips through Jackson`() {
+    val json = "{\"type\": \"organization\", \"id\": \"sample\"}"
+    val parsed = mapper.readValue(json, OrganizationApiKeyOwner::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

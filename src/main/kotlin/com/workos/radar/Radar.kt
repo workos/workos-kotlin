@@ -6,6 +6,7 @@ import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.RadarListEntryAlreadyPresentResponse
 import com.workos.models.RadarStandaloneResponse
 import com.workos.types.RadarStandaloneAssessRequestAction
@@ -85,7 +86,7 @@ class Radar(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/radar/attempts/$id",
+        path = "/radar/attempts/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -117,7 +118,7 @@ class Radar(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/radar/lists/$type/$action",
+        path = "/radar/lists/${encodePathSegment(type)}/${encodePathSegment(action)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -147,7 +148,7 @@ class Radar(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/radar/lists/$type/$action",
+        path = "/radar/lists/${encodePathSegment(type)}/${encodePathSegment(action)}",
         body = body,
         requestOptions = requestOptions
       )

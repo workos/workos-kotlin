@@ -10,6 +10,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.AuthorizationCheck
 import com.workos.models.AuthorizationPermission
@@ -108,7 +109,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/authorization/organization_memberships/$organizationMembershipId/check",
+        path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/check",
         body = body,
         requestOptions = requestOptions
       )
@@ -145,7 +146,7 @@ class Authorization(
     val itemType = object : TypeReference<AuthorizationResource>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/organization_memberships/$organizationMembershipId/resources",
+      path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/resources",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -192,7 +193,9 @@ class Authorization(
     val itemType = object : TypeReference<AuthorizationPermission>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceId/permissions",
+      path = "/authorization/organization_memberships/${encodePathSegment(
+        organizationMembershipId
+      )}/resources/${encodePathSegment(resourceId)}/permissions",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -233,7 +236,9 @@ class Authorization(
     val itemType = object : TypeReference<AuthorizationPermission>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/organization_memberships/$organizationMembershipId/resources/$resourceTypeSlug/$externalId/permissions",
+      path = "/authorization/organization_memberships/${encodePathSegment(
+        organizationMembershipId
+      )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}/permissions",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -270,7 +275,7 @@ class Authorization(
     val itemType = object : TypeReference<RoleAssignment>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+      path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/role_assignments",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -313,7 +318,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+        path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/role_assignments",
         body = body,
         requestOptions = requestOptions
       )
@@ -349,7 +354,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments",
+        path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/role_assignments",
         body = body,
         requestOptions = requestOptions
       )
@@ -373,7 +378,9 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/organization_memberships/$organizationMembershipId/role_assignments/$roleAssignmentId",
+        path = "/authorization/organization_memberships/${encodePathSegment(
+          organizationMembershipId
+        )}/role_assignments/${encodePathSegment(roleAssignmentId)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -396,7 +403,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/organizations/$organizationId/roles",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, RoleList::class.java)
@@ -434,7 +441,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/authorization/organizations/$organizationId/roles",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles",
         body = body,
         requestOptions = requestOptions
       )
@@ -460,7 +467,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/organizations/$organizationId/roles/$slug",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
@@ -494,7 +501,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/authorization/organizations/$organizationId/roles/$slug",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles/${encodePathSegment(slug)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -518,7 +525,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/organizations/$organizationId/roles/$slug",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -549,7 +556,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/authorization/organizations/$organizationId/roles/$slug/permissions",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles/${encodePathSegment(slug)}/permissions",
         body = body,
         requestOptions = requestOptions
       )
@@ -581,7 +588,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/authorization/organizations/$organizationId/roles/$slug/permissions",
+        path = "/authorization/organizations/${encodePathSegment(organizationId)}/roles/${encodePathSegment(slug)}/permissions",
         body = body,
         requestOptions = requestOptions
       )
@@ -607,7 +614,9 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/organizations/$organizationId/roles/$slug/permissions/$permissionSlug",
+        path = "/authorization/organizations/${encodePathSegment(
+          organizationId
+        )}/roles/${encodePathSegment(slug)}/permissions/${encodePathSegment(permissionSlug)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -634,7 +643,9 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+        path = "/authorization/organizations/${encodePathSegment(
+          organizationId
+        )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
@@ -680,7 +691,9 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+        path = "/authorization/organizations/${encodePathSegment(
+          organizationId
+        )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -710,7 +723,9 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId",
+        path = "/authorization/organizations/${encodePathSegment(
+          organizationId
+        )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}",
         queryParams = params,
         requestOptions = requestOptions
       )
@@ -750,7 +765,9 @@ class Authorization(
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/organizations/$organizationId/resources/$resourceTypeSlug/$externalId/organization_memberships",
+      path = "/authorization/organizations/${encodePathSegment(
+        organizationId
+      )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}/organization_memberships",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -888,7 +905,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/resources/$resourceId",
+        path = "/authorization/resources/${encodePathSegment(resourceId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
@@ -930,7 +947,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/authorization/resources/$resourceId",
+        path = "/authorization/resources/${encodePathSegment(resourceId)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -956,7 +973,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/resources/$resourceId",
+        path = "/authorization/resources/${encodePathSegment(resourceId)}",
         queryParams = params,
         requestOptions = requestOptions
       )
@@ -992,7 +1009,7 @@ class Authorization(
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/authorization/resources/$resourceId/organization_memberships",
+      path = "/authorization/resources/${encodePathSegment(resourceId)}/organization_memberships",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -1078,7 +1095,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/roles/$slug",
+        path = "/authorization/roles/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Role::class.java)
@@ -1110,7 +1127,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/authorization/roles/$slug",
+        path = "/authorization/roles/${encodePathSegment(slug)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -1140,7 +1157,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/authorization/roles/$slug/permissions",
+        path = "/authorization/roles/${encodePathSegment(slug)}/permissions",
         body = body,
         requestOptions = requestOptions
       )
@@ -1170,7 +1187,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/authorization/roles/$slug/permissions",
+        path = "/authorization/roles/${encodePathSegment(slug)}/permissions",
         body = body,
         requestOptions = requestOptions
       )
@@ -1266,7 +1283,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/authorization/permissions/$slug",
+        path = "/authorization/permissions/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuthorizationPermission::class.java)
@@ -1298,7 +1315,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/authorization/permissions/$slug",
+        path = "/authorization/permissions/${encodePathSegment(slug)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -1320,7 +1337,7 @@ class Authorization(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/authorization/permissions/$slug",
+        path = "/authorization/permissions/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

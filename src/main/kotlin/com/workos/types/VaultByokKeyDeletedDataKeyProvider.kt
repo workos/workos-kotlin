@@ -5,15 +5,14 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid EventContextActorSource values returned or accepted by the API. */
-enum class EventContextActorSource(
+/** Enumeration of valid VaultByokKeyDeletedDataKeyProvider values returned or accepted by the API. */
+enum class VaultByokKeyDeletedDataKeyProvider(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Api("api"),
-  Dashboard("dashboard"),
-  AdminPortal("admin_portal"),
-  System("system")
+  AwsKms("AWS_KMS"),
+  GcpKms("GCP_KMS"),
+  AzureKeyVault("AZURE_KEY_VAULT")
 }

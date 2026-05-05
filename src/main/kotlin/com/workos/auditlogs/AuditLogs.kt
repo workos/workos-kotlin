@@ -8,6 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.AuditLogActionJson
 import com.workos.models.AuditLogEvent
 import com.workos.models.AuditLogEventCreateResponse
@@ -39,7 +40,7 @@ class AuditLogs(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organizations/$id/audit_logs_retention",
+        path = "/organizations/${encodePathSegment(id)}/audit_logs_retention",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
@@ -68,7 +69,7 @@ class AuditLogs(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/organizations/$id/audit_logs_retention",
+        path = "/organizations/${encodePathSegment(id)}/audit_logs_retention",
         body = body,
         requestOptions = requestOptions
       )
@@ -135,7 +136,7 @@ class AuditLogs(
     val itemType = object : TypeReference<AuditLogSchemaJson>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/audit_logs/actions/$actionName/schemas",
+      path = "/audit_logs/actions/${encodePathSegment(actionName)}/schemas",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -176,7 +177,7 @@ class AuditLogs(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/audit_logs/actions/$actionName/schemas",
+        path = "/audit_logs/actions/${encodePathSegment(actionName)}/schemas",
         body = body,
         requestOptions = requestOptions
       )
@@ -286,7 +287,7 @@ class AuditLogs(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/audit_logs/exports/$auditLogExportId",
+        path = "/audit_logs/exports/${encodePathSegment(auditLogExportId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, AuditLogExportJson::class.java)

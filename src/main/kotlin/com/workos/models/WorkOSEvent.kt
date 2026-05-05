@@ -108,6 +108,7 @@ import java.time.OffsetDateTime
   JsonSubTypes.Type(value = UserCreated::class, name = "user.created"),
   JsonSubTypes.Type(value = UserDeleted::class, name = "user.deleted"),
   JsonSubTypes.Type(value = UserUpdated::class, name = "user.updated"),
+  JsonSubTypes.Type(value = VaultByokKeyDeleted::class, name = "vault.byok_key.deleted"),
   JsonSubTypes.Type(value = VaultByokKeyVerificationCompleted::class, name = "vault.byok_key.verification_completed"),
   JsonSubTypes.Type(value = VaultDataCreated::class, name = "vault.data.created"),
   JsonSubTypes.Type(value = VaultDataDeleted::class, name = "vault.data.deleted"),

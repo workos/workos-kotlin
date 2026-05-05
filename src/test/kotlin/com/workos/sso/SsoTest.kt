@@ -69,7 +69,8 @@ class SsoTest : TestBase() {
       "/sso/profile",
       200,
       "{\"object\": \"profile\", \"id\": \"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": " +
-        "\"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}"
+        "\"Pending\", \"idp_id\": \"sample\", \"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"name\": null, " +
+        "\"raw_attributes\": {}}"
     )
     val result = api().getProfile()
     assertNotNull(result)
@@ -88,7 +89,7 @@ class SsoTest : TestBase() {
       200,
       "{\"token_type\": \"Bearer\", \"access_token\": \"sample\", \"expires_in\": 0, \"profile\": {\"object\": \"profile\", \"id\": " +
         "\"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", " +
-        "\"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"raw_attributes\": {}}}"
+        "\"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"name\": null, \"raw_attributes\": {}}}"
     )
     val result = api().getProfileAndToken("sample-arg")
     assertNotNull(result)

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-04-28T13:29:20.352Z",
+  "generatedAt": "2026-05-05T06:16:11.559Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -27,8 +27,6 @@
     "src/main/kotlin/com/workos/models/ApiKeyRevokedData.kt",
     "src/main/kotlin/com/workos/models/ApiKeyRevokedDataOwner.kt",
     "src/main/kotlin/com/workos/models/ApiKeyValidationResponse.kt",
-    "src/main/kotlin/com/workos/models/ApiKeyWithValue.kt",
-    "src/main/kotlin/com/workos/models/ApiKeyWithValueOwner.kt",
     "src/main/kotlin/com/workos/models/ApplicationCredentialsListItem.kt",
     "src/main/kotlin/com/workos/models/AssignRole.kt",
     "src/main/kotlin/com/workos/models/AuditLogActionJson.kt",
@@ -156,6 +154,7 @@
     "src/main/kotlin/com/workos/models/CreateRedirectUri.kt",
     "src/main/kotlin/com/workos/models/CreateRole.kt",
     "src/main/kotlin/com/workos/models/CreateUser.kt",
+    "src/main/kotlin/com/workos/models/CreateUserApiKey.kt",
     "src/main/kotlin/com/workos/models/CreateUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/CreateUserOrganizationMembership.kt",
     "src/main/kotlin/com/workos/models/CreateWebhookEndpoint.kt",
@@ -277,6 +276,10 @@
     "src/main/kotlin/com/workos/models/MfaTotpSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/NewConnectApplicationSecret.kt",
     "src/main/kotlin/com/workos/models/Organization.kt",
+    "src/main/kotlin/com/workos/models/OrganizationApiKey.kt",
+    "src/main/kotlin/com/workos/models/OrganizationApiKeyOwner.kt",
+    "src/main/kotlin/com/workos/models/OrganizationApiKeyWithValue.kt",
+    "src/main/kotlin/com/workos/models/OrganizationApiKeyWithValueOwner.kt",
     "src/main/kotlin/com/workos/models/OrganizationCreated.kt",
     "src/main/kotlin/com/workos/models/OrganizationCreatedData.kt",
     "src/main/kotlin/com/workos/models/OrganizationCreatedDataDomain.kt",
@@ -384,6 +387,12 @@
     "src/main/kotlin/com/workos/models/UpdateUserOrganizationMembership.kt",
     "src/main/kotlin/com/workos/models/UpdateWebhookEndpoint.kt",
     "src/main/kotlin/com/workos/models/User.kt",
+    "src/main/kotlin/com/workos/models/UserApiKey.kt",
+    "src/main/kotlin/com/workos/models/UserApiKeyCreatedDataOwner.kt",
+    "src/main/kotlin/com/workos/models/UserApiKeyOwner.kt",
+    "src/main/kotlin/com/workos/models/UserApiKeyRevokedDataOwner.kt",
+    "src/main/kotlin/com/workos/models/UserApiKeyWithValue.kt",
+    "src/main/kotlin/com/workos/models/UserApiKeyWithValueOwner.kt",
     "src/main/kotlin/com/workos/models/UserAuthenticationFactorEnrollResponse.kt",
     "src/main/kotlin/com/workos/models/UserConsentOption.kt",
     "src/main/kotlin/com/workos/models/UserConsentOptionChoice.kt",
@@ -399,6 +408,8 @@
     "src/main/kotlin/com/workos/models/UserSessionsListItem.kt",
     "src/main/kotlin/com/workos/models/UserUpdated.kt",
     "src/main/kotlin/com/workos/models/ValidateApiKey.kt",
+    "src/main/kotlin/com/workos/models/VaultByokKeyDeleted.kt",
+    "src/main/kotlin/com/workos/models/VaultByokKeyDeletedData.kt",
     "src/main/kotlin/com/workos/models/VaultByokKeyVerificationCompleted.kt",
     "src/main/kotlin/com/workos/models/VaultByokKeyVerificationCompletedData.kt",
     "src/main/kotlin/com/workos/models/VaultDataCreated.kt",
@@ -435,6 +446,7 @@
     "src/main/kotlin/com/workos/pipes/Pipes.kt",
     "src/main/kotlin/com/workos/radar/Radar.kt",
     "src/main/kotlin/com/workos/sso/Sso.kt",
+    "src/main/kotlin/com/workos/types/ApiKeysOrder.kt",
     "src/main/kotlin/com/workos/types/ApplicationsOrder.kt",
     "src/main/kotlin/com/workos/types/AuditLogConfigurationLogStreamState.kt",
     "src/main/kotlin/com/workos/types/AuditLogConfigurationLogStreamType.kt",
@@ -564,6 +576,7 @@
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipStatus.kt",
     "src/main/kotlin/com/workos/types/UserSessionsAuthMethod.kt",
     "src/main/kotlin/com/workos/types/UserSessionsStatus.kt",
+    "src/main/kotlin/com/workos/types/VaultByokKeyDeletedDataKeyProvider.kt",
     "src/main/kotlin/com/workos/types/VaultByokKeyVerificationCompletedDataKeyProvider.kt",
     "src/main/kotlin/com/workos/types/VaultDataCreatedDataActorSource.kt",
     "src/main/kotlin/com/workos/types/VaultDataDeletedDataActorSource.kt",
@@ -605,14 +618,6 @@
     "src/test/kotlin/com/workos/widgets/WidgetsTest.kt"
   ],
   "operations": {
-    "POST /api_keys/validations": {
-      "sdkMethod": "createValidation",
-      "service": "apiKeys"
-    },
-    "DELETE /api_keys/{id}": {
-      "sdkMethod": "delete",
-      "service": "apiKeys"
-    },
     "POST /auth/challenges/{id}/verify": {
       "sdkMethod": "verifyChallenge",
       "service": "multiFactorAuth"
@@ -1169,6 +1174,10 @@
       "sdkMethod": "revokeInvitation",
       "service": "userManagement"
     },
+    "GET /user_management/jwt_template": {
+      "sdkMethod": "listJWTTemplate",
+      "service": "userManagement"
+    },
     "PUT /user_management/jwt_template": {
       "sdkMethod": "updateJWTTemplate",
       "service": "userManagement"
@@ -1268,6 +1277,22 @@
     "POST /widgets/token": {
       "sdkMethod": "createToken",
       "service": "widgets"
+    },
+    "POST /api_keys/validations": {
+      "sdkMethod": "createValidation",
+      "service": "apiKeys"
+    },
+    "DELETE /api_keys/{id}": {
+      "sdkMethod": "delete",
+      "service": "apiKeys"
+    },
+    "GET /user_management/users/{userId}/api_keys": {
+      "sdkMethod": "listApiKeys",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{userId}/api_keys": {
+      "sdkMethod": "createApiKey",
+      "service": "userManagement"
     },
     "GET /audit_logs/actions": {
       "sdkMethod": "listActions",

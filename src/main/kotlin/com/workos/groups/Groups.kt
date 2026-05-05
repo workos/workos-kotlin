@@ -9,6 +9,7 @@ import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.Group
 import com.workos.models.UserOrganizationMembershipBaseListData
@@ -43,7 +44,7 @@ class Groups(
     val itemType = object : TypeReference<Group>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/organizations/$organizationId/groups",
+      path = "/organizations/${encodePathSegment(organizationId)}/groups",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -81,7 +82,7 @@ class Groups(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/organizations/$organizationId/groups",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups",
         body = body,
         requestOptions = requestOptions
       )
@@ -107,7 +108,7 @@ class Groups(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/organizations/$organizationId/groups/$groupId",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Group::class.java)
@@ -141,7 +142,7 @@ class Groups(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/organizations/$organizationId/groups/$groupId",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -165,7 +166,7 @@ class Groups(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/organizations/$organizationId/groups/$groupId",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -198,7 +199,7 @@ class Groups(
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/organizations/$organizationId/groups/$groupId/organization-memberships",
+      path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}/organization-memberships",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -235,7 +236,7 @@ class Groups(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/organizations/$organizationId/groups/$groupId/organization-memberships",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}/organization-memberships",
         body = body,
         requestOptions = requestOptions
       )
@@ -261,7 +262,9 @@ class Groups(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/organizations/$organizationId/groups/$groupId/organization-memberships/$omId",
+        path = "/organizations/${encodePathSegment(
+          organizationId
+        )}/groups/${encodePathSegment(groupId)}/organization-memberships/${encodePathSegment(omId)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

@@ -621,6 +621,22 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `listJWTTemplate returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/jwt_template",
+      200,
+      "{\"object\": \"jwt_template\", \"content\": \"sample\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().listJWTTemplate()
+    assertNotNull(result)
+    assertEquals("jwt_template", result.objectType)
+    assertEquals("sample", result.content)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
   fun `updateJWTTemplate returns a typed response`() {
     stubResponse(
       "PUT",
@@ -702,7 +718,10 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
+        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().createOrganizationMembership(createUserRole = CreateUserRole.Single("sample-arg"), "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -728,7 +747,10 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
+        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().getOrganizationMembership("sample-arg")
     assertNotNull(result)
@@ -747,7 +769,10 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
+        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().updateOrganizationMembership("sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
     assertNotNull(result)
@@ -777,7 +802,10 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
+        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().deactivateOrganizationMembership("sample-arg")
     assertNotNull(result)
@@ -796,7 +824,10 @@ class UserManagementTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}}"
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
+        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}}"
     )
     val result = api().reactivateOrganizationMembership("sample-arg")
     assertNotNull(result)
@@ -845,6 +876,42 @@ class UserManagementTest : TestBase() {
   fun `deleteAuthorizedApplication completes without throwing`() {
     stubResponse("DELETE", "/user_management/users/sample-arg/authorized_applications/sample-arg", 204)
     api().deleteAuthorizedApplication("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `listApiKeys returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/users/sample-arg/api_keys",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listApiKeys("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createApiKey returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/users/sample-arg/api_keys",
+      200,
+      "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"user\", \"id\": \"sample\", \"organization_id\": " +
+        "\"sample\"}, \"name\": \"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
+    )
+    val result = api().createApiKey("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("api_key", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.obfuscatedValue)
+    assertEquals("sample", result.value)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/users/sample-arg/api_keys"))
+        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("$.organization_id"))
+    )
   }
 
   @Test

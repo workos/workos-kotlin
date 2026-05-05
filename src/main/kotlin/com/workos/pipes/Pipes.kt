@@ -7,6 +7,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.ConnectedAccount
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
@@ -45,7 +46,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/data-integrations/$slug/authorize",
+        path = "/data-integrations/${encodePathSegment(slug)}/authorize",
         body = body,
         requestOptions = requestOptions
       )
@@ -78,7 +79,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/data-integrations/$slug/token",
+        path = "/data-integrations/${encodePathSegment(slug)}/token",
         body = body,
         requestOptions = requestOptions
       )
@@ -108,7 +109,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/users/$userId/connected_accounts/$slug",
+        path = "/user_management/users/${encodePathSegment(userId)}/connected_accounts/${encodePathSegment(slug)}",
         queryParams = params,
         requestOptions = requestOptions
       )
@@ -136,7 +137,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/user_management/users/$userId/connected_accounts/$slug",
+        path = "/user_management/users/${encodePathSegment(userId)}/connected_accounts/${encodePathSegment(slug)}",
         queryParams = params,
         requestOptions = requestOptions
       )
@@ -164,7 +165,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/user_management/users/$userId/data_providers",
+        path = "/user_management/users/${encodePathSegment(userId)}/data_providers",
         queryParams = params,
         requestOptions = requestOptions
       )

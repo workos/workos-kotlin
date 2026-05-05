@@ -9,6 +9,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.models.ApplicationCredentialsListItem
 import com.workos.models.ConnectApplication
 import com.workos.models.ExternalAuthCompleteResponse
@@ -199,7 +200,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/connect/applications/$id",
+        path = "/connect/applications/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, ConnectApplication::class.java)
@@ -237,7 +238,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/connect/applications/$id",
+        path = "/connect/applications/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -259,7 +260,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/connect/applications/$id",
+        path = "/connect/applications/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -282,7 +283,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/connect/applications/$id/client_secrets",
+        path = "/connect/applications/${encodePathSegment(id)}/client_secrets",
         requestOptions = requestOptions
       )
     val responseType = object : TypeReference<List<ApplicationCredentialsListItem>>() {}
@@ -307,7 +308,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/connect/applications/$id/client_secrets",
+        path = "/connect/applications/${encodePathSegment(id)}/client_secrets",
         body = body,
         requestOptions = requestOptions
       )
@@ -329,7 +330,7 @@ class Connect(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/connect/client_secrets/$id",
+        path = "/connect/client_secrets/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

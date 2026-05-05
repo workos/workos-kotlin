@@ -2,17 +2,5 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid VaultByokKeyVerificationCompletedDataKeyProvider values returned or accepted by the API. */
-enum class VaultByokKeyVerificationCompletedDataKeyProvider(
-  /** The wire value sent to and received from the API. */
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  AwsKms("AWS_KMS"),
-  GcpKms("GCP_KMS"),
-  AzureKeyVault("AZURE_KEY_VAULT")
-}
+/** Alias for [VaultByokKeyDeletedDataKeyProvider]. */
+typealias VaultByokKeyVerificationCompletedDataKeyProvider = VaultByokKeyDeletedDataKeyProvider

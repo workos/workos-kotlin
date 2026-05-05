@@ -9,6 +9,7 @@ import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
+import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.WebhookEndpointJson
 import com.workos.types.CreateWebhookEndpointEvents
@@ -114,7 +115,7 @@ class Webhooks(
     val config =
       RequestConfig(
         method = "PATCH",
-        path = "/webhook_endpoints/$id",
+        path = "/webhook_endpoints/${encodePathSegment(id)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -136,7 +137,7 @@ class Webhooks(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/webhook_endpoints/$id",
+        path = "/webhook_endpoints/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

@@ -7,6 +7,7 @@ import com.workos.WorkOS
 import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.encodePathSegment
 import com.workos.models.FeatureFlag
 import com.workos.models.Flag
 import com.workos.types.EventsOrder
@@ -67,7 +68,7 @@ class FeatureFlags(
     val config =
       RequestConfig(
         method = "GET",
-        path = "/feature-flags/$slug",
+        path = "/feature-flags/${encodePathSegment(slug)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Flag::class.java)
@@ -91,7 +92,7 @@ class FeatureFlags(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/feature-flags/$slug/disable",
+        path = "/feature-flags/${encodePathSegment(slug)}/disable",
         body = body,
         requestOptions = requestOptions
       )
@@ -116,7 +117,7 @@ class FeatureFlags(
     val config =
       RequestConfig(
         method = "PUT",
-        path = "/feature-flags/$slug/enable",
+        path = "/feature-flags/${encodePathSegment(slug)}/enable",
         body = body,
         requestOptions = requestOptions
       )
@@ -141,7 +142,7 @@ class FeatureFlags(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/feature-flags/$slug/targets/$resourceId",
+        path = "/feature-flags/${encodePathSegment(slug)}/targets/${encodePathSegment(resourceId)}",
         body = body,
         requestOptions = requestOptions
       )
@@ -165,7 +166,7 @@ class FeatureFlags(
     val config =
       RequestConfig(
         method = "DELETE",
-        path = "/feature-flags/$slug/targets/$resourceId",
+        path = "/feature-flags/${encodePathSegment(slug)}/targets/${encodePathSegment(resourceId)}",
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -196,7 +197,7 @@ class FeatureFlags(
     val itemType = object : TypeReference<Flag>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/organizations/$organizationId/feature-flags",
+      path = "/organizations/${encodePathSegment(organizationId)}/feature-flags",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -233,7 +234,7 @@ class FeatureFlags(
     val itemType = object : TypeReference<Flag>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/user_management/users/$userId/feature-flags",
+      path = "/user_management/users/${encodePathSegment(userId)}/feature-flags",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
