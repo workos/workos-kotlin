@@ -146,14 +146,11 @@ mavenPublishing {
     }
     developers {
       developer {
-        id.set("rframpton")
-        name.set("Robert Frampton")
-        email.set("rob@workos.com")
-      }
-      developer {
-        id.set("dliu-workos")
-        name.set("David Liu")
-        email.set("david.liu@workos.com")
+        id.set("workos")
+        name.set("WorkOS")
+        email.set("sdk@workos.com")
+        organization.set("WorkOS")
+        organizationUrl.set("https://workos.com")
       }
     }
     scm {
