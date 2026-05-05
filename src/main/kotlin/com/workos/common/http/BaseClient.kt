@@ -163,16 +163,22 @@ open class BaseClient(
         config.requestOptions?.idempotencyKey == null &&
         maxRetries > 0
 
+    // Compute the retry seed once. For large bodies this avoids re-running
+    // Jackson serialization on every retry attempt.
     val effectiveIdempotencyKey =
       config.requestOptions?.idempotencyKey
         ?: if (needsAutoIdempotency) retryPolicy.generateIdempotencyKey(buildRetrySeed(config)) else null
+
+    // Build the per-request OkHttpClient once. The per-request timeout doesn't
+    // change between retries, so there's no reason to rebuild via newBuilder()
+    // on every attempt.
+    val effectiveClient = applyPerRequestTimeout(config.requestOptions)
 
     var attempt = 0
     val requestStartedAt = System.nanoTime()
     val timeoutBudgetMs = config.requestOptions?.timeoutMillis
     while (true) {
       val request = buildRequest(config, effectiveIdempotencyKey)
-      val effectiveClient = applyPerRequestTimeout(config.requestOptions)
       val outcome: AttemptOutcome
       val response: Response?
       try {

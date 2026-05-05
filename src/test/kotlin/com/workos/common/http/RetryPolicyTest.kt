@@ -92,6 +92,30 @@ class RetryPolicyTest {
   }
 
   @Test
+  fun `backoff with jitter zero equals the exponential cap exactly`() {
+    val policy = RetryPolicy(RetryConfig(maxRetries = 5, baseDelayMs = 10, maxDelayMs = 1_000, jitter = 0.0))
+    // attempt 0 -> 10 * 2^0 = 10 ms, no jitter, capped under maxDelayMs
+    repeat(50) {
+      assertEquals(10L, policy.nextDelay(0, AttemptOutcome.Response(500, null)))
+    }
+    // attempt 3 -> 10 * 2^3 = 80 ms, no jitter
+    repeat(50) {
+      assertEquals(80L, policy.nextDelay(3, AttemptOutcome.Response(500, null)))
+    }
+  }
+
+  @Test
+  fun `generateIdempotencyKey without seed returns short UUID-based key`() {
+    val policy = RetryPolicy()
+    val key = policy.generateIdempotencyKey()
+    assertTrue(key.startsWith("retry-"))
+    // "retry-" (6) + UUID (36) = 42 characters
+    assertEquals(42, key.length)
+    val other = policy.generateIdempotencyKey()
+    assertTrue(key != other, "keyless generation should produce unique values")
+  }
+
+  @Test
   fun `generateIdempotencyKey is deterministic for the same seed and distinct for different seeds`() {
     val policy = RetryPolicy()
     val a = policy.generateIdempotencyKey("POST|/things|body-a")

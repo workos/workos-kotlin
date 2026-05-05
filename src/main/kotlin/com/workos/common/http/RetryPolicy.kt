@@ -61,11 +61,14 @@ class RetryPolicy(
 
   /** Generate an idempotency key for an otherwise unkeyed POST retry. */
   fun generateIdempotencyKey(seed: String? = null): String {
-    val material =
-      seed ?: java.util.UUID
-        .randomUUID()
-        .toString()
-    val digest = MessageDigest.getInstance("SHA-256").digest(material.toByteArray(Charsets.UTF_8))
+    // No deterministic seed: a UUID already carries 122 bits of entropy, so
+    // hashing it with SHA-256 adds nothing. Return it directly.
+    if (seed == null) {
+      return "retry-${java.util.UUID.randomUUID()}"
+    }
+    // Deterministic-seed branch: hash the seed so distinct seeds produce
+    // distinct, fixed-length, opaque keys (callers may pass body bytes).
+    val digest = MessageDigest.getInstance("SHA-256").digest(seed.toByteArray(Charsets.UTF_8))
     val token = digest.joinToString("") { "%02x".format(it) }
     return "retry-$token"
   }
@@ -74,7 +77,11 @@ class RetryPolicy(
     val exponential = config.baseDelayMs.toDouble() * 2.0.pow(attempt.toDouble())
     val capped = min(exponential, config.maxDelayMs.toDouble())
     val jitterBand = capped * config.jitter
-    val jitter = ThreadLocalRandom.current().nextDouble(-jitterBand, jitterBand + 1.0)
+    // ThreadLocalRandom.nextDouble requires origin < bound. When jitter == 0.0
+    // (or capped == 0.0) the band collapses to zero and we must skip the call
+    // and return the cap directly.
+    val jitter =
+      if (jitterBand == 0.0) 0.0 else ThreadLocalRandom.current().nextDouble(-jitterBand, jitterBand)
     return (capped + jitter).toLong().coerceAtLeast(0L)
   }
 
