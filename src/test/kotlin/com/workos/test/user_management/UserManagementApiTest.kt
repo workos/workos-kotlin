@@ -1221,17 +1221,18 @@ class UserManagementApiTest : TestBase() {
         OrganizationMembershipStatusEnumType.Active,
         "2021-06-25T19:07:33.155Z",
         "2021-06-25T19:07:33.155Z",
-        user = User(
-          id = "user_456",
-          email = "marcelina@example.com",
-          firstName = "Marcelina",
-          lastName = "Davis",
-          emailVerified = true,
-          profilePictureUrl = "https://example.com/avatar.png",
-          lastSignInAt = "2021-06-25T19:07:33.155Z",
-          createdAt = "2021-06-25T19:07:33.155Z",
-          updatedAt = "2021-06-25T19:07:33.155Z"
-        )
+        user =
+          User(
+            id = "user_456",
+            email = "marcelina@example.com",
+            firstName = "Marcelina",
+            lastName = "Davis",
+            emailVerified = true,
+            profilePictureUrl = "https://example.com/avatar.png",
+            lastSignInAt = "2021-06-25T19:07:33.155Z",
+            createdAt = "2021-06-25T19:07:33.155Z",
+            updatedAt = "2021-06-25T19:07:33.155Z"
+          )
       ),
       organizationMembership
     )

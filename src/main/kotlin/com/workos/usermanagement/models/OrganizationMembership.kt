@@ -42,7 +42,6 @@ data class OrganizationMembership(
   val customAttributes: Map<String, Any> = emptyMap(),
   @JsonProperty("directory_managed")
   val directoryManaged: Boolean = false,
-
   @JsonProperty("user")
   val user: User? = null
 )

@@ -35,7 +35,6 @@ data class User(
   val createdAt: String,
   @JsonProperty("updated_at")
   val updatedAt: String,
-
   @JsonProperty("external_id")
   val externalId: String? = null
 )

@@ -134,9 +134,10 @@ class AuthorizationApiTest : TestBase() {
       }"""
     )
 
-    val result = workos.authorization.listResources(
-      ListAuthorizationResourcesOptions(resourceExternalId = "proj-456")
-    )
+    val result =
+      workos.authorization.listResources(
+        ListAuthorizationResourcesOptions(resourceExternalId = "proj-456")
+      )
 
     assertEquals(1, result.data.size)
     assertEquals("proj-456", result.data[0].externalId)

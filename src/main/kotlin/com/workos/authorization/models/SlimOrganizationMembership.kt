@@ -41,7 +41,6 @@ data class SlimOrganizationMembership(
   @JvmField
   @JsonProperty("updated_at")
   val updatedAt: String,
-
   @JvmField
   @JsonProperty("user")
   val user: User? = null
