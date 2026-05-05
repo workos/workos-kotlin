@@ -137,11 +137,11 @@ mavenPublishing {
       "The WorkOS Kotlin library provides convenient access to the WorkOS API " +
         "from applications written in JVM compatible languages."
     )
-    url.set("https://github.com/workos-inc/workos-kotlin")
+    url.set("https://github.com/workos/workos-kotlin")
     licenses {
       license {
         name.set("MIT License")
-        url.set("https://github.com/workos-inc/workos-kotlin/blob/main/LICENSE")
+        url.set("https://github.com/workos/workos-kotlin/blob/main/LICENSE")
       }
     }
     developers {
@@ -154,9 +154,9 @@ mavenPublishing {
       }
     }
     scm {
-      connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
-      developerConnection.set("scm:git:git@github.com:workos-inc/workos-kotlin.git")
-      url.set("https://github.com/workos-inc/workos-kotlin")
+      connection.set("scm:git:git://github.com/workos/workos-kotlin.git")
+      developerConnection.set("scm:git:git@github.com:workos/workos-kotlin.git")
+      url.set("https://github.com/workos/workos-kotlin")
     }
   }
 }
