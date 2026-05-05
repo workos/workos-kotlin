@@ -234,6 +234,8 @@ open class BaseClient(
       urlBuilder.addQueryParameter(name, value)
     }
 
+    val method = config.method.uppercase()
+    val methodRequiresBody = method == "POST" || method == "PUT" || method == "PATCH"
     val okBody =
       when {
         config.formBody != null -> {
@@ -243,6 +245,11 @@ open class BaseClient(
             }
           encoded.toRequestBody(FORM_MEDIA_TYPE)
         }
+        config.body == null && methodRequiresBody ->
+          // OkHttp rejects null bodies on POST/PUT/PATCH. The generator stopped
+          // emitting `{}` for body-less calls, so the runtime substitutes an
+          // empty zero-length body without a Content-Type header.
+          ByteArray(0).toRequestBody(null)
         config.body == null -> null
         config.body is String -> (config.body as String).toRequestBody(JSON_MEDIA_TYPE)
         config.body is ByteArray -> (config.body as ByteArray).toRequestBody(JSON_MEDIA_TYPE)
@@ -253,7 +260,7 @@ open class BaseClient(
       Request
         .Builder()
         .url(urlBuilder.build())
-        .method(config.method.uppercase(), okBody)
+        .method(method, okBody)
 
     // Authorization: bearer override (per-op token) > per-request apiKey > client apiKey
     val effectiveApiKey =

@@ -21,6 +21,7 @@ class Widgets(
    * @param organizationId The ID of the organization to scope the widget session to.
    * @param userId The ID of the user to issue the widget session token for.
    * @param scopes The scopes to grant the widget session.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the WidgetSessionTokenResponse
    */

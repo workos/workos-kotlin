@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 
 /** The [access token](https://workos.com/docs/reference/pipes/access-token) object, present when `active` is `true`. */
 data class DataIntegrationAccessTokenResponseAccessToken(
@@ -11,7 +12,7 @@ data class DataIntegrationAccessTokenResponseAccessToken(
   val accessToken: String,
   /** The ISO-8601 formatted timestamp indicating when the access token expires. */
   @JsonProperty("expires_at")
-  val expiresAt: String?,
+  val expiresAt: OffsetDateTime?,
   /** The scopes granted to the access token. */
   @JsonProperty("scopes")
   val scopes: List<String>,

@@ -14,7 +14,7 @@ data class UpdateOrganization(
   val allowProfilesOutsideOrganization: Boolean? = null,
   /** The domains associated with the organization. Deprecated in favor of `domain_data`. */
   @JsonProperty("domains")
-  @Deprecated("Deprecated field")
+  @Deprecated("The domains associated with the organization. Deprecated in favor of `domain_data`.")
   val domains: List<String>? = null,
   /** The domains associated with the organization, including verification state. */
   @JsonProperty("domain_data")

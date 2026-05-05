@@ -30,6 +30,7 @@ class DirectorySync(
    * @param organizationId Filter Directories by their associated organization.
    * @param search Searchable text to match against Directory names.
    * @param domain **Deprecated.** Filter Directories by their associated domain.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -53,12 +54,11 @@ class DirectorySync(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
-      params.addIfNotNull("search", search)
-      params.addIfNotNull("domain", domain)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("search", search)
+      addIfNotNull("domain", domain)
     }
   }
 
@@ -68,6 +68,7 @@ class DirectorySync(
    * Get the details of an existing directory.
    *
    * @param id Unique identifier for the Directory.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Directory
    */
@@ -91,6 +92,7 @@ class DirectorySync(
    * Permanently deletes an existing directory. It cannot be undone.
    *
    * @param id Unique identifier for the Directory.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun delete(
@@ -117,6 +119,7 @@ class DirectorySync(
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
    * @param user Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -139,11 +142,10 @@ class DirectorySync(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("directory", directory)
-      params.addIfNotNull("user", user)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("directory", directory)
+      addIfNotNull("user", user)
     }
   }
 
@@ -153,6 +155,7 @@ class DirectorySync(
    * Get the details of an existing Directory Group.
    *
    * @param id Unique identifier for the Directory Group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DirectoryGroup
    */
@@ -181,6 +184,7 @@ class DirectorySync(
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
    * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -203,11 +207,10 @@ class DirectorySync(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("directory", directory)
-      params.addIfNotNull("group", group)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("directory", directory)
+      addIfNotNull("group", group)
     }
   }
 
@@ -217,6 +220,7 @@ class DirectorySync(
    * Get the details of an existing Directory User.
    *
    * @param id Unique identifier for the Directory User.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DirectoryUserWithGroups
    */

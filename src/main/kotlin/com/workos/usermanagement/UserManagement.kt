@@ -104,6 +104,7 @@ class UserManagement(
    * Returns the JSON Web Key Set (JWKS) containing the public keys used for verifying access tokens.
    *
    * @param clientId Identifies the application making the request to the WorkOS server. You can obtain your client ID from the [API Keys](https://dashboard.workos.com/api-keys) page in the dashboard.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the JwksResponse
    */
@@ -124,12 +125,15 @@ class UserManagement(
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
    * @param email The user's email address.
    * @param password The user's password.
    * @param invitationToken An invitation token to accept during authentication.
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -141,31 +145,22 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "email" to email,
-        "password" to password,
-        "invitation_token" to invitationToken,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "password",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "password",
+      requestOptions = requestOptions,
+      "email" to email,
+      "password" to password,
+      "invitation_token" to invitationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
+   *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param code The authorization code received from the redirect.
    * @param codeVerifier The PKCE code verifier used to derive the code challenge passed to the authorization URL.
@@ -173,6 +168,7 @@ class UserManagement(
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -184,37 +180,29 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "code" to code,
-        "code_verifier" to codeVerifier,
-        "invitation_token" to invitationToken,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "authorization_code",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "authorization_code",
+      requestOptions = requestOptions,
+      "code" to code,
+      "code_verifier" to codeVerifier,
+      "invitation_token" to invitationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
+   *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param refreshToken The refresh token to exchange for new tokens.
    * @param organizationId The ID of the organization to scope the session to.
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -225,31 +213,29 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "refresh_token" to refreshToken,
-        "organization_id" to organizationId,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "refresh_token",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "refresh_token",
+      requestOptions = requestOptions,
+      "refresh_token" to refreshToken,
+      "organization_id" to organizationId,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
+   * @param code the code of the request.
+   * @param email the email of the request.
+   * @param invitationToken the invitation token of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -261,32 +247,29 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "code" to code,
-        "email" to email,
-        "invitation_token" to invitationToken,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "urn:workos:oauth:grant-type:magic-auth:code",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:magic-auth:code",
+      requestOptions = requestOptions,
+      "code" to code,
+      "email" to email,
+      "invitation_token" to invitationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
+   * @param code the code of the request.
+   * @param pendingAuthenticationToken the pending authentication token of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -297,31 +280,29 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "code" to code,
-        "pending_authentication_token" to pendingAuthenticationToken,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "urn:workos:oauth:grant-type:email-verification:code",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:email-verification:code",
+      requestOptions = requestOptions,
+      "code" to code,
+      "pending_authentication_token" to pendingAuthenticationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
+   * @param code the code of the request.
+   * @param pendingAuthenticationToken the pending authentication token of the request.
+   * @param authenticationChallengeId the authentication challenge id of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -333,32 +314,29 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "code" to code,
-        "pending_authentication_token" to pendingAuthenticationToken,
-        "authentication_challenge_id" to authenticationChallengeId,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "urn:workos:oauth:grant-type:mfa-totp",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:mfa-totp",
+      requestOptions = requestOptions,
+      "code" to code,
+      "pending_authentication_token" to pendingAuthenticationToken,
+      "authentication_challenge_id" to authenticationChallengeId,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
+   * @param pendingAuthenticationToken the pending authentication token of the request.
+   * @param organizationId the organization id of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -369,31 +347,27 @@ class UserManagement(
     deviceId: String? = null,
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
-  ): AuthenticateResponse {
-    val body =
-      bodyOf(
-        "pending_authentication_token" to pendingAuthenticationToken,
-        "organization_id" to organizationId,
-        "ip_address" to ipAddress,
-        "device_id" to deviceId,
-        "user_agent" to userAgent,
-        "grant_type" to "urn:workos:oauth:grant-type:organization-selection",
-        "client_id" to workos.clientId,
-        "client_secret" to workos.apiKey
-      )
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/authenticate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, AuthenticateResponse::class.java)
-  }
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:organization-selection",
+      requestOptions = requestOptions,
+      "pending_authentication_token" to pendingAuthenticationToken,
+      "organization_id" to organizationId,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
 
   /**
    * Authenticate
    *
+   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
+   *
+   * @param deviceCode the device code of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
   @JvmOverloads
@@ -429,6 +403,7 @@ class UserManagement(
    * Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
    *
    * @param clientId The WorkOS client ID for your application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DeviceAuthorizationResponse
    */
@@ -458,6 +433,7 @@ class UserManagement(
    *
    * @param sessionId The ID of the session to revoke. This can be extracted from the `sid` claim of the access token.
    * @param returnTo The URL to redirect the user to after session revocation.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun revokeSession(
@@ -486,6 +462,7 @@ class UserManagement(
    * Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
    *
    * @param origin The origin URL to allow for CORS requests.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the CorsOriginResponse
    */
@@ -514,6 +491,7 @@ class UserManagement(
    * Get the details of an existing email verification code that can be used to send an email to a user for verification.
    *
    * @param id The ID of the email verification code.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the EmailVerification
    */
@@ -537,6 +515,7 @@ class UserManagement(
    * Creates a one-time token that can be used to reset a user's password.
    *
    * @param email The email address of the user requesting a password reset.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the PasswordReset
    */
@@ -566,6 +545,7 @@ class UserManagement(
    *
    * @param token The password reset token.
    * @param newPassword The new password to set for the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ResetPasswordResponse
    */
@@ -596,6 +576,7 @@ class UserManagement(
    * Get the details of an existing password reset token that can be used to reset a user's password.
    *
    * @param id The ID of the password reset token.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the PasswordReset
    */
@@ -625,6 +606,7 @@ class UserManagement(
    * @param organization **Deprecated.** Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
    * @param organizationId Filter users by the organization they are a member of.
    * @param email Filter users by their email address.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -648,12 +630,11 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization", organization)
-      params.addIfNotNull("organization_id", organizationId)
-      params.addIfNotNull("email", email)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization", organization)
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("email", email)
     }
   }
 
@@ -668,6 +649,7 @@ class UserManagement(
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the User
    */
@@ -716,6 +698,7 @@ class UserManagement(
    * Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
    *
    * @param externalId The external ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the User
    */
@@ -739,6 +722,7 @@ class UserManagement(
    * Get the details of an existing user.
    *
    * @param id The unique ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the User
    */
@@ -769,6 +753,7 @@ class UserManagement(
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
    * @param locale The user's preferred locale.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the User
    */
@@ -820,6 +805,7 @@ class UserManagement(
    * Permanently deletes a user in the current environment. It cannot be undone.
    *
    * @param id The unique ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun delete(
@@ -842,6 +828,7 @@ class UserManagement(
    *
    * @param id The unique ID of the user.
    * @param code The one-time code used to confirm the email change.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the EmailChangeConfirmation
    */
@@ -872,6 +859,7 @@ class UserManagement(
    *
    * @param id The unique ID of the user.
    * @param newEmail The new email address to change to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the EmailChange
    */
@@ -902,6 +890,7 @@ class UserManagement(
    *
    * @param id The ID of the user.
    * @param code The one-time email verification code.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the VerifyEmailResponse
    */
@@ -931,6 +920,7 @@ class UserManagement(
    * Sends an email that contains a one-time code used to verify a user’s email address.
    *
    * @param id The ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the SendVerificationEmailResponse
    */
@@ -939,12 +929,10 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/${encodePathSegment(id)}/email_verification/send",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SendVerificationEmailResponse::class.java)
@@ -956,6 +944,7 @@ class UserManagement(
    * Get a list of identities associated with the user. A user can have multiple associated identities after going through [identity linking](https://workos.com/docs/authkit/identity-linking). Currently only OAuth identities are supported. More provider types may be added in the future.
    *
    * @param id The unique ID of the user.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the list of UserIdentitiesGetItem
    */
@@ -984,6 +973,7 @@ class UserManagement(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1005,9 +995,8 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -1022,6 +1011,7 @@ class UserManagement(
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
    * @param email The email address of the recipient.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1044,11 +1034,10 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
-      params.addIfNotNull("email", email)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("email", email)
     }
   }
 
@@ -1063,6 +1052,7 @@ class UserManagement(
    * @param expiresInDays How many days the invitations will be valid for. Must be between 1 and 30 days. Defaults to 7 days if not specified.
    * @param inviterUserId The ID of the [user](https://workos.com/docs/reference/authkit/user) who invites the recipient. The invitation email will mention the name of this user.
    * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
    */
@@ -1101,6 +1091,7 @@ class UserManagement(
    * Retrieve an existing invitation using the token.
    *
    * @param token The token used to accept the invitation.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
    */
@@ -1124,6 +1115,7 @@ class UserManagement(
    * Get the details of an existing invitation.
    *
    * @param id The unique ID of the invitation.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
    */
@@ -1147,6 +1139,7 @@ class UserManagement(
    * Accepts an invitation and, if linked to an organization, activates the user's membership in that organization.
    *
    * @param id The unique ID of the invitation.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Invitation
    */
@@ -1155,12 +1148,10 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/${encodePathSegment(id)}/accept",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -1173,6 +1164,7 @@ class UserManagement(
    *
    * @param id The unique ID of the invitation.
    * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
    */
@@ -1202,6 +1194,7 @@ class UserManagement(
    * Revokes an existing invitation.
    *
    * @param id The unique ID of the invitation.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Invitation
    */
@@ -1210,12 +1203,10 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/${encodePathSegment(id)}/revoke",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -1225,6 +1216,8 @@ class UserManagement(
    * Get JWT template
    *
    * Get the JWT template for the current environment.
+   *
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the JWTTemplateResponse
    */
@@ -1245,6 +1238,7 @@ class UserManagement(
    * Update the JWT template for the current environment.
    *
    * @param content The JWT template content as a Liquid template string.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the JWTTemplateResponse
    */
@@ -1274,6 +1268,7 @@ class UserManagement(
    *
    * @param email The email address to send the magic code to.
    * @param invitationToken The invitation token to associate with this magic code.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the MagicAuth
    */
@@ -1304,6 +1299,7 @@ class UserManagement(
    * Get the details of an existing [Magic Auth](https://workos.com/docs/reference/authkit/magic-auth) code that can be used to send an email to a user for authentication.
    *
    * @param id The unique ID of the Magic Auth code.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the MagicAuth
    */
@@ -1333,6 +1329,7 @@ class UserManagement(
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
    * @param statuses Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
    * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1356,12 +1353,11 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
-      params.addJoinedIfNotNull("statuses", statuses?.map { it.value })
-      params.addIfNotNull("user_id", userId)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
+      addJoinedIfNotNull("statuses", statuses?.map { it.value })
+      addIfNotNull("user_id", userId)
     }
   }
 
@@ -1374,6 +1370,7 @@ class UserManagement(
    *
    * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationMembership
    */
@@ -1411,6 +1408,7 @@ class UserManagement(
    * Get the details of an existing organization membership.
    *
    * @param id The unique ID of the organization membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserOrganizationMembership
    */
@@ -1434,6 +1432,7 @@ class UserManagement(
    * Update the details of an existing organization membership.
    *
    * @param id The unique ID of the organization membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserOrganizationMembership
    */
@@ -1466,6 +1465,7 @@ class UserManagement(
    * Permanently deletes an existing organization membership. It cannot be undone.
    *
    * @param id The unique ID of the organization membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteOrganizationMembership(
@@ -1492,6 +1492,7 @@ class UserManagement(
    * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
    *
    * @param id The unique ID of the organization membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationMembership
    */
@@ -1500,12 +1501,10 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/${encodePathSegment(id)}/deactivate",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationMembership::class.java)
@@ -1522,6 +1521,7 @@ class UserManagement(
    * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
    *
    * @param id The unique ID of the organization membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserOrganizationMembership
    */
@@ -1530,12 +1530,10 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/${encodePathSegment(id)}/reactivate",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
@@ -1547,6 +1545,7 @@ class UserManagement(
    * Creates a new redirect URI for an environment.
    *
    * @param uri The redirect URI to create.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RedirectUri
    */
@@ -1579,6 +1578,7 @@ class UserManagement(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1600,9 +1600,8 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -1613,6 +1612,7 @@ class UserManagement(
    *
    * @param userId The ID of the user.
    * @param applicationId The ID or client ID of the application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteAuthorizedApplication(
@@ -1640,6 +1640,7 @@ class UserManagement(
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
    * @param organizationId The ID of the organization to filter user API keys by. When provided, only API keys created against that organization membership are returned.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1662,10 +1663,9 @@ class UserManagement(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
     }
   }
 
@@ -1678,6 +1678,7 @@ class UserManagement(
    * @param name A descriptive name for the API key.
    * @param organizationId The ID of the organization the user API key is associated with. The user must have an active membership in this organization.
    * @param permissions The permission slugs to assign to the API key. Each permission must be enabled for user API keys.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserApiKeyWithValue
    */

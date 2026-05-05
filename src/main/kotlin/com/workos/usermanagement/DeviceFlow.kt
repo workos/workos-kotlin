@@ -42,6 +42,14 @@ data class PollDeviceAuthorizationOptions
     val userAgent: String? = null
   )
 
+/** Strategy for the inter-poll wait. Tests inject a no-op implementation. */
+internal fun interface Sleeper {
+  fun sleep(millis: Long)
+}
+
+/** Default [Sleeper] that delegates to [Thread.sleep]. */
+internal val realSleeper = Sleeper { Thread.sleep(it) }
+
 /**
  * Poll the token-exchange endpoint until the user authorizes the device or
  * a terminal error occurs. Handles `authorization_pending` (continue polling),
@@ -51,7 +59,10 @@ data class PollDeviceAuthorizationOptions
  * Throws [DeviceFlowException] for terminal failures and the usual
  * [com.workos.common.exceptions.WorkOSException] hierarchy for other errors.
  */
-fun UserManagement.pollDeviceAuthorization(options: PollDeviceAuthorizationOptions): DeviceAuthenticationResponse {
+internal fun UserManagement.pollDeviceAuthorization(
+  options: PollDeviceAuthorizationOptions,
+  sleeper: Sleeper = realSleeper
+): DeviceAuthenticationResponse {
   val deadline = System.currentTimeMillis() + options.expiresInSeconds * 1_000L
   var interval = options.intervalSeconds.coerceAtLeast(1) * 1_000L
   while (true) {
@@ -89,13 +100,13 @@ fun UserManagement.pollDeviceAuthorization(options: PollDeviceAuthorizationOptio
         "Device-flow polling exceeded expiresIn (${options.expiresInSeconds}s)"
       )
     }
-    sleepFor(interval)
+    sleeper.sleep(interval)
   }
 }
 
-/** Overridable sleep hook so tests can stub out real clock waits. */
-@JvmField
-internal var sleepFor: (Long) -> Unit = { Thread.sleep(it) }
+/** Public overload — uses the real (Thread.sleep-backed) [Sleeper]. */
+fun UserManagement.pollDeviceAuthorization(options: PollDeviceAuthorizationOptions): DeviceAuthenticationResponse =
+  pollDeviceAuthorization(options, realSleeper)
 
 /**
  * Convenience entrypoint on the WorkOS client. Equivalent to

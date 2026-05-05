@@ -29,11 +29,12 @@ class Webhooks(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listEndpoints(
+  fun list(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -49,9 +50,8 @@ class Webhooks(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -62,11 +62,12 @@ class Webhooks(
    *
    * @param endpointUrl The HTTPS URL where webhooks will be sent.
    * @param events The events that the Webhook Endpoint is subscribed to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the WebhookEndpointJson
    */
   @JvmOverloads
-  fun createEndpoint(
+  fun create(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
@@ -95,11 +96,12 @@ class Webhooks(
    * @param endpointUrl The HTTPS URL where webhooks will be sent.
    * @param status Whether the Webhook Endpoint is enabled or disabled.
    * @param events The events that the Webhook Endpoint is subscribed to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the WebhookEndpointJson
    */
   @JvmOverloads
-  fun updateEndpoint(
+  fun update(
     id: String,
     endpointUrl: PatchField<String> = PatchField.Absent,
     status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
@@ -128,9 +130,10 @@ class Webhooks(
    * Delete an existing webhook endpoint.
    *
    * @param id Unique identifier of the Webhook Endpoint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
-  fun deleteEndpoint(
+  fun delete(
     id: String,
     requestOptions: RequestOptions? = null
   ) {

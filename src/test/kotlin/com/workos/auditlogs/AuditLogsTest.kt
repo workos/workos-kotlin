@@ -16,21 +16,22 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.time.OffsetDateTime
 
 class AuditLogsTest : TestBase() {
   private fun api() = AuditLogs(createWorkOSClient())
 
   @Test
-  fun `getAuditLogsRetention returns a typed response`() {
+  fun `getRetention returns a typed response`() {
     stubResponse("GET", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
-    val result = api().getAuditLogsRetention("sample-arg")
+    val result = api().getRetention("sample-arg")
     assertNotNull(result)
   }
 
   @Test
-  fun `updateAuditLogsRetention returns a typed response`() {
+  fun `updateRetention returns a typed response`() {
     stubResponse("PUT", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
-    val result = api().updateAuditLogsRetention("sample-arg", 0)
+    val result = api().updateRetention("sample-arg", 0)
     assertNotNull(result)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
@@ -80,7 +81,7 @@ class AuditLogsTest : TestBase() {
       "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createExport("sample-arg", "sample-arg", "sample-arg")
+    val result = api().createExport("sample-arg", OffsetDateTime.now(), OffsetDateTime.now())
     assertNotNull(result)
     assertEquals("audit_log_export", result.objectType)
     assertEquals("sample", result.id)

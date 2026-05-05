@@ -10,6 +10,7 @@ import com.workos.common.http.addIfNotNull
 import com.workos.common.http.addJoinedIfNotNull
 import com.workos.models.EventSchema
 import com.workos.types.PaginationOrder
+import java.time.OffsetDateTime
 
 /** API accessor for Events. */
 class Events(
@@ -28,6 +29,7 @@ class Events(
    * @param rangeStart ISO-8601 date string to filter events created after this date.
    * @param rangeEnd ISO-8601 date string to filter events created before this date.
    * @param organizationId Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -38,8 +40,8 @@ class Events(
     limit: Int? = null,
     order: PaginationOrder? = null,
     events: List<String>? = null,
-    rangeStart: String? = null,
-    rangeEnd: String? = null,
+    rangeStart: OffsetDateTime? = null,
+    rangeEnd: OffsetDateTime? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<EventSchema> {
@@ -52,13 +54,12 @@ class Events(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addJoinedIfNotNull("events", events?.map { it })
-      params.addIfNotNull("range_start", rangeStart)
-      params.addIfNotNull("range_end", rangeEnd)
-      params.addIfNotNull("organization_id", organizationId)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addJoinedIfNotNull("events", events)
+      rangeStart?.let { add("range_start" to it.toString()) }
+      rangeEnd?.let { add("range_end" to it.toString()) }
+      addIfNotNull("organization_id", organizationId)
     }
   }
 }

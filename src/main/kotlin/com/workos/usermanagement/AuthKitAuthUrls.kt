@@ -5,6 +5,7 @@
 // emitter so these functions own those names.
 package com.workos.usermanagement
 
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.buildAuthUrl
 import com.workos.common.http.randomOAuthState
 import com.workos.pkce.PKCE
@@ -79,17 +80,17 @@ fun UserManagement.getAuthorizationUrl(options: AuthKitAuthorizationUrlOptions):
   params += "redirect_uri" to options.redirectUri
   params += "client_id" to resolvedClientId
   params += "response_type" to "code"
-  if (options.provider != null) params += "provider" to options.provider
-  if (options.connectionId != null) params += "connection_id" to options.connectionId
-  if (options.organizationId != null) params += "organization_id" to options.organizationId
-  if (options.state != null) params += "state" to options.state
-  if (options.codeChallenge != null) params += "code_challenge" to options.codeChallenge
-  if (options.codeChallengeMethod != null) params += "code_challenge_method" to options.codeChallengeMethod
-  if (options.domainHint != null) params += "domain_hint" to options.domainHint
-  if (options.loginHint != null) params += "login_hint" to options.loginHint
-  if (options.screenHint != null) params += "screen_hint" to options.screenHint
-  if (options.prompt != null) params += "prompt" to options.prompt
-  if (options.invitationToken != null) params += "invitation_token" to options.invitationToken
+  params.addIfNotNull("provider", options.provider)
+  params.addIfNotNull("connection_id", options.connectionId)
+  params.addIfNotNull("organization_id", options.organizationId)
+  params.addIfNotNull("state", options.state)
+  params.addIfNotNull("code_challenge", options.codeChallenge)
+  params.addIfNotNull("code_challenge_method", options.codeChallengeMethod)
+  params.addIfNotNull("domain_hint", options.domainHint)
+  params.addIfNotNull("login_hint", options.loginHint)
+  params.addIfNotNull("screen_hint", options.screenHint)
+  params.addIfNotNull("prompt", options.prompt)
+  params.addIfNotNull("invitation_token", options.invitationToken)
   if (options.providerScopes != null) {
     for (scope in options.providerScopes) params += "provider_scopes" to scope
   }
@@ -134,6 +135,6 @@ data class AuthKitLogoutUrlOptions
 fun UserManagement.getLogoutUrl(options: AuthKitLogoutUrlOptions): String {
   val params = mutableListOf<Pair<String, String>>()
   params += "session_id" to options.sessionId
-  if (options.returnTo != null) params += "return_to" to options.returnTo
+  params.addIfNotNull("return_to", options.returnTo)
   return buildAuthUrl(workos, "/user_management/sessions/logout", params)
 }

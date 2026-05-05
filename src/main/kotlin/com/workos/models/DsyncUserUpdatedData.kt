@@ -28,7 +28,7 @@ data class DsyncUserUpdatedData(
   val state: DsyncUserUpdatedDataState,
   /** The raw attributes received from the directory provider. */
   @JsonProperty("raw_attributes")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val rawAttributes: Map<String, Any>,
   /** An object containing the custom attribute mapping for the Directory Provider. */
   @JsonProperty("custom_attributes")
@@ -53,15 +53,15 @@ data class DsyncUserUpdatedData(
   val name: String? = null,
   /** A list of email addresses for the user. */
   @JsonProperty("emails")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val emails: List<DsyncUserUpdatedDataEmail>? = null,
   /** The job title of the user. */
   @JsonProperty("job_title")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val jobTitle: String? = null,
   /** The username of the user. */
   @JsonProperty("username")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val username: String? = null,
   /** The role. */
   @JsonProperty("role")

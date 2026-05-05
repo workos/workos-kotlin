@@ -30,7 +30,7 @@ data class DataIntegrationsListResponseDataConnectedAccount(
   val updatedAt: String,
   /** Use `user_id` instead. */
   @JsonProperty("userlandUserId")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val userlandUserId: String?,
   /** Distinguishes the connected account object. */
   @JsonProperty("object")

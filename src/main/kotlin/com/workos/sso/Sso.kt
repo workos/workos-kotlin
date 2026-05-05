@@ -34,6 +34,7 @@ class Sso(
    * @param domain Filter Connections by their associated domain.
    * @param organizationId Filter Connections by their associated organization.
    * @param search Searchable text to match against Connection names.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -58,13 +59,12 @@ class Sso(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      connectionType?.let { params += "connection_type" to it.value }
-      params.addIfNotNull("domain", domain)
-      params.addIfNotNull("organization_id", organizationId)
-      params.addIfNotNull("search", search)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      connectionType?.let { add("connection_type" to it.value) }
+      addIfNotNull("domain", domain)
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("search", search)
     }
   }
 
@@ -74,6 +74,7 @@ class Sso(
    * Get the details of an existing connection.
    *
    * @param id Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Connection
    */
@@ -97,6 +98,7 @@ class Sso(
    * Permanently deletes an existing connection. It cannot be undone.
    *
    * @param id Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteConnection(
@@ -118,6 +120,7 @@ class Sso(
    * You should call this endpoint from your server to generate a logout token which is required for the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint.
    *
    * @param profileId The unique ID of the profile to log out.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the SSOLogoutAuthorizeResponse
    */
@@ -145,6 +148,8 @@ class Sso(
    *
    * Exchange an access token for a user's [Profile](https://workos.com/docs/reference/sso/profile). Because this profile is returned in the [Get a Profile and Token endpoint](https://workos.com/docs/reference/sso/profile/get-profile-and-token) your application usually does not need to call this endpoint. It is available for any authentication flows that require an additional endpoint to retrieve a user's profile.
    *
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
    * @return the Profile
    */
   @JvmOverloads
@@ -164,6 +169,7 @@ class Sso(
    * Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
    *
    * @param code The authorization code received from the authorization callback.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the SSOTokenResponse
    */

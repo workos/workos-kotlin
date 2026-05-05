@@ -28,11 +28,12 @@ class ApiKeys(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listOrganizationApiKeys(
+  fun list(
     organizationId: String,
     before: String? = null,
     after: String? = null,
@@ -49,9 +50,8 @@ class ApiKeys(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -63,11 +63,12 @@ class ApiKeys(
    * @param organizationId Unique identifier of the Organization.
    * @param name The name for the API key.
    * @param permissions The permission slugs to assign to the API key.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationApiKeyWithValue
    */
   @JvmOverloads
-  fun createOrganizationApiKey(
+  fun create(
     organizationId: String,
     name: String,
     permissions: List<String>? = null,
@@ -94,11 +95,12 @@ class ApiKeys(
    * Validate an API key value and return the API key object if valid.
    *
    * @param value The value for an API key.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ApiKeyValidationResponse
    */
   @JvmOverloads
-  fun createValidation(
+  fun validate(
     value: String,
     requestOptions: RequestOptions? = null
   ): ApiKeyValidationResponse {
@@ -122,6 +124,7 @@ class ApiKeys(
    * Permanently deletes an API key. This action cannot be undone. Once deleted, any requests using this API key will fail authentication.
    *
    * @param id The unique ID of the API key.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun delete(

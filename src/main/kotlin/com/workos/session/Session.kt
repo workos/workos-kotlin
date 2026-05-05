@@ -61,38 +61,6 @@ data class SessionCookieData(
   val impersonator: Map<String, Any?>? = null
 )
 
-/** Successful `authenticate()` response. */
-data class AuthenticateSessionSuccess(
-  /** Unique session identifier from the JWT `sid` claim. */
-  val sessionId: String,
-  /** Organization the user authenticated into, if any. */
-  val organizationId: String? = null,
-  /** Primary role slug for the user in this organization. */
-  val role: String? = null,
-  /** All role slugs assigned to the user. */
-  val roles: List<String>? = null,
-  /** Permission slugs granted to the user. */
-  val permissions: List<String>? = null,
-  /** Entitlement slugs the user holds. */
-  val entitlements: List<String>? = null,
-  /** Feature flag keys enabled for the user. */
-  val featureFlags: List<String>? = null,
-  /** User profile data from the session cookie. */
-  val user: Map<String, Any?>? = null,
-  /** Method used to authenticate the user. */
-  val authenticationMethod: String? = null,
-  /** Details of the admin impersonating this user, if any. */
-  val impersonator: Map<String, Any?>? = null,
-  /** Raw JWT access token. */
-  val accessToken: String
-)
-
-/** Failed `authenticate()` response. */
-data class AuthenticateSessionFailure(
-  /** Why authentication failed. */
-  val reason: AuthenticateSessionFailureReason
-)
-
 /** Sum type returned by [SessionCookie.authenticate]. */
 sealed class AuthenticateSessionResult {
   /** A successful authentication containing decoded JWT claims. */
@@ -130,73 +98,40 @@ sealed class AuthenticateSessionResult {
   /** `true` when this result is a [Success]. */
   val authenticated: Boolean
     get() = this is Success
-
-  /** Returns an [AuthenticateSessionSuccess] if this is a [Success], or `null` otherwise. */
-  fun getSuccess(): AuthenticateSessionSuccess? =
-    (this as? Success)?.let {
-      AuthenticateSessionSuccess(
-        sessionId = it.sessionId,
-        organizationId = it.organizationId,
-        role = it.role,
-        roles = it.roles,
-        permissions = it.permissions,
-        entitlements = it.entitlements,
-        featureFlags = it.featureFlags,
-        user = it.user,
-        authenticationMethod = it.authenticationMethod,
-        impersonator = it.impersonator,
-        accessToken = it.accessToken
-      )
-    }
-
-  /** Returns an [AuthenticateSessionFailure] if this is a [Failure], or `null` otherwise. */
-  fun getFailure(): AuthenticateSessionFailure? = (this as? Failure)?.let { AuthenticateSessionFailure(it.reason) }
 }
-
-/** Successful `refresh()` response. */
-data class RefreshSessionSuccess(
-  /** Newly sealed session cookie value to persist on the client. */
-  val sealedSession: String,
-  /** Unique session identifier from the refreshed JWT `sid` claim. */
-  val sessionId: String,
-  /** Organization the user is authenticated into, if any. */
-  val organizationId: String? = null,
-  /** Primary role slug for the user in this organization. */
-  val role: String? = null,
-  /** All role slugs assigned to the user. */
-  val roles: List<String>? = null,
-  /** Permission slugs granted to the user. */
-  val permissions: List<String>? = null,
-  /** Entitlement slugs the user holds. */
-  val entitlements: List<String>? = null,
-  /** Feature flag keys enabled for the user. */
-  val featureFlags: List<String>? = null,
-  /** User profile data from the session cookie. */
-  val user: Map<String, Any?>? = null,
-  /** Method used to authenticate the user. */
-  val authenticationMethod: String? = null,
-  /** Details of the admin impersonating this user, if any. */
-  val impersonator: Map<String, Any?>? = null
-)
-
-/** Failed `refresh()` response. */
-data class RefreshSessionFailure(
-  /** Why the refresh failed. */
-  val reason: RefreshSessionFailureReason
-)
 
 /** Sum type returned by [SessionCookie.refresh]. */
 sealed class RefreshSessionResult {
   /** A successful refresh containing the new sealed session and decoded claims. */
   data class Success(
-    /** The successful refresh payload. */
-    val value: RefreshSessionSuccess
+    /** Newly sealed session cookie value to persist on the client. */
+    val sealedSession: String,
+    /** Unique session identifier from the refreshed JWT `sid` claim. */
+    val sessionId: String,
+    /** Organization the user is authenticated into, if any. */
+    val organizationId: String? = null,
+    /** Primary role slug for the user in this organization. */
+    val role: String? = null,
+    /** All role slugs assigned to the user. */
+    val roles: List<String>? = null,
+    /** Permission slugs granted to the user. */
+    val permissions: List<String>? = null,
+    /** Entitlement slugs the user holds. */
+    val entitlements: List<String>? = null,
+    /** Feature flag keys enabled for the user. */
+    val featureFlags: List<String>? = null,
+    /** User profile data from the session cookie. */
+    val user: Map<String, Any?>? = null,
+    /** Method used to authenticate the user. */
+    val authenticationMethod: String? = null,
+    /** Details of the admin impersonating this user, if any. */
+    val impersonator: Map<String, Any?>? = null
   ) : RefreshSessionResult()
 
   /** A failed refresh attempt. */
   data class Failure(
-    /** The failure payload describing why the refresh was rejected. */
-    val value: RefreshSessionFailure
+    /** Why the refresh failed. */
+    val reason: RefreshSessionFailureReason
   ) : RefreshSessionResult()
 
   /** `true` when this result is a [Success]. */
@@ -276,21 +211,15 @@ class SessionCookie
     ): RefreshSessionResult {
       val data =
         sessionData
-          ?: return RefreshSessionResult.Failure(
-            RefreshSessionFailure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
-          )
+          ?: return RefreshSessionResult.Failure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
       val session =
         try {
           unsealSessionData(data, cookiePassword, objectMapper)
         } catch (_: IronException) {
-          return RefreshSessionResult.Failure(
-            RefreshSessionFailure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
-          )
+          return RefreshSessionResult.Failure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
         }
       if (session.refreshToken.isEmpty()) {
-        return RefreshSessionResult.Failure(
-          RefreshSessionFailure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
-        )
+        return RefreshSessionResult.Failure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)
       }
 
       val effectiveOrgId =
@@ -322,19 +251,17 @@ class SessionCookie
 
       val claims = SignedJWT.parse(response.accessToken).jwtClaimsSet
       return RefreshSessionResult.Success(
-        RefreshSessionSuccess(
-          sealedSession = sealed,
-          sessionId = claims.getStringClaim("sid") ?: "",
-          organizationId = claims.getStringClaim("org_id"),
-          role = claims.getStringClaim("role"),
-          roles = claims.getStringListClaim("roles"),
-          permissions = claims.getStringListClaim("permissions"),
-          entitlements = claims.getStringListClaim("entitlements"),
-          featureFlags = claims.getStringListClaim("feature_flags"),
-          user = session.user,
-          authenticationMethod = newSession.authenticationMethod,
-          impersonator = session.impersonator
-        )
+        sealedSession = sealed,
+        sessionId = claims.getStringClaim("sid") ?: "",
+        organizationId = claims.getStringClaim("org_id"),
+        role = claims.getStringClaim("role"),
+        roles = claims.getStringListClaim("roles"),
+        permissions = claims.getStringListClaim("permissions"),
+        entitlements = claims.getStringListClaim("entitlements"),
+        featureFlags = claims.getStringListClaim("feature_flags"),
+        user = session.user,
+        authenticationMethod = newSession.authenticationMethod,
+        impersonator = session.impersonator
       )
     }
 
@@ -362,7 +289,7 @@ class SessionCookie
           "sso_required" -> RefreshSessionFailureReason.SSO_REQUIRED
           else -> return null
         }
-      return RefreshSessionResult.Failure(RefreshSessionFailure(reason))
+      return RefreshSessionResult.Failure(reason)
     }
   }
 

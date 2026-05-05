@@ -4,6 +4,7 @@
 // emitter so these functions own those names.
 package com.workos.sso
 
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.buildAuthUrl
 import com.workos.common.http.randomOAuthState
 import com.workos.pkce.PKCE
@@ -82,16 +83,16 @@ fun Sso.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
   params += "redirect_uri" to options.redirectUri
   params += "client_id" to resolvedClientId
   params += "response_type" to "code"
-  if (options.domain != null) params += "domain" to options.domain
-  if (options.connection != null) params += "connection" to options.connection
-  if (options.organization != null) params += "organization" to options.organization
-  if (options.provider != null) params += "provider" to options.provider
-  if (options.state != null) params += "state" to options.state
-  if (options.codeChallenge != null) params += "code_challenge" to options.codeChallenge
-  if (options.codeChallengeMethod != null) params += "code_challenge_method" to options.codeChallengeMethod
-  if (options.domainHint != null) params += "domain_hint" to options.domainHint
-  if (options.loginHint != null) params += "login_hint" to options.loginHint
-  if (options.nonce != null) params += "nonce" to options.nonce
+  params.addIfNotNull("domain", options.domain)
+  params.addIfNotNull("connection", options.connection)
+  params.addIfNotNull("organization", options.organization)
+  params.addIfNotNull("provider", options.provider)
+  params.addIfNotNull("state", options.state)
+  params.addIfNotNull("code_challenge", options.codeChallenge)
+  params.addIfNotNull("code_challenge_method", options.codeChallengeMethod)
+  params.addIfNotNull("domain_hint", options.domainHint)
+  params.addIfNotNull("login_hint", options.loginHint)
+  params.addIfNotNull("nonce", options.nonce)
   if (options.providerScopes != null) {
     for (scope in options.providerScopes) params += "provider_scopes" to scope
   }

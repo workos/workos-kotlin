@@ -26,15 +26,13 @@ open class WorkOS
     @JvmField val apiKey: String,
     /** Optional WorkOS client ID, required for OAuth/PKCE flows. */
     @JvmField val clientId: String? = null,
-    apiBaseUrl: String = DEFAULT_BASE_URL,
+    /** Base URL for all API requests (defaults to [DEFAULT_BASE_URL]). */
+    @JvmField val apiBaseUrl: String = DEFAULT_BASE_URL,
     /** The OkHttp client used for all HTTP requests. */
     @JvmField val httpClient: OkHttpClient = defaultHttpClient(),
-    retryConfig: RetryConfig = RetryConfig.DEFAULT
+    /** Retry policy applied to transient HTTP failures. */
+    @JvmField val retryConfig: RetryConfig = RetryConfig.DEFAULT
   ) {
-    /** Base URL for all API requests (defaults to [DEFAULT_BASE_URL]). */
-    @JvmField
-    val apiBaseUrl: String = apiBaseUrl
-
     /** SDK version string loaded from `version.properties` at build time. */
     @JvmField
     val version: String = loadVersion()

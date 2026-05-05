@@ -26,6 +26,7 @@ class Pipes(
    * @param userId The ID of the user to authorize.
    * @param organizationId An organization ID to scope the authorization to a specific organization.
    * @param returnTo The URL to redirect the user to after authorization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationAuthorizeUrlResponse
    */
@@ -61,6 +62,7 @@ class Pipes(
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationAccessTokenResponse
    */
@@ -94,6 +96,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
    */
@@ -124,6 +127,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteUserConnectedAccount(
@@ -151,6 +155,7 @@ class Pipes(
    *
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier to list providers and connected accounts for.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to filter connections for a specific organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationsListResponse
    */

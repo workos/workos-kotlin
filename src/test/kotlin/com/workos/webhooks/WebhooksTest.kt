@@ -20,14 +20,14 @@ class WebhooksTest : TestBase() {
   private fun api() = Webhooks(createWorkOSClient())
 
   @Test
-  fun `listEndpoints returns a typed response`() {
+  fun `list returns a typed response`() {
     stubResponse("GET", "/webhook_endpoints", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().listEndpoints()
+    val result = api().list()
     assertNotNull(result)
   }
 
   @Test
-  fun `createEndpoint returns a typed response`() {
+  fun `create returns a typed response`() {
     stubResponse(
       "POST",
       "/webhook_endpoints",
@@ -35,7 +35,7 @@ class WebhooksTest : TestBase() {
       "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": " +
         "\"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createEndpoint("sample-arg", emptyList<CreateWebhookEndpointEvents>())
+    val result = api().create("sample-arg", emptyList<CreateWebhookEndpointEvents>())
     assertNotNull(result)
     assertEquals("webhook_endpoint", result.objectType)
     assertEquals("sample", result.id)
@@ -48,7 +48,7 @@ class WebhooksTest : TestBase() {
   }
 
   @Test
-  fun `updateEndpoint returns a typed response`() {
+  fun `update returns a typed response`() {
     stubResponse(
       "PATCH",
       "/webhook_endpoints/sample-arg",
@@ -56,7 +56,7 @@ class WebhooksTest : TestBase() {
       "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": " +
         "\"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().updateEndpoint("sample-arg")
+    val result = api().update("sample-arg")
     assertNotNull(result)
     assertEquals("webhook_endpoint", result.objectType)
     assertEquals("sample", result.id)
@@ -65,40 +65,40 @@ class WebhooksTest : TestBase() {
   }
 
   @Test
-  fun `deleteEndpoint completes without throwing`() {
+  fun `delete completes without throwing`() {
     stubResponse("DELETE", "/webhook_endpoints/sample-arg", 204)
-    api().deleteEndpoint("sample-arg")
+    api().delete("sample-arg")
   }
 
   @Test
-  fun `listEndpoints translates 401 to UnauthorizedException`() {
+  fun `list translates 401 to UnauthorizedException`() {
     stubResponse("GET", "/webhook_endpoints", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().listEndpoints()
+      api().list()
     }
   }
 
   @Test
-  fun `listEndpoints translates 404 to NotFoundException`() {
+  fun `list translates 404 to NotFoundException`() {
     stubResponse("GET", "/webhook_endpoints", 404)
     assertThrows(NotFoundException::class.java) {
-      api().listEndpoints()
+      api().list()
     }
   }
 
   @Test
-  fun `listEndpoints translates 429 to RateLimitException`() {
+  fun `list translates 429 to RateLimitException`() {
     stubResponse("GET", "/webhook_endpoints", 429)
     assertThrows(RateLimitException::class.java) {
-      api().listEndpoints()
+      api().list()
     }
   }
 
   @Test
-  fun `listEndpoints translates 500 to GenericServerException`() {
+  fun `list translates 500 to GenericServerException`() {
     stubResponse("GET", "/webhook_endpoints", 500)
     assertThrows(GenericServerException::class.java) {
-      api().listEndpoints()
+      api().list()
     }
   }
 }

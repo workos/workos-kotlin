@@ -25,6 +25,7 @@ class AdminPortal(
    * @param intent The intent of the Admin Portal.
    * @param intentOptions Options to configure the Admin Portal based on the intent.
    * @param itContactEmails The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the PortalLinkResponse
    */

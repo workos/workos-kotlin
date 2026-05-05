@@ -40,6 +40,7 @@ class Connect(
    * @param externalAuthId Identifier provided when AuthKit redirected to your login page.
    * @param user The user to create or update in AuthKit.
    * @param userConsentOptions Array of [User Consent Options](https://workos.com/docs/reference/workos-connect/standalone/user-consent-options) to store with the session.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ExternalAuthCompleteResponse
    */
@@ -76,6 +77,7 @@ class Connect(
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param organizationId Filter Connect Applications by organization ID.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -97,15 +99,16 @@ class Connect(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
     }
   }
 
   /**
    * Create a Connect Application
+   *
+   * Create a new Connect Application. Supports both OAuth and Machine-to-Machine (M2M) application types.
    *
    * @param name The name of the application.
    * @param isFirstParty Whether this is a first-party application. Third-party applications require an organization_id.
@@ -114,6 +117,7 @@ class Connect(
    * @param redirectUris Redirect URIs for the application.
    * @param usesPkce Whether the application uses PKCE (Proof Key for Code Exchange).
    * @param organizationId The organization ID this application belongs to. Required when is_first_party is false.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the ConnectApplication
    */
   @JvmOverloads
@@ -151,10 +155,13 @@ class Connect(
   /**
    * Create a Connect Application
    *
+   * Create a new Connect Application. Supports both OAuth and Machine-to-Machine (M2M) application types.
+   *
    * @param name The name of the application.
    * @param organizationId The organization ID this application belongs to.
    * @param description A description for the application.
    * @param scopes The OAuth scopes granted to the application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the ConnectApplication
    */
   @JvmOverloads
@@ -189,6 +196,7 @@ class Connect(
    * Retrieve details for a specific Connect Application by ID or client ID.
    *
    * @param id The application ID or client ID of the Connect Application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectApplication
    */
@@ -216,6 +224,7 @@ class Connect(
    * @param description A description for the application.
    * @param scopes The OAuth scopes granted to the application.
    * @param redirectUris Updated redirect URIs for the application. OAuth applications only.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectApplication
    */
@@ -251,6 +260,7 @@ class Connect(
    * Delete an existing Connect Application.
    *
    * @param id The application ID or client ID of the Connect Application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteApplication(
@@ -272,6 +282,7 @@ class Connect(
    * List all client secrets associated with a Connect Application.
    *
    * @param id The application ID or client ID of the Connect Application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the list of ApplicationCredentialsListItem
    */
@@ -296,6 +307,7 @@ class Connect(
    * Create new secrets for a Connect Application.
    *
    * @param id The application ID or client ID of the Connect Application.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the NewConnectApplicationSecret
    */
@@ -304,12 +316,10 @@ class Connect(
     id: String,
     requestOptions: RequestOptions? = null
   ): NewConnectApplicationSecret {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/connect/applications/${encodePathSegment(id)}/client_secrets",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, NewConnectApplicationSecret::class.java)
@@ -321,6 +331,7 @@ class Connect(
    * Delete (revoke) an existing client secret.
    *
    * @param id The unique ID of the client secret.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteClientSecret(

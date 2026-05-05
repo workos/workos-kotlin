@@ -29,6 +29,7 @@ class Groups(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -50,9 +51,8 @@ class Groups(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -64,6 +64,7 @@ class Groups(
    * @param organizationId The ID of the organization.
    * @param name The name of the Group.
    * @param description An optional description of the Group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Group
    */
@@ -96,6 +97,7 @@ class Groups(
    *
    * @param organizationId The ID of the organization.
    * @param groupId The ID of the group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Group
    */
@@ -123,6 +125,7 @@ class Groups(
    * @param groupId The ID of the group.
    * @param name The name of the Group.
    * @param description An optional description of the Group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Group
    */
@@ -156,6 +159,7 @@ class Groups(
    *
    * @param organizationId The ID of the organization.
    * @param groupId The ID of the group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteOrganizationGroup(
@@ -183,6 +187,7 @@ class Groups(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -205,9 +210,8 @@ class Groups(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -219,6 +223,7 @@ class Groups(
    * @param organizationId Unique identifier of the Organization.
    * @param groupId Unique identifier of the Group.
    * @param organizationMembershipId The ID of the Organization Membership to add to the group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Group
    */
@@ -251,6 +256,7 @@ class Groups(
    * @param organizationId Unique identifier of the Organization.
    * @param groupId Unique identifier of the Group.
    * @param omId Unique identifier of the Organization Membership.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteOrganizationMembership(

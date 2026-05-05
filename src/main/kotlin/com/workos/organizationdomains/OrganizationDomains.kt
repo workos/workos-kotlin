@@ -21,6 +21,7 @@ class OrganizationDomains(
    *
    * @param domain The domain to add to the organization.
    * @param organizationId The ID of the organization to add the domain to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationDomain
    */
@@ -51,6 +52,7 @@ class OrganizationDomains(
    * Get the details of an existing organization domain.
    *
    * @param id Unique identifier of the organization domain.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationDomainStandAlone
    */
@@ -74,6 +76,7 @@ class OrganizationDomains(
    * Permanently deletes an organization domain. It cannot be undone.
    *
    * @param id Unique identifier of the organization domain.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun delete(
@@ -95,6 +98,7 @@ class OrganizationDomains(
    * Initiates verification process for an Organization Domain.
    *
    * @param id Unique identifier of the organization domain.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationDomainStandAlone
    */
@@ -103,12 +107,10 @@ class OrganizationDomains(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomainStandAlone {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/organization_domains/${encodePathSegment(id)}/verify",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)

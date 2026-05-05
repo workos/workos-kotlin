@@ -93,7 +93,7 @@ class SessionTest : TestBase() {
     assertEquals("sess_123", success.sessionId)
     assertEquals("org_1", success.organizationId)
     assertEquals(accessToken, success.accessToken)
-    assertNotNull(result.getSuccess())
+    assertTrue(success.authenticated)
   }
 
   @Test
@@ -112,7 +112,7 @@ class SessionTest : TestBase() {
     val result = workos.session.authenticateWithSessionCookie(sealed, cookiePassword)
     val failure = result as AuthenticateSessionResult.Failure
     assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
-    assertNotNull(result.getFailure())
+    assertFalse(failure.authenticated)
   }
 
   @Test
@@ -165,7 +165,7 @@ class SessionTest : TestBase() {
 
     val helper = workos.session.loadSealedSession(oldSealed, cookiePassword)
     val refreshed = helper.refresh(organizationId = "org_new")
-    val success = (refreshed as RefreshSessionResult.Success).value
+    val success = refreshed as RefreshSessionResult.Success
     assertEquals("sess_new", success.sessionId)
     assertEquals("org_new", success.organizationId)
     assertNotNull(success.sealedSession)

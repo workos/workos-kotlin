@@ -28,6 +28,7 @@ class MultiFactorAuth(
    *
    * @param id The unique ID of the Authentication Challenge.
    * @param code The one-time code to verify.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthenticationChallengeVerifyResponse
    */
@@ -61,6 +62,7 @@ class MultiFactorAuth(
    * @param totpIssuer Required when type is 'totp'.
    * @param totpUser Required when type is 'totp'.
    * @param userId The ID of the user to associate the factor with.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthenticationFactorEnrolled
    */
@@ -97,6 +99,7 @@ class MultiFactorAuth(
    * Gets an Authentication Factor.
    *
    * @param id The unique ID of the Factor.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthenticationFactor
    */
@@ -120,6 +123,7 @@ class MultiFactorAuth(
    * Permanently deletes an Authentication Factor. It cannot be undone.
    *
    * @param id The unique ID of the Factor.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteFactor(
@@ -142,6 +146,7 @@ class MultiFactorAuth(
    *
    * @param id The unique ID of the Authentication Factor to be challenged.
    * @param smsTemplate A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthenticationChallenge
    */
@@ -175,6 +180,7 @@ class MultiFactorAuth(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -196,9 +202,8 @@ class MultiFactorAuth(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -212,6 +217,7 @@ class MultiFactorAuth(
    * @param totpIssuer Your application or company name displayed in the user's authenticator app.
    * @param totpUser The user's account name displayed in their authenticator app.
    * @param totpSecret The Base32-encoded shared secret for TOTP factors. This can be provided when creating the auth factor, otherwise it will be generated. The algorithm used to derive TOTP codes is SHA-1, the code length is 6 digits, and the timestep is 30 seconds – the secret must be compatible with these parameters.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserAuthenticationFactorEnrollResponse
    */

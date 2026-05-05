@@ -6,24 +6,15 @@ import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.stubbing.Scenario
 import com.workos.test.TestBase
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class DeviceFlowTest : TestBase() {
   private fun api(): UserManagement = UserManagement(createWorkOSClient())
 
-  @BeforeEach
-  fun stubSleep() {
-    sleepFor = { /* no-op — tests simulate polling without real waits */ }
-  }
-
-  @AfterEach
-  fun restoreSleep() {
-    sleepFor = { Thread.sleep(it) }
-  }
+  /** No-op sleeper so tests can simulate polling without real clock waits. */
+  private val noSleep = Sleeper { /* no-op */ }
 
   @Test
   fun `pollDeviceAuthorization returns the auth response once the user approves`() {
@@ -48,7 +39,8 @@ class DeviceFlowTest : TestBase() {
     )
     val result =
       api().pollDeviceAuthorization(
-        PollDeviceAuthorizationOptions(deviceCode = "dev_1", intervalSeconds = 1, expiresInSeconds = 60)
+        PollDeviceAuthorizationOptions(deviceCode = "dev_1", intervalSeconds = 1, expiresInSeconds = 60),
+        noSleep
       )
     assertEquals("a.b.c", result.accessToken)
   }
@@ -62,7 +54,8 @@ class DeviceFlowTest : TestBase() {
     val ex =
       assertThrows(DeviceFlowException::class.java) {
         api().pollDeviceAuthorization(
-          PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 10)
+          PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 10),
+          noSleep
         )
       }
     assertEquals(DeviceFlowFailureReason.ACCESS_DENIED, ex.reason)
@@ -77,7 +70,8 @@ class DeviceFlowTest : TestBase() {
     val ex =
       assertThrows(DeviceFlowException::class.java) {
         api().pollDeviceAuthorization(
-          PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 10)
+          PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 10),
+          noSleep
         )
       }
     assertEquals(DeviceFlowFailureReason.EXPIRED_TOKEN, ex.reason)
@@ -102,7 +96,8 @@ class DeviceFlowTest : TestBase() {
     )
     val result =
       api().pollDeviceAuthorization(
-        PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 60)
+        PollDeviceAuthorizationOptions(deviceCode = "d", intervalSeconds = 1, expiresInSeconds = 60),
+        noSleep
       )
     assertEquals("a.b.c", result.accessToken)
   }

@@ -36,6 +36,6 @@ data class Organization(
   val stripeCustomerId: String? = null,
   /** Whether the Organization allows profiles outside of its managed domains. */
   @JsonProperty("allow_profiles_outside_organization")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated.")
   val allowProfilesOutsideOrganization: Boolean? = null
 )

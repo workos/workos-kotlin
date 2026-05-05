@@ -28,6 +28,7 @@ class Radar(
    * @param action The action being performed.
    * @param deviceFingerprint An optional device fingerprint for the request.
    * @param botScore An optional bot detection score for the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RadarStandaloneResponse
    */
@@ -70,6 +71,7 @@ class Radar(
    * @param id The unique identifier of the Radar attempt to update.
    * @param challengeStatus Set to `"success"` to mark the challenge as completed.
    * @param attemptStatus Set to `"success"` to mark the authentication attempt as successful.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun updateAttempt(
@@ -101,6 +103,7 @@ class Radar(
    * @param type The type of the Radar list (e.g. ip_address, domain, email).
    * @param action The list action indicating whether to add the entry to the allow or block list.
    * @param entry The value to add to the list. Must match the format of the list type (e.g. a valid IP address for `ip_address`, a valid email for `email`).
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RadarListEntryAlreadyPresentResponse
    */
@@ -133,6 +136,7 @@ class Radar(
    * @param type The type of the Radar list (e.g. ip_address, domain, email).
    * @param action The list action indicating whether to remove the entry from the allow or block list.
    * @param entry The value to remove from the list. Must match an existing entry.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun removeListEntry(

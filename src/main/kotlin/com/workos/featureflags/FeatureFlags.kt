@@ -25,6 +25,7 @@ class FeatureFlags(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -45,9 +46,8 @@ class FeatureFlags(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -57,6 +57,7 @@ class FeatureFlags(
    * Get the details of an existing feature flag by its slug.
    *
    * @param slug A unique key to reference the Feature Flag.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Flag
    */
@@ -80,6 +81,7 @@ class FeatureFlags(
    * Disables a feature flag in the current environment.
    *
    * @param slug A unique key to reference the Feature Flag.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the FeatureFlag
    */
@@ -88,12 +90,10 @@ class FeatureFlags(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/${encodePathSegment(slug)}/disable",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -105,6 +105,7 @@ class FeatureFlags(
    * Enables a feature flag in the current environment.
    *
    * @param slug A unique key to reference the Feature Flag.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the FeatureFlag
    */
@@ -113,12 +114,10 @@ class FeatureFlags(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/${encodePathSegment(slug)}/enable",
-        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -131,6 +130,7 @@ class FeatureFlags(
    *
    * @param slug The unique slug identifier of the feature flag.
    * @param resourceId The resource ID in format "user_<id>" or "org_<id>".
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun addFlagTarget(
@@ -138,12 +138,10 @@ class FeatureFlags(
     resourceId: String,
     requestOptions: RequestOptions? = null
   ) {
-    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/feature-flags/${encodePathSegment(slug)}/targets/${encodePathSegment(resourceId)}",
-        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
@@ -156,6 +154,7 @@ class FeatureFlags(
    *
    * @param slug The unique slug identifier of the feature flag.
    * @param resourceId The resource ID in format "user_<id>" or "org_<id>".
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun removeFlagTarget(
@@ -182,6 +181,7 @@ class FeatureFlags(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -203,9 +203,8 @@ class FeatureFlags(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -219,6 +218,7 @@ class FeatureFlags(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -240,9 +240,8 @@ class FeatureFlags(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 }

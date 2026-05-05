@@ -24,7 +24,7 @@ data class Connection(
   val state: ConnectionState,
   /** Deprecated. Use `state` instead. */
   @JsonProperty("status")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated. Use `state` instead.")
   val status: ConnectionStatus,
   /** List of Organization Domains. */
   @JsonProperty("domains")

@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 
 /** AuditLogExportCreation model. */
 data class AuditLogExportCreation(
@@ -11,16 +12,16 @@ data class AuditLogExportCreation(
   val organizationId: String,
   /** ISO-8601 value for start of the export range. */
   @JsonProperty("range_start")
-  val rangeStart: String,
+  val rangeStart: OffsetDateTime,
   /** ISO-8601 value for end of the export range. */
   @JsonProperty("range_end")
-  val rangeEnd: String,
+  val rangeEnd: OffsetDateTime,
   /** List of actions to filter against. */
   @JsonProperty("actions")
   val actions: List<String>? = null,
   /** Deprecated. Use `actor_names` instead. */
   @JsonProperty("actors")
-  @Deprecated("Deprecated field")
+  @Deprecated("Deprecated. Use `actor_names` instead.")
   val actors: List<String>? = null,
   /** List of actor names to filter against. */
   @JsonProperty("actor_names")

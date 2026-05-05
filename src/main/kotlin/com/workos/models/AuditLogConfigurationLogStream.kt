@@ -20,7 +20,7 @@ data class AuditLogConfigurationLogStream(
   val state: AuditLogConfigurationLogStreamState,
   /** ISO-8601 timestamp of when the last event was successfully synced, or null if no events have been synced. */
   @JsonProperty("last_synced_at")
-  val lastSyncedAt: String?,
+  val lastSyncedAt: OffsetDateTime?,
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime

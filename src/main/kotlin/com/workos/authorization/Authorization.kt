@@ -85,6 +85,7 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership to check.
    * @param permissionSlug The slug of the permission to check.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationCheck
    */
@@ -129,6 +130,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -152,15 +154,14 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      params += "permission_slug" to permissionSlug
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      add("permission_slug" to permissionSlug)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
       when (parentResource) {
-        is ParentResource.ById -> params += "parent_resource_id" to parentResource.id
+        is ParentResource.ById -> add("parent_resource_id" to parentResource.id)
         is ParentResource.ByExternalId -> {
-          params += "parent_resource_type_slug" to parentResource.typeSlug
-          params += "parent_resource_external_id" to parentResource.externalId
+          add("parent_resource_type_slug" to parentResource.typeSlug)
+          add("parent_resource_external_id" to parentResource.externalId)
         }
       }
     }
@@ -177,6 +178,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -201,9 +203,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -219,6 +220,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -244,9 +246,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -260,6 +261,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -281,9 +283,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -294,6 +295,7 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to assign.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserRoleAssignment
    */
@@ -332,6 +334,7 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to remove.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun removeRole(
@@ -368,6 +371,7 @@ class Authorization(
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleAssignmentId The ID of the role assignment to remove.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun removeRoleAssignment(
@@ -392,6 +396,7 @@ class Authorization(
    * Get a list of all roles that apply to an organization. This includes both environment roles and custom roles, returned in priority order.
    *
    * @param organizationId The ID of the organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RoleList
    */
@@ -419,6 +424,7 @@ class Authorization(
    * @param slug A unique identifier for the role within the organization. When provided, must begin with 'org-' and contain only lowercase letters, numbers, hyphens, and underscores. When omitted, a slug is auto-generated from the role name and a random suffix.
    * @param description An optional description of the role's purpose.
    * @param resourceTypeSlug The slug of the resource type the role is scoped to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -455,6 +461,7 @@ class Authorization(
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -482,6 +489,7 @@ class Authorization(
    * @param slug The slug of the role.
    * @param name A descriptive name for the role.
    * @param description An optional description of the role's purpose.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -515,6 +523,7 @@ class Authorization(
    *
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteOrganizationRole(
@@ -539,6 +548,7 @@ class Authorization(
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
    * @param bodySlug The slug of the permission to add to the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -571,6 +581,7 @@ class Authorization(
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
    * @param permissions The permission slugs to assign to the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -603,6 +614,7 @@ class Authorization(
    * @param organizationId The ID of the organization.
    * @param slug The slug of the role.
    * @param permissionSlug The slug of the permission to remove.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun removeOrganizationRolePermission(
@@ -630,6 +642,7 @@ class Authorization(
    * @param organizationId The ID of the organization that owns the resource.
    * @param resourceTypeSlug The slug of the resource type.
    * @param externalId An identifier you provide to reference the resource in your system.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationResource
    */
@@ -661,6 +674,7 @@ class Authorization(
    * @param externalId An identifier you provide to reference the resource in your system.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationResource
    */
@@ -709,6 +723,7 @@ class Authorization(
    * @param resourceTypeSlug The slug of the resource type.
    * @param externalId An identifier you provide to reference the resource in your system.
    * @param cascadeDelete If true, deletes all descendant resources and role assignments. If not set and the resource has children or assignments, the request will fail.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteResourceByExternalId(
@@ -746,6 +761,7 @@ class Authorization(
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param assignment Filter by assignment type. Use "direct" for direct assignments only, or "indirect" to include inherited assignments.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -773,11 +789,10 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      params += "permission_slug" to permissionSlug
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      assignment?.let { params += "assignment" to it.value }
+      add("permission_slug" to permissionSlug)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      assignment?.let { add("assignment" to it.value) }
     }
   }
 
@@ -793,6 +808,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -818,9 +834,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -837,6 +852,7 @@ class Authorization(
    * @param resourceTypeSlug Filter resources by resource type slug.
    * @param resourceExternalId Filter resources by external ID.
    * @param search Search resources by name.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -862,19 +878,18 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      params.addIfNotNull("organization_id", organizationId)
-      params.addIfNotNull("resource_type_slug", resourceTypeSlug)
-      params.addIfNotNull("resource_external_id", resourceExternalId)
-      params.addIfNotNull("search", search)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("resource_type_slug", resourceTypeSlug)
+      addIfNotNull("resource_external_id", resourceExternalId)
+      addIfNotNull("search", search)
       if (parent != null) {
         when (parent) {
-          is Parent.ById -> params += "parent_resource_id" to parent.resourceId
+          is Parent.ById -> add("parent_resource_id" to parent.resourceId)
           is Parent.ByExternalId -> {
-            params += "parent_resource_type_slug" to parent.resourceTypeSlug
-            params += "parent_external_id" to parent.externalId
+            add("parent_resource_type_slug" to parent.resourceTypeSlug)
+            add("parent_external_id" to parent.externalId)
           }
         }
       }
@@ -891,6 +906,7 @@ class Authorization(
    * @param resourceTypeSlug The slug of the resource type.
    * @param organizationId The ID of the organization this resource belongs to.
    * @param description An optional description of the resource.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationResource
    */
@@ -937,6 +953,7 @@ class Authorization(
    * Retrieve the details of an authorization resource by its ID.
    *
    * @param resourceId The ID of the authorization resource.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationResource
    */
@@ -962,6 +979,7 @@ class Authorization(
    * @param resourceId The ID of the authorization resource.
    * @param name A display name for the resource.
    * @param description An optional description of the resource.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationResource
    */
@@ -1004,6 +1022,7 @@ class Authorization(
    *
    * @param resourceId The ID of the authorization resource.
    * @param cascadeDelete If true, deletes all descendant resources and role assignments. If not set and the resource has children or assignments, the request will fail.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deleteResource(
@@ -1035,6 +1054,7 @@ class Authorization(
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
    * @param assignment Filter by assignment type. Use `direct` for direct assignments only, or `indirect` to include inherited assignments.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1058,11 +1078,10 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      params += "permission_slug" to permissionSlug
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
-      assignment?.let { params += "assignment" to it.value }
+      add("permission_slug" to permissionSlug)
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      assignment?.let { add("assignment" to it.value) }
     }
   }
 
@@ -1076,6 +1095,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1097,9 +1117,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -1107,6 +1126,8 @@ class Authorization(
    * List environment roles
    *
    * List all environment roles in priority order.
+   *
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RoleList
    */
@@ -1130,6 +1151,7 @@ class Authorization(
    * @param name A descriptive name for the role.
    * @param description An optional description of the role.
    * @param resourceTypeSlug The slug of the resource type the role is scoped to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -1164,6 +1186,7 @@ class Authorization(
    * Get an environment role by its slug.
    *
    * @param slug The slug of the environment role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -1189,6 +1212,7 @@ class Authorization(
    * @param slug The slug of the environment role.
    * @param name A descriptive name for the role.
    * @param description An optional description of the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -1221,6 +1245,7 @@ class Authorization(
    *
    * @param slug The slug of the environment role.
    * @param bodySlug The slug of the permission to add to the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -1251,6 +1276,7 @@ class Authorization(
    *
    * @param slug The slug of the environment role.
    * @param permissions The permission slugs to assign to the role.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Role
    */
@@ -1283,6 +1309,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
@@ -1303,9 +1330,8 @@ class Authorization(
       before = before,
       after = after
     ) {
-      val params = this
-      limit?.let { params += "limit" to it.toString() }
-      order?.let { params += "order" to it.value }
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
     }
   }
 
@@ -1318,6 +1344,7 @@ class Authorization(
    * @param name A descriptive name for the Permission.
    * @param description An optional description of the Permission.
    * @param resourceTypeSlug The slug of the resource type this permission is scoped to.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the Permission
    */
@@ -1352,6 +1379,7 @@ class Authorization(
    * Retrieve a permission by its unique slug.
    *
    * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationPermission
    */
@@ -1377,6 +1405,7 @@ class Authorization(
    * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
    * @param name A descriptive name for the Permission.
    * @param description An optional description of the Permission.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthorizationPermission
    */
@@ -1408,6 +1437,7 @@ class Authorization(
    * Delete an existing permission. System permissions cannot be deleted.
    *
    * @param slug A unique key to reference the permission. Must be lowercase and contain only letters, numbers, hyphens, underscores, colons, periods, and asterisks.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun deletePermission(
