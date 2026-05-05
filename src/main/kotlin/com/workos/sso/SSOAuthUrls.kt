@@ -4,9 +4,9 @@
 // emitter so these functions own those names.
 package com.workos.sso
 
-import com.workos.WorkOS
+import com.workos.common.http.buildAuthUrl
+import com.workos.common.http.randomOAuthState
 import com.workos.pkce.PKCE
-import java.net.URLEncoder
 
 /** Convenience alias so callers can write `SSO` instead of `Sso`. */
 typealias SSO = Sso
@@ -99,7 +99,7 @@ fun Sso.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
     for ((k, v) in options.providerQueryParams) params += "provider_query_params[$k]" to v
   }
 
-  return buildSSOUrl(workos, "/sso/authorize", params)
+  return buildAuthUrl(workos, "/sso/authorize", params)
 }
 
 /**
@@ -109,7 +109,7 @@ fun Sso.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
  */
 fun Sso.getAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKCEAuthorizationUrlResult {
   val pair = PKCE().generate()
-  val state = options.state ?: randomState()
+  val state = options.state ?: randomOAuthState()
   val url =
     getAuthorizationUrl(
       options.copy(
@@ -128,7 +128,7 @@ data class SSOLogoutUrlOptions(
 )
 
 /** Build the SSO logout redirect URL. Does not make an HTTP request. */
-fun Sso.getLogoutUrl(options: SSOLogoutUrlOptions): String = buildSSOUrl(workos, "/sso/logout", listOf("token" to options.token))
+fun Sso.getLogoutUrl(options: SSOLogoutUrlOptions): String = buildAuthUrl(workos, "/sso/logout", listOf("token" to options.token))
 
 /**
  * Exchange an SSO authorization code for a profile + token using PKCE
@@ -155,26 +155,4 @@ fun Sso.getProfileAndTokenWithPKCE(
       requestOptions = requestOptions
     )
   return workos.baseClient.request(config, com.workos.models.SSOTokenResponse::class.java)
-}
-
-internal fun buildSSOUrl(
-  workos: WorkOS,
-  path: String,
-  params: List<Pair<String, String>>
-): String {
-  val base = workos.apiBaseUrl.trimEnd('/')
-  if (params.isEmpty()) return "$base$path"
-  val query = params.joinToString("&") { (k, v) -> "${encode(k)}=${encode(v)}" }
-  return "$base$path?$query"
-}
-
-private fun encode(value: String): String = URLEncoder.encode(value, Charsets.UTF_8)
-
-private fun randomState(): String {
-  val bytes = ByteArray(32)
-  java.security.SecureRandom().nextBytes(bytes)
-  return java.util.Base64
-    .getUrlEncoder()
-    .withoutPadding()
-    .encodeToString(bytes)
 }

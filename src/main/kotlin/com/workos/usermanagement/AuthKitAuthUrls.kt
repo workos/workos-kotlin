@@ -5,9 +5,9 @@
 // emitter so these functions own those names.
 package com.workos.usermanagement
 
-import com.workos.WorkOS
+import com.workos.common.http.buildAuthUrl
+import com.workos.common.http.randomOAuthState
 import com.workos.pkce.PKCE
-import java.net.URLEncoder
 
 /** Options accepted by [UserManagement.getAuthorizationUrl]. */
 data class AuthKitAuthorizationUrlOptions
@@ -97,7 +97,7 @@ fun UserManagement.getAuthorizationUrl(options: AuthKitAuthorizationUrlOptions):
     for ((k, v) in options.providerQueryParams) params += "provider_query_params[$k]" to v
   }
 
-  return buildUrl(workos, "/user_management/authorize", params)
+  return buildAuthUrl(workos, "/user_management/authorize", params)
 }
 
 /**
@@ -108,7 +108,7 @@ fun UserManagement.getAuthorizationUrl(options: AuthKitAuthorizationUrlOptions):
  */
 fun UserManagement.getAuthorizationUrlWithPKCE(options: AuthKitAuthorizationUrlOptions): PKCEAuthorizationUrlResult {
   val pair = PKCE().generate()
-  val state = options.state ?: randomState()
+  val state = options.state ?: randomOAuthState()
   val url =
     getAuthorizationUrl(
       options.copy(
@@ -135,27 +135,5 @@ fun UserManagement.getLogoutUrl(options: AuthKitLogoutUrlOptions): String {
   val params = mutableListOf<Pair<String, String>>()
   params += "session_id" to options.sessionId
   if (options.returnTo != null) params += "return_to" to options.returnTo
-  return buildUrl(workos, "/user_management/sessions/logout", params)
-}
-
-internal fun buildUrl(
-  workos: WorkOS,
-  path: String,
-  params: List<Pair<String, String>>
-): String {
-  val base = workos.apiBaseUrl.trimEnd('/')
-  if (params.isEmpty()) return "$base$path"
-  val query = params.joinToString("&") { (k, v) -> "${encode(k)}=${encode(v)}" }
-  return "$base$path?$query"
-}
-
-private fun encode(value: String): String = URLEncoder.encode(value, Charsets.UTF_8)
-
-private fun randomState(): String {
-  val bytes = ByteArray(32)
-  java.security.SecureRandom().nextBytes(bytes)
-  return java.util.Base64
-    .getUrlEncoder()
-    .withoutPadding()
-    .encodeToString(bytes)
+  return buildAuthUrl(workos, "/user_management/sessions/logout", params)
 }

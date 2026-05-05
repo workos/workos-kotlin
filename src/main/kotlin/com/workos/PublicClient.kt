@@ -6,6 +6,7 @@ package com.workos
 
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.bodyOf
 import com.workos.models.AuthenticateResponse
 import com.workos.models.DeviceAuthorizationResponse
 import com.workos.models.JwksResponse
@@ -74,14 +75,16 @@ class PublicClient private constructor(
     userAgent: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse {
-    val body = linkedMapOf<String, Any?>()
-    body["code"] = code
-    body["code_verifier"] = codeVerifier
-    if (ipAddress != null) body["ip_address"] = ipAddress
-    if (deviceId != null) body["device_id"] = deviceId
-    if (userAgent != null) body["user_agent"] = userAgent
-    body["grant_type"] = "authorization_code"
-    body["client_id"] = workos.clientId
+    val body =
+      bodyOf(
+        "code" to code,
+        "code_verifier" to codeVerifier,
+        "ip_address" to ipAddress,
+        "device_id" to deviceId,
+        "user_agent" to userAgent,
+        "grant_type" to "authorization_code",
+        "client_id" to workos.clientId
+      )
     val config =
       RequestConfig(
         method = "POST",
