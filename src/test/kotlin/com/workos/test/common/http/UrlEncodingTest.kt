@@ -12,8 +12,8 @@ class UrlEncodingTest {
 
   @Test
   fun encodesDotSegmentsThatWouldOtherwiseTraverseUpward() {
-    assertEquals("..", encodePathSegment(".."))
-    assertEquals("a%2F..%2Fb", encodePathSegment("a/../b"))
+    assertEquals("%2E%2E", encodePathSegment(".."))
+    assertEquals("a%2F%2E%2E%2Fb", encodePathSegment("a/../b"))
   }
 
   @Test
@@ -42,8 +42,8 @@ class UrlEncodingTest {
   }
 
   @Test
-  fun leavesRfc3986UnreservedCharactersUntouched() {
-    assertEquals("AZaz09-_.~", encodePathSegment("AZaz09-_.~"))
+  fun leavesRfc3986UnreservedCharactersUntouchedExceptDot() {
+    assertEquals("AZaz09-_~", encodePathSegment("AZaz09-_~"))
   }
 
   @Test
