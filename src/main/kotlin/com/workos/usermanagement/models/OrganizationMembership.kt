@@ -17,6 +17,9 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * @param updatedAt The timestamp when the user was last updated.
  * @param customAttributes Custom attributes from the identity provider.
  * @param directoryManaged Whether the organization membership is managed by a directory sync connection.
+ * @param user The [User] associated with this organization membership.
+ *   Always populated by API responses, but may be `null` when the membership
+ *   is delivered via an `organization_membership.*` webhook event.
  */
 data class OrganizationMembership(
   @JsonProperty("id")
@@ -38,5 +41,8 @@ data class OrganizationMembership(
   @JsonProperty("custom_attributes")
   val customAttributes: Map<String, Any> = emptyMap(),
   @JsonProperty("directory_managed")
-  val directoryManaged: Boolean = false
+  val directoryManaged: Boolean = false,
+
+  @JsonProperty("user")
+  val user: User? = null
 )

@@ -1,6 +1,7 @@
 package com.workos.authorization.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.usermanagement.models.User
 import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
 
 /**
@@ -9,6 +10,11 @@ import com.workos.usermanagement.types.OrganizationMembershipStatusEnumType
  * Unlike the full [com.workos.usermanagement.models.OrganizationMembership],
  * this model omits role, custom_attributes, and other fields not returned
  * by the authorization endpoints.
+ *
+ * The [user] field is only populated by endpoints that explicitly include
+ * the full user object in their response (currently
+ * `GET /authorization/resources/:resource_id/organization_memberships` and
+ * `GET /authorization/organizations/:organization_id/resources/:resource_type_slug/:external_id/organization_memberships`).
  */
 data class SlimOrganizationMembership(
   @JvmField
@@ -34,5 +40,9 @@ data class SlimOrganizationMembership(
   val createdAt: String,
   @JvmField
   @JsonProperty("updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+
+  @JvmField
+  @JsonProperty("user")
+  val user: User? = null
 )

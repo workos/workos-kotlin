@@ -5,6 +5,7 @@
       "release-type": "simple",
       "package-name": "workos",
       "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
       "extra-files": [
         {
           "type": "generic",

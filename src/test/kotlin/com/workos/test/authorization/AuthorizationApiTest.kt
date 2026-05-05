@@ -1,5 +1,6 @@
 package com.workos.test.authorization
 
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.workos.authorization.types.AddRolePermissionOptions
 import com.workos.authorization.types.AssignRoleOptions
 import com.workos.authorization.types.CheckAuthorizationOptions
@@ -7,6 +8,7 @@ import com.workos.authorization.types.CreateAuthorizationResourceOptions
 import com.workos.authorization.types.CreateOrganizationRoleOptions
 import com.workos.authorization.types.CreatePermissionOptions
 import com.workos.authorization.types.CreateRoleOptions
+import com.workos.authorization.types.ListAuthorizationResourcesOptions
 import com.workos.authorization.types.ListOrganizationMembershipsForResourceOptions
 import com.workos.authorization.types.ListResourcesForOrganizationMembershipOptions
 import com.workos.authorization.types.RemoveRoleOptions
@@ -105,6 +107,39 @@ class AuthorizationApiTest : TestBase() {
     assertEquals("proj-456", result.data[0].externalId)
     assertEquals("Website Redesign", result.data[0].name)
     assertEquals("project", result.data[0].resourceTypeSlug)
+  }
+
+  @Test
+  fun listResourcesWithResourceExternalIdShouldFilterResults() {
+    stubResponse(
+      url = "/authorization/resources",
+      params = mapOf("resource_external_id" to equalTo("proj-456")),
+      responseBody = """{
+        "data": [
+          {
+            "id": "authz_resource_01ABC",
+            "object": "authorization_resource",
+            "external_id": "proj-456",
+            "name": "Website Redesign",
+            "organization_id": "org_01EHZNVPK3SFK441A1RGBFSHRT",
+            "resource_type_slug": "project",
+            "created_at": "2026-01-15T12:00:00.000Z",
+            "updated_at": "2026-01-15T12:00:00.000Z"
+          }
+        ],
+        "list_metadata": {
+          "after": null,
+          "before": null
+        }
+      }"""
+    )
+
+    val result = workos.authorization.listResources(
+      ListAuthorizationResourcesOptions(resourceExternalId = "proj-456")
+    )
+
+    assertEquals(1, result.data.size)
+    assertEquals("proj-456", result.data[0].externalId)
   }
 
   @Test
@@ -412,7 +447,18 @@ class AuthorizationApiTest : TestBase() {
             "status": "active",
             "directory_managed": false,
             "created_at": "2026-01-15T12:00:00.000Z",
-            "updated_at": "2026-01-15T12:00:00.000Z"
+            "updated_at": "2026-01-15T12:00:00.000Z",
+            "user": {
+              "id": "user_01EHQTV6MWP9P1F4ZXGXMC8ABB",
+              "email": "marcelina@example.com",
+              "first_name": "Marcelina",
+              "last_name": "Davis",
+              "email_verified": true,
+              "profile_picture_url": "https://example.com/avatar.png",
+              "last_sign_in_at": "2026-01-15T12:00:00.000Z",
+              "created_at": "2026-01-15T12:00:00.000Z",
+              "updated_at": "2026-01-15T12:00:00.000Z"
+            }
           }
         ],
         "list_metadata": {
@@ -432,6 +478,11 @@ class AuthorizationApiTest : TestBase() {
     assertEquals("om_01HXYZ", result.data[0].id)
     assertEquals("user_01EHQTV6MWP9P1F4ZXGXMC8ABB", result.data[0].userId)
     assertEquals("active", result.data[0].status.type)
+    assertEquals("user_01EHQTV6MWP9P1F4ZXGXMC8ABB", result.data[0].user?.id)
+    assertEquals("marcelina@example.com", result.data[0].user?.email)
+    assertEquals("Marcelina", result.data[0].user?.firstName)
+    assertEquals("Davis", result.data[0].user?.lastName)
+    assertEquals(true, result.data[0].user?.emailVerified)
   }
 
   @Test
@@ -448,7 +499,16 @@ class AuthorizationApiTest : TestBase() {
             "status": "active",
             "directory_managed": false,
             "created_at": "2026-01-15T12:00:00.000Z",
-            "updated_at": "2026-01-15T12:00:00.000Z"
+            "updated_at": "2026-01-15T12:00:00.000Z",
+            "user": {
+              "id": "user_01ABC",
+              "email": "marcelina@example.com",
+              "first_name": "Marcelina",
+              "last_name": "Davis",
+              "email_verified": true,
+              "created_at": "2026-01-15T12:00:00.000Z",
+              "updated_at": "2026-01-15T12:00:00.000Z"
+            }
           }
         ],
         "list_metadata": {
@@ -468,6 +528,8 @@ class AuthorizationApiTest : TestBase() {
 
     assertEquals(1, result.data.size)
     assertEquals("om_01HXYZ", result.data[0].id)
+    assertEquals("user_01ABC", result.data[0].user?.id)
+    assertEquals("marcelina@example.com", result.data[0].user?.email)
   }
 
   // ── Permissions ────────────────────────────────────────────────────────
