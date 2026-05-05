@@ -90,7 +90,7 @@ Most `*Api` classes lost the `Api` suffix, and some service names changed.
 | `WidgetsApi`                    | `Widgets`                                                                                |
 | `PortalApi` via `workos.portal` | `AdminPortal` via `workos.adminPortal`                                                   |
 | `MfaApi` via `workos.mfa`       | `MultiFactorAuth` via `workos.multiFactorAuth`                                           |
-| `FgaApi` via `workos.fga`       | folded into `Authorization` via `workos.authorization`                                   |
+| `FgaApi` via `workos.fga`       | redesigned as `Authorization` via `workos.authorization` (see [section 3a](#3a-authorization-fga-api-redesign)) |
 | `WebhooksApi`                   | `Webhooks` for endpoint management, plus standalone `Webhook` for signature verification |
 
 Service accessors are now generated as properties directly on the `WorkOS` class.
@@ -110,6 +110,41 @@ val org = workos.organizations.get("org_123")
 val link = workos.adminPortal.generateLink(...)
 val factor = workos.multiFactorAuth.getFactor("auth_factor_123")
 ```
+
+### Method naming
+
+Generated service methods drop the resource name from each operation. Mechanically:
+
+- `getUser(id)` → `get(id)`
+- `listUsers(...)` → `list(...)`
+- `createUser(...)` → `create(...)`
+- `updateUser(id, ...)` → `update(id, ...)`
+- `deleteUser(id)` → `delete(id)`
+- `getOrganization(id)` → `get(id)`
+- `listConnections(...)` → `list(...)`
+
+The same pattern applies across `Organizations`, `DirectorySync`, `UserManagement`, `SSO`, `AuditLogs`, and the rest. Where a service exposes more than one resource (for example, `UserManagement` also handles invitations, organization memberships, sessions, and authorized applications), the resource name is kept on the secondary methods (`listInvitations`, `listOrganizationMemberships`, `listSessions`, `listAuthorizedApplications`).
+
+### 3a. Authorization (FGA) API redesign
+
+`workos.fga` is not just renamed to `workos.authorization` — the underlying API is a different shape.
+
+v4 `FgaApi` was warrant-centric: `writeWarrant`, `batchWriteWarrants`, `listWarrants`, `query`, plus `*Resource` CRUD and `check`/`checkBatch`.
+
+v5 `Authorization` is role- and permission-centric: `assignRole`, `removeRole`, `listRoleAssignments`, `createOrganizationRole`, `listOrganizationRoles`, `getOrganizationRole`, `updateOrganizationRole`, `deleteOrganizationRole`, `addRolePermission`, `setRolePermissions`, `createPermission`, `listPermissions`, `createAuthorizationResource`, `listAuthorizationResources`, `listOrganizationMembershipsForResource`, `listResourcesForOrganizationMembership`, and so on. `check` still exists.
+
+Warrant-style writes do not have a one-to-one replacement. If you wrote warrants directly in v4, plan to re-model your authorization data against roles, permissions, and resources before upgrading.
+
+### 3b. MFA methods moved off `UserManagement`
+
+In v4, `UserManagementApi` exposed `enrollAuthFactor` and `listAuthFactors`. In v5 those live on `MultiFactorAuth`:
+
+| v4 (`workos.userManagement`) | v5                                                |
+| ---------------------------- | ------------------------------------------------- |
+| `enrollAuthFactor(...)`      | `workos.multiFactorAuth.enrollFactor(...)`        |
+| `listAuthFactors(userId)`    | `workos.multiFactorAuth.listUserAuthFactors(...)` |
+
+`MultiFactorAuth` also adds `challengeFactor`, `verifyChallenge`, `getFactor`, `deleteFactor`, and `createUserAuthFactor`.
 
 ### Java Callers
 
@@ -140,7 +175,7 @@ Examples:
 | ---------------------------------------------- | -------------------------------- |
 | `com.workos.organizations.models.Organization` | `com.workos.models.Organization` |
 | `com.workos.sso.models.Connection`             | `com.workos.models.Connection`   |
-| `com.workos.common.models.Order`               | `com.workos.types.EventsOrder`   |
+| `com.workos.common.models.Order`               | per-resource ordering enums in `com.workos.types.*` (e.g. `OrganizationsOrder`, `UserManagementUsersOrder`, `ConnectionsOrder`, `EventsOrder`), or the generic `PaginationOrder` |
 
 Also:
 
