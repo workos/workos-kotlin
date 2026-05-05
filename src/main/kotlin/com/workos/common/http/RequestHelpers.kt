@@ -1,6 +1,19 @@
 // @oagen-ignore-file
 package com.workos.common.http
 
+import java.net.URLEncoder
+
+/**
+ * Percent-encode a value for safe interpolation into a URL path segment.
+ *
+ * Generated resource methods inline path parameters via Kotlin string
+ * templates (e.g. `"/orgs/${encodePathSegment(id)}"`); without encoding, an
+ * id containing `/`, `?`, `#`, or whitespace would alter routing or break
+ * the request. `URLEncoder` targets form-encoding so ` ` becomes `+`; the
+ * post-replace converts those back to `%20` for path-segment correctness.
+ */
+fun encodePathSegment(value: String): String = URLEncoder.encode(value, Charsets.UTF_8).replace("+", "%20")
+
 /**
  * Build a request body map from key-value pairs, dropping entries whose
  * value is `null`. This reduces the repeated `if (x != null) body["x"] = x`
