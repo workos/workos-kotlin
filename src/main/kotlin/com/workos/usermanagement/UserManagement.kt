@@ -125,8 +125,6 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
-   *
    * @param email The user's email address.
    * @param password The user's password.
    * @param invitationToken An invitation token to accept during authentication.
@@ -159,8 +157,6 @@ class UserManagement(
 
   /**
    * Authenticate
-   *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param code The authorization code received from the redirect.
    * @param codeVerifier The PKCE code verifier used to derive the code challenge passed to the authorization URL.
@@ -195,8 +191,6 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
-   *
    * @param refreshToken The refresh token to exchange for new tokens.
    * @param organizationId The ID of the organization to scope the session to.
    * @param ipAddress The IP address of the user's request.
@@ -226,8 +220,6 @@ class UserManagement(
 
   /**
    * Authenticate
-   *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param code the code of the request.
    * @param email the email of the request.
@@ -262,8 +254,6 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
-   *
    * @param code the code of the request.
    * @param pendingAuthenticationToken the pending authentication token of the request.
    * @param ipAddress the ip address of the request.
@@ -293,8 +283,6 @@ class UserManagement(
 
   /**
    * Authenticate
-   *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param code the code of the request.
    * @param pendingAuthenticationToken the pending authentication token of the request.
@@ -329,8 +317,6 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
-   *
    * @param pendingAuthenticationToken the pending authentication token of the request.
    * @param organizationId the organization id of the request.
    * @param ipAddress the ip address of the request.
@@ -360,8 +346,6 @@ class UserManagement(
 
   /**
    * Authenticate
-   *
-   * Authenticate a user with a specified [authentication method](https://workos.com/docs/reference/authkit/authentication).
    *
    * @param deviceCode the device code of the request.
    * @param ipAddress the ip address of the request.
@@ -929,10 +913,12 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/users/${encodePathSegment(id)}/email_verification/send",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, SendVerificationEmailResponse::class.java)
@@ -1148,10 +1134,12 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/${encodePathSegment(id)}/accept",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -1203,10 +1191,12 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): Invitation {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/user_management/invitations/${encodePathSegment(id)}/revoke",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, Invitation::class.java)
@@ -1501,10 +1491,12 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/${encodePathSegment(id)}/deactivate",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationMembership::class.java)
@@ -1530,10 +1522,12 @@ class UserManagement(
     id: String,
     requestOptions: RequestOptions? = null
   ): UserOrganizationMembership {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/user_management/organization_memberships/${encodePathSegment(id)}/reactivate",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)

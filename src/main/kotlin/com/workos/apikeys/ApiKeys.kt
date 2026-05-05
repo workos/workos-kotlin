@@ -33,7 +33,7 @@ class ApiKeys(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun list(
+  fun listOrganizationApiKeys(
     organizationId: String,
     before: String? = null,
     after: String? = null,
@@ -68,7 +68,7 @@ class ApiKeys(
    * @return the OrganizationApiKeyWithValue
    */
   @JvmOverloads
-  fun create(
+  fun createOrganizationApiKey(
     organizationId: String,
     name: String,
     permissions: List<String>? = null,
@@ -100,7 +100,7 @@ class ApiKeys(
    * @return the ApiKeyValidationResponse
    */
   @JvmOverloads
-  fun validate(
+  fun createValidation(
     value: String,
     requestOptions: RequestOptions? = null
   ): ApiKeyValidationResponse {

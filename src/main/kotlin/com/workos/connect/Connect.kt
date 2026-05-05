@@ -108,8 +108,6 @@ class Connect(
   /**
    * Create a Connect Application
    *
-   * Create a new Connect Application. Supports both OAuth and Machine-to-Machine (M2M) application types.
-   *
    * @param name The name of the application.
    * @param isFirstParty Whether this is a first-party application. Third-party applications require an organization_id.
    * @param description A description for the application.
@@ -154,8 +152,6 @@ class Connect(
 
   /**
    * Create a Connect Application
-   *
-   * Create a new Connect Application. Supports both OAuth and Machine-to-Machine (M2M) application types.
    *
    * @param name The name of the application.
    * @param organizationId The organization ID this application belongs to.
@@ -316,10 +312,12 @@ class Connect(
     id: String,
     requestOptions: RequestOptions? = null
   ): NewConnectApplicationSecret {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/connect/applications/${encodePathSegment(id)}/client_secrets",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, NewConnectApplicationSecret::class.java)

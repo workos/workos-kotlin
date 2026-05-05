@@ -107,10 +107,12 @@ class OrganizationDomains(
     id: String,
     requestOptions: RequestOptions? = null
   ): OrganizationDomainStandAlone {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/organization_domains/${encodePathSegment(id)}/verify",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)

@@ -90,10 +90,12 @@ class FeatureFlags(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/${encodePathSegment(slug)}/disable",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -114,10 +116,12 @@ class FeatureFlags(
     slug: String,
     requestOptions: RequestOptions? = null
   ): FeatureFlag {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
         path = "/feature-flags/${encodePathSegment(slug)}/enable",
+        body = body,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
@@ -138,10 +142,12 @@ class FeatureFlags(
     resourceId: String,
     requestOptions: RequestOptions? = null
   ) {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "POST",
         path = "/feature-flags/${encodePathSegment(slug)}/targets/${encodePathSegment(resourceId)}",
+        body = body,
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)

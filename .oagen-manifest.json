@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-05-05T20:27:51.610Z",
+  "generatedAt": "2026-05-05T23:17:40.173Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -934,19 +934,19 @@
       "service": "organizations"
     },
     "GET /organizations/{id}/audit_logs_retention": {
-      "sdkMethod": "getRetention",
+      "sdkMethod": "getAuditLogsRetention",
       "service": "auditLogs"
     },
     "PUT /organizations/{id}/audit_logs_retention": {
-      "sdkMethod": "updateRetention",
+      "sdkMethod": "updateAuditLogsRetention",
       "service": "auditLogs"
     },
     "GET /organizations/{organizationId}/api_keys": {
-      "sdkMethod": "list",
+      "sdkMethod": "listOrganizationApiKeys",
       "service": "apiKeys"
     },
     "POST /organizations/{organizationId}/api_keys": {
-      "sdkMethod": "create",
+      "sdkMethod": "createOrganizationApiKey",
       "service": "apiKeys"
     },
     "GET /organizations/{organizationId}/feature-flags": {
@@ -1244,19 +1244,19 @@
       "service": "multiFactorAuth"
     },
     "GET /webhook_endpoints": {
-      "sdkMethod": "list",
+      "sdkMethod": "listEndpoints",
       "service": "webhooks"
     },
     "POST /webhook_endpoints": {
-      "sdkMethod": "create",
+      "sdkMethod": "createEndpoint",
       "service": "webhooks"
     },
     "PATCH /webhook_endpoints/{id}": {
-      "sdkMethod": "update",
+      "sdkMethod": "updateEndpoint",
       "service": "webhooks"
     },
     "DELETE /webhook_endpoints/{id}": {
-      "sdkMethod": "delete",
+      "sdkMethod": "deleteEndpoint",
       "service": "webhooks"
     },
     "POST /widgets/token": {
@@ -1264,7 +1264,7 @@
       "service": "widgets"
     },
     "POST /api_keys/validations": {
-      "sdkMethod": "validate",
+      "sdkMethod": "createValidation",
       "service": "apiKeys"
     },
     "DELETE /api_keys/{id}": {

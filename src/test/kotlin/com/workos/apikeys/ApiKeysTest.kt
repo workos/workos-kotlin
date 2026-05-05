@@ -19,14 +19,14 @@ class ApiKeysTest : TestBase() {
   private fun api() = ApiKeys(createWorkOSClient())
 
   @Test
-  fun `list returns a typed response`() {
+  fun `listOrganizationApiKeys returns a typed response`() {
     stubResponse("GET", "/organizations/sample-arg/api_keys", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().list("sample-arg")
+    val result = api().listOrganizationApiKeys("sample-arg")
     assertNotNull(result)
   }
 
   @Test
-  fun `create returns a typed response`() {
+  fun `createOrganizationApiKey returns a typed response`() {
     stubResponse(
       "POST",
       "/organizations/sample-arg/api_keys",
@@ -35,7 +35,7 @@ class ApiKeysTest : TestBase() {
         " \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
     )
-    val result = api().create("sample-arg", "sample-arg")
+    val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("api_key", result.objectType)
     assertEquals("sample", result.id)
@@ -49,9 +49,9 @@ class ApiKeysTest : TestBase() {
   }
 
   @Test
-  fun `validate returns a typed response`() {
+  fun `createValidation returns a typed response`() {
     stubResponse("POST", "/api_keys/validations", 200, "{\"api_key\": null}")
-    val result = api().validate("sample-arg")
+    val result = api().createValidation("sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/api_keys/validations"))
@@ -66,34 +66,34 @@ class ApiKeysTest : TestBase() {
   }
 
   @Test
-  fun `validate translates 401 to UnauthorizedException`() {
+  fun `createValidation translates 401 to UnauthorizedException`() {
     stubResponse("POST", "/api_keys/validations", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().validate("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `validate translates 404 to NotFoundException`() {
+  fun `createValidation translates 404 to NotFoundException`() {
     stubResponse("POST", "/api_keys/validations", 404)
     assertThrows(NotFoundException::class.java) {
-      api().validate("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `validate translates 429 to RateLimitException`() {
+  fun `createValidation translates 429 to RateLimitException`() {
     stubResponse("POST", "/api_keys/validations", 429)
     assertThrows(RateLimitException::class.java) {
-      api().validate("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 
   @Test
-  fun `validate translates 500 to GenericServerException`() {
+  fun `createValidation translates 500 to GenericServerException`() {
     stubResponse("POST", "/api_keys/validations", 500)
     assertThrows(GenericServerException::class.java) {
-      api().validate("sample-arg")
+      api().createValidation("sample-arg")
     }
   }
 }

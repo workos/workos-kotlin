@@ -22,16 +22,16 @@ class AuditLogsTest : TestBase() {
   private fun api() = AuditLogs(createWorkOSClient())
 
   @Test
-  fun `getRetention returns a typed response`() {
+  fun `getAuditLogsRetention returns a typed response`() {
     stubResponse("GET", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
-    val result = api().getRetention("sample-arg")
+    val result = api().getAuditLogsRetention("sample-arg")
     assertNotNull(result)
   }
 
   @Test
-  fun `updateRetention returns a typed response`() {
+  fun `updateAuditLogsRetention returns a typed response`() {
     stubResponse("PUT", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
-    val result = api().updateRetention("sample-arg", 0)
+    val result = api().updateAuditLogsRetention("sample-arg", 0)
     assertNotNull(result)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))

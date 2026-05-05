@@ -34,7 +34,7 @@ class Webhooks(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun list(
+  fun listEndpoints(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -67,7 +67,7 @@ class Webhooks(
    * @return the WebhookEndpointJson
    */
   @JvmOverloads
-  fun create(
+  fun createEndpoint(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
@@ -101,7 +101,7 @@ class Webhooks(
    * @return the WebhookEndpointJson
    */
   @JvmOverloads
-  fun update(
+  fun updateEndpoint(
     id: String,
     endpointUrl: PatchField<String> = PatchField.Absent,
     status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
@@ -133,7 +133,7 @@ class Webhooks(
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
-  fun delete(
+  fun deleteEndpoint(
     id: String,
     requestOptions: RequestOptions? = null
   ) {

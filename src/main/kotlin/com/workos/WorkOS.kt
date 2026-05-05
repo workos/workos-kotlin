@@ -134,7 +134,7 @@ open class WorkOS
     val radar: com.workos.radar.Radar
       get() = service(com.workos.radar.Radar::class) { com.workos.radar.Radar(this) }
 
-    /** Lazily-constructed [com.workos.sso.SSO] accessor for this [WorkOS] client. */
+    /** Lazily-constructed [com.workos.sso.Sso] accessor for this [WorkOS] client. */
     val sso: com.workos.sso.SSO
       get() = service(com.workos.sso.SSO::class) { com.workos.sso.SSO(this) }
 
@@ -149,4 +149,23 @@ open class WorkOS
     /** Lazily-constructed [com.workos.widgets.Widgets] accessor for this [WorkOS] client. */
     val widgets: com.workos.widgets.Widgets
       get() = service(com.workos.widgets.Widgets::class) { com.workos.widgets.Widgets(this) }
+
+    /** Lazily-constructed [com.workos.groups.Groups] accessor for this [WorkOS] client. */
+    val groups: com.workos.groups.Groups
+      get() =
+        service(
+          com.workos.groups.Groups::class
+        ) {
+          com.workos.groups.Groups(this)
+        }
+
+    /** Lazily-constructed [com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups] accessor for this [WorkOS] client. */
+    val userManagementOrganizationMembershipGroups:
+      com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups
+      get() =
+        service(
+          com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups::class
+        ) {
+          com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups(this)
+        }
   }
