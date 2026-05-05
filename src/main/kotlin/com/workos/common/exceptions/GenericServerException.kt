@@ -1,14 +1,12 @@
+// @oagen-ignore-file
 package com.workos.common.exceptions
 
-/**
- * Thrown when the API encounters an unexpected error.
- *
- * @param message The error message.
- * @param status The HTTP status code.
- * @param requestId The ID of the correlating request specified in the 'X-Request-ID' header.
- */
+/** Raised for HTTP 5xx responses. */
 class GenericServerException(
-  override val message: String?,
-  val status: Int,
-  val requestId: String
-) : Exception(message)
+  status: Int,
+  requestId: String?,
+  code: String?,
+  message: String?,
+  rawBody: String?,
+  cause: Throwable? = null
+) : WorkOSException(status, requestId, code, message, null, rawBody, cause)

@@ -1,14 +1,10 @@
+// @oagen-ignore-file
 package com.workos.common.exceptions
 
-/**
- * Thrown when the request to a given resource is not authorized.
- *
- * @param message The error message.
- * @param requestId The ID of the correlating request specified in the 'X-Request-ID' header.
- */
+/** Raised for HTTP 401 responses. */
 class UnauthorizedException(
-  override val message: String?,
-  val requestId: String
-) : Exception(message) {
-  val status = 401
-}
+  requestId: String?,
+  code: String?,
+  message: String?,
+  rawBody: String?
+) : WorkOSException(401, requestId, code, message, null, rawBody)
