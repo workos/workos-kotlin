@@ -21,14 +21,6 @@ Replace `VERSION` in the snippets below with the latest release from [Maven Cent
 </dependency>
 ```
 
-Maven users who see a `NoSuchMethodError` referencing Fuel may need to pin Kotlin to `2.1.21` or newer:
-
-```xml
-<properties>
-    <kotlin.version>2.1.21</kotlin.version>
-</properties>
-```
-
 ### Gradle (Groovy DSL)
 
 ```groovy
@@ -87,7 +79,7 @@ Service accessors are regular properties on the `WorkOS` class, so they work nat
 import com.workos.WorkOS;
 
 WorkOS workos = new WorkOS(System.getenv("WORKOS_API_KEY"));
-workos.getUserManagement().listUsers(params);
+workos.getUserManagement().list();
 ```
 
 ## Service accessors
@@ -98,7 +90,8 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 
 - `workos.sso`
 - `workos.userManagement`
-- `workos.passwordless`
+- `workos.userManagementOrganizationMembershipGroups`
+- `workos.passwordless` †
 - `workos.multiFactorAuth`
 
 ### Organizations and directories
@@ -106,6 +99,7 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 - `workos.organizations`
 - `workos.organizationDomains`
 - `workos.directorySync`
+- `workos.groups`
 
 ### Authorization and access control
 
@@ -126,6 +120,13 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 - `workos.widgets`
 - `workos.apiKeys`
 - `workos.adminPortal`
+- `workos.actions` †
+- `workos.vault` †
+
+† Provided as a Kotlin extension property. From Java, access these via the
+generated static accessor on the corresponding `*Kt` file
+(e.g. `PasswordlessKt.getPasswordless(workos)`) instead of as a member of
+`WorkOS`.
 
 ## Quickstart examples
 
