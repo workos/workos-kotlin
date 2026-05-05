@@ -5,8 +5,8 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid VaultByokKeyDeletedDataKeyProvider values returned or accepted by the API. */
-enum class VaultByokKeyDeletedDataKeyProvider(
+/** Enumeration of valid VaultByokKeyProvider values returned or accepted by the API. */
+enum class VaultByokKeyProvider(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {

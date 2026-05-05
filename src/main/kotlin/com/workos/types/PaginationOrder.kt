@@ -5,8 +5,8 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid EventsOrder values returned or accepted by the API. */
-enum class EventsOrder(
+/** Enumeration of valid PaginationOrder values returned or accepted by the API. */
+enum class PaginationOrder(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {

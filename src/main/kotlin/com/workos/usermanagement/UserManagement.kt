@@ -37,8 +37,8 @@ import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
-import com.workos.types.EventsOrder
 import com.workos.types.OrganizationMembershipStatus
+import com.workos.types.PaginationOrder
 
 /** Mutually exclusive password parameter variants. */
 sealed class CreateUserPassword {
@@ -633,7 +633,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organization: String? = null,
     organizationId: String? = null,
     email: String? = null,
@@ -993,7 +993,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserSessionsListItem> {
     val itemType = object : TypeReference<UserSessionsListItem>() {}
@@ -1030,7 +1030,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
@@ -1341,7 +1341,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     statuses: List<OrganizationMembershipStatus>? = null,
     userId: String? = null,
@@ -1588,7 +1588,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizedConnectApplicationListData> {
     val itemType = object : TypeReference<AuthorizedConnectApplicationListData>() {}
@@ -1649,7 +1649,7 @@ class UserManagement(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserApiKey> {

@@ -10,7 +10,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.encodePathSegment
 import com.workos.models.FeatureFlag
 import com.workos.models.Flag
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for FeatureFlags. */
 class FeatureFlags(
@@ -33,7 +33,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     val itemType = object : TypeReference<Flag>() {}
@@ -191,7 +191,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     val itemType = object : TypeReference<Flag>() {}
@@ -228,7 +228,7 @@ class FeatureFlags(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Flag> {
     val itemType = object : TypeReference<Flag>() {}

@@ -9,7 +9,7 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.addJoinedIfNotNull
 import com.workos.models.EventSchema
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for Events. */
 class Events(
@@ -36,7 +36,7 @@ class Events(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     events: List<String>? = null,
     rangeStart: String? = null,
     rangeEnd: String? = null,

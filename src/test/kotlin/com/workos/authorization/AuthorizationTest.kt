@@ -99,14 +99,15 @@ class AuthorizationTest : TestBase() {
       "POST",
       "/authorization/organization_memberships/sample-arg/role_assignments",
       200,
-      "{\"object\": \"role_assignment\", \"id\": \"sample\", \"role\": {\"slug\": \"sample\"}, \"resource\": {\"id\": \"sample\", " +
-        "\"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+      "{\"object\": \"role_assignment\", \"id\": \"sample\", \"organization_membership_id\": \"sample\", \"role\": {\"slug\": " +
+        "\"sample\"}, \"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)
     assertEquals("role_assignment", result.objectType)
     assertEquals("sample", result.id)
+    assertEquals("sample", result.organizationMembershipId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
         .withRequestBody(matchingJsonPath("$.role_slug"))
@@ -328,6 +329,18 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  fun `listRoleAssignmentsForResourceByExternalId returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/organizations/sample-arg/resources/sample-arg/sample-arg/role_assignments",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listRoleAssignmentsForResourceByExternalId("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
   fun `listResources returns a typed response`() {
     stubResponse("GET", "/authorization/resources", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listResources(parent = Parent.ById("sample-arg"))
@@ -434,6 +447,18 @@ class AuthorizationTest : TestBase() {
       getRequestedFor(urlPathMatching("/authorization/resources/sample-arg/organization_memberships"))
         .withQueryParam("permission_slug", matching("sample-arg"))
     )
+  }
+
+  @Test
+  fun `listRoleAssignmentsForResource returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/resources/sample-arg/role_assignments",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listRoleAssignmentsForResource("sample-arg")
+    assertNotNull(result)
   }
 
   @Test

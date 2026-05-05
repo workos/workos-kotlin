@@ -4,8 +4,8 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** The resource to which the role is assigned. */
-data class RoleAssignmentResource(
+/** The resource the role is assigned on. */
+data class UserRoleAssignmentResource(
   /** The unique ID of the Resource. */
   @JsonProperty("id")
   val id: String,

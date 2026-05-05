@@ -7,17 +7,17 @@ import com.workos.common.json.ObjectMapperFactory
 import com.workos.types.AuditLogExportJsonState
 import com.workos.types.AuthenticationFactorEnrolledType
 import com.workos.types.AuthenticationFactorType
-import com.workos.types.ConnectionType
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.CreateWebhookEndpointEvents
 import com.workos.types.GenerateLinkIntent
 import com.workos.types.OrganizationDomainDataState
+import com.workos.types.PaginationOrder
 import com.workos.types.ResendUserInviteOptionsLocale
-import com.workos.types.RoleType
 import com.workos.types.UpdateUserPasswordHashType
 import com.workos.types.UpdateWebhookEndpointEvents
 import com.workos.types.UpdateWebhookEndpointStatus
+import com.workos.types.VaultByokKeyProvider
 import com.workos.types.WidgetSessionTokenScopes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -25,6 +25,20 @@ import org.junit.jupiter.api.Test
 
 class GeneratedForwardCompatTest {
   private val mapper = ObjectMapperFactory.create()
+
+  @Test
+  fun `unknown PaginationOrder wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", PaginationOrder::class.java)
+    assertEquals(PaginationOrder.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown VaultByokKeyProvider wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", VaultByokKeyProvider::class.java)
+    assertEquals(VaultByokKeyProvider.Unknown, parsed)
+  }
 
   @Test
   fun `unknown OrganizationDomainDataState wire values deserialize to Unknown`() {
@@ -115,20 +129,6 @@ class GeneratedForwardCompatTest {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuthenticationFactorType::class.java)
     assertEquals(AuthenticationFactorType.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown RoleType wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", RoleType::class.java)
-    assertEquals(RoleType.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown ConnectionType wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", ConnectionType::class.java)
-    assertEquals(ConnectionType.Unknown, parsed)
   }
 
   @Test

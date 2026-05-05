@@ -8,7 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.encodePathSegment
 import com.workos.models.Group
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for UserManagementOrganizationMembershipGroups. */
 class UserManagementOrganizationMembershipGroups(
@@ -33,7 +33,7 @@ class UserManagementOrganizationMembershipGroups(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Group> {
     val itemType = object : TypeReference<Group>() {}

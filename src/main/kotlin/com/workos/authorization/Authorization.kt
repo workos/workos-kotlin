@@ -17,11 +17,11 @@ import com.workos.models.AuthorizationPermission
 import com.workos.models.AuthorizationResource
 import com.workos.models.Permission
 import com.workos.models.Role
-import com.workos.models.RoleAssignment
 import com.workos.models.RoleList
 import com.workos.models.UserOrganizationMembershipBaseListData
+import com.workos.models.UserRoleAssignment
 import com.workos.types.AuthorizationAssignment
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** Mutually exclusive resource target parameter variants. */
 sealed class ResourceTarget {
@@ -139,7 +139,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     parentResource: ParentResource,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
@@ -187,7 +187,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
     val itemType = object : TypeReference<AuthorizationPermission>() {}
@@ -230,7 +230,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
     val itemType = object : TypeReference<AuthorizationPermission>() {}
@@ -269,10 +269,10 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<RoleAssignment> {
-    val itemType = object : TypeReference<RoleAssignment>() {}
+  ): Page<UserRoleAssignment> {
+    val itemType = object : TypeReference<UserRoleAssignment>() {}
     return workos.baseClient.requestPage(
       method = "GET",
       path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/role_assignments",
@@ -295,7 +295,7 @@ class Authorization(
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to assign.
    *
-   * @return the RoleAssignment
+   * @return the UserRoleAssignment
    */
   @JvmOverloads
   fun assignRole(
@@ -303,7 +303,7 @@ class Authorization(
     resourceTarget: ResourceTarget,
     roleSlug: String,
     requestOptions: RequestOptions? = null
-  ): RoleAssignment {
+  ): UserRoleAssignment {
     val body =
       bodyOf(
         "role_slug" to roleSlug
@@ -322,7 +322,7 @@ class Authorization(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, RoleAssignment::class.java)
+    return workos.baseClient.request(config, UserRoleAssignment::class.java)
   }
 
   /**
@@ -758,7 +758,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
@@ -778,6 +778,49 @@ class Authorization(
       limit?.let { params += "limit" to it.toString() }
       order?.let { params += "order" to it.value }
       assignment?.let { params += "assignment" to it.value }
+    }
+  }
+
+  /**
+   * List role assignments for a resource by external ID
+   *
+   * List all role assignments granted on a resource, identified by its external ID. Each assignment includes the organization membership it was granted to.
+   *
+   * @param organizationId The ID of the organization that owns the resource.
+   * @param resourceTypeSlug The slug of the resource type.
+   * @param externalId An identifier you provide to reference the resource in your system.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listRoleAssignmentsForResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserRoleAssignment> {
+    val itemType = object : TypeReference<UserRoleAssignment>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/organizations/${encodePathSegment(
+        organizationId
+      )}/resources/${encodePathSegment(resourceTypeSlug)}/${encodePathSegment(externalId)}/role_assignments",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
     }
   }
 
@@ -802,7 +845,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
@@ -1002,7 +1045,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     assignment: AuthorizationAssignment? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
@@ -1020,6 +1063,43 @@ class Authorization(
       limit?.let { params += "limit" to it.toString() }
       order?.let { params += "order" to it.value }
       assignment?.let { params += "assignment" to it.value }
+    }
+  }
+
+  /**
+   * List role assignments for a resource
+   *
+   * List all role assignments granted on a specific resource instance. Each assignment includes the organization membership it was granted to.
+   *
+   * @param resourceId The ID of the authorization resource.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listRoleAssignmentsForResource(
+    resourceId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserRoleAssignment> {
+    val itemType = object : TypeReference<UserRoleAssignment>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/resources/${encodePathSegment(resourceId)}/role_assignments",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      val params = this
+      limit?.let { params += "limit" to it.toString() }
+      order?.let { params += "order" to it.value }
     }
   }
 
@@ -1211,7 +1291,7 @@ class Authorization(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationPermission> {
     val itemType = object : TypeReference<AuthorizationPermission>() {}

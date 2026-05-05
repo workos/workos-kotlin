@@ -17,7 +17,7 @@ import com.workos.models.NewConnectApplicationSecret
 import com.workos.models.RedirectUriInput
 import com.workos.models.UserConsentOption
 import com.workos.models.UserObject
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for Connect. */
 class Connect(
@@ -84,7 +84,7 @@ class Connect(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<ConnectApplication> {

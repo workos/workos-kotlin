@@ -13,7 +13,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.WebhookEndpointJson
 import com.workos.types.CreateWebhookEndpointEvents
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 import com.workos.types.WebhookEndpointJsonStatus
 
 /** API accessor for Webhooks. */
@@ -37,7 +37,7 @@ class Webhooks(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<WebhookEndpointJson> {
     val itemType = object : TypeReference<WebhookEndpointJson>() {}

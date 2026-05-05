@@ -3,16 +3,16 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.VaultByokKeyVerificationCompletedDataKeyProvider
+import com.workos.types.VaultByokKeyProvider
 
 /** The event payload. */
 data class VaultByokKeyVerificationCompletedData(
   /** The unique identifier of the organization. */
   @JsonProperty("organization_id")
   val organizationId: String,
-  /** The external key provider used for BYOK. */
+  /** The key provider. */
   @JsonProperty("key_provider")
-  val keyProvider: VaultByokKeyVerificationCompletedDataKeyProvider,
+  val keyProvider: VaultByokKeyProvider,
   /** Whether the BYOK key verification completed successfully. */
   @JsonProperty("verified")
   val verified: Boolean

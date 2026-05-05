@@ -13,7 +13,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.Group
 import com.workos.models.UserOrganizationMembershipBaseListData
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for Groups. */
 class Groups(
@@ -38,7 +38,7 @@ class Groups(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<Group> {
     val itemType = object : TypeReference<Group>() {}
@@ -193,7 +193,7 @@ class Groups(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserOrganizationMembershipBaseListData> {
     val itemType = object : TypeReference<UserOrganizationMembershipBaseListData>() {}

@@ -17,7 +17,7 @@ import com.workos.models.AuditLogSchemaActor
 import com.workos.models.AuditLogSchemaJson
 import com.workos.models.AuditLogSchemaTarget
 import com.workos.models.AuditLogsRetentionJson
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for AuditLogs. */
 class AuditLogs(
@@ -93,7 +93,7 @@ class AuditLogs(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogActionJson> {
     val itemType = object : TypeReference<AuditLogActionJson>() {}
@@ -130,7 +130,7 @@ class AuditLogs(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuditLogSchemaJson> {
     val itemType = object : TypeReference<AuditLogSchemaJson>() {}

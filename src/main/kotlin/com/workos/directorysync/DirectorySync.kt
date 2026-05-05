@@ -12,7 +12,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectoryUserWithGroups
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for DirectorySync. */
 class DirectorySync(
@@ -38,7 +38,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     organizationId: String? = null,
     search: String? = null,
     domain: String? = null,
@@ -125,7 +125,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     directory: String? = null,
     user: String? = null,
     requestOptions: RequestOptions? = null
@@ -189,7 +189,7 @@ class DirectorySync(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     directory: String? = null,
     group: String? = null,
     requestOptions: RequestOptions? = null

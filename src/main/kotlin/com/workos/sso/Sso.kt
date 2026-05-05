@@ -15,7 +15,7 @@ import com.workos.models.Profile
 import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for SSO. */
 class Sso(
@@ -42,7 +42,7 @@ class Sso(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     connectionType: ConnectionsConnectionType? = null,
     domain: String? = null,
     organizationId: String? = null,

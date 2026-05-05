@@ -1073,9 +1073,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `RoleAssignmentResource round-trips through Jackson`() {
+  fun `UserRoleAssignmentResource round-trips through Jackson`() {
     val json = "{\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}"
-    val parsed = mapper.readValue(json, RoleAssignmentResource::class.java)
+    val parsed = mapper.readValue(json, UserRoleAssignmentResource::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

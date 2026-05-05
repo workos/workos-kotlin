@@ -14,7 +14,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
 import com.workos.models.OrganizationDomainData
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for Organizations. */
 class Organizations(
@@ -39,7 +39,7 @@ class Organizations(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     domains: List<String>? = null,
     search: String? = null,
     requestOptions: RequestOptions? = null

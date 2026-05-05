@@ -12,7 +12,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.ApiKeyValidationResponse
 import com.workos.models.OrganizationApiKey
 import com.workos.models.OrganizationApiKeyWithValue
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for ApiKeys. */
 class ApiKeys(
@@ -37,7 +37,7 @@ class ApiKeys(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<OrganizationApiKey> {
     val itemType = object : TypeReference<OrganizationApiKey>() {}

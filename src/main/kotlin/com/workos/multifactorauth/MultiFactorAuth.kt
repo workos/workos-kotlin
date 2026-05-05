@@ -15,7 +15,7 @@ import com.workos.models.AuthenticationFactor
 import com.workos.models.AuthenticationFactorEnrolled
 import com.workos.models.UserAuthenticationFactorEnrollResponse
 import com.workos.types.AuthenticationFactorsCreateRequestType
-import com.workos.types.EventsOrder
+import com.workos.types.PaginationOrder
 
 /** API accessor for MultiFactorAuth. */
 class MultiFactorAuth(
@@ -184,7 +184,7 @@ class MultiFactorAuth(
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
-    order: EventsOrder? = null,
+    order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthenticationFactor> {
     val itemType = object : TypeReference<AuthenticationFactor>() {}
