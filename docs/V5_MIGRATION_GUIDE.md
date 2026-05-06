@@ -1,0 +1,678 @@
+# V5 Migration Guide
+
+This guide covers the upgrade from the v4 Kotlin SDK surface to the v5 surface.
+
+v5 is a substantial SDK rewrite:
+
+- the transport layer moved from Fuel to OkHttp
+- service classes were regenerated from the OpenAPI spec
+- models and enums were consolidated into shared packages
+- most builder-style request objects were replaced with flat method arguments or small option data classes
+- pagination, retries, request overrides, and error handling were standardized across the SDK
+
+If your code imports SDK models directly, constructs request builders, or uses webhook verification, expect source changes.
+
+## Upgrade Checklist
+
+- Upgrade your runtime to Java 17 before adopting v5.
+- Recreate `WorkOS` clients with constructor arguments instead of mutating `apiHostname` / `https` / `port`.
+- Move any per-call `clientId` arguments into the `WorkOS` client configuration.
+- Replace `*Api` classes, per-service `models` packages, per-service `types` packages, and builder classes.
+- Update list handling to use `Page<T>` and `autoPagingIterable()`.
+- Replace webhook signature verification calls with the standalone `Webhook` helper.
+- Switch any Fuel customization to `OkHttpClient`.
+
+## 1. Runtime And Transport Changes
+
+v4 was built around Fuel and older Kotlin/JVM targets. v5 now builds around OkHttp and targets Java 17 bytecode.
+
+What changes:
+
+- Java 17 is now required for consumers.
+- Kotlin consumers should align to Kotlin 2.1.x or newer.
+- Any code that depended on Fuel types, Fuel interceptors, or `FuelManager` needs to move to `OkHttpClient`.
+
+Before:
+
+```kotlin
+val workos = WorkOS(System.getenv("WORKOS_API_KEY"))
+```
+
+After:
+
+```kotlin
+val workos = WorkOS(
+  apiKey = System.getenv("WORKOS_API_KEY"),
+  clientId = System.getenv("WORKOS_CLIENT_ID"), // optional unless your flow needs it
+  apiBaseUrl = "https://api.workos.com",
+  httpClient = okhttp3.OkHttpClient(),
+  retryConfig = com.workos.common.http.RetryConfig.DEFAULT,
+)
+```
+
+## 2. Client Configuration Is Immutable
+
+In v4, the client was configured after construction:
+
+```kotlin
+val workos = WorkOS(apiKey)
+workos.apiHostname = "localhost"
+workos.https = false
+workos.port = 8000
+```
+
+In v5, configuration is constructor-based:
+
+```kotlin
+val workos = WorkOS(
+  apiKey = apiKey,
+  apiBaseUrl = "http://localhost:8000",
+)
+```
+
+Also note:
+
+- `clientId` now lives on the client and is reused by User Management and SSO helpers.
+- low-level `workos.get(...)`, `post(...)`, `put(...)`, `patch(...)`, and `delete(...)` helpers are gone
+- if you were using those internals directly, move to service methods or `workos.baseClient.request(...)`
+
+## 3. Service Accessor Changes
+
+Most `*Api` classes lost the `Api` suffix, and some service names changed.
+
+| v4                              | v5                                                                                       |
+| ------------------------------- | ---------------------------------------------------------------------------------------- |
+| `OrganizationsApi`              | `Organizations`                                                                          |
+| `DirectorySyncApi`              | `DirectorySync`                                                                          |
+| `UserManagementApi`             | `UserManagement`                                                                         |
+| `SsoApi`                        | `SSO`                                                                                    |
+| `AuditLogsApi`                  | `AuditLogs`                                                                              |
+| `WidgetsApi`                    | `Widgets`                                                                                |
+| `PortalApi` via `workos.portal` | `AdminPortal` via `workos.adminPortal`                                                   |
+| `MfaApi` via `workos.mfa`       | `MultiFactorAuth` via `workos.multiFactorAuth`                                           |
+| `FgaApi` via `workos.fga`       | redesigned as `Authorization` via `workos.authorization` (see [section 3a](#3a-authorization-fga-api-redesign)) |
+| `WebhooksApi`                   | `Webhooks` for endpoint management, plus standalone `Webhook` for signature verification |
+
+Service accessors are now generated as properties directly on the `WorkOS` class.
+
+Before:
+
+```kotlin
+val org = workos.organizations.getOrganization("org_123")
+val link = workos.portal.generateLink(...)
+val factor = workos.mfa.getFactor("auth_factor_123")
+```
+
+After:
+
+```kotlin
+val org = workos.organizations.get("org_123")
+val link = workos.adminPortal.generateLink(...)
+val factor = workos.multiFactorAuth.getFactor("auth_factor_123")
+```
+
+### Method naming
+
+Generated service methods drop the resource name from each operation. Mechanically:
+
+- `getUser(id)` → `get(id)`
+- `listUsers(...)` → `list(...)`
+- `createUser(...)` → `create(...)`
+- `updateUser(id, ...)` → `update(id, ...)`
+- `deleteUser(id)` → `delete(id)`
+- `getOrganization(id)` → `get(id)`
+- `listConnections(...)` → `list(...)`
+
+The same pattern applies across `Organizations`, `DirectorySync`, `UserManagement`, `SSO`, `AuditLogs`, and the rest. Where a service exposes more than one resource (for example, `UserManagement` also handles invitations, organization memberships, sessions, and authorized applications), the resource name is kept on the secondary methods (`listInvitations`, `listOrganizationMemberships`, `listSessions`, `listAuthorizedApplications`).
+
+### 3a. Authorization (FGA) API redesign
+
+`workos.fga` is not just renamed to `workos.authorization` — the underlying API is a different shape.
+
+v4 `FgaApi` was warrant-centric: `writeWarrant`, `batchWriteWarrants`, `listWarrants`, `query`, plus `*Resource` CRUD and `check`/`checkBatch`.
+
+v5 `Authorization` is role- and permission-centric: `assignRole`, `removeRole`, `listRoleAssignments`, `createOrganizationRole`, `listOrganizationRoles`, `getOrganizationRole`, `updateOrganizationRole`, `deleteOrganizationRole`, `addRolePermission`, `setRolePermissions`, `createPermission`, `listPermissions`, `createAuthorizationResource`, `listAuthorizationResources`, `listOrganizationMembershipsForResource`, `listResourcesForOrganizationMembership`, and so on. `check` still exists.
+
+Warrant-style writes do not have a one-to-one replacement. If you wrote warrants directly in v4, plan to re-model your authorization data against roles, permissions, and resources before upgrading.
+
+### 3b. MFA methods moved off `UserManagement`
+
+In v4, `UserManagementApi` exposed `enrollAuthFactor` and `listAuthFactors`. In v5 those live on `MultiFactorAuth`:
+
+| v4 (`workos.userManagement`) | v5                                                |
+| ---------------------------- | ------------------------------------------------- |
+| `enrollAuthFactor(...)`      | `workos.multiFactorAuth.enrollFactor(...)`        |
+| `listAuthFactors(userId)`    | `workos.multiFactorAuth.listUserAuthFactors(...)` |
+
+`MultiFactorAuth` also adds `challengeFactor`, `verifyChallenge`, `getFactor`, `deleteFactor`, and `createUserAuthFactor`.
+
+### Java Callers
+
+Service accessors work natively from Java — no extra wrapper class needed:
+
+```java
+WorkOS workos = new WorkOS(System.getenv("WORKOS_API_KEY"), System.getenv("WORKOS_CLIENT_ID"));
+Organizations organizations = workos.getOrganizations();
+```
+
+For more configurable construction without filling in every positional
+constructor parameter, use the fluent `WorkOS.builder()`:
+
+```java
+WorkOS workos = WorkOS.builder()
+    .apiKey(System.getenv("WORKOS_API_KEY"))
+    .clientId(System.getenv("WORKOS_CLIENT_ID"))
+    .retryConfig(RetryConfig.DISABLED)
+    .build();
+```
+
+Sealed-class operation parameters (`ResourceTarget`, `CreateUserPassword`,
+`CreateUserRole`, etc.) emit Java-friendly overloads that take the
+discriminating fields directly so you do not have to construct the variant
+class explicitly:
+
+```java
+// Kotlin idiom — sealed-class variant
+workos.getAuthorization().check(membershipId, ResourceTarget.ByExternalId("ext_1", "type_slug"), "perm");
+
+// Java-friendly overload
+workos.getAuthorization().checkByExternalId(membershipId, "ext_1", "type_slug", "perm");
+```
+
+Generated model and exception properties are exposed as `@JvmField` so
+Java reads them as fields — `connection.id`, not `connection.getId()`.
+
+## 4. Packages Were Consolidated
+
+v4 split request/response types across many service-local packages:
+
+- `com.workos.organizations.models.*`
+- `com.workos.usermanagement.types.*`
+- `com.workos.fga.builders.*`
+- `com.workos.webhooks.models.*`
+
+v5 consolidates most generated types into:
+
+- `com.workos.models.*`
+- `com.workos.types.*`
+
+Examples:
+
+| v4 import                                      | v5 import                        |
+| ---------------------------------------------- | -------------------------------- |
+| `com.workos.organizations.models.Organization` | `com.workos.models.Organization` |
+| `com.workos.sso.models.Connection`             | `com.workos.models.Connection`   |
+| `com.workos.common.models.Order`               | per-resource ordering enums in `com.workos.types.*` (e.g. `OrganizationsOrder`, `UserManagementUsersOrder`, `ConnectionsOrder`, `EventsOrder`), or the generic `PaginationOrder` |
+
+Also:
+
+- most `builders` packages are gone
+- many `types` classes used only to shape request bodies are gone
+- webhook event classes are no longer under `com.workos.webhooks.models`
+
+## 5. Request Builders Were Replaced
+
+v4 leaned heavily on builders and service-specific option objects.
+
+Before:
+
+```kotlin
+val org = workos.organizations.createOrganization(
+  OrganizationsApi.CreateOrganizationOptions.builder()
+    .name("Acme")
+    .domains(listOf("acme.com"))
+    .build()
+)
+```
+
+After:
+
+```kotlin
+val org = workos.organizations.create(
+  name = "Acme",
+  domains = listOf("acme.com"),
+)
+```
+
+Before:
+
+```kotlin
+val users = workos.userManagement.listUsers(
+  ListUsersOptions.builder()
+    .email("admin@acme.com")
+    .build()
+)
+```
+
+After:
+
+```kotlin
+val users = workos.userManagement.list(
+  email = "admin@acme.com",
+)
+```
+
+The general rule in v5 is:
+
+- simple operations use flat method arguments
+- URL-building helpers use small option data classes like `AuthKitAuthorizationUrlOptions` and `SSOAuthorizationUrlOptions`
+- per-request behavior uses a shared `RequestOptions` builder
+
+## 6. `clientId` Moved To The Client
+
+Several v4 User Management and SSO methods required `clientId` on every call.
+
+Before:
+
+```kotlin
+val auth = workos.userManagement.authenticateWithPassword(
+  clientId,
+  "user@example.com",
+  "secret-password",
+)
+```
+
+After:
+
+```kotlin
+val workos = WorkOS(
+  apiKey = apiKey,
+  clientId = clientId,
+)
+
+val auth = workos.userManagement.authenticateWithPassword(
+  email = "user@example.com",
+  password = "secret-password",
+)
+```
+
+The same applies to:
+
+- `authenticateWithCode`
+- `authenticateWithRefreshToken`
+- `authenticateWithMagicAuth`
+- `authenticateWithEmailVerification`
+- `authenticateWithTotp`
+- AuthKit URL helpers
+- SSO URL helpers
+
+## 7. Pagination Is Now Uniform
+
+v4 returned service-specific list wrappers such as `OrganizationList`, `Users`, `ConnectionList`, and `Invitations`.
+
+v5 returns `Page<T>` from every generated `list(...)` method.
+
+Before:
+
+```kotlin
+val result = workos.organizations.listOrganizations()
+for (org in result.data) {
+  println(org.id)
+}
+```
+
+After:
+
+```kotlin
+val page = workos.organizations.list(limit = 10)
+for (org in page.data) {
+  println(org.id)
+}
+
+for (org in page.autoPagingIterable()) {
+  println(org.id)
+}
+```
+
+Important changes:
+
+- `PaginationParams` is gone
+- `list(...)` methods accept cursor and filter arguments directly
+- cursor metadata now lives on `page.listMetadata`
+- auto-pagination is built in via `page.autoPagingIterable()`
+
+## 8. PATCH Semantics Use `PatchField`
+
+PATCH endpoints now distinguish between:
+
+- field omitted
+- field set to a value
+- field explicitly cleared to `null`
+
+For those endpoints, use `PatchField`.
+
+```kotlin
+import com.workos.common.http.PatchField
+
+workos.webhooks.updateEndpoint(
+  id = "wh_123",
+  endpointUrl = PatchField.of("https://example.com/webhooks"),
+  status = PatchField.absent(),
+  events = PatchField.ofNull(),
+)
+```
+
+If you pass plain nullable values where a `PatchField<T>` is required, the call site must be updated.
+
+## 9. Webhook Verification Moved
+
+This is one of the biggest behavior changes.
+
+In v4, webhook signature verification lived on `WebhooksApi`, which was exposed as `workos.webhooks`.
+
+In v5:
+
+- `workos.webhooks` is the API client for webhook endpoint CRUD
+- `Webhook()` is the standalone signature verification helper
+
+Before:
+
+```kotlin
+val event = workos.webhooks.constructEvent(payload, signatureHeader, secret)
+```
+
+After:
+
+```kotlin
+import com.workos.models.WorkOSEvent
+import com.workos.webhooks.Webhook
+
+// Preferred: typed sealed-class event
+val event: WorkOSEvent = Webhook()
+  .constructTypedEvent(payload, signatureHeader, secret)
+
+when (event) {
+  is WorkOSEvent.UserCreated -> println("New user ${event.data.id}")
+  else -> println("Other event ${event.event}")
+}
+
+// Or use the raw form when you need to handle event types the SDK
+// has not yet modeled.
+val node = Webhook().constructEvent(payload, signatureHeader, secret)
+```
+
+Also note:
+
+- `constructTypedEvent(...)` returns a sealed `WorkOSEvent`; unknown types
+  fall back to the catch-all `EventSchema` variant
+- `constructEvent(...)` still returns the raw `JsonNode` for full control
+- the helper accepts both `v1=` and legacy `s=` signature formats
+
+## 10. Request Overrides Are Standardized
+
+v4 had scattered request option classes such as `CreateOrganizationRequestOptions`.
+
+v5 uses a shared `RequestOptions` builder:
+
+```kotlin
+import com.workos.common.http.RequestOptions
+
+val requestOptions =
+  RequestOptions.builder()
+    .idempotencyKey(java.util.UUID.randomUUID().toString())
+    .header("X-Trace-Id", "trace_123")
+    .maxRetries(0)
+    .build()
+
+val org = workos.organizations.create(
+  name = "Acme",
+  requestOptions = requestOptions,
+)
+```
+
+Supported per-request overrides include:
+
+- headers
+- timeout
+- max retries
+- base URL
+- idempotency key
+- API key or bearer token override
+
+One subtle SSO difference: if you previously called `sso.getProfile(accessToken)`, in v5 you override the bearer token via `RequestOptions`:
+
+```kotlin
+val profile = workos.sso.getProfile(
+  requestOptions =
+    RequestOptions.builder()
+      .apiKey(accessToken)
+      .build()
+)
+```
+
+## 11. Retries Are On By Default
+
+v4 did not retry failed requests. v5 retries automatically with exponential
+backoff (up to 3 attempts by default). This affects all SDK methods.
+
+If a v4 caller was retrying manually, remove the retry loop — the SDK
+handles it now. To disable retries or tune the policy:
+
+```kotlin
+import com.workos.common.http.RetryConfig
+
+// Disable retries entirely
+val workos = WorkOS(
+  apiKey = apiKey,
+  retryConfig = RetryConfig.DISABLED,
+)
+
+// Or customize
+val workos = WorkOS(
+  apiKey = apiKey,
+  retryConfig = RetryConfig(maxRetries = 5),
+)
+
+// Per-request override
+workos.organizations.create(
+  name = "Acme",
+  requestOptions = RequestOptions.builder().maxRetries(0).build(),
+)
+```
+
+For retried POST requests that do not already carry an `Idempotency-Key`
+header, the SDK auto-generates one so the server can deduplicate. You can
+supply your own via `RequestOptions`:
+
+```kotlin
+workos.organizations.create(
+  name = "Acme",
+  requestOptions = RequestOptions.builder()
+    .idempotencyKey(java.util.UUID.randomUUID().toString())
+    .build(),
+)
+```
+
+## 12. Error Handling Changed
+
+All SDK errors now inherit from `com.workos.common.exceptions.WorkOSException`.
+
+Typed subclasses include:
+
+- `BadRequestException` (HTTP 400)
+- `UnauthorizedException` (HTTP 401)
+- `NotFoundException` (HTTP 404)
+- `UnprocessableEntityException` (HTTP 422)
+- `RateLimitException` (HTTP 429)
+- `GenericServerException` (HTTP 5xx)
+- `WorkOSGenericException` (other HTTP statuses without a specific type)
+- `TransportException` (status `0` — IOException, timeout, DNS or TLS failure; the request never received an HTTP status)
+
+New behavior to be aware of:
+
+- `Retry-After` is honored for retryable responses
+- `RateLimitException` exposes `retryAfterSeconds`
+- `WorkOSException` includes `status`, `requestId`, `code`, `errors`, and `rawBody`
+- `errors` is now a typed `List<ApiError>?` (was `List<Map<String, Any?>>?`); each entry has `field`, `code`, and `message` properties so callers can inspect validation failures without `Map` casts
+
+If you previously caught generic transport exceptions from Fuel, update those catch blocks to catch `TransportException`, `WorkOSException`, or the specific typed subclass you care about. If you specifically caught the v5 pre-release `GenericException`, rename to `WorkOSGenericException` (HTTP fallback) or switch to `TransportException` (network failure) depending on which case you meant.
+
+## 13. Public-Client Flows Have A Dedicated Client
+
+If you support browser, mobile, CLI, or desktop PKCE flows, v5 adds `PublicClient`.
+
+```kotlin
+val publicClient = PublicClient.create(
+  clientId = System.getenv("WORKOS_CLIENT_ID"),
+)
+
+val authUrl = publicClient.getAuthorizationUrlWithPKCE(
+  com.workos.usermanagement.AuthKitAuthorizationUrlOptions(
+    redirectUri = "https://example.com/callback",
+    provider = "authkit",
+  )
+)
+```
+
+Use `PublicClient` when you do not want to send a `client_secret` on the wire.
+
+## 14. Session Cookies With Iron Encryption
+
+v5 adds `Session` helpers for managing sealed AuthKit session cookies.
+These use Iron Fe26.2 encryption (the same format used by the Node SDK's
+`iron-webcrypto` package) so session cookies are interoperable across
+SDKs.
+
+```kotlin
+import com.workos.session.Session
+
+val session = Session.create(
+  workos = workos,
+  cookiePassword = System.getenv("WORKOS_COOKIE_PASSWORD"),
+)
+
+// Seal an auth response into a cookie value
+val sealed = session.sealAuthResponse(authResponse)
+
+// Read session data from a cookie
+val data = session.unsealData(cookieValue)
+```
+
+Key points:
+
+- `cookiePassword` must be at least 32 characters; security rests on
+  password entropy, not iteration count.
+- `sealData` / `unsealData` let you store arbitrary JSON in Iron-sealed
+  cookies.
+- `sealAuthResponse` produces a cookie value compatible with the Node
+  and Go SDK session helpers.
+- If the seal is malformed or the password doesn't match, `unsealData`
+  returns an empty map rather than throwing (matches Node SDK semantics).
+
+## 15. Common Before/After Rewrites
+
+### Organizations
+
+```kotlin
+// v4
+val org = workos.organizations.getOrganization("org_123")
+val all = workos.organizations.listOrganizations()
+
+// v5
+val org = workos.organizations.get("org_123")
+val all = workos.organizations.list()
+```
+
+### User Management
+
+```kotlin
+// v4
+val user = workos.userManagement.createUser(
+  CreateUserOptions(email = "user@example.com")
+)
+
+// v5
+val user = workos.userManagement.create(
+  email = "user@example.com",
+)
+```
+
+### AuthKit URL generation
+
+```kotlin
+// v4
+val url = workos.userManagement
+  .getAuthorizationUrl(clientId, "https://example.com/callback")
+  .provider("authkit")
+  .build()
+
+// v5
+val url = workos.userManagement.getAuthorizationUrl(
+  com.workos.usermanagement.AuthKitAuthorizationUrlOptions(
+    redirectUri = "https://example.com/callback",
+    provider = "authkit",
+  )
+)
+```
+
+### SSO URL generation
+
+```kotlin
+// v4
+val url = workos.sso
+  .getAuthorizationUrl(clientId, "https://example.com/callback")
+  .connection("conn_123")
+  .build()
+
+// v5
+val url = workos.sso.getAuthorizationUrl(
+  com.workos.sso.SSOAuthorizationUrlOptions(
+    redirectUri = "https://example.com/callback",
+    connection = "conn_123",
+  )
+)
+```
+
+## 16. Coroutines
+
+Every generated service method has both a blocking version and a
+coroutine-aware `<method>Suspend` variant that wraps the call in
+`withContext(Dispatchers.IO)`. Pulled in transitively via
+`kotlinx-coroutines-core`.
+
+```kotlin
+// Blocking
+val org = workos.organizations.create(name = "Foo Corp")
+
+// suspend
+val org = workos.organizations.createSuspend(name = "Foo Corp")
+```
+
+The blocking and suspend forms are independently named (`create` vs
+`createSuspend`) — Kotlin does not allow overload resolution to
+disambiguate `fun foo()` from `suspend fun foo()` with the same value
+parameters.
+
+## 17. Notable Additions In V5
+
+In addition to the breaking changes above, this branch adds or expands:
+
+- `PublicClient` for PKCE-safe public flows
+- `Session` helpers for sealed AuthKit session cookies
+- `Vault` helpers and client-side crypto support
+- generated accessors for `Actions`, `ApiKeys`, `Connect`, `FeatureFlags`, `OrganizationDomains`, `Pipes`, and `Radar`
+- broader generated model coverage, including forward-compat enum handling via `Unknown`
+- typed `Webhook.constructTypedEvent(...)` returning a sealed `WorkOSEvent`
+- `WorkOS.builder()` for fluent Java-friendly construction
+- typed `ApiError` model on `WorkOSException.errors`
+- `TransportException` (status `0`) split out of `WorkOSGenericException`
+- `<method>Suspend` coroutine variants on every generated operation
+- Java-friendly overloads for sealed-class operation parameters
+
+## Final Advice
+
+The fastest migration path is usually:
+
+1. upgrade Java first
+2. update imports from service-local `models` / `types` packages to `com.workos.models` and `com.workos.types`
+3. move `clientId` into `WorkOS(...)`
+4. replace builder objects with direct method arguments
+5. update list handling to `Page<T>`
+6. replace webhook verification with `Webhook()`
+
+If you do those six steps first, the remaining compile errors should mostly collapse into straightforward method renames.
+
+If you tracked a v5 pre-release of this SDK, also note: `GenericException`
+was split into `WorkOSGenericException` (HTTP fallback) and
+`TransportException` (network failure), and `WorkOSException.errors` is
+now a typed `List<ApiError>?` rather than `List<Map<String, Any?>>?`.

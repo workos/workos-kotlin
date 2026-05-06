@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+echo "==> Checking lint..."
+./gradlew ktlintCheck
+
+echo "==> Formatting..."
+./gradlew ktlintFormat
+
+echo "==> Running tests..."
+./gradlew test
+
+echo "==> Generating Javadoc (Dokka)..."
+./gradlew dokkaGeneratePublicationJavadoc
+
+echo "==> All checks passed."

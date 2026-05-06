@@ -1,4 +1,5 @@
-import java.io.FileOutputStream
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 group = "com.workos"
@@ -9,19 +10,17 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.5.0"
+  id("org.jetbrains.kotlin.jvm") version "2.3.21"
 
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+  id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
-  id("org.jetbrains.dokka") version "1.5.30"
+  id("org.jetbrains.dokka") version "2.2.0"
 
-  id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+  id("org.jetbrains.dokka-javadoc") version "2.2.0"
 
-  signing
+  id("com.vanniktech.maven.publish") version "0.36.0"
 
   `java-library`
-
-  `maven-publish`
 }
 
 repositories {
@@ -30,32 +29,37 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+  implementation(platform(kotlin("bom")))
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+  implementation(kotlin("stdlib"))
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
-  implementation("org.apache.httpcomponents:httpclient:4.5.13")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.2")
 
-  implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
+  // JWT verification + JWKS handling for session helpers (hand-maintained).
+  implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
+  implementation(kotlin("reflect"))
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+  testImplementation(platform("org.junit:junit-bom:6.0.3"))
 
-  testImplementation("com.github.tomakehurst:wiremock:2.27.2")
+  testImplementation(kotlin("test-junit5"))
 
-  dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
 
-  api("org.apache.commons:commons-math3:3.6.1")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+  testImplementation("org.wiremock:wiremock:3.13.2")
 }
 
-val generatedVersionDir = "$buildDir/generated-version"
+val generatedVersionDir = layout.buildDirectory.dir("generated-version")
 
 sourceSets {
   main {
@@ -67,12 +71,13 @@ sourceSets {
 
 tasks.register("generateVersionProperties") {
   doLast {
-    val propertiesFile = file("$generatedVersionDir/version.properties")
+    val propertiesFile = generatedVersionDir.get().file("version.properties").asFile
     propertiesFile.parentFile.mkdirs()
     val properties = Properties()
     properties.setProperty("version", "$version")
-    val out = FileOutputStream(propertiesFile)
-    properties.store(out, null)
+    propertiesFile.outputStream().use { out ->
+      properties.store(out, null)
+    }
   }
 }
 
@@ -81,20 +86,26 @@ tasks.named("processResources") {
 }
 
 tasks.named("build") {
-  finalizedBy("dokkaJavadoc")
+  finalizedBy("dokkaGeneratePublicationJavadoc")
 }
 
 tasks.named("javadoc") {
-  finalizedBy("dokkaJavadoc")
+  finalizedBy("dokkaGeneratePublicationJavadoc")
 }
 
-tasks.dokkaJavadoc.configure {
-  outputDirectory.set(buildDir.resolve("docs/javadoc"))
-  dokkaSourceSets {
-    configureEach {
-      reportUndocumented.set(true)
-    }
+dokka {
+  dokkaPublications.javadoc {
+    outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+    failOnWarning.set(true)
   }
+
+  dokkaSourceSets.configureEach {
+    reportUndocumented.set(true)
+  }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+  failOnWarning.set(true)
 }
 
 tasks.jar {
@@ -109,78 +120,52 @@ tasks.jar {
 }
 
 java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_17)
   }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
+tasks.withType<Test>().configureEach {
+  useJUnitPlatform()
 }
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      artifactId = "workos"
+mavenPublishing {
+  publishToMavenCentral(automaticRelease = true)
+  signAllPublications()
 
-      from(components["java"])
+  coordinates("com.workos", "workos", version.toString())
 
-      pom {
-        name.set("WorkOS SDK")
-        description.set("The WorkOS Kotlin library provides convenient access to the WorkOS API from applications written in JVM compatible languages.")
-        url.set("https://github.com/workos-inc/workos-kotlin")
-        licenses {
-          license {
-            name.set("MIT License")
-            url.set("https://github.com/workos-inc/workos-kotlin/blob/main/LICENSE")
-          }
-        }
-        developers {
-          developer {
-            id.set("rframpton")
-            name.set("Robert Frampton")
-            email.set("rob@workos.com")
-          }
-          developer {
-            id.set("dliu-workos")
-            name.set("David Liu")
-            email.set("david.liu@workos.com")
-          }
-        }
-        scm {
-          connection.set("scm:git:git://github.com/workos-inc/workos-kotlin.git")
-          developerConnection.set("scm:git:git@github.com:workos-inc/workos-kotlin.git")
-          url.set("https://github.com/workos-inc/workos-kotlin")
-        }
+  pom {
+    name.set("WorkOS SDK")
+    description.set(
+      "The WorkOS Kotlin library provides convenient access to the WorkOS API " +
+        "from applications written in JVM compatible languages."
+    )
+    url.set("https://github.com/workos/workos-kotlin")
+    licenses {
+      license {
+        name.set("MIT License")
+        url.set("https://github.com/workos/workos-kotlin/blob/main/LICENSE")
       }
     }
-  }
-}
-
-nexusPublishing {
-  repositories {
-    create("myNexus") {
-      // Central Portal compatibility endpoints (post-OSSRH EOL June 30, 2025)
-      nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+    developers {
+      developer {
+        id.set("workos")
+        name.set("WorkOS")
+        email.set("sdk@workos.com")
+        organization.set("WorkOS")
+        organizationUrl.set("https://workos.com")
+      }
+    }
+    scm {
+      connection.set("scm:git:git://github.com/workos/workos-kotlin.git")
+      developerConnection.set("scm:git:git@github.com:workos/workos-kotlin.git")
+      url.set("https://github.com/workos/workos-kotlin")
     }
   }
-}
-
-signing {
-  val signingPassword: String? by project
-
-  if (signingPassword != null) {
-    val signingKey = File("signing.key").readText()
-
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications)
-  }
-}
-
-java {
-  withSourcesJar()
-  withJavadocJar()
 }

@@ -6,6 +6,11 @@ indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 insert_final_newline = true
+# ktlint's `no-blank-line-in-list` rule strips blank lines between
+# constructor properties; we want them between data class properties for
+# readability. The generated SDK code emits one blank line between each
+# property (KDoc + annotations + val) and we don't want ktlint undoing it.
+ktlint_standard_no-blank-line-in-list = disabled
 ij_continuation_indent_size = 2
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
