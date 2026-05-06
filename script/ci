@@ -12,4 +12,7 @@ echo "==> Formatting..."
 echo "==> Running tests..."
 ./gradlew test
 
+echo "==> Generating Javadoc (Dokka)..."
+./gradlew dokkaGeneratePublicationJavadoc
+
 echo "==> All checks passed."

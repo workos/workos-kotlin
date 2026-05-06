@@ -14,7 +14,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 data class ApiError
   @JvmOverloads
   constructor(
+    /** Name of the input field that caused the error, when applicable. */
     @JvmField val field: String? = null,
+    /** Machine-readable error code identifying the failure. */
     @JvmField val code: String? = null,
+    /** Human-readable explanation of the error. */
     @JvmField val message: String? = null
   )
