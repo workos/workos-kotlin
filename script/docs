@@ -9,3 +9,18 @@ mkdir -p docs/_site
 
 cp -R build/dokka/html/. docs/_site/
 cp -R build/dokka/markdown/. docs/_site/
+
+# llms.txt — index of the Markdown mirror for LLM/agent consumption.
+# Every .html page has a sibling .md at the same path.
+SITE="https://workos.github.io/workos-kotlin"
+{
+  printf '# WorkOS Kotlin SDK\n\n'
+  printf '> Markdown mirror of the WorkOS Kotlin SDK API reference for LLM and agent consumption. Every HTML page on this site has a sibling Markdown file at the same path with a `.md` suffix.\n\n'
+  printf '## Packages\n\n'
+  (cd docs/_site && find . -mindepth 2 -maxdepth 2 -name 'index.md' | sort) \
+    | while IFS= read -r f; do
+        rel="${f#./}"
+        pkg="${rel%/index.md}"
+        printf -- '- [%s](%s/%s)\n' "$pkg" "$SITE" "$rel"
+      done
+} > docs/_site/llms.txt
