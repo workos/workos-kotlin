@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-class SsoTest : TestBase() {
-  private fun api() = Sso(createWorkOSClient())
+class SSOTest : TestBase() {
+  private fun api() = SSO(createWorkOSClient())
 
   @Test
   fun `listConnections returns a typed response`() {

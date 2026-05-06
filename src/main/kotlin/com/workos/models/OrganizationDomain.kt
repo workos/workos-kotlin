@@ -12,30 +12,39 @@ data class OrganizationDomain(
   /** Unique identifier of the organization domain. */
   @JsonProperty("id")
   val id: String,
+
   /** ID of the parent Organization. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** Domain for the organization domain. */
   @JsonProperty("domain")
   val domain: String,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the organization domain object. */
   @JsonProperty("object")
   val objectType: String = "organization_domain",
+
   /** Verification state of the domain. */
   @JsonProperty("state")
   val state: OrganizationDomainState? = null,
+
   /** The prefix used in DNS verification. */
   @JsonProperty("verification_prefix")
   val verificationPrefix: String? = null,
+
   /** Validation token to be used in DNS TXT record. */
   @JsonProperty("verification_token")
   val verificationToken: String? = null,
+
   /** Strategy used to verify the domain. */
   @JsonProperty("verification_strategy")
   val verificationStrategy: OrganizationDomainVerificationStrategy? = null

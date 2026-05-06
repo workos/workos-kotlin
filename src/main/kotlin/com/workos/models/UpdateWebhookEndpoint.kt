@@ -11,9 +11,11 @@ data class UpdateWebhookEndpoint(
   /** The HTTPS URL where webhooks will be sent. */
   @JsonProperty("endpoint_url")
   val endpointUrl: String? = null,
+
   /** Whether the Webhook Endpoint is enabled or disabled. */
   @JsonProperty("status")
   val status: UpdateWebhookEndpointStatus? = null,
+
   /** The events that the Webhook Endpoint is subscribed to. */
   @JsonProperty("events")
   val events: List<UpdateWebhookEndpointEvents>? = null

@@ -10,15 +10,19 @@ data class EmailChange(
   /** The user. */
   @JsonProperty("user")
   val user: User,
+
   /** The new email address the user is changing to. */
   @JsonProperty("new_email")
   val newEmail: String,
+
   /** The timestamp when the email change code expires. */
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
+
   /** The timestamp when the email change challenge was created. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** Distinguishes the email change object. */
   @JsonProperty("object")
   val objectType: String = "email_change"

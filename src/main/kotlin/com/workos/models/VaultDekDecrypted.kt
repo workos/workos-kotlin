@@ -10,18 +10,23 @@ data class VaultDekDecrypted(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: VaultDekDecryptedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"vault.dek.decrypted"`. */
   @JsonProperty("event")
   override val event: String = "vault.dek.decrypted",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

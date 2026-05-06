@@ -10,18 +10,23 @@ data class OrganizationDomainVerified(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: OrganizationDomainVerifiedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"organization_domain.verified"`. */
   @JsonProperty("event")
   override val event: String = "organization_domain.verified",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

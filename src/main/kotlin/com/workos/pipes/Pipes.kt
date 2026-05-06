@@ -12,8 +12,14 @@ import com.workos.models.ConnectedAccount
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
 import com.workos.models.DataIntegrationsListResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Pipes. */
+/**
+ * API accessor for Pipes.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Pipes(
   internal val workos: WorkOS
 ) {
@@ -55,6 +61,26 @@ class Pipes(
   }
 
   /**
+   * Coroutine-aware variant of [authorizeDataIntegration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authorizeDataIntegration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authorizeDataIntegrationSuspend")
+  suspend fun authorizeDataIntegrationSuspend(
+    slug: String,
+    userId: String,
+    organizationId: String? = null,
+    returnTo: String? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationAuthorizeUrlResponse =
+    withContext(Dispatchers.IO) {
+      authorizeDataIntegration(slug, userId, organizationId, returnTo, requestOptions)
+    }
+
+  /**
    * Get an access token for a connected account
    *
    * Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
@@ -89,6 +115,25 @@ class Pipes(
   }
 
   /**
+   * Coroutine-aware variant of [createDataIntegrationToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDataIntegrationToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDataIntegrationTokenSuspend")
+  suspend fun createDataIntegrationTokenSuspend(
+    slug: String,
+    userId: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationAccessTokenResponse =
+    withContext(Dispatchers.IO) {
+      createDataIntegrationToken(slug, userId, organizationId, requestOptions)
+    }
+
+  /**
    * Get a connected account
    *
    * Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
@@ -120,6 +165,25 @@ class Pipes(
   }
 
   /**
+   * Coroutine-aware variant of [getUserConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getUserConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getUserConnectedAccountSuspend")
+  suspend fun getUserConnectedAccountSuspend(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      getUserConnectedAccount(userId, slug, organizationId, requestOptions)
+    }
+
+  /**
    * Delete a connected account
    *
    * Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
@@ -146,6 +210,24 @@ class Pipes(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteUserConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteUserConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteUserConnectedAccountSuspend")
+  suspend fun deleteUserConnectedAccountSuspend(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteUserConnectedAccount(userId, slug, organizationId, requestOptions)
   }
 
   /**
@@ -176,4 +258,22 @@ class Pipes(
       )
     return workos.baseClient.request(config, DataIntegrationsListResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [listUserDataProviders]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listUserDataProviders] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listUserDataProvidersSuspend")
+  suspend fun listUserDataProvidersSuspend(
+    userId: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationsListResponse =
+    withContext(Dispatchers.IO) {
+      listUserDataProviders(userId, organizationId, requestOptions)
+    }
 }

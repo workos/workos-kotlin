@@ -11,8 +11,14 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.FeatureFlag
 import com.workos.models.Flag
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for FeatureFlags. */
+/**
+ * API accessor for FeatureFlags.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class FeatureFlags(
   internal val workos: WorkOS
 ) {
@@ -52,6 +58,26 @@ class FeatureFlags(
   }
 
   /**
+   * Coroutine-aware variant of [list]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [list] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSuspend")
+  suspend fun listSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Flag> =
+    withContext(Dispatchers.IO) {
+      list(before, after, limit, order, requestOptions)
+    }
+
+  /**
    * Get a feature flag
    *
    * Get the details of an existing feature flag by its slug.
@@ -74,6 +100,23 @@ class FeatureFlags(
       )
     return workos.baseClient.request(config, Flag::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [get]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [get] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSuspend")
+  suspend fun getSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): Flag =
+    withContext(Dispatchers.IO) {
+      get(slug, requestOptions)
+    }
 
   /**
    * Disable a feature flag
@@ -102,6 +145,23 @@ class FeatureFlags(
   }
 
   /**
+   * Coroutine-aware variant of [disable]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [disable] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("disableSuspend")
+  suspend fun disableSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): FeatureFlag =
+    withContext(Dispatchers.IO) {
+      disable(slug, requestOptions)
+    }
+
+  /**
    * Enable a feature flag
    *
    * Enables a feature flag in the current environment.
@@ -126,6 +186,23 @@ class FeatureFlags(
       )
     return workos.baseClient.request(config, FeatureFlag::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [enable]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [enable] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("enableSuspend")
+  suspend fun enableSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): FeatureFlag =
+    withContext(Dispatchers.IO) {
+      enable(slug, requestOptions)
+    }
 
   /**
    * Add a feature flag target
@@ -154,6 +231,23 @@ class FeatureFlags(
   }
 
   /**
+   * Coroutine-aware variant of [addFlagTarget]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [addFlagTarget] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("addFlagTargetSuspend")
+  suspend fun addFlagTargetSuspend(
+    slug: String,
+    resourceId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    addFlagTarget(slug, resourceId, requestOptions)
+  }
+
+  /**
    * Remove a feature flag target
    *
    * Removes a target from the feature flag's target list in the current environment. Currently, supported targets include users and organizations.
@@ -175,6 +269,23 @@ class FeatureFlags(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [removeFlagTarget]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeFlagTarget] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeFlagTargetSuspend")
+  suspend fun removeFlagTargetSuspend(
+    slug: String,
+    resourceId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeFlagTarget(slug, resourceId, requestOptions)
   }
 
   /**
@@ -215,6 +326,27 @@ class FeatureFlags(
   }
 
   /**
+   * Coroutine-aware variant of [listOrganizationFeatureFlags]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationFeatureFlags] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationFeatureFlagsSuspend")
+  suspend fun listOrganizationFeatureFlagsSuspend(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Flag> =
+    withContext(Dispatchers.IO) {
+      listOrganizationFeatureFlags(organizationId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * List enabled feature flags for a user
    *
    * Get a list of all enabled feature flags for the provided user. This includes feature flags enabled specifically for the user as well as any organizations that the user is a member of.
@@ -250,4 +382,25 @@ class FeatureFlags(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listUserFeatureFlags]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listUserFeatureFlags] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listUserFeatureFlagsSuspend")
+  suspend fun listUserFeatureFlagsSuspend(
+    userId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Flag> =
+    withContext(Dispatchers.IO) {
+      listUserFeatureFlags(userId, before, after, limit, order, requestOptions)
+    }
 }

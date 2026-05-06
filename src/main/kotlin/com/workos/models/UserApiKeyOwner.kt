@@ -9,9 +9,11 @@ data class UserApiKeyOwner(
   /** Unique identifier of the API Key owner. */
   @JsonProperty("id")
   val id: String,
+
   /** Unique identifier of the organization the API Key can access. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The type of the API Key owner. */
   @JsonProperty("type")
   val type: String = "user"

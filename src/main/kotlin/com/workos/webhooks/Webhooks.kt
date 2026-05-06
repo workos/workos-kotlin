@@ -15,8 +15,14 @@ import com.workos.models.WebhookEndpointJson
 import com.workos.types.CreateWebhookEndpointEvents
 import com.workos.types.PaginationOrder
 import com.workos.types.WebhookEndpointJsonStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Webhooks. */
+/**
+ * API accessor for Webhooks.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Webhooks(
   internal val workos: WorkOS
 ) {
@@ -28,7 +34,7 @@ class Webhooks(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -54,6 +60,26 @@ class Webhooks(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listEndpoints]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listEndpoints] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listEndpointsSuspend")
+  suspend fun listEndpointsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<WebhookEndpointJson> =
+    withContext(Dispatchers.IO) {
+      listEndpoints(before, after, limit, order, requestOptions)
+    }
 
   /**
    * Create a Webhook Endpoint
@@ -86,6 +112,24 @@ class Webhooks(
       )
     return workos.baseClient.request(config, WebhookEndpointJson::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createEndpoint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createEndpoint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createEndpointSuspend")
+  suspend fun createEndpointSuspend(
+    endpointUrl: String,
+    events: List<CreateWebhookEndpointEvents>,
+    requestOptions: RequestOptions? = null
+  ): WebhookEndpointJson =
+    withContext(Dispatchers.IO) {
+      createEndpoint(endpointUrl, events, requestOptions)
+    }
 
   /**
    * Update a Webhook Endpoint
@@ -125,6 +169,26 @@ class Webhooks(
   }
 
   /**
+   * Coroutine-aware variant of [updateEndpoint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateEndpoint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateEndpointSuspend")
+  suspend fun updateEndpointSuspend(
+    id: String,
+    endpointUrl: PatchField<String> = PatchField.Absent,
+    status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
+    events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): WebhookEndpointJson =
+    withContext(Dispatchers.IO) {
+      updateEndpoint(id, endpointUrl, status, events, requestOptions)
+    }
+
+  /**
    * Delete a Webhook Endpoint
    *
    * Delete an existing webhook endpoint.
@@ -144,5 +208,21 @@ class Webhooks(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteEndpoint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteEndpoint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteEndpointSuspend")
+  suspend fun deleteEndpointSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteEndpoint(id, requestOptions)
   }
 }

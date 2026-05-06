@@ -10,18 +10,23 @@ data class AuthenticationRadarRiskDetected(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: AuthenticationRadarRiskDetectedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.radar_risk_detected"`. */
   @JsonProperty("event")
   override val event: String = "authentication.radar_risk_detected",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

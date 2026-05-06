@@ -5,23 +5,28 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** AuthenticationMfaFailed model. */
-data class AuthenticationMfaFailed(
+/** AuthenticationMFAFailed model. */
+data class AuthenticationMFAFailed(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
-  val data: AuthenticationMfaFailedData,
+  val data: AuthenticationMFAFailedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.mfa_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.mfa_failed",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

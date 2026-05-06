@@ -9,6 +9,7 @@ data class CreateOrganizationApiKey(
   /** The name for the API key. */
   @JsonProperty("name")
   val name: String,
+
   /** The permission slugs to assign to the API key. */
   @JsonProperty("permissions")
   val permissions: List<String>? = null

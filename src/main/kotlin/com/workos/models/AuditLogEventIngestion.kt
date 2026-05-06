@@ -9,6 +9,7 @@ data class AuditLogEventIngestion(
   /** The unique ID of the Organization. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The audit log event to create. */
   @JsonProperty("event")
   val event: AuditLogEvent

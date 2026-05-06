@@ -8,8 +8,14 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.models.WidgetSessionTokenResponse
 import com.workos.types.WidgetSessionTokenScopes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Widgets. */
+/**
+ * API accessor for Widgets.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Widgets(
   internal val workos: WorkOS
 ) {
@@ -47,4 +53,23 @@ class Widgets(
       )
     return workos.baseClient.request(config, WidgetSessionTokenResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createTokenSuspend")
+  suspend fun createTokenSuspend(
+    organizationId: String,
+    userId: String? = null,
+    scopes: List<WidgetSessionTokenScopes>? = null,
+    requestOptions: RequestOptions? = null
+  ): WidgetSessionTokenResponse =
+    withContext(Dispatchers.IO) {
+      createToken(organizationId, userId, scopes, requestOptions)
+    }
 }

@@ -9,18 +9,23 @@ data class RedirectUri(
   /** The ID of the redirect URI. */
   @JsonProperty("id")
   val id: String,
+
   /** The redirect URI. */
   @JsonProperty("uri")
   val uri: String,
+
   /** Whether this is the default redirect URI. */
   @JsonProperty("default")
   val default: Boolean,
+
   /** The timestamp when the redirect URI was created. */
   @JsonProperty("created_at")
   val createdAt: String,
+
   /** The timestamp when the redirect URI was last updated. */
   @JsonProperty("updated_at")
   val updatedAt: String,
+
   /** The object type. */
   @JsonProperty("object")
   val objectType: String = "redirect_uri"

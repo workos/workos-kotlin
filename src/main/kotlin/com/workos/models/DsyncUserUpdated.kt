@@ -10,18 +10,23 @@ data class DsyncUserUpdated(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: DsyncUserUpdatedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"dsync.user.updated"`. */
   @JsonProperty("event")
   override val event: String = "dsync.user.updated",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

@@ -9,6 +9,7 @@ data class FlagRuleUpdatedContextPreviousAttributeData(
   /** Whether the flag was previously enabled. */
   @JsonProperty("enabled")
   val enabled: Boolean? = null,
+
   /** The previous default value of the flag. */
   @JsonProperty("default_value")
   val defaultValue: Boolean? = null

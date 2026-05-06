@@ -10,12 +10,15 @@ data class VaultDekDecryptedData(
   /** The unique identifier of the actor. */
   @JsonProperty("actor_id")
   val actorId: String,
+
   /** The actor source. */
   @JsonProperty("actor_source")
   val actorSource: VaultDekDecryptedDataActorSource,
+
   /** The name of the actor. */
   @JsonProperty("actor_name")
   val actorName: String,
+
   /** The unique identifier of the data encryption key. */
   @JsonProperty("key_id")
   val keyId: String

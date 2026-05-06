@@ -10,18 +10,23 @@ data class AuthenticationMagicAuthFailed(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: AuthenticationMagicAuthFailedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.magic_auth_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.magic_auth_failed",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

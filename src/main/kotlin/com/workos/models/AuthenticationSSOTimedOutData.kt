@@ -9,24 +9,31 @@ data class AuthenticationSSOTimedOutData(
   /** The IP address of the request. */
   @JsonProperty("ip_address")
   val ipAddress: String?,
+
   /** The user agent of the request. */
   @JsonProperty("user_agent")
   val userAgent: String?,
+
   /** The ID of the user. */
   @JsonProperty("user_id")
   val userId: String?,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String?,
+
   /** SSO connection details. */
   @JsonProperty("sso")
   val sso: AuthenticationSSOTimedOutDataSSO,
+
   /** Details about the authentication error. */
   @JsonProperty("error")
   val error: AuthenticationSSOTimedOutDataError,
+
   /** Always `"sso"`. */
   @JsonProperty("type")
   val type: String = "sso",
+
   /** Always `"timed_out"`. */
   @JsonProperty("status")
   val status: String = "timed_out"

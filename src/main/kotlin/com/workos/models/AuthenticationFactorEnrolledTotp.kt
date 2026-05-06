@@ -9,15 +9,19 @@ data class AuthenticationFactorEnrolledTotp(
   /** Your application or company name displayed in the user's authenticator app. Defaults to your WorkOS team name. */
   @JsonProperty("issuer")
   val issuer: String,
+
   /** The user's account name displayed in their authenticator app. Defaults to the user's email. */
   @JsonProperty("user")
   val user: String,
+
   /** TOTP secret that can be manually entered into some authenticator apps in place of scanning a QR code. */
   @JsonProperty("secret")
   val secret: String,
+
   /** Base64 encoded image containing scannable QR code. */
   @JsonProperty("qr_code")
   val qrCode: String,
+
   /** The `otpauth` URI that is encoded by the provided `qr_code`. */
   @JsonProperty("uri")
   val uri: String

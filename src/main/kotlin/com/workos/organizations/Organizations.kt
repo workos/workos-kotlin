@@ -15,8 +15,14 @@ import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
 import com.workos.models.OrganizationDomainData
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Organizations. */
+/**
+ * API accessor for Organizations.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Organizations(
   internal val workos: WorkOS
 ) {
@@ -28,7 +34,7 @@ class Organizations(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param domains The domains of an Organization. Any Organization with a matching domain will be returned.
    * @param search Searchable text for an Organization. Matches against the organization name.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -60,6 +66,28 @@ class Organizations(
       addIfNotNull("search", search)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [list]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [list] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSuspend")
+  suspend fun listSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    domains: List<String>? = null,
+    search: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Organization> =
+    withContext(Dispatchers.IO) {
+      list(before, after, limit, order, domains, search, requestOptions)
+    }
 
   /**
    * Create an Organization
@@ -106,6 +134,28 @@ class Organizations(
   }
 
   /**
+   * Coroutine-aware variant of [create]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [create] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createSuspend")
+  suspend fun createSuspend(
+    name: String,
+    allowProfilesOutsideOrganization: Boolean? = null,
+    domains: List<String>? = null,
+    domainData: List<OrganizationDomainData>? = null,
+    metadata: Map<String, String>? = null,
+    externalId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Organization =
+    withContext(Dispatchers.IO) {
+      create(name, allowProfilesOutsideOrganization, domains, domainData, metadata, externalId, requestOptions)
+    }
+
+  /**
    * Get an Organization by External ID
    *
    * Get the details of an existing organization by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
@@ -130,6 +180,23 @@ class Organizations(
   }
 
   /**
+   * Coroutine-aware variant of [getByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getByExternalIdSuspend")
+  suspend fun getByExternalIdSuspend(
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): Organization =
+    withContext(Dispatchers.IO) {
+      getByExternalId(externalId, requestOptions)
+    }
+
+  /**
    * Get an Organization
    *
    * Get the details of an existing organization.
@@ -152,6 +219,23 @@ class Organizations(
       )
     return workos.baseClient.request(config, Organization::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [get]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [get] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSuspend")
+  suspend fun getSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Organization =
+    withContext(Dispatchers.IO) {
+      get(id, requestOptions)
+    }
 
   /**
    * Update an Organization
@@ -203,6 +287,30 @@ class Organizations(
   }
 
   /**
+   * Coroutine-aware variant of [update]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [update] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateSuspend")
+  suspend fun updateSuspend(
+    id: String,
+    name: String? = null,
+    allowProfilesOutsideOrganization: Boolean? = null,
+    domains: List<String>? = null,
+    domainData: List<OrganizationDomainData>? = null,
+    stripeCustomerId: String? = null,
+    metadata: Map<String, String>? = null,
+    externalId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Organization =
+    withContext(Dispatchers.IO) {
+      update(id, name, allowProfilesOutsideOrganization, domains, domainData, stripeCustomerId, metadata, externalId, requestOptions)
+    }
+
+  /**
    * Delete an Organization
    *
    * Permanently deletes an organization in the current environment. It cannot be undone.
@@ -222,6 +330,22 @@ class Organizations(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [delete]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [delete] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteSuspend")
+  suspend fun deleteSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    delete(id, requestOptions)
   }
 
   /**
@@ -247,4 +371,21 @@ class Organizations(
       )
     return workos.baseClient.request(config, AuditLogConfiguration::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getAuditLogConfiguration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getAuditLogConfiguration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getAuditLogConfigurationSuspend")
+  suspend fun getAuditLogConfigurationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): AuditLogConfiguration =
+    withContext(Dispatchers.IO) {
+      getAuditLogConfiguration(id, requestOptions)
+    }
 }

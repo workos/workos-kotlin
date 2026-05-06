@@ -5,23 +5,28 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** AuthenticationMfaSucceeded model. */
-data class AuthenticationMfaSucceeded(
+/** AuthenticationMFASucceeded model. */
+data class AuthenticationMFASucceeded(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
-  val data: AuthenticationMfaSucceededData,
+  val data: AuthenticationMFASucceededData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.mfa_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.mfa_succeeded",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

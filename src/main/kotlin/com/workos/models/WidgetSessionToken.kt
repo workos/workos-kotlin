@@ -10,9 +10,11 @@ data class WidgetSessionToken(
   /** The ID of the organization to scope the widget session to. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The ID of the user to issue the widget session token for. */
   @JsonProperty("user_id")
   val userId: String? = null,
+
   /** The scopes to grant the widget session. */
   @JsonProperty("scopes")
   val scopes: List<WidgetSessionTokenScopes>? = null

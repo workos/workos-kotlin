@@ -11,21 +11,27 @@ data class RadarStandaloneAssessRequest(
   /** The IP address of the request to assess. */
   @JsonProperty("ip_address")
   val ipAddress: String,
+
   /** The user agent string of the request to assess. */
   @JsonProperty("user_agent")
   val userAgent: String,
+
   /** The email address of the user making the request. */
   @JsonProperty("email")
   val email: String,
+
   /** The authentication method being used. */
   @JsonProperty("auth_method")
   val authMethod: RadarStandaloneAssessRequestAuthMethod,
+
   /** The action being performed. */
   @JsonProperty("action")
   val action: RadarStandaloneAssessRequestAction,
+
   /** An optional device fingerprint for the request. */
   @JsonProperty("device_fingerprint")
   val deviceFingerprint: String? = null,
+
   /** An optional bot detection score for the request. */
   @JsonProperty("bot_score")
   val botScore: String? = null

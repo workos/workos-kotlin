@@ -389,9 +389,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AuthenticationMfaFailedDataError round-trips through Jackson`() {
+  fun `AuthenticationMFAFailedDataError round-trips through Jackson`() {
     val json = "{\"code\": \"sample\", \"message\": \"sample\"}"
-    val parsed = mapper.readValue(json, AuthenticationMfaFailedDataError::class.java)
+    val parsed = mapper.readValue(json, AuthenticationMFAFailedDataError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -399,11 +399,11 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AuthenticationMfaSucceededData round-trips through Jackson`() {
+  fun `AuthenticationMFASucceededData round-trips through Jackson`() {
     val json =
       "{\"type\": \"mfa\", \"status\": \"succeeded\", \"ip_address\": null, \"user_agent\": null, \"user_id\": \"sample\", \"email\": " +
         "\"sample\"}"
-    val parsed = mapper.readValue(json, AuthenticationMfaSucceededData::class.java)
+    val parsed = mapper.readValue(json, AuthenticationMFASucceededData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [AuthenticationMfaFailedDataError]. */
-typealias AuthenticationMagicAuthFailedDataError = AuthenticationMfaFailedDataError
+/** Alias for [AuthenticationMFAFailedDataError]. */
+typealias AuthenticationMagicAuthFailedDataError = AuthenticationMFAFailedDataError

@@ -10,6 +10,7 @@ data class OrganizationDomainData(
   /** The domain value. */
   @JsonProperty("domain")
   val domain: String,
+
   /** The verification state of the domain. */
   @JsonProperty("state")
   val state: OrganizationDomainDataState

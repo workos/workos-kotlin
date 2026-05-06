@@ -9,9 +9,11 @@ data class AuthenticationSSOFailedDataSSO(
   /** The ID of the organization. */
   @JsonProperty("organization_id")
   val organizationId: String?,
+
   /** The ID of the SSO connection. */
   @JsonProperty("connection_id")
   val connectionId: String?,
+
   /** The ID of the SSO session. */
   @JsonProperty("session_id")
   val sessionId: String?

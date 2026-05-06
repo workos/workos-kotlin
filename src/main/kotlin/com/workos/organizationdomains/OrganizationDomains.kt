@@ -9,8 +9,14 @@ import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.OrganizationDomain
 import com.workos.models.OrganizationDomainStandAlone
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for OrganizationDomains. */
+/**
+ * API accessor for OrganizationDomains.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class OrganizationDomains(
   internal val workos: WorkOS
 ) {
@@ -47,6 +53,24 @@ class OrganizationDomains(
   }
 
   /**
+   * Coroutine-aware variant of [create]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [create] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createSuspend")
+  suspend fun createSuspend(
+    domain: String,
+    organizationId: String,
+    requestOptions: RequestOptions? = null
+  ): OrganizationDomain =
+    withContext(Dispatchers.IO) {
+      create(domain, organizationId, requestOptions)
+    }
+
+  /**
    * Get an Organization Domain
    *
    * Get the details of an existing organization domain.
@@ -71,6 +95,23 @@ class OrganizationDomains(
   }
 
   /**
+   * Coroutine-aware variant of [get]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [get] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSuspend")
+  suspend fun getSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): OrganizationDomainStandAlone =
+    withContext(Dispatchers.IO) {
+      get(id, requestOptions)
+    }
+
+  /**
    * Delete an Organization Domain
    *
    * Permanently deletes an organization domain. It cannot be undone.
@@ -90,6 +131,22 @@ class OrganizationDomains(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [delete]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [delete] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteSuspend")
+  suspend fun deleteSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    delete(id, requestOptions)
   }
 
   /**
@@ -117,4 +174,21 @@ class OrganizationDomains(
       )
     return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [verify]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [verify] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("verifySuspend")
+  suspend fun verifySuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): OrganizationDomainStandAlone =
+    withContext(Dispatchers.IO) {
+      verify(id, requestOptions)
+    }
 }

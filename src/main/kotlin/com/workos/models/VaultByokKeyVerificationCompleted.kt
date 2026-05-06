@@ -10,18 +10,23 @@ data class VaultByokKeyVerificationCompleted(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: VaultByokKeyVerificationCompletedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"vault.byok_key.verification_completed"`. */
   @JsonProperty("event")
   override val event: String = "vault.byok_key.verification_completed",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

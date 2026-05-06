@@ -5,14 +5,16 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.workos.common.exceptions.ApiError
 import com.workos.common.exceptions.BadRequestException
-import com.workos.common.exceptions.GenericException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
+import com.workos.common.exceptions.TransportException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.exceptions.WorkOSException
+import com.workos.common.exceptions.WorkOSGenericException
 import com.workos.common.json.ObjectMapperFactory
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
@@ -301,9 +303,9 @@ open class BaseClient(
   private fun translateTransportFailure(e: IOException): WorkOSException =
     when (e) {
       is SocketTimeoutException ->
-        GenericException(0, null, "timeout", "Request timed out: ${e.message}", null, e)
+        TransportException("Request timed out: ${e.message}", e)
       else ->
-        GenericException(0, null, "io_error", e.message ?: "I/O error", null, e)
+        TransportException(e.message ?: "I/O error", e)
     }
 
   private fun translateHttpFailure(
@@ -321,11 +323,11 @@ open class BaseClient(
       422 -> UnprocessableEntityException(requestId, code, message, errors, body)
       429 -> RateLimitException(requestId, code, message, retryAfterHeader?.let { RetryPolicy.parseRetryAfter(it)?.div(1000L) }, body)
       in 500..599 -> GenericServerException(status, requestId, code, message, body)
-      else -> GenericException(status, requestId, code, message, body)
+      else -> WorkOSGenericException(status, requestId, code, message, body)
     }
   }
 
-  private fun parseApiError(body: String): Triple<String?, String?, List<Map<String, Any?>>?> {
+  private fun parseApiError(body: String): Triple<String?, String?, List<ApiError>?> {
     if (body.isBlank()) return Triple(null, null, null)
     return try {
       val tree = objectMapper.readTree(body)
@@ -336,8 +338,17 @@ open class BaseClient(
       val errorsNode = tree.path("errors")
       val errors =
         if (errorsNode.isArray) {
-          val typeRef = object : TypeReference<List<Map<String, Any?>>>() {}
-          objectMapper.convertValue(errorsNode, typeRef)
+          val parsed = mutableListOf<ApiError>()
+          for (entry in errorsNode) {
+            try {
+              parsed.add(objectMapper.treeToValue(entry, ApiError::class.java))
+            } catch (_: JsonMappingException) {
+              // Skip malformed entries rather than failing the whole list.
+            } catch (_: IOException) {
+              // Skip malformed entries rather than failing the whole list.
+            }
+          }
+          parsed
         } else {
           null
         }

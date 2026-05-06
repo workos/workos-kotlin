@@ -9,15 +9,19 @@ data class SSOTokenResponseOAuthToken(
   /** The OAuth provider used for authentication. */
   @JsonProperty("provider")
   val provider: String,
+
   /** The refresh token from the OAuth provider. */
   @JsonProperty("refresh_token")
   val refreshToken: String,
+
   /** The access token from the OAuth provider. */
   @JsonProperty("access_token")
   val accessToken: String,
+
   /** The timestamp at which the access token expires. */
   @JsonProperty("expires_at")
   val expiresAt: Long,
+
   /** A list of OAuth scopes for which the access token is authorized. */
   @JsonProperty("scopes")
   val scopes: List<String>

@@ -83,7 +83,21 @@ class SessionTest : TestBase() {
         mapOf(
           "accessToken" to accessToken,
           "refreshToken" to "refresh_1",
-          "user" to mapOf("id" to "user_1")
+          "user" to
+            mapOf(
+              "object" to "user",
+              "id" to "user_1",
+              "email" to "u@e.com",
+              "first_name" to null,
+              "last_name" to null,
+              "email_verified" to true,
+              "profile_picture_url" to null,
+              "external_id" to null,
+              "last_sign_in_at" to null,
+              "created_at" to "2024-01-01T00:00:00Z",
+              "updated_at" to "2024-01-01T00:00:00Z",
+              "metadata" to emptyMap<String, Any>()
+            )
         )
       )
     val sealed = Iron.seal(cookieJson, cookiePassword)
@@ -93,6 +107,7 @@ class SessionTest : TestBase() {
     assertEquals("sess_123", success.sessionId)
     assertEquals("org_1", success.organizationId)
     assertEquals(accessToken, success.accessToken)
+    assertEquals("user_1", success.user?.id)
     assertTrue(success.authenticated)
   }
 

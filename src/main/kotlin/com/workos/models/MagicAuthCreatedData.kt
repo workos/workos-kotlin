@@ -10,21 +10,27 @@ data class MagicAuthCreatedData(
   /** The unique ID of the Magic Auth code. */
   @JsonProperty("id")
   val id: String,
+
   /** The unique ID of the user. */
   @JsonProperty("user_id")
   val userId: String,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String,
+
   /** The timestamp when the Magic Auth code expires. */
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the Magic Auth object. */
   @JsonProperty("object")
   val objectType: String = "magic_auth"

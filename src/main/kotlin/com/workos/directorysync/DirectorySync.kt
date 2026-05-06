@@ -13,8 +13,14 @@ import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectoryUserWithGroups
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for DirectorySync. */
+/**
+ * API accessor for DirectorySync.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class DirectorySync(
   internal val workos: WorkOS
 ) {
@@ -63,6 +69,29 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [list]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [list] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSuspend")
+  suspend fun listSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    search: String? = null,
+    domain: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Directory> =
+    withContext(Dispatchers.IO) {
+      list(before, after, limit, order, organizationId, search, domain, requestOptions)
+    }
+
+  /**
    * Get a Directory
    *
    * Get the details of an existing directory.
@@ -87,6 +116,23 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [get]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [get] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSuspend")
+  suspend fun getSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Directory =
+    withContext(Dispatchers.IO) {
+      get(id, requestOptions)
+    }
+
+  /**
    * Delete a Directory
    *
    * Permanently deletes an existing directory. It cannot be undone.
@@ -109,6 +155,22 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [delete]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [delete] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteSuspend")
+  suspend fun deleteSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    delete(id, requestOptions)
+  }
+
+  /**
    * List Directory Groups
    *
    * Get a list of all of existing directory groups matching the criteria specified.
@@ -116,7 +178,7 @@ class DirectorySync(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
    * @param user Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -150,6 +212,28 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [listGroups]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listGroups] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listGroupsSuspend")
+  suspend fun listGroupsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    user: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryGroup> =
+    withContext(Dispatchers.IO) {
+      listGroups(before, after, limit, order, directory, user, requestOptions)
+    }
+
+  /**
    * Get a Directory Group
    *
    * Get the details of an existing Directory Group.
@@ -174,6 +258,23 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [getGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getGroupSuspend")
+  suspend fun getGroupSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryGroup =
+    withContext(Dispatchers.IO) {
+      getGroup(id, requestOptions)
+    }
+
+  /**
    * List Directory Users
    *
    * Get a list of all of existing Directory Users matching the criteria specified.
@@ -181,7 +282,7 @@ class DirectorySync(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
    * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -215,6 +316,28 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [listUsers]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listUsers] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listUsersSuspend")
+  suspend fun listUsersSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    group: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryUserWithGroups> =
+    withContext(Dispatchers.IO) {
+      listUsers(before, after, limit, order, directory, group, requestOptions)
+    }
+
+  /**
    * Get a Directory User
    *
    * Get the details of an existing Directory User.
@@ -237,4 +360,21 @@ class DirectorySync(
       )
     return workos.baseClient.request(config, DirectoryUserWithGroups::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getUser]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getUser] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getUserSuspend")
+  suspend fun getUserSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryUserWithGroups =
+    withContext(Dispatchers.IO) {
+      getUser(id, requestOptions)
+    }
 }

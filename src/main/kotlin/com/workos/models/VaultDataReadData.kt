@@ -10,15 +10,19 @@ data class VaultDataReadData(
   /** The unique identifier of the actor. */
   @JsonProperty("actor_id")
   val actorId: String,
+
   /** The actor source. */
   @JsonProperty("actor_source")
   val actorSource: VaultDataReadDataActorSource,
+
   /** The name of the actor. */
   @JsonProperty("actor_name")
   val actorName: String,
+
   /** The name of the key-value store. */
   @JsonProperty("kv_name")
   val kvName: String,
+
   /** The unique identifier of the encryption key. */
   @JsonProperty("key_id")
   val keyId: String

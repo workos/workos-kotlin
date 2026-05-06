@@ -9,6 +9,7 @@ data class UserSessionsImpersonator(
   /** The email address of the WorkOS Dashboard user who is impersonating the user. */
   @JsonProperty("email")
   val email: String,
+
   /** The justification the impersonator gave for impersonating the user. */
   @JsonProperty("reason")
   val reason: String?

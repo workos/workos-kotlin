@@ -12,15 +12,19 @@ data class AuditLogConfigurationLogStream(
   /** Unique identifier of the Audit Log Stream. */
   @JsonProperty("id")
   val id: String,
+
   /** The type of the Audit Log Stream destination. */
   @JsonProperty("type")
   val type: AuditLogConfigurationLogStreamType,
+
   /** The current state of the Audit Log Stream. */
   @JsonProperty("state")
   val state: AuditLogConfigurationLogStreamState,
+
   /** ISO-8601 timestamp of when the last event was successfully synced, or null if no events have been synced. */
   @JsonProperty("last_synced_at")
   val lastSyncedAt: OffsetDateTime?,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime

@@ -18,9 +18,15 @@ import com.workos.models.AuditLogSchemaJson
 import com.workos.models.AuditLogSchemaTarget
 import com.workos.models.AuditLogsRetentionJson
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 
-/** API accessor for AuditLogs. */
+/**
+ * API accessor for AuditLogs.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class AuditLogs(
   internal val workos: WorkOS
 ) {
@@ -47,6 +53,23 @@ class AuditLogs(
       )
     return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getAuditLogsRetention]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getAuditLogsRetention] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getAuditLogsRetentionSuspend")
+  suspend fun getAuditLogsRetentionSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): AuditLogsRetentionJson =
+    withContext(Dispatchers.IO) {
+      getAuditLogsRetention(id, requestOptions)
+    }
 
   /**
    * Set Retention
@@ -78,6 +101,24 @@ class AuditLogs(
       )
     return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [updateAuditLogsRetention]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateAuditLogsRetention] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateAuditLogsRetentionSuspend")
+  suspend fun updateAuditLogsRetentionSuspend(
+    id: String,
+    retentionPeriodInDays: Long,
+    requestOptions: RequestOptions? = null
+  ): AuditLogsRetentionJson =
+    withContext(Dispatchers.IO) {
+      updateAuditLogsRetention(id, retentionPeriodInDays, requestOptions)
+    }
 
   /**
    * List Actions
@@ -113,6 +154,26 @@ class AuditLogs(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listActions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listActions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listActionsSuspend")
+  suspend fun listActionsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuditLogActionJson> =
+    withContext(Dispatchers.IO) {
+      listActions(before, after, limit, order, requestOptions)
+    }
 
   /**
    * List Schemas
@@ -152,6 +213,27 @@ class AuditLogs(
   }
 
   /**
+   * Coroutine-aware variant of [listActionSchemas]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listActionSchemas] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listActionSchemasSuspend")
+  suspend fun listActionSchemasSuspend(
+    actionName: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuditLogSchemaJson> =
+    withContext(Dispatchers.IO) {
+      listActionSchemas(actionName, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * Create Schema
    *
    * Creates a new Audit Log schema used to validate the payload of incoming Audit Log Events. If the `action` does not exist, it will also be created.
@@ -187,6 +269,26 @@ class AuditLogs(
       )
     return workos.baseClient.request(config, AuditLogSchemaJson::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createSchema]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createSchema] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createSchemaSuspend")
+  suspend fun createSchemaSuspend(
+    actionName: String,
+    targets: List<AuditLogSchemaTarget>,
+    actor: AuditLogSchemaActor? = null,
+    metadata: Map<String, Any>? = null,
+    requestOptions: RequestOptions? = null
+  ): AuditLogSchemaJson =
+    withContext(Dispatchers.IO) {
+      createSchema(actionName, targets, actor, metadata, requestOptions)
+    }
 
   /**
    * Create Event
@@ -225,6 +327,24 @@ class AuditLogs(
       )
     return workos.baseClient.request(config, AuditLogEventCreateResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createEvent]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createEvent] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createEventSuspend")
+  suspend fun createEventSuspend(
+    organizationId: String,
+    event: AuditLogEvent,
+    requestOptions: RequestOptions? = null
+  ): AuditLogEventCreateResponse =
+    withContext(Dispatchers.IO) {
+      createEvent(organizationId, event, requestOptions)
+    }
 
   /**
    * Create Export
@@ -277,6 +397,30 @@ class AuditLogs(
   }
 
   /**
+   * Coroutine-aware variant of [createExport]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createExport] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createExportSuspend")
+  suspend fun createExportSuspend(
+    organizationId: String,
+    rangeStart: OffsetDateTime,
+    rangeEnd: OffsetDateTime,
+    actions: List<String>? = null,
+    actors: List<String>? = null,
+    actorNames: List<String>? = null,
+    actorIds: List<String>? = null,
+    targets: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): AuditLogExportJson =
+    withContext(Dispatchers.IO) {
+      createExport(organizationId, rangeStart, rangeEnd, actions, actors, actorNames, actorIds, targets, requestOptions)
+    }
+
+  /**
    * Get Export
    *
    * Get an Audit Log Export. The URL will expire after 10 minutes. If the export is needed again at a later time, refetching the export will regenerate the URL.
@@ -299,4 +443,21 @@ class AuditLogs(
       )
     return workos.baseClient.request(config, AuditLogExportJson::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getExport]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getExport] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getExportSuspend")
+  suspend fun getExportSuspend(
+    auditLogExportId: String,
+    requestOptions: RequestOptions? = null
+  ): AuditLogExportJson =
+    withContext(Dispatchers.IO) {
+      getExport(auditLogExportId, requestOptions)
+    }
 }

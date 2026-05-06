@@ -9,6 +9,7 @@ data class UpdateRole(
   /** A descriptive name for the role. */
   @JsonProperty("name")
   val name: String? = null,
+
   /** An optional description of the role. */
   @JsonProperty("description")
   val description: String? = null

@@ -9,18 +9,23 @@ data class AuthenticationPasskeySucceededData(
   /** The IP address of the request. */
   @JsonProperty("ip_address")
   val ipAddress: String?,
+
   /** The user agent of the request. */
   @JsonProperty("user_agent")
   val userAgent: String?,
+
   /** The ID of the user. */
   @JsonProperty("user_id")
   val userId: String,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String,
+
   /** Always `"passkey"`. */
   @JsonProperty("type")
   val type: String = "passkey",
+
   /** Always `"succeeded"`. */
   @JsonProperty("status")
   val status: String = "succeeded"

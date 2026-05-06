@@ -9,10 +9,7 @@ import com.workos.common.http.buildAuthUrl
 import com.workos.common.http.randomOAuthState
 import com.workos.pkce.PKCE
 
-/** Convenience alias so callers can write `SSO` instead of `Sso`. */
-typealias SSO = Sso
-
-/** Options accepted by [Sso.getAuthorizationUrl]. */
+/** Options accepted by [SSO.getAuthorizationUrl]. */
 data class SSOAuthorizationUrlOptions
   @JvmOverloads
   constructor(
@@ -46,7 +43,7 @@ data class SSOAuthorizationUrlOptions
     val providerQueryParams: Map<String, String>? = null
   )
 
-/** Result of [Sso.getAuthorizationUrlWithPKCE]. */
+/** Result of [SSO.getAuthorizationUrlWithPKCE]. */
 data class SSOPKCEAuthorizationUrlResult(
   /** The fully constructed SSO authorization URL to redirect the user to. */
   val url: String,
@@ -65,7 +62,7 @@ data class SSOPKCEAuthorizationUrlResult(
  * [SSOAuthorizationUrlOptions.organization], or
  * [SSOAuthorizationUrlOptions.provider] must be supplied.
  */
-fun Sso.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
+fun SSO.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
   val resolvedClientId =
     options.clientId ?: workos.clientId
       ?: throw IllegalArgumentException("clientId is required (pass explicitly or configure it on the WorkOS client)")
@@ -108,7 +105,7 @@ fun Sso.getAuthorizationUrl(options: SSOAuthorizationUrlOptions): String {
  * and random state. The returned value carries the verifier + state the
  * caller must persist for the subsequent code exchange.
  */
-fun Sso.getAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKCEAuthorizationUrlResult {
+fun SSO.getAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKCEAuthorizationUrlResult {
   val pair = PKCE().generate()
   val state = options.state ?: randomOAuthState()
   val url =
@@ -124,12 +121,12 @@ fun Sso.getAuthorizationUrlWithPKCE(options: SSOAuthorizationUrlOptions): SSOPKC
 
 /** Options accepted by [SSO.getLogoutUrl]. */
 data class SSOLogoutUrlOptions(
-  /** The logout token obtained from [Sso.authorizeLogout]. */
+  /** The logout token obtained from [SSO.authorizeLogout]. */
   val token: String
 )
 
 /** Build the SSO logout redirect URL. Does not make an HTTP request. */
-fun Sso.getLogoutUrl(options: SSOLogoutUrlOptions): String = buildAuthUrl(workos, "/sso/logout", listOf("token" to options.token))
+fun SSO.getLogoutUrl(options: SSOLogoutUrlOptions): String = buildAuthUrl(workos, "/sso/logout", listOf("token" to options.token))
 
 /**
  * Exchange an SSO authorization code for a profile + token using PKCE
@@ -138,7 +135,7 @@ fun Sso.getLogoutUrl(options: SSOLogoutUrlOptions): String = buildAuthUrl(workos
  * flows (CLI, mobile, desktop).
  */
 @JvmOverloads
-fun Sso.getProfileAndTokenWithPKCE(
+fun SSO.getProfileAndTokenWithPKCE(
   code: String,
   codeVerifier: String,
   requestOptions: com.workos.common.http.RequestOptions? = null

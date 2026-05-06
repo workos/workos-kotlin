@@ -9,6 +9,7 @@ data class ApiKeyOwner(
   /** Unique identifier of the API Key owner. */
   @JsonProperty("id")
   val id: String,
+
   /** The type of the API Key owner. */
   @JsonProperty("type")
   val type: String = "organization"

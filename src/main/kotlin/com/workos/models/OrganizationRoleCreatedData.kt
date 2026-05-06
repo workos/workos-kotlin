@@ -10,27 +10,35 @@ data class OrganizationRoleCreatedData(
   /** The ID of the organization the role belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The slug identifier of the role. */
   @JsonProperty("slug")
   val slug: String,
+
   /** The name of the role. */
   @JsonProperty("name")
   val name: String,
+
   /** A description of the role. */
   @JsonProperty("description")
   val description: String?,
+
   /** The slug of the resource type the role applies to. */
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String,
+
   /** The permissions granted by the role. */
   @JsonProperty("permissions")
   val permissions: List<String>,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the organization role object. */
   @JsonProperty("object")
   val objectType: String = "organization_role"

@@ -14,6 +14,8 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor
 import com.workos.WorkOS
 import com.workos.common.json.ObjectMapperFactory
 import com.workos.models.AuthenticateResponse
+import com.workos.models.AuthenticateResponseImpersonator
+import com.workos.models.User
 import com.workos.usermanagement.AuthKitLogoutUrlOptions
 import com.workos.usermanagement.UserManagement
 import com.workos.usermanagement.getLogoutUrl
@@ -47,18 +49,34 @@ enum class RefreshSessionFailureReason {
   SSO_REQUIRED
 }
 
-/** Payload persisted in a sealed session cookie. */
+/**
+ * Payload persisted in a sealed session cookie.
+ *
+ * Wire format: serialized via the SDK's shared Jackson mapper. The `user` and
+ * `impersonator` fields are typed [User] and [AuthenticateResponseImpersonator]
+ * models whose JSON shape matches the WorkOS API (snake_case, via
+ * [com.fasterxml.jackson.annotation.JsonProperty] on each model field). This
+ * mirrors the cross-SDK semantics shared with the Node SDK.
+ *
+ * NOTE: The on-disk shape of the typed objects is identical to what the
+ * previous untyped-`Map` representation produced — both routed through the
+ * same [com.fasterxml.jackson.databind.ObjectMapper.convertValue] /
+ * `writeValueAsString` path. Existing sealed cookies remain readable.
+ * If the cookie shape ever needs to change in a way that is incompatible
+ * with sealed cookies already in the wild, bump a cookie-format version
+ * field here and gate deserialization on it.
+ */
 data class SessionCookieData(
   /** JWT access token for authenticating API requests. */
   val accessToken: String,
   /** Refresh token used to obtain a new access token. */
   val refreshToken: String,
   /** User profile data associated with this session. */
-  val user: Map<String, Any?>? = null,
+  val user: User? = null,
   /** Method used to authenticate the user (e.g. `"SSO"`, `"Password"`). */
   val authenticationMethod: String? = null,
   /** Details of the admin impersonating this user, if any. */
-  val impersonator: Map<String, Any?>? = null
+  val impersonator: AuthenticateResponseImpersonator? = null
 )
 
 /** Sum type returned by [SessionCookie.authenticate]. */
@@ -80,11 +98,11 @@ sealed class AuthenticateSessionResult {
     /** Feature flag keys enabled for the user. */
     val featureFlags: List<String>? = null,
     /** User profile data from the session cookie. */
-    val user: Map<String, Any?>? = null,
+    val user: User? = null,
     /** Method used to authenticate the user. */
     val authenticationMethod: String? = null,
     /** Details of the admin impersonating this user, if any. */
-    val impersonator: Map<String, Any?>? = null,
+    val impersonator: AuthenticateResponseImpersonator? = null,
     /** Raw JWT access token. */
     val accessToken: String
   ) : AuthenticateSessionResult()
@@ -121,11 +139,11 @@ sealed class RefreshSessionResult {
     /** Feature flag keys enabled for the user. */
     val featureFlags: List<String>? = null,
     /** User profile data from the session cookie. */
-    val user: Map<String, Any?>? = null,
+    val user: User? = null,
     /** Method used to authenticate the user. */
     val authenticationMethod: String? = null,
     /** Details of the admin impersonating this user, if any. */
-    val impersonator: Map<String, Any?>? = null
+    val impersonator: AuthenticateResponseImpersonator? = null
   ) : RefreshSessionResult()
 
   /** A failed refresh attempt. */
@@ -350,17 +368,11 @@ class Session internal constructor(
       SessionCookieData(
         accessToken = response.accessToken,
         refreshToken = response.refreshToken,
-        user = toMap(response.user),
+        user = response.user,
         authenticationMethod = response.authenticationMethod?.value,
-        impersonator = response.impersonator?.let { toMap(it) }
+        impersonator = response.impersonator
       )
     return Iron.seal(objectMapper.writeValueAsString(payload), cookiePassword)
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  private fun toMap(value: Any?): Map<String, Any?>? {
-    if (value == null) return null
-    return objectMapper.convertValue(value, Map::class.java) as? Map<String, Any?>
   }
 }
 

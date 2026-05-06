@@ -10,6 +10,7 @@ data class FlagRuleUpdatedContextPreviousAttributeContext(
   /** The previous access type of the flag rule. */
   @JsonProperty("access_type")
   val accessType: FlagRuleUpdatedContextPreviousAttributeContextAccessType? = null,
+
   /** The previous configured targets for the flag rule. */
   @JsonProperty("configured_targets")
   val configuredTargets: FlagRuleUpdatedContextPreviousAttributeContextConfiguredTarget? = null

@@ -9,9 +9,11 @@ data class AuditLogSchema(
   /** The list of targets for the schema. */
   @JsonProperty("targets")
   val targets: List<AuditLogSchemaTarget>,
+
   /** The metadata schema for the actor. */
   @JsonProperty("actor")
   val actor: AuditLogSchemaActor? = null,
+
   /** Optional JSON schema for event metadata. */
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null

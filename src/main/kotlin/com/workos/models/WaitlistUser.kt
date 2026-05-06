@@ -11,21 +11,27 @@ data class WaitlistUser(
   /** The unique ID of the Waitlist User. */
   @JsonProperty("id")
   val id: String,
+
   /** The email address of the Waitlist User. */
   @JsonProperty("email")
   val email: String,
+
   /** The state of the Waitlist User. */
   @JsonProperty("state")
   val state: WaitlistUserState,
+
   /** The timestamp when the Waitlist User was approved, or null if not yet approved. */
   @JsonProperty("approved_at")
   val approvedAt: OffsetDateTime?,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the Waitlist User object. */
   @JsonProperty("object")
   val objectType: String = "waitlist_user"

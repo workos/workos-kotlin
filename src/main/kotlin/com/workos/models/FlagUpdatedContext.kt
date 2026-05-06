@@ -9,9 +9,11 @@ data class FlagUpdatedContext(
   /** The client ID associated with the flag event. */
   @JsonProperty("client_id")
   val clientId: String,
+
   /** The actor who performed the action. */
   @JsonProperty("actor")
   val actor: FlagUpdatedContextActor,
+
   /** Attributes that changed from their previous values. */
   @JsonProperty("previous_attributes")
   val previousAttributes: FlagUpdatedContextPreviousAttribute? = null

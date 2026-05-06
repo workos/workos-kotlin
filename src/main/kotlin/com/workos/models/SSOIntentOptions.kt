@@ -9,6 +9,7 @@ data class SSOIntentOptions(
   /** The bookmark slug to use for SSO. */
   @JsonProperty("bookmark_slug")
   val bookmarkSlug: String? = null,
+
   /** The SSO provider type to configure. */
   @JsonProperty("provider_type")
   val providerType: String? = null

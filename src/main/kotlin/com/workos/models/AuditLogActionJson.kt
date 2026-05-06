@@ -10,15 +10,19 @@ data class AuditLogActionJson(
   /** Identifier of what action was taken. */
   @JsonProperty("name")
   val name: String,
+
   /** The schema associated with the action. */
   @JsonProperty("schema")
   val schema: AuditLogSchemaJson,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the Audit Log Action object. */
   @JsonProperty("object")
   val objectType: String = "audit_log_action"

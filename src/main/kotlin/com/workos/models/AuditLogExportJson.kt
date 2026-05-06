@@ -11,18 +11,23 @@ data class AuditLogExportJson(
   /** The unique ID of the Audit Log Export. */
   @JsonProperty("id")
   val id: String,
+
   /** The state of the export. Possible values: pending, ready, error. */
   @JsonProperty("state")
   val state: AuditLogExportJsonState,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the Audit Log Export object. */
   @JsonProperty("object")
   val objectType: String = "audit_log_export",
+
   /** A URL to the CSV file. Only defined when the Audit Log Export is ready. */
   @JsonProperty("url")
   val url: String? = null

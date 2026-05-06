@@ -11,8 +11,14 @@ import com.workos.models.RadarListEntryAlreadyPresentResponse
 import com.workos.models.RadarStandaloneResponse
 import com.workos.types.RadarStandaloneAssessRequestAction
 import com.workos.types.RadarStandaloneAssessRequestAuthMethod
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Radar. */
+/**
+ * API accessor for Radar.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Radar(
   internal val workos: WorkOS
 ) {
@@ -64,6 +70,29 @@ class Radar(
   }
 
   /**
+   * Coroutine-aware variant of [createAttempt]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createAttempt] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createAttemptSuspend")
+  suspend fun createAttemptSuspend(
+    ipAddress: String,
+    userAgent: String,
+    email: String,
+    authMethod: RadarStandaloneAssessRequestAuthMethod,
+    action: RadarStandaloneAssessRequestAction,
+    deviceFingerprint: String? = null,
+    botScore: String? = null,
+    requestOptions: RequestOptions? = null
+  ): RadarStandaloneResponse =
+    withContext(Dispatchers.IO) {
+      createAttempt(ipAddress, userAgent, email, authMethod, action, deviceFingerprint, botScore, requestOptions)
+    }
+
+  /**
    * Update a Radar attempt
    *
    * You may optionally inform Radar that an authentication attempt or challenge was successful using this endpoint. Some Radar controls depend on tracking recent successful attempts, such as impossible travel.
@@ -93,6 +122,24 @@ class Radar(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateAttempt]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateAttempt] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateAttemptSuspend")
+  suspend fun updateAttemptSuspend(
+    id: String,
+    challengeStatus: String? = null,
+    attemptStatus: String? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    updateAttempt(id, challengeStatus, attemptStatus, requestOptions)
   }
 
   /**
@@ -129,6 +176,25 @@ class Radar(
   }
 
   /**
+   * Coroutine-aware variant of [addListEntry]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [addListEntry] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("addListEntrySuspend")
+  suspend fun addListEntrySuspend(
+    type: String,
+    action: String,
+    entry: String,
+    requestOptions: RequestOptions? = null
+  ): RadarListEntryAlreadyPresentResponse =
+    withContext(Dispatchers.IO) {
+      addListEntry(type, action, entry, requestOptions)
+    }
+
+  /**
    * Remove an entry from a Radar list
    *
    * Remove an entry from a Radar list.
@@ -157,5 +223,23 @@ class Radar(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [removeListEntry]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeListEntry] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeListEntrySuspend")
+  suspend fun removeListEntrySuspend(
+    type: String,
+    action: String,
+    entry: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeListEntry(type, action, entry, requestOptions)
   }
 }

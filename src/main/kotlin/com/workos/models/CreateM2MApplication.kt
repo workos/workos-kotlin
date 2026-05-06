@@ -9,15 +9,19 @@ data class CreateM2MApplication(
   /** The name of the application. */
   @JsonProperty("name")
   val name: String,
+
   /** The organization ID this application belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The type of application to create. */
   @JsonProperty("application_type")
   val applicationType: String = "m2m",
+
   /** A description for the application. */
   @JsonProperty("description")
   val description: String? = null,
+
   /** The OAuth scopes granted to the application. */
   @JsonProperty("scopes")
   val scopes: List<String>? = null

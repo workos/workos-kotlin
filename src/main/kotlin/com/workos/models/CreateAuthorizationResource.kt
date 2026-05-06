@@ -9,24 +9,31 @@ data class CreateAuthorizationResource(
   /** An external identifier for the resource. */
   @JsonProperty("external_id")
   val externalId: String,
+
   /** A display name for the resource. */
   @JsonProperty("name")
   val name: String,
+
   /** The slug of the resource type. */
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String,
+
   /** The ID of the organization this resource belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** An optional description of the resource. */
   @JsonProperty("description")
   val description: String? = null,
+
   /** The ID of the parent resource. Mutually exclusive with `parent_resource_external_id` and `parent_resource_type_slug`. */
   @JsonProperty("parent_resource_id")
   val parentResourceId: String? = null,
+
   /** The external ID of the parent resource. Required with `parent_resource_type_slug`. Mutually exclusive with `parent_resource_id`. */
   @JsonProperty("parent_resource_external_id")
   val parentResourceExternalId: String? = null,
+
   /** The resource type slug of the parent resource. Required with `parent_resource_external_id`. Mutually exclusive with `parent_resource_id`. */
   @JsonProperty("parent_resource_type_slug")
   val parentResourceTypeSlug: String? = null

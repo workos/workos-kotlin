@@ -1,8 +1,12 @@
 // @oagen-ignore-file
 package com.workos.webhooks
 
+import com.workos.models.UserCreated
+import com.workos.models.WorkOSEvent
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.security.SignatureException
 import java.time.Instant
@@ -83,5 +87,42 @@ class WebhookVerifierTest {
     assertThrows(SignatureException::class.java) {
       webhooks.verifyHeader("""{"tampered":true}""", header, secret, 60_000)
     }
+  }
+
+  @Test
+  fun `constructTypedEvent returns typed WorkOSEvent for user created`() {
+    val userCreatedPayload =
+      """
+      {
+        "id": "event_01",
+        "event": "user.created",
+        "created_at": "2024-01-01T00:00:00Z",
+        "data": {
+          "object": "user",
+          "id": "user_1",
+          "email": "u@e.com",
+          "first_name": null,
+          "last_name": null,
+          "email_verified": true,
+          "profile_picture_url": null,
+          "external_id": null,
+          "last_sign_in_at": null,
+          "created_at": "2024-01-01T00:00:00Z",
+          "updated_at": "2024-01-01T00:00:00Z",
+          "metadata": {}
+        }
+      }
+      """.trimIndent()
+    val timestamp = Instant.now().toEpochMilli().toString()
+    val signature = webhooks.createSignature(timestamp, userCreatedPayload, secret)
+    val header = "t=$timestamp, v1=$signature"
+
+    val event: WorkOSEvent = webhooks.constructTypedEvent(userCreatedPayload, header, secret)
+    assertTrue(event is UserCreated)
+    val userCreated = event as UserCreated
+    assertInstanceOf(UserCreated::class.java, event)
+    assertEquals("event_01", userCreated.id)
+    assertEquals("user.created", userCreated.event)
+    assertEquals("user_1", userCreated.data.id)
   }
 }

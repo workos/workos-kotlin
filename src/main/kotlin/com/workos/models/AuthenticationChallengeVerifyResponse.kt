@@ -9,6 +9,7 @@ data class AuthenticationChallengeVerifyResponse(
   /** The authentication challenge object. */
   @JsonProperty("challenge")
   val challenge: AuthenticationChallenge,
+
   /** Whether the code was valid. */
   @JsonProperty("valid")
   val valid: Boolean

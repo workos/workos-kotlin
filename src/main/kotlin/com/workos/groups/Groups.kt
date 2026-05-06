@@ -14,8 +14,14 @@ import com.workos.common.http.patchBodyOf
 import com.workos.models.Group
 import com.workos.models.UserOrganizationMembershipBaseListData
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Groups. */
+/**
+ * API accessor for Groups.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Groups(
   internal val workos: WorkOS
 ) {
@@ -28,7 +34,7 @@ class Groups(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -55,6 +61,27 @@ class Groups(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationGroups]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationGroups] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationGroupsSuspend")
+  suspend fun listOrganizationGroupsSuspend(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Group> =
+    withContext(Dispatchers.IO) {
+      listOrganizationGroups(organizationId, before, after, limit, order, requestOptions)
+    }
 
   /**
    * Create a group
@@ -91,6 +118,25 @@ class Groups(
   }
 
   /**
+   * Coroutine-aware variant of [createOrganizationGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationGroupSuspend")
+  suspend fun createOrganizationGroupSuspend(
+    organizationId: String,
+    name: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Group =
+    withContext(Dispatchers.IO) {
+      createOrganizationGroup(organizationId, name, description, requestOptions)
+    }
+
+  /**
    * Get a group
    *
    * Retrieve a group by its ID within an organization.
@@ -115,6 +161,24 @@ class Groups(
       )
     return workos.baseClient.request(config, Group::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getOrganizationGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getOrganizationGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getOrganizationGroupSuspend")
+  suspend fun getOrganizationGroupSuspend(
+    organizationId: String,
+    groupId: String,
+    requestOptions: RequestOptions? = null
+  ): Group =
+    withContext(Dispatchers.IO) {
+      getOrganizationGroup(organizationId, groupId, requestOptions)
+    }
 
   /**
    * Update a group
@@ -153,6 +217,26 @@ class Groups(
   }
 
   /**
+   * Coroutine-aware variant of [updateOrganizationGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateOrganizationGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateOrganizationGroupSuspend")
+  suspend fun updateOrganizationGroupSuspend(
+    organizationId: String,
+    groupId: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): Group =
+    withContext(Dispatchers.IO) {
+      updateOrganizationGroup(organizationId, groupId, name, description, requestOptions)
+    }
+
+  /**
    * Delete a group
    *
    * Delete a group from an organization.
@@ -177,6 +261,23 @@ class Groups(
   }
 
   /**
+   * Coroutine-aware variant of [deleteOrganizationGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteOrganizationGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteOrganizationGroupSuspend")
+  suspend fun deleteOrganizationGroupSuspend(
+    organizationId: String,
+    groupId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteOrganizationGroup(organizationId, groupId, requestOptions)
+  }
+
+  /**
    * List Group members
    *
    * Get a list of organization memberships in a group.
@@ -186,7 +287,7 @@ class Groups(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -214,6 +315,28 @@ class Groups(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationMemberships]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationMemberships] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationMembershipsSuspend")
+  suspend fun listOrganizationMembershipsSuspend(
+    organizationId: String,
+    groupId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserOrganizationMembershipBaseListData> =
+    withContext(Dispatchers.IO) {
+      listOrganizationMemberships(organizationId, groupId, before, after, limit, order, requestOptions)
+    }
 
   /**
    * Add a member to a Group
@@ -249,6 +372,25 @@ class Groups(
   }
 
   /**
+   * Coroutine-aware variant of [createOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationMembershipSuspend")
+  suspend fun createOrganizationMembershipSuspend(
+    organizationId: String,
+    groupId: String,
+    organizationMembershipId: String,
+    requestOptions: RequestOptions? = null
+  ): Group =
+    withContext(Dispatchers.IO) {
+      createOrganizationMembership(organizationId, groupId, organizationMembershipId, requestOptions)
+    }
+
+  /**
    * Remove a member from a Group
    *
    * Remove an organization membership from a group.
@@ -274,5 +416,23 @@ class Groups(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteOrganizationMembershipSuspend")
+  suspend fun deleteOrganizationMembershipSuspend(
+    organizationId: String,
+    groupId: String,
+    omId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteOrganizationMembership(organizationId, groupId, omId, requestOptions)
   }
 }

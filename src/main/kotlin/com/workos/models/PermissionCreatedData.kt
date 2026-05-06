@@ -10,24 +10,31 @@ data class PermissionCreatedData(
   /** Unique identifier of the permission. */
   @JsonProperty("id")
   val id: String,
+
   /** The slug identifier of the permission. */
   @JsonProperty("slug")
   val slug: String,
+
   /** The name of the permission. */
   @JsonProperty("name")
   val name: String,
+
   /** A description of the permission. */
   @JsonProperty("description")
   val description: String?,
+
   /** Whether the permission is a system permission. */
   @JsonProperty("system")
   val system: Boolean,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the permission object. */
   @JsonProperty("object")
   val objectType: String = "permission"

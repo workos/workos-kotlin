@@ -13,33 +13,43 @@ data class ConnectionActivatedData(
   /** Unique identifier of the connection. */
   @JsonProperty("id")
   val id: String,
+
   /** The current state of the connection. */
   @JsonProperty("state")
   val state: ConnectionActivatedDataState,
+
   /** The name of the connection. */
   @JsonProperty("name")
   val name: String,
+
   /** The type of the connection. */
   @JsonProperty("connection_type")
   val connectionType: ConnectionActivatedDataConnectionType,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** The external key of the connection. */
   @JsonProperty("external_key")
   val externalKey: String,
+
   /** Deprecated. Use state instead. */
   @JsonProperty("status")
   val status: ConnectionActivatedDataStatus,
+
   /** The domains associated with the connection. */
   @JsonProperty("domains")
   val domains: List<ConnectionActivatedDataDomain>,
+
   /** Distinguishes the connection object. */
   @JsonProperty("object")
   val objectType: String = "connection",
+
   /** The ID of the organization the connection belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String? = null

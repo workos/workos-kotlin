@@ -9,9 +9,11 @@ data class EventContextGoogleAnalyticsSession(
   /** The Google Analytics container ID. */
   @JsonProperty("containerId")
   val containerId: String,
+
   /** The Google Analytics session ID. */
   @JsonProperty("sessionId")
   val sessionId: String? = null,
+
   /** The Google Analytics session number. */
   @JsonProperty("sessionNumber")
   val sessionNumber: String? = null

@@ -9,9 +9,11 @@ data class ConnectionDomain(
   /** Unique identifier for the Connection Domain. */
   @JsonProperty("id")
   val id: String,
+
   /** The domain value. */
   @JsonProperty("domain")
   val domain: String,
+
   /** Distinguishes the Connection Domain object. */
   @JsonProperty("object")
   val objectType: String = "connection_domain"

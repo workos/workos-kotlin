@@ -9,9 +9,11 @@ data class CreateUserApiKey(
   /** A descriptive name for the API key. */
   @JsonProperty("name")
   val name: String,
+
   /** The ID of the organization the user API key is associated with. The user must have an active membership in this organization. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The permission slugs to assign to the API key. Each permission must be enabled for user API keys. */
   @JsonProperty("permissions")
   val permissions: List<String>? = null

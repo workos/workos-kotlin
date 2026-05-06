@@ -10,15 +10,19 @@ data class FlagRuleUpdatedContext(
   /** The client ID associated with the flag event. */
   @JsonProperty("client_id")
   val clientId: String,
+
   /** The actor who performed the action. */
   @JsonProperty("actor")
   val actor: FlagRuleUpdatedContextActor,
+
   /** The access type of the flag rule. */
   @JsonProperty("access_type")
   val accessType: FlagRuleUpdatedContextAccessType,
+
   /** The configured targets for the flag rule. */
   @JsonProperty("configured_targets")
   val configuredTargets: FlagRuleUpdatedContextConfiguredTarget,
+
   /** Attributes that changed from their previous values. */
   @JsonProperty("previous_attributes")
   val previousAttributes: FlagRuleUpdatedContextPreviousAttribute

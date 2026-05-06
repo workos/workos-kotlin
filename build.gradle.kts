@@ -44,6 +44,8 @@ dependencies {
 
   implementation(kotlin("reflect"))
 
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+
   testImplementation(platform("org.junit:junit-bom:6.0.3"))
 
   testImplementation(kotlin("test-junit5"))

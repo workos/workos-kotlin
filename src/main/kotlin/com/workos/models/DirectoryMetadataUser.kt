@@ -9,6 +9,7 @@ data class DirectoryMetadataUser(
   /** Count of active directory users. */
   @JsonProperty("active")
   val active: Long,
+
   /** Count of inactive directory users. */
   @JsonProperty("inactive")
   val inactive: Long

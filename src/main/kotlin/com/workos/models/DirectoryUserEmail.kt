@@ -9,9 +9,11 @@ data class DirectoryUserEmail(
   /** Whether this is the primary email address. */
   @JsonProperty("primary")
   val primary: Boolean? = null,
+
   /** The type of email address. */
   @JsonProperty("type")
   val type: String? = null,
+
   /** The email address value. */
   @JsonProperty("value")
   val value: String? = null

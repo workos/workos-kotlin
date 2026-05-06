@@ -9,21 +9,27 @@ data class AuthenticationPasswordFailedData(
   /** The IP address of the request. */
   @JsonProperty("ip_address")
   val ipAddress: String?,
+
   /** The user agent of the request. */
   @JsonProperty("user_agent")
   val userAgent: String?,
+
   /** The ID of the user. */
   @JsonProperty("user_id")
   val userId: String?,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String?,
+
   /** Details about the authentication error. */
   @JsonProperty("error")
   val error: AuthenticationPasswordFailedDataError,
+
   /** Always `"password"`. */
   @JsonProperty("type")
   val type: String = "password",
+
   /** Always `"failed"`. */
   @JsonProperty("status")
   val status: String = "failed"

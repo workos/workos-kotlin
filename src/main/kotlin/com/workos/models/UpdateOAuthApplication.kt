@@ -9,12 +9,15 @@ data class UpdateOAuthApplication(
   /** The name of the application. */
   @JsonProperty("name")
   val name: String? = null,
+
   /** A description for the application. */
   @JsonProperty("description")
   val description: String? = null,
+
   /** The OAuth scopes granted to the application. */
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
+
   /** Updated redirect URIs for the application. OAuth applications only. */
   @JsonProperty("redirect_uris")
   val redirectUris: List<RedirectUriInput>? = null

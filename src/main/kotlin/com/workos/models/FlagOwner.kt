@@ -9,9 +9,11 @@ data class FlagOwner(
   /** The email address of the flag owner. */
   @JsonProperty("email")
   val email: String,
+
   /** The first name of the flag owner. */
   @JsonProperty("first_name")
   val firstName: String?,
+
   /** The last name of the flag owner. */
   @JsonProperty("last_name")
   val lastName: String?

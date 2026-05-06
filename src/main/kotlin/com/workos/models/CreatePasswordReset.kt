@@ -9,6 +9,7 @@ data class CreatePasswordReset(
   /** The password reset token. */
   @JsonProperty("token")
   val token: String,
+
   /** The new password to set for the user. */
   @JsonProperty("new_password")
   val newPassword: String

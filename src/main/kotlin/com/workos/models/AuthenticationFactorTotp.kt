@@ -9,6 +9,7 @@ data class AuthenticationFactorTotp(
   /** Your application or company name displayed in the user's authenticator app. Defaults to your WorkOS team name. */
   @JsonProperty("issuer")
   val issuer: String,
+
   /** The user's account name displayed in their authenticator app. Defaults to the user's email. */
   @JsonProperty("user")
   val user: String

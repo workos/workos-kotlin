@@ -6,6 +6,6 @@ class BadRequestException(
   requestId: String?,
   code: String?,
   message: String?,
-  errors: List<Map<String, Any?>>?,
+  errors: List<ApiError>?,
   rawBody: String?
 ) : WorkOSException(400, requestId, code, message, errors, rawBody)

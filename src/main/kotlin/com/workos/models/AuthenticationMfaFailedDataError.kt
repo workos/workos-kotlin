@@ -5,10 +5,11 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /** Details about the authentication error. */
-data class AuthenticationMfaFailedDataError(
+data class AuthenticationMFAFailedDataError(
   /** The error code. */
   @JsonProperty("code")
   val code: String,
+
   /** A human-readable error message. */
   @JsonProperty("message")
   val message: String

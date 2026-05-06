@@ -9,6 +9,7 @@ data class FlagRuleUpdatedContextConfiguredTargetUser(
   /** The ID of the user. */
   @JsonProperty("id")
   val id: String,
+
   /** The email of the user. */
   @JsonProperty("email")
   val email: String

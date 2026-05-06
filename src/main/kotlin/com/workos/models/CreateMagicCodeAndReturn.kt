@@ -9,6 +9,7 @@ data class CreateMagicCodeAndReturn(
   /** The email address to send the magic code to. */
   @JsonProperty("email")
   val email: String,
+
   /** The invitation token to associate with this magic code. */
   @JsonProperty("invitation_token")
   val invitationToken: String? = null

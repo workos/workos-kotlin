@@ -9,9 +9,11 @@ data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
   /** The ID of the user to authorize. */
   @JsonProperty("user_id")
   val userId: String,
+
   /** An organization ID to scope the authorization to a specific organization. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
+
   /** The URL to redirect the user to after authorization. */
   @JsonProperty("return_to")
   val returnTo: String? = null

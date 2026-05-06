@@ -3,10 +3,12 @@ package com.workos.webhooks
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import com.workos.common.crypto.decodeHexOrNull
 import com.workos.common.crypto.toHex
 import com.workos.common.http.parseSignatureHeader
 import com.workos.common.json.ObjectMapperFactory
+import com.workos.models.WorkOSEvent
 import java.security.MessageDigest
 import java.security.SignatureException
 import java.time.Instant
@@ -30,7 +32,13 @@ class Webhook
     /**
      * Validate the `WorkOS-Signature` header against [payload] and return the
      * parsed event body as a [JsonNode]. Callers that want a typed view can
-     * deserialize the node to a generated model with [ObjectMapper.treeToValue].
+     * deserialize the node to a generated model with [ObjectMapper.treeToValue],
+     * or use [constructTypedEvent] to do so in a single call.
+     *
+     * Use this raw form when you need forward-compatibility with event types
+     * the SDK does not yet model (the JSON tree is fully introspectable even
+     * for unknown discriminators), or when you want to avoid binding an event
+     * payload to a Kotlin class.
      *
      * @param payload raw request body as received from the webhook.
      * @param signatureHeader value of the `WorkOS-Signature` header.
@@ -48,6 +56,35 @@ class Webhook
     ): JsonNode {
       verifyHeader(payload, signatureHeader, secret, toleranceMillis)
       return objectMapper.readTree(payload)
+    }
+
+    /**
+     * Verify the signature and return a strongly-typed [WorkOSEvent].
+     *
+     * Use this for ergonomic `when (event) { is UserCreated -> ... }` style
+     * pattern matching. Unknown event types deserialize to the
+     * [com.workos.models.EventSchema] fallback so the call still succeeds.
+     *
+     * If you need to inspect raw JSON fields the SDK does not yet model
+     * (e.g. fields added on the server before an SDK release), prefer
+     * [constructEvent] which returns the raw [JsonNode].
+     *
+     * @param payload raw request body as received from the webhook.
+     * @param signatureHeader value of the `WorkOS-Signature` header.
+     * @param secret webhook signing secret from the WorkOS Dashboard.
+     * @param toleranceMillis maximum age (in ms) a timestamp may have before it
+     *   is rejected as a replay. Defaults to 3 minutes.
+     */
+    @JvmOverloads
+    @Throws(SignatureException::class)
+    fun constructTypedEvent(
+      payload: String,
+      signatureHeader: String,
+      secret: String,
+      toleranceMillis: Long = DEFAULT_TOLERANCE_MILLIS
+    ): WorkOSEvent {
+      val node = constructEvent(payload, signatureHeader, secret, toleranceMillis)
+      return objectMapper.treeToValue(node)
     }
 
     /** Throws [SignatureException] if the signature is invalid or expired. */

@@ -2,9 +2,28 @@
 
 package com.workos
 
+import com.workos.adminportal.AdminPortal
+import com.workos.apikeys.ApiKeys
+import com.workos.auditlogs.AuditLogs
+import com.workos.authorization.Authorization
 import com.workos.common.http.BaseClient
 import com.workos.common.http.RetryConfig
 import com.workos.common.json.ObjectMapperFactory
+import com.workos.connect.Connect
+import com.workos.directorysync.DirectorySync
+import com.workos.events.Events
+import com.workos.featureflags.FeatureFlags
+import com.workos.groups.Groups
+import com.workos.multifactorauth.MultiFactorAuth
+import com.workos.organizationdomains.OrganizationDomains
+import com.workos.organizations.Organizations
+import com.workos.pipes.Pipes
+import com.workos.radar.Radar
+import com.workos.sso.SSO
+import com.workos.usermanagement.UserManagement
+import com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups
+import com.workos.webhooks.Webhooks
+import com.workos.widgets.Widgets
 import okhttp3.OkHttpClient
 import java.util.Properties
 import java.util.concurrent.ConcurrentHashMap
@@ -51,17 +70,100 @@ open class WorkOS
 
     private val serviceCache: ConcurrentHashMap<KClass<*>, Any> = ConcurrentHashMap()
 
-    /** Used by generated service accessors — one instance per service per client. */
+    /**
+     * Used by hand-written extension-property service accessors (e.g.
+     * `WorkOS.actions`, `WorkOS.session`) that cannot be expressed as
+     * `by lazy` because they live outside the [WorkOS] class. Generated
+     * service accessors use `by lazy` directly.
+     */
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> service(
       cls: KClass<T>,
       factory: () -> T
     ): T = serviceCache.computeIfAbsent(cls) { factory() } as T
 
+    /**
+     * Fluent builder for [WorkOS], primarily intended for Java callers who
+     * cannot easily use Kotlin named/default arguments.
+     *
+     * Kotlin usage:
+     * ```kotlin
+     * val workos = WorkOS.builder()
+     *   .apiKey("sk_test_xxx")
+     *   .retryConfig(RetryConfig.DISABLED)
+     *   .build()
+     * ```
+     *
+     * Java usage:
+     * ```java
+     * WorkOS workos = WorkOS.builder()
+     *     .apiKey("sk_test_xxx")
+     *     .retryConfig(RetryConfig.DISABLED)
+     *     .build();
+     * ```
+     */
+    class Builder {
+      private var apiKey: String? = null
+      private var clientId: String? = null
+      private var apiBaseUrl: String = DEFAULT_BASE_URL
+      private var httpClient: OkHttpClient? = null
+      private var retryConfig: RetryConfig = RetryConfig.DEFAULT
+
+      /** Sets the WorkOS API key (required). */
+      fun apiKey(apiKey: String): Builder = apply { this.apiKey = apiKey }
+
+      /** Sets the WorkOS client ID (required for OAuth/PKCE flows). */
+      fun clientId(clientId: String?): Builder = apply { this.clientId = clientId }
+
+      /** Sets the base URL for all API requests (defaults to [DEFAULT_BASE_URL]). */
+      fun apiBaseUrl(apiBaseUrl: String): Builder = apply { this.apiBaseUrl = apiBaseUrl }
+
+      /** Sets the OkHttp client used for all HTTP requests. */
+      fun httpClient(httpClient: OkHttpClient): Builder = apply { this.httpClient = httpClient }
+
+      /** Sets the retry policy applied to transient HTTP failures. */
+      fun retryConfig(retryConfig: RetryConfig): Builder = apply { this.retryConfig = retryConfig }
+
+      /**
+       * Builds a new [WorkOS] instance using the configured values. Throws
+       * [IllegalStateException] if [apiKey] has not been set.
+       */
+      fun build(): WorkOS {
+        val key = apiKey ?: error("apiKey is required")
+        return WorkOS(
+          apiKey = key,
+          clientId = clientId,
+          apiBaseUrl = apiBaseUrl,
+          httpClient = httpClient ?: defaultHttpClient(),
+          retryConfig = retryConfig
+        )
+      }
+    }
+
     /** Constants and factory helpers for the WorkOS SDK client. */
     companion object {
       /** Default base URL for the WorkOS API. */
       const val DEFAULT_BASE_URL: String = "https://api.workos.com"
+
+      /**
+       * Returns a new [Builder] for fluent construction of a [WorkOS] client.
+       *
+       * Kotlin usage:
+       * ```kotlin
+       * val workos = WorkOS.builder()
+       *   .apiKey("sk_test_xxx")
+       *   .build()
+       * ```
+       *
+       * Java usage:
+       * ```java
+       * WorkOS workos = WorkOS.builder()
+       *     .apiKey("sk_test_xxx")
+       *     .build();
+       * ```
+       */
+      @JvmStatic
+      fun builder(): Builder = Builder()
 
       private fun defaultHttpClient(): OkHttpClient =
         OkHttpClient
@@ -77,95 +179,62 @@ open class WorkOS
       }
     }
 
-    /** Lazily-constructed [com.workos.adminportal.AdminPortal] accessor for this [WorkOS] client. */
-    val adminPortal: com.workos.adminportal.AdminPortal
-      get() = service(com.workos.adminportal.AdminPortal::class) { com.workos.adminportal.AdminPortal(this) }
+    /** Lazily-constructed [AdminPortal] accessor for this [WorkOS] client. */
+    val adminPortal: AdminPortal by lazy { AdminPortal(this) }
 
-    /** Lazily-constructed [com.workos.apikeys.ApiKeys] accessor for this [WorkOS] client. */
-    val apiKeys: com.workos.apikeys.ApiKeys
-      get() = service(com.workos.apikeys.ApiKeys::class) { com.workos.apikeys.ApiKeys(this) }
+    /** Lazily-constructed [ApiKeys] accessor for this [WorkOS] client. */
+    val apiKeys: ApiKeys by lazy { ApiKeys(this) }
 
-    /** Lazily-constructed [com.workos.auditlogs.AuditLogs] accessor for this [WorkOS] client. */
-    val auditLogs: com.workos.auditlogs.AuditLogs
-      get() = service(com.workos.auditlogs.AuditLogs::class) { com.workos.auditlogs.AuditLogs(this) }
+    /** Lazily-constructed [AuditLogs] accessor for this [WorkOS] client. */
+    val auditLogs: AuditLogs by lazy { AuditLogs(this) }
 
-    /** Lazily-constructed [com.workos.authorization.Authorization] accessor for this [WorkOS] client. */
-    val authorization: com.workos.authorization.Authorization
-      get() = service(com.workos.authorization.Authorization::class) { com.workos.authorization.Authorization(this) }
+    /** Lazily-constructed [Authorization] accessor for this [WorkOS] client. */
+    val authorization: Authorization by lazy { Authorization(this) }
 
-    /** Lazily-constructed [com.workos.connect.Connect] accessor for this [WorkOS] client. */
-    val connect: com.workos.connect.Connect
-      get() = service(com.workos.connect.Connect::class) { com.workos.connect.Connect(this) }
+    /** Lazily-constructed [Connect] accessor for this [WorkOS] client. */
+    val connect: Connect by lazy { Connect(this) }
 
-    /** Lazily-constructed [com.workos.directorysync.DirectorySync] accessor for this [WorkOS] client. */
-    val directorySync: com.workos.directorysync.DirectorySync
-      get() = service(com.workos.directorysync.DirectorySync::class) { com.workos.directorysync.DirectorySync(this) }
+    /** Lazily-constructed [DirectorySync] accessor for this [WorkOS] client. */
+    val directorySync: DirectorySync by lazy { DirectorySync(this) }
 
-    /** Lazily-constructed [com.workos.events.Events] accessor for this [WorkOS] client. */
-    val events: com.workos.events.Events
-      get() = service(com.workos.events.Events::class) { com.workos.events.Events(this) }
+    /** Lazily-constructed [Events] accessor for this [WorkOS] client. */
+    val events: Events by lazy { Events(this) }
 
-    /** Lazily-constructed [com.workos.featureflags.FeatureFlags] accessor for this [WorkOS] client. */
-    val featureFlags: com.workos.featureflags.FeatureFlags
-      get() = service(com.workos.featureflags.FeatureFlags::class) { com.workos.featureflags.FeatureFlags(this) }
+    /** Lazily-constructed [FeatureFlags] accessor for this [WorkOS] client. */
+    val featureFlags: FeatureFlags by lazy { FeatureFlags(this) }
 
-    /** Lazily-constructed [com.workos.multifactorauth.MultiFactorAuth] accessor for this [WorkOS] client. */
-    val multiFactorAuth: com.workos.multifactorauth.MultiFactorAuth
-      get() = service(com.workos.multifactorauth.MultiFactorAuth::class) { com.workos.multifactorauth.MultiFactorAuth(this) }
+    /** Lazily-constructed [MultiFactorAuth] accessor for this [WorkOS] client. */
+    val multiFactorAuth: MultiFactorAuth by lazy { MultiFactorAuth(this) }
 
-    /** Lazily-constructed [com.workos.organizationdomains.OrganizationDomains] accessor for this [WorkOS] client. */
-    val organizationDomains: com.workos.organizationdomains.OrganizationDomains
-      get() =
-        service(
-          com.workos.organizationdomains.OrganizationDomains::class
-        ) {
-          com.workos.organizationdomains.OrganizationDomains(this)
-        }
+    /** Lazily-constructed [OrganizationDomains] accessor for this [WorkOS] client. */
+    val organizationDomains: OrganizationDomains by lazy { OrganizationDomains(this) }
 
-    /** Lazily-constructed [com.workos.organizations.Organizations] accessor for this [WorkOS] client. */
-    val organizations: com.workos.organizations.Organizations
-      get() = service(com.workos.organizations.Organizations::class) { com.workos.organizations.Organizations(this) }
+    /** Lazily-constructed [Organizations] accessor for this [WorkOS] client. */
+    val organizations: Organizations by lazy { Organizations(this) }
 
-    /** Lazily-constructed [com.workos.pipes.Pipes] accessor for this [WorkOS] client. */
-    val pipes: com.workos.pipes.Pipes
-      get() = service(com.workos.pipes.Pipes::class) { com.workos.pipes.Pipes(this) }
+    /** Lazily-constructed [Pipes] accessor for this [WorkOS] client. */
+    val pipes: Pipes by lazy { Pipes(this) }
 
-    /** Lazily-constructed [com.workos.radar.Radar] accessor for this [WorkOS] client. */
-    val radar: com.workos.radar.Radar
-      get() = service(com.workos.radar.Radar::class) { com.workos.radar.Radar(this) }
+    /** Lazily-constructed [Radar] accessor for this [WorkOS] client. */
+    val radar: Radar by lazy { Radar(this) }
 
-    /** Lazily-constructed [com.workos.sso.Sso] accessor for this [WorkOS] client. */
-    val sso: com.workos.sso.SSO
-      get() = service(com.workos.sso.SSO::class) { com.workos.sso.SSO(this) }
+    /** Lazily-constructed [SSO] accessor for this [WorkOS] client. */
+    val sso: SSO by lazy { SSO(this) }
 
-    /** Lazily-constructed [com.workos.usermanagement.UserManagement] accessor for this [WorkOS] client. */
-    val userManagement: com.workos.usermanagement.UserManagement
-      get() = service(com.workos.usermanagement.UserManagement::class) { com.workos.usermanagement.UserManagement(this) }
+    /** Lazily-constructed [UserManagement] accessor for this [WorkOS] client. */
+    val userManagement: UserManagement by lazy { UserManagement(this) }
 
-    /** Lazily-constructed [com.workos.webhooks.Webhooks] accessor for this [WorkOS] client. */
-    val webhooks: com.workos.webhooks.Webhooks
-      get() = service(com.workos.webhooks.Webhooks::class) { com.workos.webhooks.Webhooks(this) }
+    /** Lazily-constructed [Webhooks] accessor for this [WorkOS] client. */
+    val webhooks: Webhooks by lazy { Webhooks(this) }
 
-    /** Lazily-constructed [com.workos.widgets.Widgets] accessor for this [WorkOS] client. */
-    val widgets: com.workos.widgets.Widgets
-      get() = service(com.workos.widgets.Widgets::class) { com.workos.widgets.Widgets(this) }
+    /** Lazily-constructed [Widgets] accessor for this [WorkOS] client. */
+    val widgets: Widgets by lazy { Widgets(this) }
 
-    /** Lazily-constructed [com.workos.groups.Groups] accessor for this [WorkOS] client. */
-    val groups: com.workos.groups.Groups
-      get() =
-        service(
-          com.workos.groups.Groups::class
-        ) {
-          com.workos.groups.Groups(this)
-        }
+    /** Lazily-constructed [Groups] accessor for this [WorkOS] client. */
+    val groups: Groups by lazy { Groups(this) }
 
-    /** Lazily-constructed [com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups] accessor for this [WorkOS] client. */
-    val userManagementOrganizationMembershipGroups:
-      com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups
-      get() =
-        service(
-          com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups::class
-        ) {
-          com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups(this)
-        }
+    /** Lazily-constructed [UserManagementOrganizationMembershipGroups] accessor for this [WorkOS] client. */
+    val userManagementOrganizationMembershipGroups: UserManagementOrganizationMembershipGroups by lazy {
+      UserManagementOrganizationMembershipGroups(this)
+    }
   }

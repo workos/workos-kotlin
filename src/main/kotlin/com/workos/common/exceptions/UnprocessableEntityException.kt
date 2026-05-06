@@ -6,6 +6,6 @@ class UnprocessableEntityException(
   requestId: String?,
   code: String?,
   message: String?,
-  errors: List<Map<String, Any?>>?,
+  errors: List<ApiError>?,
   rawBody: String?
 ) : WorkOSException(422, requestId, code, message, errors, rawBody)

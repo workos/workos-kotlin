@@ -16,8 +16,14 @@ import com.workos.models.AuthenticationFactorEnrolled
 import com.workos.models.UserAuthenticationFactorEnrollResponse
 import com.workos.types.AuthenticationFactorsCreateRequestType
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for MultiFactorAuth. */
+/**
+ * API accessor for MultiFactorAuth.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class MultiFactorAuth(
   internal val workos: WorkOS
 ) {
@@ -51,6 +57,24 @@ class MultiFactorAuth(
       )
     return workos.baseClient.request(config, AuthenticationChallengeVerifyResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [verifyChallenge]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [verifyChallenge] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("verifyChallengeSuspend")
+  suspend fun verifyChallengeSuspend(
+    id: String,
+    code: String,
+    requestOptions: RequestOptions? = null
+  ): AuthenticationChallengeVerifyResponse =
+    withContext(Dispatchers.IO) {
+      verifyChallenge(id, code, requestOptions)
+    }
 
   /**
    * Enroll Factor
@@ -94,6 +118,27 @@ class MultiFactorAuth(
   }
 
   /**
+   * Coroutine-aware variant of [enrollFactor]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [enrollFactor] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("enrollFactorSuspend")
+  suspend fun enrollFactorSuspend(
+    type: AuthenticationFactorsCreateRequestType,
+    phoneNumber: String? = null,
+    totpIssuer: String? = null,
+    totpUser: String? = null,
+    userId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticationFactorEnrolled =
+    withContext(Dispatchers.IO) {
+      enrollFactor(type, phoneNumber, totpIssuer, totpUser, userId, requestOptions)
+    }
+
+  /**
    * Get Factor
    *
    * Gets an Authentication Factor.
@@ -118,6 +163,23 @@ class MultiFactorAuth(
   }
 
   /**
+   * Coroutine-aware variant of [getFactor]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getFactor] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getFactorSuspend")
+  suspend fun getFactorSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): AuthenticationFactor =
+    withContext(Dispatchers.IO) {
+      getFactor(id, requestOptions)
+    }
+
+  /**
    * Delete Factor
    *
    * Permanently deletes an Authentication Factor. It cannot be undone.
@@ -137,6 +199,22 @@ class MultiFactorAuth(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteFactor]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteFactor] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteFactorSuspend")
+  suspend fun deleteFactorSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteFactor(id, requestOptions)
   }
 
   /**
@@ -169,6 +247,24 @@ class MultiFactorAuth(
       )
     return workos.baseClient.request(config, AuthenticationChallenge::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [challengeFactor]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [challengeFactor] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("challengeFactorSuspend")
+  suspend fun challengeFactorSuspend(
+    id: String,
+    smsTemplate: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticationChallenge =
+    withContext(Dispatchers.IO) {
+      challengeFactor(id, smsTemplate, requestOptions)
+    }
 
   /**
    * List authentication factors
@@ -206,6 +302,27 @@ class MultiFactorAuth(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listUserAuthFactors]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listUserAuthFactors] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listUserAuthFactorsSuspend")
+  suspend fun listUserAuthFactorsSuspend(
+    userlandUserId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthenticationFactor> =
+    withContext(Dispatchers.IO) {
+      listUserAuthFactors(userlandUserId, before, after, limit, order, requestOptions)
+    }
 
   /**
    * Enroll an authentication factor
@@ -246,4 +363,25 @@ class MultiFactorAuth(
       )
     return workos.baseClient.request(config, UserAuthenticationFactorEnrollResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createUserAuthFactor]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createUserAuthFactor] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createUserAuthFactorSuspend")
+  suspend fun createUserAuthFactorSuspend(
+    userlandUserId: String,
+    type: String,
+    totpIssuer: String? = null,
+    totpUser: String? = null,
+    totpSecret: String? = null,
+    requestOptions: RequestOptions? = null
+  ): UserAuthenticationFactorEnrollResponse =
+    withContext(Dispatchers.IO) {
+      createUserAuthFactor(userlandUserId, type, totpIssuer, totpUser, totpSecret, requestOptions)
+    }
 }

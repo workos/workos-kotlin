@@ -9,6 +9,7 @@ data class FlagRuleUpdatedContextPreviousAttribute(
   /** The previous data attributes of the flag. */
   @JsonProperty("data")
   val data: FlagRuleUpdatedContextPreviousAttributeData? = null,
+
   /** The previous context attributes of the flag rule. */
   @JsonProperty("context")
   val context: FlagRuleUpdatedContextPreviousAttributeContext? = null

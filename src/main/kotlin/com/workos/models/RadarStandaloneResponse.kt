@@ -12,15 +12,19 @@ data class RadarStandaloneResponse(
   /** The verdict of the risk assessment. */
   @JsonProperty("verdict")
   val verdict: RadarStandaloneResponseVerdict,
+
   /** A human-readable reason for the verdict. */
   @JsonProperty("reason")
   val reason: String,
+
   /** Unique identifier of the authentication attempt. */
   @JsonProperty("attempt_id")
   val attemptId: String,
+
   /** The Radar control that triggered the verdict. Only present if the verdict is `block` or `challenge`. */
   @JsonProperty("control")
   val control: RadarStandaloneResponseControl? = null,
+
   /** The type of blocklist entry that triggered the verdict. Only present if the control is `restriction`. */
   @JsonProperty("blocklist_type")
   val blocklistType: RadarStandaloneResponseBlocklistType? = null

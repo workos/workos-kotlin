@@ -9,6 +9,7 @@ data class RoleList(
   /** The list of records for the current page. */
   @JsonProperty("data")
   val data: List<Role>,
+
   /** Always `"list"`. */
   @JsonProperty("object")
   val objectType: String = "list"

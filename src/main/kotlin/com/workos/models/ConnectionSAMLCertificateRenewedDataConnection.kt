@@ -9,6 +9,7 @@ data class ConnectionSAMLCertificateRenewedDataConnection(
   /** Unique identifier of the connection. */
   @JsonProperty("id")
   val id: String,
+
   /** The ID of the organization the connection belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String? = null

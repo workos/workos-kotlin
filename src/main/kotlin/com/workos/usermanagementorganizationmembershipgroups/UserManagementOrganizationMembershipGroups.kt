@@ -9,8 +9,14 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.encodePathSegment
 import com.workos.models.Group
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for UserManagementOrganizationMembershipGroups. */
+/**
+ * API accessor for UserManagementOrganizationMembershipGroups.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class UserManagementOrganizationMembershipGroups(
   internal val workos: WorkOS
 ) {
@@ -23,7 +29,7 @@ class UserManagementOrganizationMembershipGroups(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -50,4 +56,25 @@ class UserManagementOrganizationMembershipGroups(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationMembershipGroups]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationMembershipGroups] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationMembershipGroupsSuspend")
+  suspend fun listOrganizationMembershipGroupsSuspend(
+    omId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Group> =
+    withContext(Dispatchers.IO) {
+      listOrganizationMembershipGroups(omId, before, after, limit, order, requestOptions)
+    }
 }

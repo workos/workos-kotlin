@@ -9,24 +9,31 @@ data class ActionUserRegistrationDeniedData(
   /** The ID of the action endpoint. */
   @JsonProperty("action_endpoint_id")
   val actionEndpointId: String,
+
   /** The ID of the action execution. */
   @JsonProperty("action_execution_id")
   val actionExecutionId: String,
+
   /** The ID of the organization. */
   @JsonProperty("organization_id")
   val organizationId: String?,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String,
+
   /** The IP address of the request. */
   @JsonProperty("ip_address")
   val ipAddress: String?,
+
   /** The user agent of the request. */
   @JsonProperty("user_agent")
   val userAgent: String?,
+
   /** The type of action that was denied. */
   @JsonProperty("type")
   val type: String = "user_registration",
+
   /** The verdict of the action. */
   @JsonProperty("verdict")
   val verdict: String = "Deny"

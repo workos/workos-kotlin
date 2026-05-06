@@ -10,6 +10,7 @@ data class OrganizationDomainVerificationFailedData(
   /** The reason the domain verification failed. */
   @JsonProperty("reason")
   val reason: OrganizationDomainVerificationFailedDataReason,
+
   /** The organization domain that failed verification. */
   @JsonProperty("organization_domain")
   val organizationDomain: OrganizationDomainVerificationFailedDataOrganizationDomain

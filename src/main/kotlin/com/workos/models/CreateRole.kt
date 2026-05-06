@@ -9,12 +9,15 @@ data class CreateRole(
   /** A unique slug for the role. */
   @JsonProperty("slug")
   val slug: String,
+
   /** A descriptive name for the role. */
   @JsonProperty("name")
   val name: String,
+
   /** An optional description of the role. */
   @JsonProperty("description")
   val description: String? = null,
+
   /** The slug of the resource type the role is scoped to. */
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String? = null

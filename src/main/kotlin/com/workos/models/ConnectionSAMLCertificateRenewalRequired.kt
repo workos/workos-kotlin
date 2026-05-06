@@ -10,18 +10,23 @@ data class ConnectionSAMLCertificateRenewalRequired(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: ConnectionSAMLCertificateRenewalRequiredData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"connection.saml_certificate_renewal_required"`. */
   @JsonProperty("event")
   override val event: String = "connection.saml_certificate_renewal_required",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

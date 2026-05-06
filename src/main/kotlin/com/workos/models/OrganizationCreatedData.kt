@@ -10,27 +10,35 @@ data class OrganizationCreatedData(
   /** Unique identifier of the Organization. */
   @JsonProperty("id")
   val id: String,
+
   /** A descriptive name for the Organization. This field does not need to be unique. */
   @JsonProperty("name")
   val name: String,
+
   /** List of Organization Domains. */
   @JsonProperty("domains")
   val domains: List<OrganizationCreatedDataDomain>,
+
   /** Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization. */
   @JsonProperty("metadata")
   val metadata: Map<String, String>,
+
   /** The external ID of the Organization. */
   @JsonProperty("external_id")
   val externalId: String?,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the Organization object. */
   @JsonProperty("object")
   val objectType: String = "organization",
+
   /** The Stripe customer ID of the Organization. */
   @JsonProperty("stripe_customer_id")
   val stripeCustomerId: String? = null

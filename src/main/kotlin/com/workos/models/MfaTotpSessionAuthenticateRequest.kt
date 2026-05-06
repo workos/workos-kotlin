@@ -4,32 +4,40 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** MfaTotpSessionAuthenticateRequest model. */
-data class MfaTotpSessionAuthenticateRequest(
+/** MFATotpSessionAuthenticateRequest model. */
+data class MFATotpSessionAuthenticateRequest(
   /** The client ID of the application. */
   @JsonProperty("client_id")
   val clientId: String,
+
   /** The client secret of the application. */
   @JsonProperty("client_secret")
   val clientSecret: String,
+
   /** The TOTP code from the authenticator app. */
   @JsonProperty("code")
   val code: String,
+
   /** The pending authentication token from a previous authentication attempt. */
   @JsonProperty("pending_authentication_token")
   val pendingAuthenticationToken: String,
+
   /** The ID of the MFA authentication challenge. */
   @JsonProperty("authentication_challenge_id")
   val authenticationChallengeId: String,
+
   /** Always `"urn:workos:oauth:grant-type:mfa-totp"`. */
   @JsonProperty("grant_type")
   val grantType: String = "urn:workos:oauth:grant-type:mfa-totp",
+
   /** The IP address of the user's request. */
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
+
   /** A unique identifier for the device. */
   @JsonProperty("device_id")
   val deviceId: String? = null,
+
   /** The user agent string from the user's browser. */
   @JsonProperty("user_agent")
   val userAgent: String? = null

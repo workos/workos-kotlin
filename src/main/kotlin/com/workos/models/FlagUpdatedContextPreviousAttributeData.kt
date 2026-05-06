@@ -9,15 +9,19 @@ data class FlagUpdatedContextPreviousAttributeData(
   /** The previous name of the flag. */
   @JsonProperty("name")
   val name: String? = null,
+
   /** The previous description of the flag. */
   @JsonProperty("description")
   val description: String? = null,
+
   /** The previous tags of the flag. */
   @JsonProperty("tags")
   val tags: List<String>? = null,
+
   /** Whether the flag was previously enabled. */
   @JsonProperty("enabled")
   val enabled: Boolean? = null,
+
   /** The previous default value of the flag. */
   @JsonProperty("default_value")
   val defaultValue: Boolean? = null

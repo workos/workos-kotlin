@@ -9,6 +9,7 @@ data class UserAuthenticationFactorEnrollResponse(
   /** The [authentication factor](https://workos.com/docs/reference/authkit/mfa/authentication-factor) object that represents the additional authentication method used on top of the existing authentication strategy. */
   @JsonProperty("authentication_factor")
   val authenticationFactor: AuthenticationFactorEnrolled,
+
   /** The [authentication challenge](https://workos.com/docs/reference/authkit/mfa/authentication-challenge) object that is used to complete the authentication process. */
   @JsonProperty("authentication_challenge")
   val authenticationChallenge: AuthenticationChallenge

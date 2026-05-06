@@ -9,6 +9,7 @@ data class CreateOrganizationDomain(
   /** The domain to add to the organization. */
   @JsonProperty("domain")
   val domain: String,
+
   /** The ID of the organization to add the domain to. */
   @JsonProperty("organization_id")
   val organizationId: String

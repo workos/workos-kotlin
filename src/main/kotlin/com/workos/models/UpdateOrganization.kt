@@ -9,22 +9,28 @@ data class UpdateOrganization(
   /** The name of the organization. */
   @JsonProperty("name")
   val name: String? = null,
+
   /** Whether the organization allows profiles from outside the organization to sign in. */
   @JsonProperty("allow_profiles_outside_organization")
   val allowProfilesOutsideOrganization: Boolean? = null,
+
   /** The domains associated with the organization. Deprecated in favor of `domain_data`. */
   @JsonProperty("domains")
   @Deprecated("The domains associated with the organization. Deprecated in favor of `domain_data`.")
   val domains: List<String>? = null,
+
   /** The domains associated with the organization, including verification state. */
   @JsonProperty("domain_data")
   val domainData: List<OrganizationDomainData>? = null,
+
   /** The Stripe customer ID associated with the organization. */
   @JsonProperty("stripe_customer_id")
   val stripeCustomerId: String? = null,
+
   /** Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization. */
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null,
+
   /** An external identifier for the Organization. */
   @JsonProperty("external_id")
   val externalId: String? = null

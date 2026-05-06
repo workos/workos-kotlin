@@ -9,8 +9,14 @@ import com.workos.common.http.bodyOf
 import com.workos.models.IntentOptions
 import com.workos.models.PortalLinkResponse
 import com.workos.types.GenerateLinkIntent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for AdminPortal. */
+/**
+ * API accessor for AdminPortal.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class AdminPortal(
   internal val workos: WorkOS
 ) {
@@ -57,4 +63,26 @@ class AdminPortal(
       )
     return workos.baseClient.request(config, PortalLinkResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [generateLink]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [generateLink] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("generateLinkSuspend")
+  suspend fun generateLinkSuspend(
+    organization: String,
+    returnUrl: String? = null,
+    successUrl: String? = null,
+    intent: GenerateLinkIntent? = null,
+    intentOptions: IntentOptions? = null,
+    itContactEmails: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): PortalLinkResponse =
+    withContext(Dispatchers.IO) {
+      generateLink(organization, returnUrl, successUrl, intent, intentOptions, itContactEmails, requestOptions)
+    }
 }

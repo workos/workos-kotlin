@@ -10,9 +10,11 @@ data class UserIdentitiesGetItem(
   /** The unique ID of the user in the external identity provider. */
   @JsonProperty("idp_id")
   val idpId: String,
+
   /** The type of OAuth provider for the identity. */
   @JsonProperty("provider")
   val provider: UserIdentitiesGetItemProvider,
+
   /** The type of the identity. */
   @JsonProperty("type")
   val type: String = "OAuth"

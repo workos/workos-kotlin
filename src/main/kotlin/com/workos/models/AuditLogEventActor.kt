@@ -9,12 +9,15 @@ data class AuditLogEventActor(
   /** Actor identifier. */
   @JsonProperty("id")
   val id: String,
+
   /** Actor type. */
   @JsonProperty("type")
   val type: String,
+
   /** Optional actor name. */
   @JsonProperty("name")
   val name: String? = null,
+
   /** Additional data associated with the event or entity. */
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null

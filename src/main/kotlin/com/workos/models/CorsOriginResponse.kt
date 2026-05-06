@@ -10,15 +10,19 @@ data class CorsOriginResponse(
   /** Unique identifier of the CORS origin. */
   @JsonProperty("id")
   val id: String,
+
   /** The origin URL. */
   @JsonProperty("origin")
   val origin: String,
+
   /** Timestamp when the CORS origin was created. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** Timestamp when the CORS origin was last updated. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the CORS origin object. */
   @JsonProperty("object")
   val objectType: String = "cors_origin"

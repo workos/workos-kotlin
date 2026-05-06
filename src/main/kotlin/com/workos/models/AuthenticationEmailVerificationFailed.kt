@@ -10,18 +10,23 @@ data class AuthenticationEmailVerificationFailed(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: AuthenticationEmailVerificationFailedData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.email_verification_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.email_verification_failed",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

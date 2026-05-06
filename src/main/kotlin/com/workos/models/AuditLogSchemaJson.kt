@@ -10,18 +10,23 @@ data class AuditLogSchemaJson(
   /** The version of the schema. */
   @JsonProperty("version")
   val version: Long,
+
   /** The list of targets for the schema. */
   @JsonProperty("targets")
   val targets: List<AuditLogSchemaJsonTarget>,
+
   /** The timestamp when the Audit Log Schema was created. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** Distinguishes the Audit Log Schema object. */
   @JsonProperty("object")
   val objectType: String = "audit_log_schema",
+
   /** The metadata schema for the actor. */
   @JsonProperty("actor")
   val actor: AuditLogSchemaJsonActor? = null,
+
   /** Additional data associated with the event or entity. */
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null

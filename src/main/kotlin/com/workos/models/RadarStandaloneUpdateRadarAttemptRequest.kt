@@ -9,6 +9,7 @@ data class RadarStandaloneUpdateRadarAttemptRequest(
   /** Set to `"success"` to mark the challenge as completed. */
   @JsonProperty("challenge_status")
   val challengeStatus: String? = null,
+
   /** Set to `"success"` to mark the authentication attempt as successful. */
   @JsonProperty("attempt_status")
   val attemptStatus: String? = null

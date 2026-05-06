@@ -9,12 +9,15 @@ data class JWTTemplateResponse(
   /** The JWT template content as a Liquid template string. */
   @JsonProperty("content")
   val content: String,
+
   /** The timestamp when the JWT template was created. */
   @JsonProperty("created_at")
   val createdAt: String,
+
   /** The timestamp when the JWT template was last updated. */
   @JsonProperty("updated_at")
   val updatedAt: String,
+
   /** The object type. */
   @JsonProperty("object")
   val objectType: String = "jwt_template"

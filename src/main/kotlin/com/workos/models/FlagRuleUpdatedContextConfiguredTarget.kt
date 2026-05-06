@@ -9,6 +9,7 @@ data class FlagRuleUpdatedContextConfiguredTarget(
   /** The organizations targeted by the flag rule. */
   @JsonProperty("organizations")
   val organizations: List<FlagRuleUpdatedContextConfiguredTargetOrganization>,
+
   /** The users targeted by the flag rule. */
   @JsonProperty("users")
   val users: List<FlagRuleUpdatedContextConfiguredTargetUser>

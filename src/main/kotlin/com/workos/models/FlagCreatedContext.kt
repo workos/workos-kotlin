@@ -9,6 +9,7 @@ data class FlagCreatedContext(
   /** The client ID associated with the flag event. */
   @JsonProperty("client_id")
   val clientId: String,
+
   /** The actor who performed the action. */
   @JsonProperty("actor")
   val actor: FlagCreatedContextActor

@@ -10,21 +10,27 @@ data class UserRoleAssignment(
   /** Unique identifier of the role assignment. */
   @JsonProperty("id")
   val id: String,
+
   /** The ID of the organization membership the role is assigned to. */
   @JsonProperty("organization_membership_id")
   val organizationMembershipId: String,
+
   /** The role included in the assignment. */
   @JsonProperty("role")
   val role: SlimRole,
+
   /** The resource the role is assigned on. */
   @JsonProperty("resource")
   val resource: UserRoleAssignmentResource,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the role assignment object. */
   @JsonProperty("object")
   val objectType: String = "role_assignment"

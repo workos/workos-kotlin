@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [AuthenticationMfaFailedDataError]. */
-typealias AuthenticationSSOTimedOutDataError = AuthenticationMfaFailedDataError
+/** Alias for [AuthenticationMFAFailedDataError]. */
+typealias AuthenticationSSOTimedOutDataError = AuthenticationMFAFailedDataError

@@ -15,7 +15,7 @@ enum class CreateWebhookEndpointEvents(
   AuthenticationEmailVerificationSucceeded("authentication.email_verification_succeeded"),
   AuthenticationMagicAuthFailed("authentication.magic_auth_failed"),
   AuthenticationMagicAuthSucceeded("authentication.magic_auth_succeeded"),
-  AuthenticationMfaSucceeded("authentication.mfa_succeeded"),
+  AuthenticationMFASucceeded("authentication.mfa_succeeded"),
   AuthenticationOAuthFailed("authentication.oauth_failed"),
   AuthenticationOAuthSucceeded("authentication.oauth_succeeded"),
   AuthenticationPasswordFailed("authentication.password_failed"),

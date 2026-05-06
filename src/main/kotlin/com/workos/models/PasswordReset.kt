@@ -10,24 +10,31 @@ data class PasswordReset(
   /** The unique ID of the password reset object. */
   @JsonProperty("id")
   val id: String,
+
   /** The unique ID of the user. */
   @JsonProperty("user_id")
   val userId: String,
+
   /** The email address of the user. */
   @JsonProperty("email")
   val email: String,
+
   /** The timestamp when the password reset token expires. */
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime,
+
   /** The timestamp when the password reset token was created. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** The token used to reset the password. */
   @JsonProperty("password_reset_token")
   val passwordResetToken: String,
+
   /** The URL where the user can reset their password. */
   @JsonProperty("password_reset_url")
   val passwordResetUrl: String,
+
   /** Distinguishes the password reset object. */
   @JsonProperty("object")
   val objectType: String = "password_reset"

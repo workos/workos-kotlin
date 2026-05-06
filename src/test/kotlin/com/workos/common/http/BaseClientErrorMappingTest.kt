@@ -5,13 +5,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.workos.common.exceptions.BadRequestException
-import com.workos.common.exceptions.GenericException
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.common.exceptions.UnprocessableEntityException
 import com.workos.common.exceptions.WorkOSException
+import com.workos.common.exceptions.WorkOSGenericException
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -71,8 +71,8 @@ class BaseClientErrorMappingTest : TestBase() {
     val errors = ex.errors
     assertNotNull(errors)
     assertEquals(1, errors!!.size)
-    assertEquals("required", errors[0]["code"])
-    assertEquals("slug", errors[0]["field"])
+    assertEquals("required", errors[0].code)
+    assertEquals("slug", errors[0].field)
   }
 
   @Test
@@ -82,8 +82,8 @@ class BaseClientErrorMappingTest : TestBase() {
   }
 
   @Test
-  fun `403 falls through to GenericException with 403 status`() {
-    val ex = runErrorCase<GenericException>(403, """{"message": "Forbidden"}""")
+  fun `403 falls through to WorkOSGenericException with 403 status`() {
+    val ex = runErrorCase<WorkOSGenericException>(403, """{"message": "Forbidden"}""")
     assertEquals(403, ex.status)
   }
 
@@ -94,8 +94,8 @@ class BaseClientErrorMappingTest : TestBase() {
   }
 
   @Test
-  fun `409 falls through to GenericException with 409 status`() {
-    val ex = runErrorCase<GenericException>(409, """{"message": "Conflict"}""")
+  fun `409 falls through to WorkOSGenericException with 409 status`() {
+    val ex = runErrorCase<WorkOSGenericException>(409, """{"message": "Conflict"}""")
     assertEquals(409, ex.status)
   }
 
@@ -109,7 +109,7 @@ class BaseClientErrorMappingTest : TestBase() {
     val errors = ex.errors
     assertNotNull(errors)
     assertEquals(1, errors!!.size)
-    assertEquals("email", errors[0]["field"])
+    assertEquals("email", errors[0].field)
   }
 
   @Test

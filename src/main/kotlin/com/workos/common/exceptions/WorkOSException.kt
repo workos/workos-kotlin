@@ -17,7 +17,7 @@ sealed class WorkOSException(
   @JvmField val code: String?,
   message: String?,
   /** Structured validation errors from the API response body, if present. */
-  @JvmField val errors: List<Map<String, Any?>>?,
+  @JvmField val errors: List<ApiError>?,
   /** The raw, unparsed response body for debugging. */
   @JvmField val rawBody: String?,
   cause: Throwable? = null

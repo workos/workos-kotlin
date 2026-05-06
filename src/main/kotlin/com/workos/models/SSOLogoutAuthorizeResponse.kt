@@ -9,6 +9,7 @@ data class SSOLogoutAuthorizeResponse(
   /** The URL to redirect the user to in order to log out ([Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint ready to use). */
   @JsonProperty("logout_url")
   val logoutUrl: String,
+
   /** The logout token to be used in the [Logout Redirect](https://workos.com/docs/reference/sso/logout) endpoint. */
   @JsonProperty("logout_token")
   val logoutToken: String

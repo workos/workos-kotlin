@@ -11,24 +11,31 @@ data class AuthenticationFactor(
   /** The unique ID of the factor. */
   @JsonProperty("id")
   val id: String,
+
   /** The type of the factor to enroll. */
   @JsonProperty("type")
   val type: AuthenticationFactorType,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the authentication factor object. */
   @JsonProperty("object")
   val objectType: String = "authentication_factor",
+
   /** The ID of the [user](https://workos.com/docs/reference/authkit/user). */
   @JsonProperty("user_id")
   val userId: String? = null,
+
   /** SMS-based authentication factor details. */
   @JsonProperty("sms")
   val sms: AuthenticationFactorSms? = null,
+
   /** TOTP-based authentication factor details. */
   @JsonProperty("totp")
   val totp: AuthenticationFactorTotp? = null

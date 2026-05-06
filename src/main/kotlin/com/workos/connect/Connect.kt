@@ -18,8 +18,14 @@ import com.workos.models.RedirectUriInput
 import com.workos.models.UserConsentOption
 import com.workos.models.UserObject
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for Connect. */
+/**
+ * API accessor for Connect.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Connect(
   internal val workos: WorkOS
 ) {
@@ -68,6 +74,25 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [completeOAuth2]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [completeOAuth2] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("completeOAuth2Suspend")
+  suspend fun completeOAuth2Suspend(
+    externalAuthId: String,
+    user: UserObject,
+    userConsentOptions: List<UserConsentOption>? = null,
+    requestOptions: RequestOptions? = null
+  ): ExternalAuthCompleteResponse =
+    withContext(Dispatchers.IO) {
+      completeOAuth2(externalAuthId, user, userConsentOptions, requestOptions)
+    }
+
+  /**
    * List Connect Applications
    *
    * List all Connect Applications in the current environment with optional filtering.
@@ -75,7 +100,7 @@ class Connect(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param organizationId Filter Connect Applications by organization ID.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -104,6 +129,27 @@ class Connect(
       addIfNotNull("organization_id", organizationId)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listApplications]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listApplications] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listApplicationsSuspend")
+  suspend fun listApplicationsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<ConnectApplication> =
+    withContext(Dispatchers.IO) {
+      listApplications(before, after, limit, order, organizationId, requestOptions)
+    }
 
   /**
    * Create a Connect Application
@@ -151,6 +197,29 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [createOAuthApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOAuthApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOAuthApplicationSuspend")
+  suspend fun createOAuthApplicationSuspend(
+    name: String,
+    isFirstParty: Boolean,
+    description: String? = null,
+    scopes: List<String>? = null,
+    redirectUris: List<RedirectUriInput>? = null,
+    usesPkce: Boolean? = null,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectApplication =
+    withContext(Dispatchers.IO) {
+      createOAuthApplication(name, isFirstParty, description, scopes, redirectUris, usesPkce, organizationId, requestOptions)
+    }
+
+  /**
    * Create a Connect Application
    *
    * @param name The name of the application.
@@ -187,6 +256,26 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [createM2MApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createM2MApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createM2MApplicationSuspend")
+  suspend fun createM2MApplicationSuspend(
+    name: String,
+    organizationId: String,
+    description: String? = null,
+    scopes: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectApplication =
+    withContext(Dispatchers.IO) {
+      createM2MApplication(name, organizationId, description, scopes, requestOptions)
+    }
+
+  /**
    * Get a Connect Application
    *
    * Retrieve details for a specific Connect Application by ID or client ID.
@@ -209,6 +298,23 @@ class Connect(
       )
     return workos.baseClient.request(config, ConnectApplication::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getApplicationSuspend")
+  suspend fun getApplicationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): ConnectApplication =
+    withContext(Dispatchers.IO) {
+      getApplication(id, requestOptions)
+    }
 
   /**
    * Update a Connect Application
@@ -251,6 +357,27 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [updateApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateApplicationSuspend")
+  suspend fun updateApplicationSuspend(
+    id: String,
+    name: String? = null,
+    description: String? = null,
+    scopes: List<String>? = null,
+    redirectUris: List<RedirectUriInput>? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectApplication =
+    withContext(Dispatchers.IO) {
+      updateApplication(id, name, description, scopes, redirectUris, requestOptions)
+    }
+
+  /**
    * Delete a Connect Application
    *
    * Delete an existing Connect Application.
@@ -270,6 +397,22 @@ class Connect(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteApplicationSuspend")
+  suspend fun deleteApplicationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteApplication(id, requestOptions)
   }
 
   /**
@@ -298,6 +441,23 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [listApplicationClientSecrets]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listApplicationClientSecrets] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listApplicationClientSecretsSuspend")
+  suspend fun listApplicationClientSecretsSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): List<ApplicationCredentialsListItem> =
+    withContext(Dispatchers.IO) {
+      listApplicationClientSecrets(id, requestOptions)
+    }
+
+  /**
    * Create a new client secret for a Connect Application
    *
    * Create new secrets for a Connect Application.
@@ -324,6 +484,23 @@ class Connect(
   }
 
   /**
+   * Coroutine-aware variant of [createApplicationClientSecret]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createApplicationClientSecret] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createApplicationClientSecretSuspend")
+  suspend fun createApplicationClientSecretSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): NewConnectApplicationSecret =
+    withContext(Dispatchers.IO) {
+      createApplicationClientSecret(id, requestOptions)
+    }
+
+  /**
    * Delete a Client Secret
    *
    * Delete (revoke) an existing client secret.
@@ -343,5 +520,21 @@ class Connect(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteClientSecret]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteClientSecret] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteClientSecretSuspend")
+  suspend fun deleteClientSecretSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteClientSecret(id, requestOptions)
   }
 }

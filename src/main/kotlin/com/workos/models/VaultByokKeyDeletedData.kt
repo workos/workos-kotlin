@@ -10,6 +10,7 @@ data class VaultByokKeyDeletedData(
   /** The unique identifier of the organization. */
   @JsonProperty("organization_id")
   val organizationId: String,
+
   /** The key provider. */
   @JsonProperty("key_provider")
   val keyProvider: VaultByokKeyProvider

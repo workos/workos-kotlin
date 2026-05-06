@@ -39,8 +39,24 @@ import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.OrganizationMembershipStatus
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** Mutually exclusive password parameter variants. */
+/**
+ * Mutually exclusive password parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: CreateUserPassword = CreateUserPassword.Plaintext(password = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * CreateUserPassword target = new CreateUserPassword.Plaintext("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
 sealed class CreateUserPassword {
   /** Variant: plaintext. */
   data class Plaintext(
@@ -57,7 +73,21 @@ sealed class CreateUserPassword {
   ) : CreateUserPassword()
 }
 
-/** Mutually exclusive role parameter variants. */
+/**
+ * Mutually exclusive role parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: CreateUserRole = CreateUserRole.Single(slug = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * CreateUserRole target = new CreateUserRole.Single("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
 sealed class CreateUserRole {
   /** Variant: single. */
   data class Single(
@@ -72,7 +102,11 @@ sealed class CreateUserRole {
   ) : CreateUserRole()
 }
 
-/** API accessor for UserManagement. */
+/**
+ * API accessor for UserManagement.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class UserManagement(
   internal val workos: WorkOS
 ) {
@@ -123,6 +157,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getJwks]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getJwks] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getJwksSuspend")
+  suspend fun getJwksSuspend(
+    clientId: String,
+    requestOptions: RequestOptions? = null
+  ): JwksResponse =
+    withContext(Dispatchers.IO) {
+      getJwks(clientId, requestOptions)
+    }
+
+  /**
    * Authenticate
    *
    * @param email The user's email address.
@@ -154,6 +205,28 @@ class UserManagement(
       "device_id" to deviceId,
       "user_agent" to userAgent
     )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithPassword]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithPassword] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithPasswordSuspend")
+  suspend fun authenticateWithPasswordSuspend(
+    email: String,
+    password: String,
+    invitationToken: String? = null,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithPassword(email, password, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+    }
 
   /**
    * Authenticate
@@ -189,6 +262,28 @@ class UserManagement(
     )
 
   /**
+   * Coroutine-aware variant of [authenticateWithCode]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithCode] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithCodeSuspend")
+  suspend fun authenticateWithCodeSuspend(
+    code: String,
+    codeVerifier: String? = null,
+    invitationToken: String? = null,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithCode(code, codeVerifier, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+    }
+
+  /**
    * Authenticate
    *
    * @param refreshToken The refresh token to exchange for new tokens.
@@ -217,6 +312,27 @@ class UserManagement(
       "device_id" to deviceId,
       "user_agent" to userAgent
     )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithRefreshToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithRefreshToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithRefreshTokenSuspend")
+  suspend fun authenticateWithRefreshTokenSuspend(
+    refreshToken: String,
+    organizationId: String? = null,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithRefreshToken(refreshToken, organizationId, ipAddress, deviceId, userAgent, requestOptions)
+    }
 
   /**
    * Authenticate
@@ -252,6 +368,28 @@ class UserManagement(
     )
 
   /**
+   * Coroutine-aware variant of [authenticateWithMagicAuth]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithMagicAuth] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithMagicAuthSuspend")
+  suspend fun authenticateWithMagicAuthSuspend(
+    code: String,
+    email: String,
+    invitationToken: String? = null,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithMagicAuth(code, email, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+    }
+
+  /**
    * Authenticate
    *
    * @param code the code of the request.
@@ -280,6 +418,27 @@ class UserManagement(
       "device_id" to deviceId,
       "user_agent" to userAgent
     )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithEmailVerification]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithEmailVerification] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithEmailVerificationSuspend")
+  suspend fun authenticateWithEmailVerificationSuspend(
+    code: String,
+    pendingAuthenticationToken: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithEmailVerification(code, pendingAuthenticationToken, ipAddress, deviceId, userAgent, requestOptions)
+    }
 
   /**
    * Authenticate
@@ -315,6 +474,28 @@ class UserManagement(
     )
 
   /**
+   * Coroutine-aware variant of [authenticateWithTotp]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithTotp] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithTotpSuspend")
+  suspend fun authenticateWithTotpSuspend(
+    code: String,
+    pendingAuthenticationToken: String,
+    authenticationChallengeId: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithTotp(code, pendingAuthenticationToken, authenticationChallengeId, ipAddress, deviceId, userAgent, requestOptions)
+    }
+
+  /**
    * Authenticate
    *
    * @param pendingAuthenticationToken the pending authentication token of the request.
@@ -343,6 +524,27 @@ class UserManagement(
       "device_id" to deviceId,
       "user_agent" to userAgent
     )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithOrganizationSelection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithOrganizationSelection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithOrganizationSelectionSuspend")
+  suspend fun authenticateWithOrganizationSelectionSuspend(
+    pendingAuthenticationToken: String,
+    organizationId: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithOrganizationSelection(pendingAuthenticationToken, organizationId, ipAddress, deviceId, userAgent, requestOptions)
+    }
 
   /**
    * Authenticate
@@ -382,6 +584,26 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [authenticateWithDeviceCode]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithDeviceCode] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithDeviceCodeSuspend")
+  suspend fun authenticateWithDeviceCodeSuspend(
+    deviceCode: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithDeviceCode(deviceCode, ipAddress, deviceId, userAgent, requestOptions)
+    }
+
+  /**
    * Get device authorization URL
    *
    * Initiates the CLI Auth flow by requesting a device code and verification URLs. This endpoint implements the OAuth 2.0 Device Authorization Flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)) and is designed for command-line applications or other devices with limited input capabilities.
@@ -409,6 +631,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, DeviceAuthorizationResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createDevice]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDevice] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDeviceSuspend")
+  suspend fun createDeviceSuspend(
+    clientId: String,
+    requestOptions: RequestOptions? = null
+  ): DeviceAuthorizationResponse =
+    withContext(Dispatchers.IO) {
+      createDevice(clientId, requestOptions)
+    }
 
   /**
    * Revoke Session
@@ -441,6 +680,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [revokeSession]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [revokeSession] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("revokeSessionSuspend")
+  suspend fun revokeSessionSuspend(
+    sessionId: String,
+    returnTo: String? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    revokeSession(sessionId, returnTo, requestOptions)
+  }
+
+  /**
    * Create a CORS origin
    *
    * Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
@@ -470,6 +726,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [createCorsOrigin]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createCorsOrigin] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createCorsOriginSuspend")
+  suspend fun createCorsOriginSuspend(
+    origin: String,
+    requestOptions: RequestOptions? = null
+  ): CorsOriginResponse =
+    withContext(Dispatchers.IO) {
+      createCorsOrigin(origin, requestOptions)
+    }
+
+  /**
    * Get an email verification code
    *
    * Get the details of an existing email verification code that can be used to send an email to a user for verification.
@@ -492,6 +765,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, EmailVerification::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getEmailVerification]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getEmailVerification] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getEmailVerificationSuspend")
+  suspend fun getEmailVerificationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): EmailVerification =
+    withContext(Dispatchers.IO) {
+      getEmailVerification(id, requestOptions)
+    }
 
   /**
    * Create a password reset token
@@ -521,6 +811,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, PasswordReset::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [resetPassword]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [resetPassword] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("resetPasswordSuspend")
+  suspend fun resetPasswordSuspend(
+    email: String,
+    requestOptions: RequestOptions? = null
+  ): PasswordReset =
+    withContext(Dispatchers.IO) {
+      resetPassword(email, requestOptions)
+    }
 
   /**
    * Reset the password
@@ -555,6 +862,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [confirmPasswordReset]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [confirmPasswordReset] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("confirmPasswordResetSuspend")
+  suspend fun confirmPasswordResetSuspend(
+    token: String,
+    newPassword: String,
+    requestOptions: RequestOptions? = null
+  ): ResetPasswordResponse =
+    withContext(Dispatchers.IO) {
+      confirmPasswordReset(token, newPassword, requestOptions)
+    }
+
+  /**
    * Get a password reset token
    *
    * Get the details of an existing password reset token that can be used to reset a user's password.
@@ -579,6 +904,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getPasswordReset]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getPasswordReset] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getPasswordResetSuspend")
+  suspend fun getPasswordResetSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): PasswordReset =
+    withContext(Dispatchers.IO) {
+      getPasswordReset(id, requestOptions)
+    }
+
+  /**
    * List users
    *
    * Get a list of all of your existing users matching the criteria specified.
@@ -586,7 +928,7 @@ class UserManagement(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param organization **Deprecated.** Filter users by the organization they are a member of. Deprecated in favor of `organization_id`.
    * @param organizationId Filter users by the organization they are a member of.
    * @param email Filter users by their email address.
@@ -621,6 +963,29 @@ class UserManagement(
       addIfNotNull("email", email)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [list]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [list] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSuspend")
+  suspend fun listSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organization: String? = null,
+    organizationId: String? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<User> =
+    withContext(Dispatchers.IO) {
+      list(before, after, limit, order, organization, organizationId, email, requestOptions)
+    }
 
   /**
    * Create a user
@@ -677,6 +1042,29 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [create]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [create] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createSuspend")
+  suspend fun createSuspend(
+    createUserPassword: CreateUserPassword? = null,
+    email: String,
+    firstName: String? = null,
+    lastName: String? = null,
+    emailVerified: Boolean? = null,
+    metadata: Map<String, String>? = null,
+    externalId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): User =
+    withContext(Dispatchers.IO) {
+      create(createUserPassword, email, firstName, lastName, emailVerified, metadata, externalId, requestOptions)
+    }
+
+  /**
    * Get a user by external ID
    *
    * Get the details of an existing user by an [external identifier](https://workos.com/docs/authkit/metadata/external-identifiers).
@@ -701,6 +1089,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getByExternalIdSuspend")
+  suspend fun getByExternalIdSuspend(
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): User =
+    withContext(Dispatchers.IO) {
+      getByExternalId(externalId, requestOptions)
+    }
+
+  /**
    * Get a user
    *
    * Get the details of an existing user.
@@ -723,6 +1128,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, User::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [get]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [get] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSuspend")
+  suspend fun getSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): User =
+    withContext(Dispatchers.IO) {
+      get(id, requestOptions)
+    }
 
   /**
    * Update a user
@@ -784,6 +1206,31 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [update]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [update] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateSuspend")
+  suspend fun updateSuspend(
+    id: String,
+    createUserPassword: CreateUserPassword? = null,
+    email: String? = null,
+    firstName: String? = null,
+    lastName: String? = null,
+    emailVerified: Boolean? = null,
+    metadata: Map<String, String>? = null,
+    externalId: String? = null,
+    locale: String? = null,
+    requestOptions: RequestOptions? = null
+  ): User =
+    withContext(Dispatchers.IO) {
+      update(id, createUserPassword, email, firstName, lastName, emailVerified, metadata, externalId, locale, requestOptions)
+    }
+
+  /**
    * Delete a user
    *
    * Permanently deletes a user in the current environment. It cannot be undone.
@@ -803,6 +1250,22 @@ class UserManagement(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [delete]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [delete] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteSuspend")
+  suspend fun deleteSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    delete(id, requestOptions)
   }
 
   /**
@@ -837,6 +1300,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [confirmEmailChange]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [confirmEmailChange] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("confirmEmailChangeSuspend")
+  suspend fun confirmEmailChangeSuspend(
+    id: String,
+    code: String,
+    requestOptions: RequestOptions? = null
+  ): EmailChangeConfirmation =
+    withContext(Dispatchers.IO) {
+      confirmEmailChange(id, code, requestOptions)
+    }
+
+  /**
    * Send email change code
    *
    * Sends an email that contains a one-time code used to change a user's email address.
@@ -866,6 +1347,24 @@ class UserManagement(
       )
     return workos.baseClient.request(config, EmailChange::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [sendEmailChange]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [sendEmailChange] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("sendEmailChangeSuspend")
+  suspend fun sendEmailChangeSuspend(
+    id: String,
+    newEmail: String,
+    requestOptions: RequestOptions? = null
+  ): EmailChange =
+    withContext(Dispatchers.IO) {
+      sendEmailChange(id, newEmail, requestOptions)
+    }
 
   /**
    * Verify email
@@ -899,6 +1398,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [verifyEmail]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [verifyEmail] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("verifyEmailSuspend")
+  suspend fun verifyEmailSuspend(
+    id: String,
+    code: String,
+    requestOptions: RequestOptions? = null
+  ): VerifyEmailResponse =
+    withContext(Dispatchers.IO) {
+      verifyEmail(id, code, requestOptions)
+    }
+
+  /**
    * Send verification email
    *
    * Sends an email that contains a one-time code used to verify a user’s email address.
@@ -923,6 +1440,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, SendVerificationEmailResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [sendVerificationEmail]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [sendVerificationEmail] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("sendVerificationEmailSuspend")
+  suspend fun sendVerificationEmailSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): SendVerificationEmailResponse =
+    withContext(Dispatchers.IO) {
+      sendVerificationEmail(id, requestOptions)
+    }
 
   /**
    * Get user identities
@@ -950,6 +1484,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getIdentities]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getIdentities] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getIdentitiesSuspend")
+  suspend fun getIdentitiesSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): List<UserIdentitiesGetItem> =
+    withContext(Dispatchers.IO) {
+      getIdentities(id, requestOptions)
+    }
+
+  /**
    * List sessions
    *
    * Get a list of all active sessions for a specific user.
@@ -958,7 +1509,7 @@ class UserManagement(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -987,6 +1538,27 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [listSessions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listSessions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSessionsSuspend")
+  suspend fun listSessionsSuspend(
+    id: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserSessionsListItem> =
+    withContext(Dispatchers.IO) {
+      listSessions(id, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * List invitations
    *
    * Get a list of all of invitations matching the criteria specified.
@@ -994,7 +1566,7 @@ class UserManagement(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) that the recipient will join.
    * @param email The email address of the recipient.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -1026,6 +1598,28 @@ class UserManagement(
       addIfNotNull("email", email)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listInvitations]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listInvitations] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listInvitationsSuspend")
+  suspend fun listInvitationsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserInvite> =
+    withContext(Dispatchers.IO) {
+      listInvitations(before, after, limit, order, organizationId, email, requestOptions)
+    }
 
   /**
    * Send an invitation
@@ -1072,6 +1666,28 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [sendInvitation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [sendInvitation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("sendInvitationSuspend")
+  suspend fun sendInvitationSuspend(
+    email: String,
+    organizationId: String? = null,
+    roleSlug: String? = null,
+    expiresInDays: Long? = null,
+    inviterUserId: String? = null,
+    locale: CreateUserInviteOptionsLocale? = null,
+    requestOptions: RequestOptions? = null
+  ): UserInvite =
+    withContext(Dispatchers.IO) {
+      sendInvitation(email, organizationId, roleSlug, expiresInDays, inviterUserId, locale, requestOptions)
+    }
+
+  /**
    * Find an invitation by token
    *
    * Retrieve an existing invitation using the token.
@@ -1094,6 +1710,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, UserInvite::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [findInvitationByToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [findInvitationByToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("findInvitationByTokenSuspend")
+  suspend fun findInvitationByTokenSuspend(
+    token: String,
+    requestOptions: RequestOptions? = null
+  ): UserInvite =
+    withContext(Dispatchers.IO) {
+      findInvitationByToken(token, requestOptions)
+    }
 
   /**
    * Get an invitation
@@ -1120,6 +1753,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getInvitation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getInvitation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getInvitationSuspend")
+  suspend fun getInvitationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): UserInvite =
+    withContext(Dispatchers.IO) {
+      getInvitation(id, requestOptions)
+    }
+
+  /**
    * Accept an invitation
    *
    * Accepts an invitation and, if linked to an organization, activates the user's membership in that organization.
@@ -1144,6 +1794,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, Invitation::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [acceptInvitation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [acceptInvitation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("acceptInvitationSuspend")
+  suspend fun acceptInvitationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Invitation =
+    withContext(Dispatchers.IO) {
+      acceptInvitation(id, requestOptions)
+    }
 
   /**
    * Resend an invitation
@@ -1177,6 +1844,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [resendInvitation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [resendInvitation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("resendInvitationSuspend")
+  suspend fun resendInvitationSuspend(
+    id: String,
+    locale: CreateUserInviteOptionsLocale? = null,
+    requestOptions: RequestOptions? = null
+  ): UserInvite =
+    withContext(Dispatchers.IO) {
+      resendInvitation(id, locale, requestOptions)
+    }
+
+  /**
    * Revoke an invitation
    *
    * Revokes an existing invitation.
@@ -1203,6 +1888,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [revokeInvitation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [revokeInvitation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("revokeInvitationSuspend")
+  suspend fun revokeInvitationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Invitation =
+    withContext(Dispatchers.IO) {
+      revokeInvitation(id, requestOptions)
+    }
+
+  /**
    * Get JWT template
    *
    * Get the JWT template for the current environment.
@@ -1221,6 +1923,20 @@ class UserManagement(
       )
     return workos.baseClient.request(config, JWTTemplateResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [listJWTTemplate]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listJWTTemplate] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listJWTTemplateSuspend")
+  suspend fun listJWTTemplateSuspend(requestOptions: RequestOptions? = null): JWTTemplateResponse =
+    withContext(Dispatchers.IO) {
+      listJWTTemplate(requestOptions)
+    }
 
   /**
    * Update JWT template
@@ -1250,6 +1966,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, JWTTemplateResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [updateJWTTemplate]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateJWTTemplate] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateJWTTemplateSuspend")
+  suspend fun updateJWTTemplateSuspend(
+    content: String,
+    requestOptions: RequestOptions? = null
+  ): JWTTemplateResponse =
+    withContext(Dispatchers.IO) {
+      updateJWTTemplate(content, requestOptions)
+    }
 
   /**
    * Create a Magic Auth code
@@ -1284,6 +2017,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [createMagicAuth]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createMagicAuth] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createMagicAuthSuspend")
+  suspend fun createMagicAuthSuspend(
+    email: String,
+    invitationToken: String? = null,
+    requestOptions: RequestOptions? = null
+  ): MagicAuth =
+    withContext(Dispatchers.IO) {
+      createMagicAuth(email, invitationToken, requestOptions)
+    }
+
+  /**
    * Get Magic Auth code details
    *
    * Get the details of an existing [Magic Auth](https://workos.com/docs/reference/authkit/magic-auth) code that can be used to send an email to a user for authentication.
@@ -1308,6 +2059,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [getMagicAuth]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getMagicAuth] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getMagicAuthSuspend")
+  suspend fun getMagicAuthSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): MagicAuth =
+    withContext(Dispatchers.IO) {
+      getMagicAuth(id, requestOptions)
+    }
+
+  /**
    * List organization memberships
    *
    * Get a list of all organization memberships matching the criteria specified. At least one of `user_id` or `organization_id` must be provided. By default only active memberships are returned. Use the `statuses` parameter to filter by other statuses.
@@ -1315,7 +2083,7 @@ class UserManagement(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
    * @param statuses Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
    * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
@@ -1350,6 +2118,29 @@ class UserManagement(
       addIfNotNull("user_id", userId)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationMemberships]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationMemberships] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationMembershipsSuspend")
+  suspend fun listOrganizationMembershipsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    statuses: List<OrganizationMembershipStatus>? = null,
+    userId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserOrganizationMembership> =
+    withContext(Dispatchers.IO) {
+      listOrganizationMemberships(before, after, limit, order, organizationId, statuses, userId, requestOptions)
+    }
 
   /**
    * Create an organization membership
@@ -1393,6 +2184,25 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [createOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationMembershipSuspend")
+  suspend fun createOrganizationMembershipSuspend(
+    createUserRole: CreateUserRole? = null,
+    userId: String,
+    organizationId: String,
+    requestOptions: RequestOptions? = null
+  ): OrganizationMembership =
+    withContext(Dispatchers.IO) {
+      createOrganizationMembership(createUserRole, userId, organizationId, requestOptions)
+    }
+
+  /**
    * Get an organization membership
    *
    * Get the details of an existing organization membership.
@@ -1415,6 +2225,23 @@ class UserManagement(
       )
     return workos.baseClient.request(config, UserOrganizationMembership::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getOrganizationMembershipSuspend")
+  suspend fun getOrganizationMembershipSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): UserOrganizationMembership =
+    withContext(Dispatchers.IO) {
+      getOrganizationMembership(id, requestOptions)
+    }
 
   /**
    * Update an organization membership
@@ -1450,6 +2277,24 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [updateOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateOrganizationMembershipSuspend")
+  suspend fun updateOrganizationMembershipSuspend(
+    id: String,
+    createUserRole: CreateUserRole? = null,
+    requestOptions: RequestOptions? = null
+  ): UserOrganizationMembership =
+    withContext(Dispatchers.IO) {
+      updateOrganizationMembership(id, createUserRole, requestOptions)
+    }
+
+  /**
    * Delete an organization membership
    *
    * Permanently deletes an existing organization membership. It cannot be undone.
@@ -1469,6 +2314,22 @@ class UserManagement(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteOrganizationMembershipSuspend")
+  suspend fun deleteOrganizationMembershipSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteOrganizationMembership(id, requestOptions)
   }
 
   /**
@@ -1503,6 +2364,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [deactivateOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deactivateOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deactivateOrganizationMembershipSuspend")
+  suspend fun deactivateOrganizationMembershipSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): OrganizationMembership =
+    withContext(Dispatchers.IO) {
+      deactivateOrganizationMembership(id, requestOptions)
+    }
+
+  /**
    * Reactivate an organization membership
    *
    * Reactivates an `inactive` organization membership, retaining the pre-existing role(s). Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful reactivation.
@@ -1534,6 +2412,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [reactivateOrganizationMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [reactivateOrganizationMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("reactivateOrganizationMembershipSuspend")
+  suspend fun reactivateOrganizationMembershipSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): UserOrganizationMembership =
+    withContext(Dispatchers.IO) {
+      reactivateOrganizationMembership(id, requestOptions)
+    }
+
+  /**
    * Create a redirect URI
    *
    * Creates a new redirect URI for an environment.
@@ -1563,6 +2458,23 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [createRedirectUri]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createRedirectUri] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createRedirectUriSuspend")
+  suspend fun createRedirectUriSuspend(
+    uri: String,
+    requestOptions: RequestOptions? = null
+  ): RedirectUri =
+    withContext(Dispatchers.IO) {
+      createRedirectUri(uri, requestOptions)
+    }
+
+  /**
    * List authorized applications
    *
    * Get a list of all Connect applications that the user has authorized.
@@ -1571,7 +2483,7 @@ class UserManagement(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -1600,6 +2512,27 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [listAuthorizedApplications]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listAuthorizedApplications] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listAuthorizedApplicationsSuspend")
+  suspend fun listAuthorizedApplicationsSuspend(
+    userId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizedConnectApplicationListData> =
+    withContext(Dispatchers.IO) {
+      listAuthorizedApplications(userId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * Delete an authorized application
    *
    * Delete an existing Authorized Connect Application.
@@ -1621,6 +2554,23 @@ class UserManagement(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteAuthorizedApplication]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteAuthorizedApplication] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteAuthorizedApplicationSuspend")
+  suspend fun deleteAuthorizedApplicationSuspend(
+    userId: String,
+    applicationId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteAuthorizedApplication(userId, applicationId, requestOptions)
   }
 
   /**
@@ -1664,6 +2614,28 @@ class UserManagement(
   }
 
   /**
+   * Coroutine-aware variant of [listApiKeys]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listApiKeys] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listApiKeysSuspend")
+  suspend fun listApiKeysSuspend(
+    userId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserApiKey> =
+    withContext(Dispatchers.IO) {
+      listApiKeys(userId, before, after, limit, order, organizationId, requestOptions)
+    }
+
+  /**
    * Create an API key for a user
    *
    * Create a new API key owned by a user. The user must have an active membership in the specified organization.
@@ -1699,4 +2671,24 @@ class UserManagement(
       )
     return workos.baseClient.request(config, UserApiKeyWithValue::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [createApiKey]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createApiKey] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createApiKeySuspend")
+  suspend fun createApiKeySuspend(
+    userId: String,
+    name: String,
+    organizationId: String,
+    permissions: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): UserApiKeyWithValue =
+    withContext(Dispatchers.IO) {
+      createApiKey(userId, name, organizationId, permissions, requestOptions)
+    }
 }

@@ -16,9 +16,15 @@ import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for SSO. */
-class Sso(
+/**
+ * API accessor for SSO.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
+class SSO(
   internal val workos: WorkOS
 ) {
   /**
@@ -69,6 +75,30 @@ class Sso(
   }
 
   /**
+   * Coroutine-aware variant of [listConnections]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listConnections] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listConnectionsSuspend")
+  suspend fun listConnectionsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    connectionType: ConnectionsConnectionType? = null,
+    domain: String? = null,
+    organizationId: String? = null,
+    search: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<Connection> =
+    withContext(Dispatchers.IO) {
+      listConnections(before, after, limit, order, connectionType, domain, organizationId, search, requestOptions)
+    }
+
+  /**
    * Get a Connection
    *
    * Get the details of an existing connection.
@@ -93,6 +123,23 @@ class Sso(
   }
 
   /**
+   * Coroutine-aware variant of [getConnection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getConnection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getConnectionSuspend")
+  suspend fun getConnectionSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Connection =
+    withContext(Dispatchers.IO) {
+      getConnection(id, requestOptions)
+    }
+
+  /**
    * Delete a Connection
    *
    * Permanently deletes an existing connection. It cannot be undone.
@@ -112,6 +159,22 @@ class Sso(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteConnection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteConnection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteConnectionSuspend")
+  suspend fun deleteConnectionSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteConnection(id, requestOptions)
   }
 
   /**
@@ -144,6 +207,23 @@ class Sso(
   }
 
   /**
+   * Coroutine-aware variant of [authorizeLogout]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authorizeLogout] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authorizeLogoutSuspend")
+  suspend fun authorizeLogoutSuspend(
+    profileId: String,
+    requestOptions: RequestOptions? = null
+  ): SSOLogoutAuthorizeResponse =
+    withContext(Dispatchers.IO) {
+      authorizeLogout(profileId, requestOptions)
+    }
+
+  /**
    * Get a User Profile
    *
    * Exchange an access token for a user's [Profile](https://workos.com/docs/reference/sso/profile). Because this profile is returned in the [Get a Profile and Token endpoint](https://workos.com/docs/reference/sso/profile/get-profile-and-token) your application usually does not need to call this endpoint. It is available for any authentication flows that require an additional endpoint to retrieve a user's profile.
@@ -162,6 +242,20 @@ class Sso(
       )
     return workos.baseClient.request(config, Profile::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getProfile]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getProfile] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getProfileSuspend")
+  suspend fun getProfileSuspend(requestOptions: RequestOptions? = null): Profile =
+    withContext(Dispatchers.IO) {
+      getProfile(requestOptions)
+    }
 
   /**
    * Get a Profile and Token
@@ -197,4 +291,21 @@ class Sso(
       )
     return workos.baseClient.request(config, SSOTokenResponse::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getProfileAndToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getProfileAndToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getProfileAndTokenSuspend")
+  suspend fun getProfileAndTokenSuspend(
+    code: String,
+    requestOptions: RequestOptions? = null
+  ): SSOTokenResponse =
+    withContext(Dispatchers.IO) {
+      getProfileAndToken(code, requestOptions)
+    }
 }

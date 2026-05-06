@@ -9,9 +9,11 @@ data class UserRoleAssignmentResource(
   /** The unique ID of the Resource. */
   @JsonProperty("id")
   val id: String,
+
   /** An identifier you provide to reference the resource in your system. */
   @JsonProperty("external_id")
   val externalId: String,
+
   /** The slug of the resource type this resource belongs to. */
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String

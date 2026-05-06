@@ -10,9 +10,15 @@ import com.workos.common.http.addIfNotNull
 import com.workos.common.http.addJoinedIfNotNull
 import com.workos.models.EventSchema
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 
-/** API accessor for Events. */
+/**
+ * API accessor for Events.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Events(
   internal val workos: WorkOS
 ) {
@@ -24,7 +30,7 @@ class Events(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param events Filter events by one or more event types (e.g. `dsync.user.created`).
    * @param rangeStart ISO-8601 date string to filter events created after this date.
    * @param rangeEnd ISO-8601 date string to filter events created before this date.
@@ -62,4 +68,28 @@ class Events(
       addIfNotNull("organization_id", organizationId)
     }
   }
+
+  /**
+   * Coroutine-aware variant of [list]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [list] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSuspend")
+  suspend fun listSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    events: List<String>? = null,
+    rangeStart: OffsetDateTime? = null,
+    rangeEnd: OffsetDateTime? = null,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<EventSchema> =
+    withContext(Dispatchers.IO) {
+      list(before, after, limit, order, events, rangeStart, rangeEnd, organizationId, requestOptions)
+    }
 }

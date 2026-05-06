@@ -12,24 +12,31 @@ data class DsyncDeletedData(
   /** Unique identifier of the directory. */
   @JsonProperty("id")
   val id: String,
+
   /** The type of the directory. */
   @JsonProperty("type")
   val type: DsyncDeletedDataType,
+
   /** The current state of the directory. */
   @JsonProperty("state")
   val state: DsyncDeletedDataState,
+
   /** The name of the directory. */
   @JsonProperty("name")
   val name: String,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the directory object. */
   @JsonProperty("object")
   val objectType: String = "directory",
+
   /** The ID of the organization the directory belongs to. */
   @JsonProperty("organization_id")
   val organizationId: String? = null

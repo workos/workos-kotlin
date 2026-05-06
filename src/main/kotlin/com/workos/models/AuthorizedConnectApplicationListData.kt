@@ -9,15 +9,19 @@ data class AuthorizedConnectApplicationListData(
   /** The unique ID of the authorized connect application. */
   @JsonProperty("id")
   val id: String,
+
   /** The scopes granted by the user to the application. */
   @JsonProperty("granted_scopes")
   val grantedScopes: List<String>,
+
   /** The application. */
   @JsonProperty("application")
   val application: ConnectApplication,
+
   /** Distinguishes the authorized connect application object. */
   @JsonProperty("object")
   val objectType: String = "authorized_connect_application",
+
   /** The OAuth resource associated with the authorized connect application, if one was requested. */
   @JsonProperty("oauth_resource")
   val oauthResource: String? = null

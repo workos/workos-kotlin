@@ -10,15 +10,19 @@ data class DataIntegrationAccessTokenResponseAccessToken(
   /** The OAuth access token for the connected integration. */
   @JsonProperty("access_token")
   val accessToken: String,
+
   /** The ISO-8601 formatted timestamp indicating when the access token expires. */
   @JsonProperty("expires_at")
   val expiresAt: OffsetDateTime?,
+
   /** The scopes granted to the access token. */
   @JsonProperty("scopes")
   val scopes: List<String>,
+
   /** If the integration has requested scopes that aren't present on the access token, they're listed here. */
   @JsonProperty("missing_scopes")
   val missingScopes: List<String>,
+
   /** Distinguishes the access token object. */
   @JsonProperty("object")
   val objectType: String = "access_token"

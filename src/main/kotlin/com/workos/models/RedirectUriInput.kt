@@ -9,6 +9,7 @@ data class RedirectUriInput(
   /** The redirect URI. */
   @JsonProperty("uri")
   val uri: String,
+
   /** Whether this is the default redirect URI. */
   @JsonProperty("default")
   val default: Boolean? = null

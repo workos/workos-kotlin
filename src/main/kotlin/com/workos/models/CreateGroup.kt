@@ -9,6 +9,7 @@ data class CreateGroup(
   /** The name of the Group. */
   @JsonProperty("name")
   val name: String,
+
   /** An optional description of the Group. */
   @JsonProperty("description")
   val description: String? = null

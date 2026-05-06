@@ -9,12 +9,15 @@ data class AssignRole(
   /** The slug of the role to assign. */
   @JsonProperty("role_slug")
   val roleSlug: String,
+
   /** The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`. */
   @JsonProperty("resource_id")
   val resourceId: String? = null,
+
   /** The external ID of the resource. Required with `resource_type_slug`. Mutually exclusive with `resource_id`. */
   @JsonProperty("resource_external_id")
   val resourceExternalId: String? = null,
+
   /** The resource type slug. Required with `resource_external_id`. Mutually exclusive with `resource_id`. */
   @JsonProperty("resource_type_slug")
   val resourceTypeSlug: String? = null

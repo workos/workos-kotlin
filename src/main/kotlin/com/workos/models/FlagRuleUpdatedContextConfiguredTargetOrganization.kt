@@ -9,6 +9,7 @@ data class FlagRuleUpdatedContextConfiguredTargetOrganization(
   /** The ID of the organization. */
   @JsonProperty("id")
   val id: String,
+
   /** The name of the organization. */
   @JsonProperty("name")
   val name: String

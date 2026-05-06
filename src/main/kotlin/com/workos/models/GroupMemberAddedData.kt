@@ -9,6 +9,7 @@ data class GroupMemberAddedData(
   /** The ID of the Group. */
   @JsonProperty("group_id")
   val groupId: String,
+
   /** The ID of the OrganizationMembership. */
   @JsonProperty("organization_membership_id")
   val organizationMembershipId: String

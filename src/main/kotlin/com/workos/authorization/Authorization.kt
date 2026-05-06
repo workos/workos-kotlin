@@ -22,8 +22,24 @@ import com.workos.models.UserOrganizationMembershipBaseListData
 import com.workos.models.UserRoleAssignment
 import com.workos.types.AuthorizationAssignment
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** Mutually exclusive resource target parameter variants. */
+/**
+ * Mutually exclusive resource target parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: ResourceTarget = ResourceTarget.ById(resourceId = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * ResourceTarget target = new ResourceTarget.ById("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
 sealed class ResourceTarget {
   /** Variant: by id. */
   data class ById(
@@ -40,7 +56,21 @@ sealed class ResourceTarget {
   ) : ResourceTarget()
 }
 
-/** Mutually exclusive parent resource parameter variants. */
+/**
+ * Mutually exclusive parent resource parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: ParentResource = ParentResource.ById(id = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * ParentResource target = new ParentResource.ById("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
 sealed class ParentResource {
   /** Variant: by id. */
   data class ById(
@@ -57,7 +87,21 @@ sealed class ParentResource {
   ) : ParentResource()
 }
 
-/** Mutually exclusive parent parameter variants. */
+/**
+ * Mutually exclusive parent parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: Parent = Parent.ById(resourceId = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * Parent target = new Parent.ById("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
 sealed class Parent {
   /** Variant: by id. */
   data class ById(
@@ -74,7 +118,11 @@ sealed class Parent {
   ) : Parent()
 }
 
-/** API accessor for Authorization. */
+/**
+ * API accessor for Authorization.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class Authorization(
   internal val workos: WorkOS
 ) {
@@ -118,6 +166,105 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [check]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [check] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("checkSuspend")
+  suspend fun checkSuspend(
+    organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationCheck =
+    withContext(Dispatchers.IO) {
+      check(organizationMembershipId, resourceTarget, permissionSlug, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `check(ResourceTarget.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ById` explicitly.
+   */
+  fun check(
+    organizationMembershipId: String,
+    resourceId: String,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationCheck =
+    check(
+      organizationMembershipId = organizationMembershipId,
+      resourceTarget = ResourceTarget.ById(resourceId = resourceId),
+      permissionSlug = permissionSlug,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [check]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [check] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("checkSuspend")
+  suspend fun checkSuspend(
+    organizationMembershipId: String,
+    resourceId: String,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationCheck =
+    withContext(Dispatchers.IO) {
+      check(organizationMembershipId, resourceId, permissionSlug, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `check(ResourceTarget.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ByExternalId` explicitly.
+   */
+  fun checkByExternalId(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationCheck =
+    check(
+      organizationMembershipId = organizationMembershipId,
+      resourceTarget = ResourceTarget.ByExternalId(resourceExternalId = resourceExternalId, resourceTypeSlug = resourceTypeSlug),
+      permissionSlug = permissionSlug,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [checkByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [checkByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("checkByExternalIdSuspend")
+  suspend fun checkByExternalIdSuspend(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationCheck =
+    withContext(Dispatchers.IO) {
+      checkByExternalId(organizationMembershipId, resourceExternalId, resourceTypeSlug, permissionSlug, requestOptions)
+    }
+
+  /**
    * List resources for organization membership
    *
    * Returns all child resources of a parent resource where the organization membership has a specific permission. This is useful for resource discovery—answering "What projects can this user access in this workspace?"
@@ -129,7 +276,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -168,6 +315,143 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listResourcesForMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResourcesForMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesForMembershipSuspend")
+  suspend fun listResourcesForMembershipSuspend(
+    organizationMembershipId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    parentResource: ParentResource,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResourcesForMembership(organizationMembershipId, permissionSlug, before, after, limit, order, parentResource, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `listResourcesForMembership(ParentResource.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ById` explicitly.
+   */
+  fun listResourcesForMembership(
+    organizationMembershipId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    listResourcesForMembership(
+      organizationMembershipId = organizationMembershipId,
+      permissionSlug = permissionSlug,
+      before = before,
+      after = after,
+      limit = limit,
+      order = order,
+      parentResource = ParentResource.ById(id = id),
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [listResourcesForMembership]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResourcesForMembership] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesForMembershipSuspend")
+  suspend fun listResourcesForMembershipSuspend(
+    organizationMembershipId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResourcesForMembership(organizationMembershipId, permissionSlug, before, after, limit, order, id, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `listResourcesForMembership(ParentResource.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ByExternalId` explicitly.
+   */
+  fun listResourcesForMembershipByExternalId(
+    organizationMembershipId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    typeSlug: String,
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    listResourcesForMembership(
+      organizationMembershipId = organizationMembershipId,
+      permissionSlug = permissionSlug,
+      before = before,
+      after = after,
+      limit = limit,
+      order = order,
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = externalId),
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [listResourcesForMembershipByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResourcesForMembershipByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesForMembershipByExternalIdSuspend")
+  suspend fun listResourcesForMembershipByExternalIdSuspend(
+    organizationMembershipId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    typeSlug: String,
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResourcesForMembershipByExternalId(
+        organizationMembershipId,
+        permissionSlug,
+        before,
+        after,
+        limit,
+        order,
+        typeSlug,
+        externalId,
+        requestOptions
+      )
+    }
+
+  /**
    * List effective permissions for an organization membership on a resource
    *
    * Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
@@ -177,7 +461,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -209,6 +493,28 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listEffectivePermissions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listEffectivePermissions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listEffectivePermissionsSuspend")
+  suspend fun listEffectivePermissionsSuspend(
+    organizationMembershipId: String,
+    resourceId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationPermission> =
+    withContext(Dispatchers.IO) {
+      listEffectivePermissions(organizationMembershipId, resourceId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * List effective permissions for an organization membership on a resource by external ID
    *
    * Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources.
@@ -219,7 +525,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -252,6 +558,38 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listEffectivePermissionsByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listEffectivePermissionsByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listEffectivePermissionsByExternalIdSuspend")
+  suspend fun listEffectivePermissionsByExternalIdSuspend(
+    organizationMembershipId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationPermission> =
+    withContext(Dispatchers.IO) {
+      listEffectivePermissionsByExternalId(
+        organizationMembershipId,
+        resourceTypeSlug,
+        externalId,
+        before,
+        after,
+        limit,
+        order,
+        requestOptions
+      )
+    }
+
+  /**
    * List role assignments
    *
    * List all role assignments for an organization membership. This returns all roles that have been assigned to the user on resources, including organization-level and sub-resource roles.
@@ -260,7 +598,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -287,6 +625,27 @@ class Authorization(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listRoleAssignmentsSuspend")
+  suspend fun listRoleAssignmentsSuspend(
+    organizationMembershipId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserRoleAssignment> =
+    withContext(Dispatchers.IO) {
+      listRoleAssignments(organizationMembershipId, before, after, limit, order, requestOptions)
+    }
 
   /**
    * Assign a role
@@ -328,6 +687,105 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [assignRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [assignRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("assignRoleSuspend")
+  suspend fun assignRoleSuspend(
+    organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ): UserRoleAssignment =
+    withContext(Dispatchers.IO) {
+      assignRole(organizationMembershipId, resourceTarget, roleSlug, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `assignRole(ResourceTarget.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ById` explicitly.
+   */
+  fun assignRole(
+    organizationMembershipId: String,
+    resourceId: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ): UserRoleAssignment =
+    assignRole(
+      organizationMembershipId = organizationMembershipId,
+      resourceTarget = ResourceTarget.ById(resourceId = resourceId),
+      roleSlug = roleSlug,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [assignRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [assignRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("assignRoleSuspend")
+  suspend fun assignRoleSuspend(
+    organizationMembershipId: String,
+    resourceId: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ): UserRoleAssignment =
+    withContext(Dispatchers.IO) {
+      assignRole(organizationMembershipId, resourceId, roleSlug, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `assignRole(ResourceTarget.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ByExternalId` explicitly.
+   */
+  fun assignRoleByExternalId(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ): UserRoleAssignment =
+    assignRole(
+      organizationMembershipId = organizationMembershipId,
+      resourceTarget = ResourceTarget.ByExternalId(resourceExternalId = resourceExternalId, resourceTypeSlug = resourceTypeSlug),
+      roleSlug = roleSlug,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [assignRoleByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [assignRoleByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("assignRoleByExternalIdSuspend")
+  suspend fun assignRoleByExternalIdSuspend(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ): UserRoleAssignment =
+    withContext(Dispatchers.IO) {
+      assignRoleByExternalId(organizationMembershipId, resourceExternalId, resourceTypeSlug, roleSlug, requestOptions)
+    }
+
+  /**
    * Remove a role assignment
    *
    * Remove a role assignment by role slug and resource.
@@ -365,6 +823,100 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [removeRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeRoleSuspend")
+  suspend fun removeRoleSuspend(
+    organizationMembershipId: String,
+    resourceTarget: ResourceTarget,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeRole(organizationMembershipId, resourceTarget, roleSlug, requestOptions)
+  }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `removeRole(ResourceTarget.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ById` explicitly.
+   */
+  fun removeRole(
+    organizationMembershipId: String,
+    resourceId: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = removeRole(
+    organizationMembershipId = organizationMembershipId,
+    resourceTarget = ResourceTarget.ById(resourceId = resourceId),
+    roleSlug = roleSlug,
+    requestOptions = requestOptions
+  )
+
+  /**
+   * Coroutine-aware variant of [removeRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeRoleSuspend")
+  suspend fun removeRoleSuspend(
+    organizationMembershipId: String,
+    resourceId: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeRole(organizationMembershipId, resourceId, roleSlug, requestOptions)
+  }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `removeRole(ResourceTarget.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ResourceTarget.ByExternalId` explicitly.
+   */
+  fun removeRoleByExternalId(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = removeRole(
+    organizationMembershipId = organizationMembershipId,
+    resourceTarget = ResourceTarget.ByExternalId(resourceExternalId = resourceExternalId, resourceTypeSlug = resourceTypeSlug),
+    roleSlug = roleSlug,
+    requestOptions = requestOptions
+  )
+
+  /**
+   * Coroutine-aware variant of [removeRoleByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeRoleByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeRoleByExternalIdSuspend")
+  suspend fun removeRoleByExternalIdSuspend(
+    organizationMembershipId: String,
+    resourceExternalId: String,
+    resourceTypeSlug: String,
+    roleSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeRoleByExternalId(organizationMembershipId, resourceExternalId, resourceTypeSlug, roleSlug, requestOptions)
+  }
+
+  /**
    * Remove a role assignment by ID
    *
    * Remove a role assignment using its ID.
@@ -391,6 +943,23 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [removeRoleAssignment]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeRoleAssignment] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeRoleAssignmentSuspend")
+  suspend fun removeRoleAssignmentSuspend(
+    organizationMembershipId: String,
+    roleAssignmentId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeRoleAssignment(organizationMembershipId, roleAssignmentId, requestOptions)
+  }
+
+  /**
    * List custom roles
    *
    * Get a list of all roles that apply to an organization. This includes both environment roles and custom roles, returned in priority order.
@@ -413,6 +982,23 @@ class Authorization(
       )
     return workos.baseClient.request(config, RoleList::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationRoles]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationRoles] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationRolesSuspend")
+  suspend fun listOrganizationRolesSuspend(
+    organizationId: String,
+    requestOptions: RequestOptions? = null
+  ): RoleList =
+    withContext(Dispatchers.IO) {
+      listOrganizationRoles(organizationId, requestOptions)
+    }
 
   /**
    * Create a custom role
@@ -455,6 +1041,27 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [createOrganizationRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationRoleSuspend")
+  suspend fun createOrganizationRoleSuspend(
+    organizationId: String,
+    name: String,
+    slug: String? = null,
+    description: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      createOrganizationRole(organizationId, name, slug, description, resourceTypeSlug, requestOptions)
+    }
+
+  /**
    * Get a custom role
    *
    * Retrieve a role that applies to an organization by its slug. This can return either an environment role or a custom role.
@@ -479,6 +1086,24 @@ class Authorization(
       )
     return workos.baseClient.request(config, Role::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getOrganizationRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getOrganizationRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getOrganizationRoleSuspend")
+  suspend fun getOrganizationRoleSuspend(
+    organizationId: String,
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      getOrganizationRole(organizationId, slug, requestOptions)
+    }
 
   /**
    * Update a custom role
@@ -517,6 +1142,26 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [updateOrganizationRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateOrganizationRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateOrganizationRoleSuspend")
+  suspend fun updateOrganizationRoleSuspend(
+    organizationId: String,
+    slug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      updateOrganizationRole(organizationId, slug, name, description, requestOptions)
+    }
+
+  /**
    * Delete a custom role
    *
    * Delete an existing custom role.
@@ -538,6 +1183,23 @@ class Authorization(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteOrganizationRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteOrganizationRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteOrganizationRoleSuspend")
+  suspend fun deleteOrganizationRoleSuspend(
+    organizationId: String,
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteOrganizationRole(organizationId, slug, requestOptions)
   }
 
   /**
@@ -574,6 +1236,25 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [addOrganizationRolePermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [addOrganizationRolePermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("addOrganizationRolePermissionSuspend")
+  suspend fun addOrganizationRolePermissionSuspend(
+    organizationId: String,
+    slug: String,
+    bodySlug: String,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      addOrganizationRolePermission(organizationId, slug, bodySlug, requestOptions)
+    }
+
+  /**
    * Set permissions for a custom role
    *
    * Replace all permissions on a custom role with the provided list.
@@ -607,6 +1288,25 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [setOrganizationRolePermissions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [setOrganizationRolePermissions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("setOrganizationRolePermissionsSuspend")
+  suspend fun setOrganizationRolePermissionsSuspend(
+    organizationId: String,
+    slug: String,
+    permissions: List<String>,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      setOrganizationRolePermissions(organizationId, slug, permissions, requestOptions)
+    }
+
+  /**
    * Remove a permission from a custom role
    *
    * Remove a single permission from a custom role by its slug.
@@ -632,6 +1332,24 @@ class Authorization(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [removeOrganizationRolePermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [removeOrganizationRolePermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("removeOrganizationRolePermissionSuspend")
+  suspend fun removeOrganizationRolePermissionSuspend(
+    organizationId: String,
+    slug: String,
+    permissionSlug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    removeOrganizationRolePermission(organizationId, slug, permissionSlug, requestOptions)
   }
 
   /**
@@ -663,6 +1381,25 @@ class Authorization(
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getResourceByExternalIdSuspend")
+  suspend fun getResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      getResourceByExternalId(organizationId, resourceTypeSlug, externalId, requestOptions)
+    }
 
   /**
    * Update a resource by external ID
@@ -715,6 +1452,135 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [updateResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceByExternalIdSuspend")
+  suspend fun updateResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    parentResource: ParentResource? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResourceByExternalId(organizationId, resourceTypeSlug, externalId, parentResource, name, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `updateResourceByExternalId(ParentResource.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ById` explicitly.
+   */
+  fun updateResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    id: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    updateResourceByExternalId(
+      organizationId = organizationId,
+      resourceTypeSlug = resourceTypeSlug,
+      externalId = externalId,
+      parentResource = ParentResource.ById(id = id),
+      name = name,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [updateResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceByExternalIdSuspend")
+  suspend fun updateResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    id: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResourceByExternalId(organizationId, resourceTypeSlug, externalId, id, name, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `updateResourceByExternalId(ParentResource.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ByExternalId` explicitly.
+   */
+  fun updateResourceByExternalId(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    parentResourceExternalId: String,
+    typeSlug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    updateResourceByExternalId(
+      organizationId = organizationId,
+      resourceTypeSlug = resourceTypeSlug,
+      externalId = externalId,
+      parentResource = ParentResource.ByExternalId(externalId = parentResourceExternalId, typeSlug = typeSlug),
+      name = name,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [updateResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceByExternalIdSuspend")
+  suspend fun updateResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    parentResourceExternalId: String,
+    typeSlug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResourceByExternalId(
+        organizationId,
+        resourceTypeSlug,
+        externalId,
+        parentResourceExternalId,
+        typeSlug,
+        name,
+        description,
+        requestOptions
+      )
+    }
+
+  /**
    * Delete an authorization resource by external ID
    *
    * Delete an authorization resource by organization, resource type, and external ID. This also deletes all descendant resources.
@@ -748,6 +1614,25 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [deleteResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteResourceByExternalIdSuspend")
+  suspend fun deleteResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    cascadeDelete: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteResourceByExternalId(organizationId, resourceTypeSlug, externalId, cascadeDelete, requestOptions)
+  }
+
+  /**
    * List memberships for a resource by external ID
    *
    * Returns all organization memberships that have a specific permission on a resource, using the resource's external ID. This is useful for answering "Who can access this resource?" when you only have the external ID.
@@ -759,7 +1644,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param assignment Filter by assignment type. Use "direct" for direct assignments only, or "indirect" to include inherited assignments.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -797,6 +1682,42 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listMembershipsForResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listMembershipsForResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listMembershipsForResourceByExternalIdSuspend")
+  suspend fun listMembershipsForResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    assignment: AuthorizationAssignment? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserOrganizationMembershipBaseListData> =
+    withContext(Dispatchers.IO) {
+      listMembershipsForResourceByExternalId(
+        organizationId,
+        resourceTypeSlug,
+        externalId,
+        permissionSlug,
+        before,
+        after,
+        limit,
+        order,
+        assignment,
+        requestOptions
+      )
+    }
+
+  /**
    * List role assignments for a resource by external ID
    *
    * List all role assignments granted on a resource, identified by its external ID. Each assignment includes the organization membership it was granted to.
@@ -807,7 +1728,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -840,6 +1761,29 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listRoleAssignmentsForResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listRoleAssignmentsForResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listRoleAssignmentsForResourceByExternalIdSuspend")
+  suspend fun listRoleAssignmentsForResourceByExternalIdSuspend(
+    organizationId: String,
+    resourceTypeSlug: String,
+    externalId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserRoleAssignment> =
+    withContext(Dispatchers.IO) {
+      listRoleAssignmentsForResourceByExternalId(organizationId, resourceTypeSlug, externalId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * List resources
    *
    * Get a paginated list of authorization resources.
@@ -847,7 +1791,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param organizationId Filter resources by organization ID.
    * @param resourceTypeSlug Filter resources by resource type slug.
    * @param resourceExternalId Filter resources by external ID.
@@ -895,6 +1839,159 @@ class Authorization(
       }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listResources]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResources] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesSuspend")
+  suspend fun listResourcesSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
+    search: String? = null,
+    parent: Parent? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, search, parent, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `listResources(Parent.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `Parent.ById` explicitly.
+   */
+  fun listResources(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
+    search: String? = null,
+    resourceId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    listResources(
+      before = before,
+      after = after,
+      limit = limit,
+      order = order,
+      organizationId = organizationId,
+      resourceTypeSlug = resourceTypeSlug,
+      resourceExternalId = resourceExternalId,
+      search = search,
+      parent = Parent.ById(resourceId = resourceId),
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [listResources]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResources] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesSuspend")
+  suspend fun listResourcesSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
+    search: String? = null,
+    resourceId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, search, resourceId, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `listResources(Parent.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `Parent.ByExternalId` explicitly.
+   */
+  fun listResourcesByExternalId(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
+    search: String? = null,
+    parentResourceTypeSlug: String,
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    listResources(
+      before = before,
+      after = after,
+      limit = limit,
+      order = order,
+      organizationId = organizationId,
+      resourceTypeSlug = resourceTypeSlug,
+      resourceExternalId = resourceExternalId,
+      search = search,
+      parent = Parent.ByExternalId(resourceTypeSlug = parentResourceTypeSlug, externalId = externalId),
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [listResourcesByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listResourcesByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listResourcesByExternalIdSuspend")
+  suspend fun listResourcesByExternalIdSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    resourceTypeSlug: String? = null,
+    resourceExternalId: String? = null,
+    search: String? = null,
+    parentResourceTypeSlug: String,
+    externalId: String,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationResource> =
+    withContext(Dispatchers.IO) {
+      listResourcesByExternalId(
+        before,
+        after,
+        limit,
+        order,
+        organizationId,
+        resourceTypeSlug,
+        resourceExternalId,
+        search,
+        parentResourceTypeSlug,
+        externalId,
+        requestOptions
+      )
+    }
 
   /**
    * Create an authorization resource
@@ -948,6 +2045,135 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [createResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createResourceSuspend")
+  suspend fun createResourceSuspend(
+    parentResource: ParentResource? = null,
+    externalId: String,
+    name: String,
+    resourceTypeSlug: String,
+    organizationId: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      createResource(parentResource, externalId, name, resourceTypeSlug, organizationId, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `createResource(ParentResource.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ById` explicitly.
+   */
+  fun createResource(
+    id: String,
+    externalId: String,
+    name: String,
+    resourceTypeSlug: String,
+    organizationId: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    createResource(
+      parentResource = ParentResource.ById(id = id),
+      externalId = externalId,
+      name = name,
+      resourceTypeSlug = resourceTypeSlug,
+      organizationId = organizationId,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [createResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createResourceSuspend")
+  suspend fun createResourceSuspend(
+    id: String,
+    externalId: String,
+    name: String,
+    resourceTypeSlug: String,
+    organizationId: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      createResource(id, externalId, name, resourceTypeSlug, organizationId, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `createResource(ParentResource.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ByExternalId` explicitly.
+   */
+  fun createResourceByExternalId(
+    parentResourceExternalId: String,
+    typeSlug: String,
+    externalId: String,
+    name: String,
+    resourceTypeSlug: String,
+    organizationId: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    createResource(
+      parentResource = ParentResource.ByExternalId(externalId = parentResourceExternalId, typeSlug = typeSlug),
+      externalId = externalId,
+      name = name,
+      resourceTypeSlug = resourceTypeSlug,
+      organizationId = organizationId,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [createResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createResourceByExternalIdSuspend")
+  suspend fun createResourceByExternalIdSuspend(
+    parentResourceExternalId: String,
+    typeSlug: String,
+    externalId: String,
+    name: String,
+    resourceTypeSlug: String,
+    organizationId: String,
+    description: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      createResourceByExternalId(
+        parentResourceExternalId,
+        typeSlug,
+        externalId,
+        name,
+        resourceTypeSlug,
+        organizationId,
+        description,
+        requestOptions
+      )
+    }
+
+  /**
    * Get a resource
    *
    * Retrieve the details of an authorization resource by its ID.
@@ -970,6 +2196,23 @@ class Authorization(
       )
     return workos.baseClient.request(config, AuthorizationResource::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getResourceSuspend")
+  suspend fun getResourceSuspend(
+    resourceId: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      getResource(resourceId, requestOptions)
+    }
 
   /**
    * Update a resource
@@ -1016,6 +2259,112 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [updateResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceSuspend")
+  suspend fun updateResourceSuspend(
+    resourceId: String,
+    parentResource: ParentResource? = null,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResource(resourceId, parentResource, name, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `updateResource(ParentResource.ById(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ById` explicitly.
+   */
+  fun updateResource(
+    resourceId: String,
+    id: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    updateResource(
+      resourceId = resourceId,
+      parentResource = ParentResource.ById(id = id),
+      name = name,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [updateResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceSuspend")
+  suspend fun updateResourceSuspend(
+    resourceId: String,
+    id: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResource(resourceId, id, name, description, requestOptions)
+    }
+
+  /**
+   * Java-friendly overload — equivalent to
+   * `updateResource(ParentResource.ByExternalId(...))` from Kotlin.
+   *
+   * Accepts the discriminating fields directly so Java callers don't
+   * need to construct `ParentResource.ByExternalId` explicitly.
+   */
+  fun updateResourceByExternalId(
+    resourceId: String,
+    externalId: String,
+    typeSlug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    updateResource(
+      resourceId = resourceId,
+      parentResource = ParentResource.ByExternalId(externalId = externalId, typeSlug = typeSlug),
+      name = name,
+      description = description,
+      requestOptions = requestOptions
+    )
+
+  /**
+   * Coroutine-aware variant of [updateResourceByExternalId]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateResourceByExternalId] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateResourceByExternalIdSuspend")
+  suspend fun updateResourceByExternalIdSuspend(
+    resourceId: String,
+    externalId: String,
+    typeSlug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationResource =
+    withContext(Dispatchers.IO) {
+      updateResourceByExternalId(resourceId, externalId, typeSlug, name, description, requestOptions)
+    }
+
+  /**
    * Delete an authorization resource
    *
    * Delete an authorization resource and all its descendants.
@@ -1043,6 +2392,23 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [deleteResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteResourceSuspend")
+  suspend fun deleteResourceSuspend(
+    resourceId: String,
+    cascadeDelete: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteResource(resourceId, cascadeDelete, requestOptions)
+  }
+
+  /**
    * List organization memberships for resource
    *
    * Returns all organization memberships that have a specific permission on a resource instance. This is useful for answering "Who can access this resource?".
@@ -1052,7 +2418,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param assignment Filter by assignment type. Use `direct` for direct assignments only, or `indirect` to include inherited assignments.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -1086,6 +2452,29 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listMembershipsForResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listMembershipsForResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listMembershipsForResourceSuspend")
+  suspend fun listMembershipsForResourceSuspend(
+    resourceId: String,
+    permissionSlug: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    assignment: AuthorizationAssignment? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserOrganizationMembershipBaseListData> =
+    withContext(Dispatchers.IO) {
+      listMembershipsForResource(resourceId, permissionSlug, before, after, limit, order, assignment, requestOptions)
+    }
+
+  /**
    * List role assignments for a resource
    *
    * List all role assignments granted on a specific resource instance. Each assignment includes the organization membership it was granted to.
@@ -1094,7 +2483,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -1123,6 +2512,27 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [listRoleAssignmentsForResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listRoleAssignmentsForResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listRoleAssignmentsForResourceSuspend")
+  suspend fun listRoleAssignmentsForResourceSuspend(
+    resourceId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<UserRoleAssignment> =
+    withContext(Dispatchers.IO) {
+      listRoleAssignmentsForResource(resourceId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * List environment roles
    *
    * List all environment roles in priority order.
@@ -1141,6 +2551,20 @@ class Authorization(
       )
     return workos.baseClient.request(config, RoleList::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [listEnvironmentRoles]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listEnvironmentRoles] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listEnvironmentRolesSuspend")
+  suspend fun listEnvironmentRolesSuspend(requestOptions: RequestOptions? = null): RoleList =
+    withContext(Dispatchers.IO) {
+      listEnvironmentRoles(requestOptions)
+    }
 
   /**
    * Create an environment role
@@ -1181,6 +2605,26 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [createEnvironmentRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createEnvironmentRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createEnvironmentRoleSuspend")
+  suspend fun createEnvironmentRoleSuspend(
+    slug: String,
+    name: String,
+    description: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      createEnvironmentRole(slug, name, description, resourceTypeSlug, requestOptions)
+    }
+
+  /**
    * Get an environment role
    *
    * Get an environment role by its slug.
@@ -1203,6 +2647,23 @@ class Authorization(
       )
     return workos.baseClient.request(config, Role::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getEnvironmentRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getEnvironmentRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getEnvironmentRoleSuspend")
+  suspend fun getEnvironmentRoleSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      getEnvironmentRole(slug, requestOptions)
+    }
 
   /**
    * Update an environment role
@@ -1239,6 +2700,25 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [updateEnvironmentRole]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateEnvironmentRole] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateEnvironmentRoleSuspend")
+  suspend fun updateEnvironmentRoleSuspend(
+    slug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      updateEnvironmentRole(slug, name, description, requestOptions)
+    }
+
+  /**
    * Add a permission to an environment role
    *
    * Add a single permission to an environment role. If the permission is already assigned to the role, this operation has no effect.
@@ -1268,6 +2748,24 @@ class Authorization(
       )
     return workos.baseClient.request(config, Role::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [addEnvironmentRolePermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [addEnvironmentRolePermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("addEnvironmentRolePermissionSuspend")
+  suspend fun addEnvironmentRolePermissionSuspend(
+    slug: String,
+    bodySlug: String,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      addEnvironmentRolePermission(slug, bodySlug, requestOptions)
+    }
 
   /**
    * Set permissions for an environment role
@@ -1301,6 +2799,24 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [setEnvironmentRolePermissions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [setEnvironmentRolePermissions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("setEnvironmentRolePermissionsSuspend")
+  suspend fun setEnvironmentRolePermissionsSuspend(
+    slug: String,
+    permissions: List<String>,
+    requestOptions: RequestOptions? = null
+  ): Role =
+    withContext(Dispatchers.IO) {
+      setEnvironmentRolePermissions(slug, permissions, requestOptions)
+    }
+
+  /**
    * List permissions
    *
    * Get a list of all permissions in your WorkOS environment.
@@ -1308,7 +2824,7 @@ class Authorization(
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order Order the results by the creation time. Supported values are `"asc"` (ascending), `"desc"` (descending), and `"normal"` (descending with reversed cursor semantics where `before` fetches older records and `after` fetches newer records). Defaults to descending.
+   * @param order the order to return records in. See [PaginationOrder].
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -1334,6 +2850,26 @@ class Authorization(
       order?.let { add("order" to it.value) }
     }
   }
+
+  /**
+   * Coroutine-aware variant of [listPermissions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listPermissions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listPermissionsSuspend")
+  suspend fun listPermissionsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthorizationPermission> =
+    withContext(Dispatchers.IO) {
+      listPermissions(before, after, limit, order, requestOptions)
+    }
 
   /**
    * Create a permission
@@ -1374,6 +2910,26 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [createPermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createPermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createPermissionSuspend")
+  suspend fun createPermissionSuspend(
+    slug: String,
+    name: String,
+    description: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Permission =
+    withContext(Dispatchers.IO) {
+      createPermission(slug, name, description, resourceTypeSlug, requestOptions)
+    }
+
+  /**
    * Get a permission
    *
    * Retrieve a permission by its unique slug.
@@ -1396,6 +2952,23 @@ class Authorization(
       )
     return workos.baseClient.request(config, AuthorizationPermission::class.java)
   }
+
+  /**
+   * Coroutine-aware variant of [getPermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getPermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getPermissionSuspend")
+  suspend fun getPermissionSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationPermission =
+    withContext(Dispatchers.IO) {
+      getPermission(slug, requestOptions)
+    }
 
   /**
    * Update a permission
@@ -1432,6 +3005,25 @@ class Authorization(
   }
 
   /**
+   * Coroutine-aware variant of [updatePermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updatePermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updatePermissionSuspend")
+  suspend fun updatePermissionSuspend(
+    slug: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AuthorizationPermission =
+    withContext(Dispatchers.IO) {
+      updatePermission(slug, name, description, requestOptions)
+    }
+
+  /**
    * Delete a permission
    *
    * Delete an existing permission. System permissions cannot be deleted.
@@ -1451,5 +3043,21 @@ class Authorization(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deletePermission]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deletePermission] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deletePermissionSuspend")
+  suspend fun deletePermissionSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deletePermission(slug, requestOptions)
   }
 }

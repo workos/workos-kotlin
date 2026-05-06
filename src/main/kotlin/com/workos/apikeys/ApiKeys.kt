@@ -13,8 +13,14 @@ import com.workos.models.ApiKeyValidationResponse
 import com.workos.models.OrganizationApiKey
 import com.workos.models.OrganizationApiKeyWithValue
 import com.workos.types.PaginationOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/** API accessor for ApiKeys. */
+/**
+ * API accessor for ApiKeys.
+ *
+ * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
+ */
 class ApiKeys(
   internal val workos: WorkOS
 ) {
@@ -56,6 +62,27 @@ class ApiKeys(
   }
 
   /**
+   * Coroutine-aware variant of [listOrganizationApiKeys]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationApiKeys] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationApiKeysSuspend")
+  suspend fun listOrganizationApiKeysSuspend(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<OrganizationApiKey> =
+    withContext(Dispatchers.IO) {
+      listOrganizationApiKeys(organizationId, before, after, limit, order, requestOptions)
+    }
+
+  /**
    * Create an API key for an organization
    *
    * Create a new API key for an organization.
@@ -90,6 +117,25 @@ class ApiKeys(
   }
 
   /**
+   * Coroutine-aware variant of [createOrganizationApiKey]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationApiKey] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationApiKeySuspend")
+  suspend fun createOrganizationApiKeySuspend(
+    organizationId: String,
+    name: String,
+    permissions: List<String>? = null,
+    requestOptions: RequestOptions? = null
+  ): OrganizationApiKeyWithValue =
+    withContext(Dispatchers.IO) {
+      createOrganizationApiKey(organizationId, name, permissions, requestOptions)
+    }
+
+  /**
    * Validate API key
    *
    * Validate an API key value and return the API key object if valid.
@@ -119,6 +165,23 @@ class ApiKeys(
   }
 
   /**
+   * Coroutine-aware variant of [createValidation]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createValidation] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createValidationSuspend")
+  suspend fun createValidationSuspend(
+    value: String,
+    requestOptions: RequestOptions? = null
+  ): ApiKeyValidationResponse =
+    withContext(Dispatchers.IO) {
+      createValidation(value, requestOptions)
+    }
+
+  /**
    * Delete an API key
    *
    * Permanently deletes an API key. This action cannot be undone. Once deleted, any requests using this API key will fail authentication.
@@ -138,5 +201,21 @@ class ApiKeys(
         requestOptions = requestOptions
       )
     workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [delete]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [delete] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteSuspend")
+  suspend fun deleteSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    delete(id, requestOptions)
   }
 }

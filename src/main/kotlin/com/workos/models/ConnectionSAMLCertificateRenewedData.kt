@@ -10,9 +10,11 @@ data class ConnectionSAMLCertificateRenewedData(
   /** The connection with the renewed certificate. */
   @JsonProperty("connection")
   val connection: ConnectionSAMLCertificateRenewedDataConnection,
+
   /** The renewed SAML certificate details. */
   @JsonProperty("certificate")
   val certificate: ConnectionSAMLCertificateRenewedDataCertificate,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("renewed_at")
   val renewedAt: OffsetDateTime

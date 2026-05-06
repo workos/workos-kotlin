@@ -9,6 +9,7 @@ data class UserConsentOptionChoice(
   /** The value of this choice. */
   @JsonProperty("value")
   val value: String? = null,
+
   /** A human-readable label for this choice. */
   @JsonProperty("label")
   val label: String? = null

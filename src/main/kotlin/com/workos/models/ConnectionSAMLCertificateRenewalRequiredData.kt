@@ -9,9 +9,11 @@ data class ConnectionSAMLCertificateRenewalRequiredData(
   /** The connection with the expiring certificate. */
   @JsonProperty("connection")
   val connection: ConnectionSAMLCertificateRenewalRequiredDataConnection,
+
   /** The SAML certificate details. */
   @JsonProperty("certificate")
   val certificate: ConnectionSAMLCertificateRenewalRequiredDataCertificate,
+
   /** The number of days until the certificate expires. */
   @JsonProperty("days_until_expiry")
   val daysUntilExpiry: Long

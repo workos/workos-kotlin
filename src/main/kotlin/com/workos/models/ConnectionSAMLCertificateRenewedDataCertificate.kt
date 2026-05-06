@@ -11,6 +11,7 @@ data class ConnectionSAMLCertificateRenewedDataCertificate(
   /** The type of the SAML certificate. */
   @JsonProperty("certificate_type")
   val certificateType: ConnectionSAMLCertificateRenewedDataCertificateCertificateType,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("expiry_date")
   val expiryDate: OffsetDateTime

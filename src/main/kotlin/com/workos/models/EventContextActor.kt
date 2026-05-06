@@ -10,9 +10,11 @@ data class EventContextActor(
   /** Unique identifier of the actor. */
   @JsonProperty("id")
   val id: String,
+
   /** The source of the actor that performed the action. */
   @JsonProperty("source")
   val source: EventContextActorSource,
+
   /** The name of the actor. */
   @JsonProperty("name")
   val name: String?

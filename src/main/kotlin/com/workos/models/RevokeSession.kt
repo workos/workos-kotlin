@@ -9,6 +9,7 @@ data class RevokeSession(
   /** The ID of the session to revoke. This can be extracted from the `sid` claim of the access token. */
   @JsonProperty("session_id")
   val sessionId: String,
+
   /** The URL to redirect the user to after session revocation. */
   @JsonProperty("return_to")
   val returnTo: String? = null

@@ -10,18 +10,23 @@ data class ApplicationCredentialsListItem(
   /** The unique ID of the client secret. */
   @JsonProperty("id")
   val id: String,
+
   /** A hint showing the last few characters of the secret value. */
   @JsonProperty("secret_hint")
   val secretHint: String,
+
   /** The timestamp when the client secret was last used, or null if never used. */
   @JsonProperty("last_used_at")
   val lastUsedAt: String?,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the connect application secret object. */
   @JsonProperty("object")
   val objectType: String = "connect_application_secret"

@@ -9,24 +9,31 @@ data class RefreshTokenSessionAuthenticateRequest(
   /** The client ID of the application. */
   @JsonProperty("client_id")
   val clientId: String,
+
   /** The client secret of the application. */
   @JsonProperty("client_secret")
   val clientSecret: String,
+
   /** The refresh token to exchange for new tokens. */
   @JsonProperty("refresh_token")
   val refreshToken: String,
+
   /** Always `"refresh_token"`. */
   @JsonProperty("grant_type")
   val grantType: String = "refresh_token",
+
   /** The ID of the organization to scope the session to. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
+
   /** The IP address of the user's request. */
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
+
   /** A unique identifier for the device. */
   @JsonProperty("device_id")
   val deviceId: String? = null,
+
   /** The user agent string from the user's browser. */
   @JsonProperty("user_agent")
   val userAgent: String? = null

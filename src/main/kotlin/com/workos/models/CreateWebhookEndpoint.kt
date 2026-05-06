@@ -10,6 +10,7 @@ data class CreateWebhookEndpoint(
   /** The HTTPS URL where webhooks will be sent. */
   @JsonProperty("endpoint_url")
   val endpointUrl: String,
+
   /** The events that the Webhook Endpoint is subscribed to. */
   @JsonProperty("events")
   val events: List<CreateWebhookEndpointEvents>

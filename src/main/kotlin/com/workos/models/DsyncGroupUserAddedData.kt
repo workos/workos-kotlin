@@ -9,9 +9,11 @@ data class DsyncGroupUserAddedData(
   /** The ID of the directory. */
   @JsonProperty("directory_id")
   val directoryId: String,
+
   /** The directory user added to the group. */
   @JsonProperty("user")
   val user: DirectoryUser,
+
   /** The directory group the user was added to. */
   @JsonProperty("group")
   val group: DirectoryGroup

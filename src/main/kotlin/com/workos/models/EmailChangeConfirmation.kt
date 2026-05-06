@@ -9,6 +9,7 @@ data class EmailChangeConfirmation(
   /** The user object. */
   @JsonProperty("user")
   val user: EmailChangeConfirmationUser,
+
   /** Distinguishes the email change confirmation object. */
   @JsonProperty("object")
   val objectType: String = "email_change_confirmation"

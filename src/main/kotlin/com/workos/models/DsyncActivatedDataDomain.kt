@@ -9,9 +9,11 @@ data class DsyncActivatedDataDomain(
   /** Unique identifier of the organization domain. */
   @JsonProperty("id")
   val id: String,
+
   /** The domain value. */
   @JsonProperty("domain")
   val domain: String,
+
   /** Distinguishes the organization domain object. */
   @JsonProperty("object")
   val objectType: String = "organization_domain"

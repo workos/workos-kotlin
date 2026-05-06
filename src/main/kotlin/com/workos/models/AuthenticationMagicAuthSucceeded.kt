@@ -10,18 +10,23 @@ data class AuthenticationMagicAuthSucceeded(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
+
   /** The event payload. */
   @JsonProperty("data")
   val data: AuthenticationMagicAuthSucceededData,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
+
   /** Always `"authentication.magic_auth_succeeded"`. */
   @JsonProperty("event")
   override val event: String = "authentication.magic_auth_succeeded",
+
   /** The context. */
   @JsonProperty("context")
   val context: EventContext? = null,
+
   /** Distinguishes the Event object. */
   @JsonProperty("object")
   val objectType: String = "event"

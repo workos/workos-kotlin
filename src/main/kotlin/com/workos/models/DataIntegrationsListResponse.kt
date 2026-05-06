@@ -9,6 +9,7 @@ data class DataIntegrationsListResponse(
   /** A list of [providers](https://workos.com/docs/reference/pipes/provider), each including a [`connected_account`](https://workos.com/docs/reference/pipes/connected-account) field with the user's connection status. */
   @JsonProperty("data")
   val data: List<DataIntegrationsListResponseData>,
+
   /** Indicates this is a list response. */
   @JsonProperty("object")
   val objectType: String = "list"

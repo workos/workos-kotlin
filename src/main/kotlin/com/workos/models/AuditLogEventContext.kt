@@ -9,6 +9,7 @@ data class AuditLogEventContext(
   /** IP Address or some other geolocation identifier. */
   @JsonProperty("location")
   val location: String,
+
   /** User agent string. */
   @JsonProperty("user_agent")
   val userAgent: String? = null

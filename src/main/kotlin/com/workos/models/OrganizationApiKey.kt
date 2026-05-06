@@ -10,27 +10,35 @@ data class OrganizationApiKey(
   /** Unique identifier of the API Key. */
   @JsonProperty("id")
   val id: String,
+
   /** The entity that owns the API Key. */
   @JsonProperty("owner")
   val owner: OrganizationApiKeyOwner,
+
   /** A descriptive name for the API Key. */
   @JsonProperty("name")
   val name: String,
+
   /** An obfuscated representation of the API Key value. */
   @JsonProperty("obfuscated_value")
   val obfuscatedValue: String,
+
   /** Timestamp of when the API Key was last used. */
   @JsonProperty("last_used_at")
   val lastUsedAt: OffsetDateTime?,
+
   /** The permission slugs assigned to the API Key. */
   @JsonProperty("permissions")
   val permissions: List<String>,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
+
   /** Distinguishes the API Key object. */
   @JsonProperty("object")
   val objectType: String = "api_key"
