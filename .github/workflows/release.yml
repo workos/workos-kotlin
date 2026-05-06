@@ -23,7 +23,9 @@ jobs:
           MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
         run: |
           DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
-          echo "::add-mask::$DECODED"
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$DECODED"
           {
             echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
             echo "$DECODED"
