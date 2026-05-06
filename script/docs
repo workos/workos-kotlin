@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+
+rm -rf docs/_site
+mkdir -p docs/_site
+
+./gradlew dokkaGenerateHtml dokkaGenerateMarkdown -Prelease
+
+cp -R build/dokka/html/. docs/_site/
+cp -R build/dokka/markdown/. docs/_site/
