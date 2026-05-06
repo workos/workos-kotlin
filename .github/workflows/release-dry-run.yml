@@ -1,0 +1,45 @@
+name: Release Dry Run
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  dry-run:
+    name: Sign artifacts without publishing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Decode signing key
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+        run: |
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
+
+      - name: Publish to local Maven repo (signs, does not upload)
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+        run: ./gradlew publishToMavenLocal --no-configuration-cache -Prelease
+
+      - name: Verify signatures were produced
+        run: |
+          shopt -s globstar nullglob
+          asc_files=( ~/.m2/repository/**/*.asc )
+          if [ ${#asc_files[@]} -eq 0 ]; then
+            echo "No .asc signature files found — signing did not run."
+            exit 1
+          fi
+          echo "Found ${#asc_files[@]} signature file(s):"
+          printf '  %s\n' "${asc_files[@]}"
