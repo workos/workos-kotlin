@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/workos/workos-kotlin/compare/v5.0.0...v5.0.1) (2026-05-06)
+
+
+### Bug Fixes
+
+* pin explicit Kotlin version in published POM ([d8b0ba2](https://github.com/workos/workos-kotlin/commit/d8b0ba22079e08ec2c8004ffd1a723d44e745183))
+
 ## [5.0.0](https://github.com/workos/workos-kotlin/compare/v4.25.0...v5.0.0) (2026-05-06)
 
 
