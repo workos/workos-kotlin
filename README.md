@@ -82,6 +82,28 @@ WorkOS workos = new WorkOS(System.getenv("WORKOS_API_KEY"));
 workos.getUserManagement().list();
 ```
 
+For more configurable construction, `WorkOS.builder()` exposes a fluent
+builder so Java callers can set only the parameters they care about:
+
+```java
+import com.workos.WorkOS;
+import com.workos.common.http.RetryConfig;
+
+WorkOS workos = WorkOS.builder()
+    .apiKey(System.getenv("WORKOS_API_KEY"))
+    .clientId(System.getenv("WORKOS_CLIENT_ID"))
+    .retryConfig(RetryConfig.DISABLED)
+    .build();
+```
+
+Generated model and exception properties are exposed as Kotlin `val`s with
+`@JvmField`, which means Java callers read them as fields rather than
+through bean-style getters — `connection.id`, not `connection.getId()`.
+Sealed-class operation parameters (e.g. `ResourceTarget`) include
+Java-friendly overloads that take the discriminating fields directly
+(`workos.getAuthorization().checkByExternalId(...)`) so you do not have to
+construct the variant class explicitly.
+
 ## Service accessors
 
 Once constructed, every WorkOS API surface is available as a property on the `WorkOS` instance.
@@ -160,10 +182,18 @@ Every API error deserializes into a typed subclass of
 | 422         | `com.workos.common.exceptions.UnprocessableEntityException` |
 | 429         | `com.workos.common.exceptions.RateLimitException`           |
 | 5xx         | `com.workos.common.exceptions.GenericServerException`       |
-| other       | `com.workos.common.exceptions.GenericException`             |
+| other       | `com.workos.common.exceptions.WorkOSGenericException`       |
+| transport   | `com.workos.common.exceptions.TransportException`           |
+
+`TransportException` (status `0`) is thrown when the SDK cannot reach the
+API at all — IOExceptions, timeouts, DNS or TLS failures.
+`WorkOSGenericException` is thrown when the API returns an HTTP status the
+SDK does not have a more specific exception type for.
 
 Each exception exposes the response `code`, human-readable `message`, and
-any structured validation `errors` returned by the API.
+the structured `errors: List<ApiError>?` array returned by the API.
+`ApiError` is a typed model (`field`, `code`, `message`) so callers can
+inspect validation failures without `Map` casts.
 `RateLimitException` additionally exposes `retryAfterSeconds` parsed from
 the `Retry-After` response header (delta-seconds or HTTP-date) when the
 server provides one. `WorkOSException.rawBody` also preserves the raw HTTP
@@ -183,15 +213,55 @@ try {
 ## Webhook signatures
 
 The standalone `Webhook` helper validates signatures on inbound webhook
-payloads.
+payloads. Two flavors are available:
+
+- `constructTypedEvent(...)` returns a sealed `WorkOSEvent` you can
+  pattern-match against — preferred for the common case.
+- `constructEvent(...)` returns a raw `JsonNode`, which is useful if you
+  need to handle event types the SDK does not yet model.
 
 ```kotlin
-val event = com.workos.webhooks.Webhook().constructEvent(
+import com.workos.models.WorkOSEvent
+import com.workos.webhooks.Webhook
+
+val event = Webhook().constructTypedEvent(
   payload = rawRequestBody,
   signatureHeader = request.getHeader("WorkOS-Signature"),
   secret = System.getenv("WORKOS_WEBHOOK_SECRET"),
 )
+
+when (event) {
+  is WorkOSEvent.UserCreated -> println("New user ${event.data.id}")
+  else -> println("Other event ${event.event}")
+}
 ```
+
+## PATCH semantics
+
+PATCH endpoints distinguish between "field omitted", "field set to a
+value", and "field explicitly cleared to `null`". Use `PatchField` to
+express that intent — see the
+[v5 migration guide](./docs/V5_MIGRATION_GUIDE.md#8-patch-semantics-use-patchfield)
+for examples.
+
+## Coroutines
+
+Every generated service method has both a blocking version and a
+coroutine-aware `<method>Suspend` variant that wraps the call in
+`withContext(Dispatchers.IO)`. Add `kotlinx-coroutines-core` to your
+classpath (already a transitive dependency of this SDK) and call from any
+`suspend` context:
+
+```kotlin
+val org = workos.organizations.createSuspend(name = "Foo Corp")
+
+val firstPage = workos.organizations.listSuspend(limit = 10)
+for (org in firstPage.data) println(org.id)
+```
+
+The blocking and suspend forms are independently named (`create` vs
+`createSuspend`) so they can coexist on the same service without Kotlin
+overload-resolution ambiguity.
 
 ## Pagination
 

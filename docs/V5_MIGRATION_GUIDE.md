@@ -155,6 +155,33 @@ WorkOS workos = new WorkOS(System.getenv("WORKOS_API_KEY"), System.getenv("WORKO
 Organizations organizations = workos.getOrganizations();
 ```
 
+For more configurable construction without filling in every positional
+constructor parameter, use the fluent `WorkOS.builder()`:
+
+```java
+WorkOS workos = WorkOS.builder()
+    .apiKey(System.getenv("WORKOS_API_KEY"))
+    .clientId(System.getenv("WORKOS_CLIENT_ID"))
+    .retryConfig(RetryConfig.DISABLED)
+    .build();
+```
+
+Sealed-class operation parameters (`ResourceTarget`, `CreateUserPassword`,
+`CreateUserRole`, etc.) emit Java-friendly overloads that take the
+discriminating fields directly so you do not have to construct the variant
+class explicitly:
+
+```java
+// Kotlin idiom — sealed-class variant
+workos.getAuthorization().check(membershipId, ResourceTarget.ByExternalId("ext_1", "type_slug"), "perm");
+
+// Java-friendly overload
+workos.getAuthorization().checkByExternalId(membershipId, "ext_1", "type_slug", "perm");
+```
+
+Generated model and exception properties are exposed as `@JvmField` so
+Java reads them as fields — `connection.id`, not `connection.getId()`.
+
 ## 4. Packages Were Consolidated
 
 v4 split request/response types across many service-local packages:
@@ -347,14 +374,28 @@ val event = workos.webhooks.constructEvent(payload, signatureHeader, secret)
 After:
 
 ```kotlin
-val event = com.workos.webhooks.Webhook()
-  .constructEvent(payload, signatureHeader, secret)
+import com.workos.models.WorkOSEvent
+import com.workos.webhooks.Webhook
+
+// Preferred: typed sealed-class event
+val event: WorkOSEvent = Webhook()
+  .constructTypedEvent(payload, signatureHeader, secret)
+
+when (event) {
+  is WorkOSEvent.UserCreated -> println("New user ${event.data.id}")
+  else -> println("Other event ${event.event}")
+}
+
+// Or use the raw form when you need to handle event types the SDK
+// has not yet modeled.
+val node = Webhook().constructEvent(payload, signatureHeader, secret)
 ```
 
 Also note:
 
-- v5 returns a `JsonNode` from `constructEvent(...)`
-- if you need a typed event model, deserialize that node into the specific `com.workos.models.*` class you expect
+- `constructTypedEvent(...)` returns a sealed `WorkOSEvent`; unknown types
+  fall back to the catch-all `EventSchema` variant
+- `constructEvent(...)` still returns the raw `JsonNode` for full control
 - the helper accepts both `v1=` and legacy `s=` signature formats
 
 ## 10. Request Overrides Are Standardized
@@ -448,21 +489,23 @@ All SDK errors now inherit from `com.workos.common.exceptions.WorkOSException`.
 
 Typed subclasses include:
 
-- `BadRequestException`
-- `UnauthorizedException`
-- `NotFoundException`
-- `UnprocessableEntityException`
-- `RateLimitException`
-- `GenericServerException`
-- `GenericException`
+- `BadRequestException` (HTTP 400)
+- `UnauthorizedException` (HTTP 401)
+- `NotFoundException` (HTTP 404)
+- `UnprocessableEntityException` (HTTP 422)
+- `RateLimitException` (HTTP 429)
+- `GenericServerException` (HTTP 5xx)
+- `WorkOSGenericException` (other HTTP statuses without a specific type)
+- `TransportException` (status `0` — IOException, timeout, DNS or TLS failure; the request never received an HTTP status)
 
 New behavior to be aware of:
 
 - `Retry-After` is honored for retryable responses
 - `RateLimitException` exposes `retryAfterSeconds`
 - `WorkOSException` includes `status`, `requestId`, `code`, `errors`, and `rawBody`
+- `errors` is now a typed `List<ApiError>?` (was `List<Map<String, Any?>>?`); each entry has `field`, `code`, and `message` properties so callers can inspect validation failures without `Map` casts
 
-If you previously caught generic transport exceptions from Fuel, update those catch blocks to catch `WorkOSException` or the specific typed subclass you care about.
+If you previously caught generic transport exceptions from Fuel, update those catch blocks to catch `TransportException`, `WorkOSException`, or the specific typed subclass you care about. If you specifically caught the v5 pre-release `GenericException`, rename to `WorkOSGenericException` (HTTP fallback) or switch to `TransportException` (network failure) depending on which case you meant.
 
 ## 13. Public-Client Flows Have A Dedicated Client
 
@@ -580,7 +623,27 @@ val url = workos.sso.getAuthorizationUrl(
 )
 ```
 
-## 16. Notable Additions In V5
+## 16. Coroutines
+
+Every generated service method has both a blocking version and a
+coroutine-aware `<method>Suspend` variant that wraps the call in
+`withContext(Dispatchers.IO)`. Pulled in transitively via
+`kotlinx-coroutines-core`.
+
+```kotlin
+// Blocking
+val org = workos.organizations.create(name = "Foo Corp")
+
+// suspend
+val org = workos.organizations.createSuspend(name = "Foo Corp")
+```
+
+The blocking and suspend forms are independently named (`create` vs
+`createSuspend`) — Kotlin does not allow overload resolution to
+disambiguate `fun foo()` from `suspend fun foo()` with the same value
+parameters.
+
+## 17. Notable Additions In V5
 
 In addition to the breaking changes above, this branch adds or expands:
 
@@ -589,6 +652,12 @@ In addition to the breaking changes above, this branch adds or expands:
 - `Vault` helpers and client-side crypto support
 - generated accessors for `Actions`, `ApiKeys`, `Connect`, `FeatureFlags`, `OrganizationDomains`, `Pipes`, and `Radar`
 - broader generated model coverage, including forward-compat enum handling via `Unknown`
+- typed `Webhook.constructTypedEvent(...)` returning a sealed `WorkOSEvent`
+- `WorkOS.builder()` for fluent Java-friendly construction
+- typed `ApiError` model on `WorkOSException.errors`
+- `TransportException` (status `0`) split out of `WorkOSGenericException`
+- `<method>Suspend` coroutine variants on every generated operation
+- Java-friendly overloads for sealed-class operation parameters
 
 ## Final Advice
 
@@ -602,3 +671,8 @@ The fastest migration path is usually:
 6. replace webhook verification with `Webhook()`
 
 If you do those six steps first, the remaining compile errors should mostly collapse into straightforward method renames.
+
+If you tracked a v5 pre-release of this SDK, also note: `GenericException`
+was split into `WorkOSGenericException` (HTTP fallback) and
+`TransportException` (network failure), and `WorkOSException.errors` is
+now a typed `List<ApiError>?` rather than `List<Map<String, Any?>>?`.
