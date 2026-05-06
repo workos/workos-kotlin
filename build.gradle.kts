@@ -1,5 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import java.util.Properties
 
 group = "com.workos"
@@ -28,10 +29,12 @@ repositories {
   mavenLocal()
 }
 
-dependencies {
-  implementation(platform(kotlin("bom")))
+val kotlinVersion = getKotlinPluginVersion()
 
-  implementation(kotlin("stdlib"))
+dependencies {
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
@@ -42,7 +45,7 @@ dependencies {
   // JWT verification + JWKS handling for session helpers (hand-maintained).
   implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
 
-  implementation(kotlin("reflect"))
+  implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
