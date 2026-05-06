@@ -6,10 +6,21 @@
 ### ⚠ BREAKING CHANGES
 
 * Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357))
+* Upgrade to Java 17 and migrate any Fuel-based HTTP customization to `OkHttpClient`
+* Recreate `WorkOS` clients with constructor-based configuration instead of mutating `apiHostname`, `https`, or `port`
+* Update service accessors and method names across the SDK, including renamed services such as `PortalApi` -> `AdminPortal`, `MfaApi` -> `MultiFactorAuth`, and `FgaApi` -> `Authorization`
+* Replace per-service model, type, and builder imports with the consolidated shared packages and newer flat method arguments or option classes
+* Adopt the new pagination, webhook verification, and request handling patterns used across v5
+* Review any existing FGA integrations closely, since the v5 Authorization API is a redesign rather than a direct rename
 
 ### Features
 
 * Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357)) ([0b2b9e8](https://github.com/workos/workos-kotlin/commit/0b2b9e86d63ed011ea7a4888fc14e39bc9326fcb))
+* Regenerate service clients from the OpenAPI spec and standardize retries, pagination, request overrides, and error handling across the SDK
+* Consolidate generated models and enums into shared packages to reduce service-specific surface area
+* Move webhook signature verification to the standalone `Webhook` helper while keeping webhook endpoint management on the `Webhooks` service
+
+Please read the v5 migration guide before upgrading: https://github.com/workos/workos-kotlin/blob/v5.0.0/docs/V5_MIGRATION_GUIDE.md
 
 ## [4.25.0](https://github.com/workos/workos-kotlin/compare/v4.24.0...v4.25.0) (2026-04-30)
 
