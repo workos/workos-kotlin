@@ -121,8 +121,10 @@ abstract class DokkaMarkdownPlugin : DokkaFormatPlugin(formatName = "markdown") 
   override fun DokkaFormatPlugin.DokkaFormatPluginContext.configure() {
     project.dependencies {
       dokkaPlugin(dokka("gfm-plugin"))
-      formatDependencies.dokkaPublicationPluginClasspathApiOnly
-        .dependencies.addLater(dokka("gfm-template-processing-plugin"))
+      formatDependencies
+        .dokkaPublicationPluginClasspathApiOnly
+        .dependencies
+        .addLater(dokka("gfm-template-processing-plugin"))
     }
   }
 }
