@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/workos/workos-kotlin/compare/v4.25.0...v5.0.0) (2026-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357))
+
+### Features
+
+* Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357)) ([0b2b9e8](https://github.com/workos/workos-kotlin/commit/0b2b9e86d63ed011ea7a4888fc14e39bc9326fcb))
+
 ## [4.25.0](https://github.com/workos/workos-kotlin/compare/v4.24.0...v4.25.0) (2026-04-30)
 
 
