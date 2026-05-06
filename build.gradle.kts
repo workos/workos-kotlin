@@ -36,18 +36,18 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.3")
 
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.2")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.3")
 
   implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
   // JWT verification + JWKS handling for session helpers (hand-maintained).
-  implementation("com.nimbusds:nimbus-jose-jwt:9.41.2")
+  implementation("com.nimbusds:nimbus-jose-jwt:9.48")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
   testImplementation(platform("org.junit:junit-bom:6.0.3"))
 
