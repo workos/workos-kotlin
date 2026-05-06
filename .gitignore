@@ -20,3 +20,6 @@ bin
 # Credentials
 gradle.properties
 signing.key
+
+# Generated API docs site
+docs/_site/

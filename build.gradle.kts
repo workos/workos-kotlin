@@ -1,4 +1,5 @@
-import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.formats.DokkaFormatPlugin
+import org.jetbrains.dokka.gradle.internal.InternalDokkaGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import java.util.Properties
@@ -99,6 +100,9 @@ tasks.named("javadoc") {
 dokka {
   dokkaPublications.javadoc {
     outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+  }
+
+  dokkaPublications.configureEach {
     failOnWarning.set(true)
   }
 
@@ -107,9 +111,25 @@ dokka {
   }
 }
 
-tasks.withType<DokkaTask>().configureEach {
-  failOnWarning.set(true)
+// GFM (GitHub-Flavored Markdown) output via the official DokkaFormatPlugin
+// extension point. DGP v2 doesn't ship a built-in markdown format, but the
+// gfm-plugin artifacts are still published, and JetBrains documents this
+// pattern as the supported way to wire them in. Produces a `dokkaGenerateMarkdown`
+// task whose output lands in build/dokka/markdown/.
+@OptIn(InternalDokkaGradlePluginApi::class)
+abstract class DokkaMarkdownPlugin : DokkaFormatPlugin(formatName = "markdown") {
+  override fun DokkaFormatPlugin.DokkaFormatPluginContext.configure() {
+    project.dependencies {
+      dokkaPlugin(dokka("gfm-plugin"))
+      formatDependencies
+        .dokkaPublicationPluginClasspathApiOnly
+        .dependencies
+        .addLater(dokka("gfm-template-processing-plugin"))
+    }
+  }
 }
+
+apply<DokkaMarkdownPlugin>()
 
 tasks.jar {
   manifest {
