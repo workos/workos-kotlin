@@ -98,8 +98,7 @@ class Webhook
       val (timestamp, signatureHash) = parseSignatureHeader(signatureHeader, setOf("v1", "s"))
 
       val timestampMs = timestamp.toLongOrNull() ?: throw SignatureException("Timestamp is not a valid long value")
-      val oldestAcceptable = Instant.now().toEpochMilli() - toleranceMillis
-      if (timestampMs < oldestAcceptable) {
+      if (kotlin.math.abs(Instant.now().toEpochMilli() - timestampMs) > toleranceMillis) {
         throw SignatureException("Timestamp outside the tolerance zone")
       }
 
