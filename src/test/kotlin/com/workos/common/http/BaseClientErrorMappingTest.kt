@@ -93,6 +93,109 @@ class BaseClientErrorMappingTest : TestBase() {
     assertEquals("Not here", ex.message)
   }
 
+  /**
+   * Regression test for finding #51: bearer-equivalent path tokens are
+   * redacted out of `NotFoundException.path` before the exception is
+   * constructed. The token segment must be replaced with `[REDACTED]` so
+   * that anyone capturing the exception (logs, error reporting) cannot
+   * recover the secret. Mirrors the Ruby #44 redaction list.
+   */
+  private fun assert404RedactsPath(
+    path: String,
+    redactedPath: String
+  ) {
+    wireMockRule.stubFor(
+      get(urlPathEqualTo(path))
+        .willReturn(
+          aResponse()
+            .withStatus(404)
+            .withHeader("Content-Type", "application/json")
+            .withHeader("X-Request-Id", "req_01TEST")
+            .withBody("""{"message": "not found"}""")
+        )
+    )
+    val client = createWorkOSClient()
+    val ex =
+      assertThrows(NotFoundException::class.java) {
+        client.baseClient.request(
+          RequestConfig(method = "GET", path = path, queryParams = emptyList()),
+          Map::class.java
+        )
+      }
+    val storedPath = ex.path
+    assertNotNull(storedPath)
+    assertTrue(
+      storedPath!!.endsWith(redactedPath),
+      "expected path to end with $redactedPath but was $storedPath"
+    )
+    // Cross-check the original token never appears in the stored path.
+    val tokenSegment = path.substringAfterLast('/')
+    assertTrue(
+      !storedPath.contains(tokenSegment),
+      "exception path leaked sensitive segment $tokenSegment: $storedPath"
+    )
+  }
+
+  @Test
+  fun `404 redacts invitation by_token`() {
+    assert404RedactsPath(
+      path = "/user_management/invitations/by_token/super-secret-token-123",
+      redactedPath = "/user_management/invitations/by_token/[REDACTED]"
+    )
+  }
+
+  @Test
+  fun `404 redacts password reset token`() {
+    assert404RedactsPath(
+      path = "/user_management/password_reset/super-secret-reset-456",
+      redactedPath = "/user_management/password_reset/[REDACTED]"
+    )
+  }
+
+  @Test
+  fun `404 redacts email verification token`() {
+    assert404RedactsPath(
+      path = "/user_management/email_verification/super-secret-verify-789",
+      redactedPath = "/user_management/email_verification/[REDACTED]"
+    )
+  }
+
+  @Test
+  fun `404 redacts magic auth token`() {
+    assert404RedactsPath(
+      path = "/user_management/magic_auth/super-secret-magic-000",
+      redactedPath = "/user_management/magic_auth/[REDACTED]"
+    )
+  }
+
+  @Test
+  fun `404 leaves password reset confirm action unredacted`() {
+    // /password_reset/confirm is a literal action endpoint, not a token.
+    wireMockRule.stubFor(
+      get(urlPathEqualTo("/user_management/password_reset/confirm"))
+        .willReturn(
+          aResponse()
+            .withStatus(404)
+            .withHeader("Content-Type", "application/json")
+            .withHeader("X-Request-Id", "req_01TEST")
+            .withBody("""{"message": "not found"}""")
+        )
+    )
+    val client = createWorkOSClient()
+    val ex =
+      assertThrows(NotFoundException::class.java) {
+        client.baseClient.request(
+          RequestConfig(
+            method = "GET",
+            path = "/user_management/password_reset/confirm",
+            queryParams = emptyList()
+          ),
+          Map::class.java
+        )
+      }
+    assertTrue(ex.path!!.endsWith("/user_management/password_reset/confirm"))
+  }
+
   @Test
   fun `409 falls through to WorkOSGenericException with 409 status`() {
     val ex = runErrorCase<WorkOSGenericException>(409, """{"message": "Conflict"}""")
