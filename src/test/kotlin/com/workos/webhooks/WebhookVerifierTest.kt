@@ -46,6 +46,16 @@ class WebhookVerifierTest {
   }
 
   @Test
+  fun `future timestamp beyond tolerance is rejected`() {
+    val futureTs = (Instant.now().toEpochMilli() + 10 * 60_000).toString()
+    val signature = webhooks.createSignature(futureTs, payload, secret)
+    val header = "t=$futureTs, v1=$signature"
+    assertThrows(SignatureException::class.java) {
+      webhooks.verifyHeader(payload, header, secret, 60_000)
+    }
+  }
+
+  @Test
   fun `mismatched signature is rejected`() {
     val timestamp = Instant.now().toEpochMilli().toString()
     val header = "t=$timestamp, v1=0000000000000000000000000000000000000000000000000000000000000000"
