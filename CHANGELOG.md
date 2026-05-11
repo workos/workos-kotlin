@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.1.0](https://github.com/workos/workos-kotlin/compare/v5.0.0...v5.1.0) (2026-05-11)
+
+
+### Features
+
+* publish Dokka API docs to GitHub Pages ([#379](https://github.com/workos/workos-kotlin/issues/379)) ([8dbce54](https://github.com/workos/workos-kotlin/commit/8dbce542d61fbaa7332d6ce7f0cc806ca987be4f))
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#358](https://github.com/workos/workos-kotlin/issues/358)) ([74a45ff](https://github.com/workos/workos-kotlin/commit/74a45fff86e1b69fa562d8bea493a8ed6b6d048e))
+* harden URL/token handling and webhook timestamp validation ([#380](https://github.com/workos/workos-kotlin/issues/380)) ([e10f2a3](https://github.com/workos/workos-kotlin/commit/e10f2a3d2a0f20378fb91b1fd2d30a75203317e5))
+* mask each line of decoded signing key in release workflow ([0aa1609](https://github.com/workos/workos-kotlin/commit/0aa1609c868455af6ca9f561064f7b69bed5c546))
+
 ## [5.0.0](https://github.com/workos/workos-kotlin/compare/v4.25.0...v5.0.0) (2026-05-06)
 
 
