@@ -319,12 +319,44 @@ open class BaseClient(
     return when (status) {
       400 -> BadRequestException(requestId, code, message, errors, body)
       401 -> UnauthorizedException(requestId, code, message, body)
-      404 -> NotFoundException(requestId, code, message, url, body)
+      404 -> NotFoundException(requestId, code, message, redactSensitivePath(url), body)
       422 -> UnprocessableEntityException(requestId, code, message, errors, body)
       429 -> RateLimitException(requestId, code, message, retryAfterHeader?.let { RetryPolicy.parseRetryAfter(it)?.div(1000L) }, body)
       in 500..599 -> GenericServerException(status, requestId, code, message, body)
       else -> WorkOSGenericException(status, requestId, code, message, body)
     }
+  }
+
+  /**
+   * Redact bearer-equivalent path segments before they get embedded in
+   * exception messages or downstream logs (security finding #51, mirrors
+   * the Ruby `base_client.rb` redaction list from #44).
+   *
+   * The WorkOS API exposes several endpoints whose path segment IS the
+   * secret — invitation tokens (`/user_management/invitations/by_token/{token}`),
+   * password-reset / email-verification / magic-auth single-use tokens.
+   * Anyone with read access to a 404's exception trail would otherwise be
+   * able to replay the token. We replace the secret segment with
+   * `[REDACTED]` while keeping the route prefix intact for debuggability.
+   */
+  private fun redactSensitivePath(url: String): String {
+    var redacted = url
+    for (pattern in SENSITIVE_PATH_PATTERNS) {
+      redacted = pattern.replace(redacted, "$1[REDACTED]")
+    }
+    return redacted
+  }
+
+  private companion object {
+    private val SENSITIVE_PATH_PATTERNS: List<Regex> =
+      listOf(
+        Regex("(/user_management/invitations/by_token/)[^/?#]+"),
+        // Exclude the literal `confirm` action so we only redact the
+        // single-use secret IDs.
+        Regex("(/user_management/password_reset/)(?!confirm(?:[/?#]|$))[^/?#]+"),
+        Regex("(/user_management/email_verification/)[^/?#]+"),
+        Regex("(/user_management/magic_auth/)[^/?#]+")
+      )
   }
 
   private fun parseApiError(body: String): Triple<String?, String?, List<ApiError>?> {
