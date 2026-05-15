@@ -41,7 +41,7 @@ dependencies {
 
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.3")
 
-  implementation("com.squareup.okhttp3:okhttp:4.12.0")
+  implementation("com.squareup.okhttp3:okhttp:5.3.2")
 
   // JWT verification + JWKS handling for session helpers (hand-maintained).
   implementation("com.nimbusds:nimbus-jose-jwt:9.48")
