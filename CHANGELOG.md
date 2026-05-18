@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.1.1](https://github.com/workos/workos-kotlin/compare/v5.1.0...v5.1.1) (2026-05-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.nimbusds:nimbus-jose-jwt to v10 ([#384](https://github.com/workos/workos-kotlin/issues/384)) ([b866a33](https://github.com/workos/workos-kotlin/commit/b866a33c790fdaf91610435dbcd2db588ba07463))
+* **deps:** update dependency com.squareup.okhttp3:okhttp to v5 ([#385](https://github.com/workos/workos-kotlin/issues/385)) ([8d20796](https://github.com/workos/workos-kotlin/commit/8d20796f671c33862fc1987eb9ee7f2af490b34a))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.11.0 ([#381](https://github.com/workos/workos-kotlin/issues/381)) ([09130f0](https://github.com/workos/workos-kotlin/commit/09130f004d01b26eb0ef78cc33ac13c4c89439ae))
+
 ## [5.1.0](https://github.com/workos/workos-kotlin/compare/v5.0.0...v5.1.0) (2026-05-11)
 
 
