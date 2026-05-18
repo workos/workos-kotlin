@@ -599,6 +599,9 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param resourceId Filter assignments by the ID of the resource.
+   * @param resourceExternalId Filter assignments by the external ID of the resource.
+   * @param resourceTypeSlug Filter assignments by the slug of the resource type.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -610,6 +613,9 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> {
     val itemType = object : TypeReference<UserRoleAssignment>() {}
@@ -623,6 +629,9 @@ class Authorization(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      addIfNotNull("resource_id", resourceId)
+      addIfNotNull("resource_external_id", resourceExternalId)
+      addIfNotNull("resource_type_slug", resourceTypeSlug)
     }
   }
 
@@ -641,10 +650,23 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> =
     withContext(Dispatchers.IO) {
-      listRoleAssignments(organizationMembershipId, before, after, limit, order, requestOptions)
+      listRoleAssignments(
+        organizationMembershipId,
+        before,
+        after,
+        limit,
+        order,
+        resourceId,
+        resourceExternalId,
+        resourceTypeSlug,
+        requestOptions
+      )
     }
 
   /**
@@ -1729,6 +1751,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param roleSlug Filter assignments by the slug of the role.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -1742,6 +1765,7 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    roleSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> {
     val itemType = object : TypeReference<UserRoleAssignment>() {}
@@ -1757,6 +1781,7 @@ class Authorization(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      addIfNotNull("role_slug", roleSlug)
     }
   }
 
@@ -1777,10 +1802,21 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    roleSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> =
     withContext(Dispatchers.IO) {
-      listRoleAssignmentsForResourceByExternalId(organizationId, resourceTypeSlug, externalId, before, after, limit, order, requestOptions)
+      listRoleAssignmentsForResourceByExternalId(
+        organizationId,
+        resourceTypeSlug,
+        externalId,
+        before,
+        after,
+        limit,
+        order,
+        roleSlug,
+        requestOptions
+      )
     }
 
   /**
@@ -1795,7 +1831,6 @@ class Authorization(
    * @param organizationId Filter resources by organization ID.
    * @param resourceTypeSlug Filter resources by resource type slug.
    * @param resourceExternalId Filter resources by external ID.
-   * @param search Search resources by name.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -1809,7 +1844,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     parent: Parent? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
@@ -1827,7 +1861,6 @@ class Authorization(
       addIfNotNull("organization_id", organizationId)
       addIfNotNull("resource_type_slug", resourceTypeSlug)
       addIfNotNull("resource_external_id", resourceExternalId)
-      addIfNotNull("search", search)
       if (parent != null) {
         when (parent) {
           is Parent.ById -> add("parent_resource_id" to parent.resourceId)
@@ -1857,12 +1890,11 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     parent: Parent? = null,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
-      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, search, parent, requestOptions)
+      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, parent, requestOptions)
     }
 
   /**
@@ -1880,7 +1912,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     resourceId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
@@ -1892,7 +1923,6 @@ class Authorization(
       organizationId = organizationId,
       resourceTypeSlug = resourceTypeSlug,
       resourceExternalId = resourceExternalId,
-      search = search,
       parent = Parent.ById(resourceId = resourceId),
       requestOptions = requestOptions
     )
@@ -1914,12 +1944,11 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     resourceId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
-      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, search, resourceId, requestOptions)
+      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, resourceId, requestOptions)
     }
 
   /**
@@ -1937,7 +1966,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     parentResourceTypeSlug: String,
     externalId: String,
     requestOptions: RequestOptions? = null
@@ -1950,7 +1978,6 @@ class Authorization(
       organizationId = organizationId,
       resourceTypeSlug = resourceTypeSlug,
       resourceExternalId = resourceExternalId,
-      search = search,
       parent = Parent.ByExternalId(resourceTypeSlug = parentResourceTypeSlug, externalId = externalId),
       requestOptions = requestOptions
     )
@@ -1972,7 +1999,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    search: String? = null,
     parentResourceTypeSlug: String,
     externalId: String,
     requestOptions: RequestOptions? = null
@@ -1986,7 +2012,6 @@ class Authorization(
         organizationId,
         resourceTypeSlug,
         resourceExternalId,
-        search,
         parentResourceTypeSlug,
         externalId,
         requestOptions
@@ -2484,6 +2509,7 @@ class Authorization(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param roleSlug Filter assignments by the slug of the role.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -2495,6 +2521,7 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    roleSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> {
     val itemType = object : TypeReference<UserRoleAssignment>() {}
@@ -2508,6 +2535,7 @@ class Authorization(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      addIfNotNull("role_slug", roleSlug)
     }
   }
 
@@ -2526,10 +2554,11 @@ class Authorization(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    roleSlug: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<UserRoleAssignment> =
     withContext(Dispatchers.IO) {
-      listRoleAssignmentsForResource(resourceId, before, after, limit, order, requestOptions)
+      listRoleAssignmentsForResource(resourceId, before, after, limit, order, roleSlug, requestOptions)
     }
 
   /**
