@@ -44,7 +44,7 @@ dependencies {
   implementation("com.squareup.okhttp3:okhttp:5.3.2")
 
   // JWT verification + JWKS handling for session helpers (hand-maintained).
-  implementation("com.nimbusds:nimbus-jose-jwt:9.48")
+  implementation("com.nimbusds:nimbus-jose-jwt:10.9")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
