@@ -3,11 +3,11 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.WebhookEndpointJsonStatus
+import com.workos.types.WebhookEndpointStatus
 import java.time.OffsetDateTime
 
-/** WebhookEndpointJson model. */
-data class WebhookEndpointJson(
+/** WebhookEndpoint model. */
+data class WebhookEndpoint(
   /** Unique identifier of the Webhook Endpoint. */
   @JsonProperty("id")
   val id: String,
@@ -22,7 +22,7 @@ data class WebhookEndpointJson(
 
   /** Whether the Webhook Endpoint is enabled or disabled. */
   @JsonProperty("status")
-  val status: WebhookEndpointJsonStatus,
+  val status: WebhookEndpointStatus,
 
   /** The events that the Webhook Endpoint is subscribed to. */
   @JsonProperty("events")

@@ -43,10 +43,6 @@ data class ConnectApplication(
   @JsonProperty("application_type")
   val applicationType: String? = null,
 
-  /** The ID of the organization the application belongs to. */
-  @JsonProperty("organization_id")
-  val organizationId: String? = null,
-
   /** The redirect URIs configured for this application. */
   @JsonProperty("redirect_uris")
   val redirectUris: List<ConnectApplicationRedirectUri>? = null,
@@ -61,5 +57,9 @@ data class ConnectApplication(
 
   /** Whether the application was dynamically registered. */
   @JsonProperty("was_dynamically_registered")
-  val wasDynamicallyRegistered: Boolean? = null
+  val wasDynamicallyRegistered: Boolean? = null,
+
+  /** The ID of the organization the application belongs to. */
+  @JsonProperty("organization_id")
+  val organizationId: String? = null
 )

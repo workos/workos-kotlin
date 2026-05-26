@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.common.json.ObjectMapperFactory
-import com.workos.types.AuditLogExportJsonState
+import com.workos.types.AuditLogExportState
 import com.workos.types.AuthenticationFactorEnrolledType
 import com.workos.types.AuthenticationFactorType
 import com.workos.types.CreateUserInviteOptionsLocale
@@ -111,10 +111,10 @@ class GeneratedForwardCompatTest {
   }
 
   @Test
-  fun `unknown AuditLogExportJsonState wire values deserialize to Unknown`() {
+  fun `unknown AuditLogExportState wire values deserialize to Unknown`() {
     // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuditLogExportJsonState::class.java)
-    assertEquals(AuditLogExportJsonState.Unknown, parsed)
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", AuditLogExportState::class.java)
+    assertEquals(AuditLogExportState.Unknown, parsed)
   }
 
   @Test

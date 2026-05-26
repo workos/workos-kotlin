@@ -23,11 +23,11 @@ data class FlagRuleUpdated(
   @JsonProperty("context")
   val context: FlagRuleUpdatedContext,
 
-  /** Always `"flag.rule_updated"`. */
-  @JsonProperty("event")
-  override val event: String = "flag.rule_updated",
-
   /** Distinguishes the Event object. */
   @JsonProperty("object")
-  val objectType: String = "event"
+  val objectType: String = "event",
+
+  /** Always `"flag.rule_updated"`. */
+  @JsonProperty("event")
+  override val event: String = "flag.rule_updated"
 ) : WorkOSEvent

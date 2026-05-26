@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 
 /** CreateOrganizationApiKey model. */
 data class CreateOrganizationApiKey(
@@ -12,5 +13,9 @@ data class CreateOrganizationApiKey(
 
   /** The permission slugs to assign to the API key. */
   @JsonProperty("permissions")
-  val permissions: List<String>? = null
+  val permissions: List<String>? = null,
+
+  /** The timestamp when the API key should expire. Must be a future timestamp. If omitted, the key does not expire. */
+  @JsonProperty("expires_at")
+  val expiresAt: OffsetDateTime? = null
 )

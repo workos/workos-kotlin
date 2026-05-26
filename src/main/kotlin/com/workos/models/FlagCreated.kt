@@ -23,11 +23,11 @@ data class FlagCreated(
   @JsonProperty("context")
   val context: FlagCreatedContext,
 
-  /** Always `"flag.created"`. */
-  @JsonProperty("event")
-  override val event: String = "flag.created",
-
   /** Distinguishes the Event object. */
   @JsonProperty("object")
-  val objectType: String = "event"
+  val objectType: String = "event",
+
+  /** Always `"flag.created"`. */
+  @JsonProperty("event")
+  override val event: String = "flag.created"
 ) : WorkOSEvent

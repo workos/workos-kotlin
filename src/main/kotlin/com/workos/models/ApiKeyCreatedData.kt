@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 
 /** The event payload. */
 data class ApiKeyCreatedData(
@@ -40,5 +41,9 @@ data class ApiKeyCreatedData(
 
   /** Distinguishes the API key object. */
   @JsonProperty("object")
-  val objectType: String = "api_key"
+  val objectType: String = "api_key",
+
+  /** Timestamp when the API Key expires. Null means the key does not expire. */
+  @JsonProperty("expires_at")
+  val expiresAt: OffsetDateTime? = null
 )

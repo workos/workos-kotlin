@@ -4,9 +4,9 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** AuditLogSchemaActor model. */
+/** The metadata schema for the actor. */
 data class AuditLogSchemaActor(
-  /** JSON schema for actor metadata. */
+  /** The JSON Schema definition for actor metadata. */
   @JsonProperty("metadata")
   val metadata: Map<String, Any>
 )

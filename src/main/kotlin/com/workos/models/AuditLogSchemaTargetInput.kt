@@ -3,4 +3,4 @@
 package com.workos.models
 
 /** Alias for [AuditLogSchemaTarget]. */
-typealias AuditLogSchemaJsonTarget = AuditLogSchemaTarget
+typealias AuditLogSchemaTargetInput = AuditLogSchemaTarget

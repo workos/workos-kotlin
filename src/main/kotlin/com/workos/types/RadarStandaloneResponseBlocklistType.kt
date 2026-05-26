@@ -2,5 +2,5 @@
 
 package com.workos.types
 
-/** Alias for [RadarType]. */
-typealias RadarStandaloneResponseBlocklistType = RadarType
+/** Alias for [RadarListType]. */
+typealias RadarStandaloneResponseBlocklistType = RadarListType

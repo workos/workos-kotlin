@@ -3,18 +3,18 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.AuditLogExportJsonState
+import com.workos.types.AuditLogExportState
 import java.time.OffsetDateTime
 
-/** AuditLogExportJson model. */
-data class AuditLogExportJson(
+/** AuditLogExport model. */
+data class AuditLogExport(
   /** The unique ID of the Audit Log Export. */
   @JsonProperty("id")
   val id: String,
 
   /** The state of the export. Possible values: pending, ready, error. */
   @JsonProperty("state")
-  val state: AuditLogExportJsonState,
+  val state: AuditLogExportState,
 
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")

@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [FlagRuleUpdatedContextConfiguredTargetOrganization]. */
-typealias FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization = FlagRuleUpdatedContextConfiguredTargetOrganization
+/** Alias for [Actor]. */
+typealias FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization = Actor

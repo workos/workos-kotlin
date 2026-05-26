@@ -8,7 +8,6 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
-import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.AuthenticateResponse
@@ -22,7 +21,6 @@ import com.workos.models.Invitation
 import com.workos.models.JWTTemplateResponse
 import com.workos.models.JwksResponse
 import com.workos.models.MagicAuth
-import com.workos.models.OrganizationMembership
 import com.workos.models.PasswordReset
 import com.workos.models.RedirectUri
 import com.workos.models.ResetPasswordResponse
@@ -32,15 +30,14 @@ import com.workos.models.UserApiKey
 import com.workos.models.UserApiKeyWithValue
 import com.workos.models.UserIdentitiesGetItem
 import com.workos.models.UserInvite
-import com.workos.models.UserOrganizationMembership
 import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
-import com.workos.types.OrganizationMembershipStatus
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.OffsetDateTime
 
 /**
  * Mutually exclusive password parameter variants.
@@ -71,35 +68,6 @@ sealed class CreateUserPassword {
     /** The password hash type. */
     val hashType: CreateUserPasswordHashType
   ) : CreateUserPassword()
-}
-
-/**
- * Mutually exclusive role parameter variants.
- *
- * Usage from Kotlin:
- * ```kotlin
- * val target: CreateUserRole = CreateUserRole.Single(slug = "...")
- * ```
- *
- * Usage from Java:
- * ```java
- * CreateUserRole target = new CreateUserRole.Single("...");
- * ```
- *
- * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
- */
-sealed class CreateUserRole {
-  /** Variant: single. */
-  data class Single(
-    /** The role slug. */
-    val slug: String
-  ) : CreateUserRole()
-
-  /** Variant: multiple. */
-  data class Multiple(
-    /** The role slugs. */
-    val slugs: List<String>
-  ) : CreateUserRole()
 }
 
 /**
@@ -2076,359 +2044,6 @@ class UserManagement(
     }
 
   /**
-   * List organization memberships
-   *
-   * Get a list of all organization memberships matching the criteria specified. At least one of `user_id` or `organization_id` must be provided. By default only active memberships are returned. Use the `statuses` parameter to filter by other statuses.
-   *
-   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
-   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
-   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
-   * @param order the order to return records in. See [PaginationOrder].
-   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
-   * @param statuses Filter by the status of the organization membership. Array including any of `active`, `inactive`, or `pending`.
-   * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return a [com.workos.common.http.Page] of results
-   */
-  @JvmOverloads
-  fun listOrganizationMemberships(
-    before: String? = null,
-    after: String? = null,
-    limit: Int? = null,
-    order: PaginationOrder? = null,
-    organizationId: String? = null,
-    statuses: List<OrganizationMembershipStatus>? = null,
-    userId: String? = null,
-    requestOptions: RequestOptions? = null
-  ): Page<UserOrganizationMembership> {
-    val itemType = object : TypeReference<UserOrganizationMembership>() {}
-    return workos.baseClient.requestPage(
-      method = "GET",
-      path = "/user_management/organization_memberships",
-      itemType = itemType,
-      requestOptions = requestOptions,
-      before = before,
-      after = after
-    ) {
-      limit?.let { add("limit" to it.toString()) }
-      order?.let { add("order" to it.value) }
-      addIfNotNull("organization_id", organizationId)
-      addJoinedIfNotNull("statuses", statuses?.map { it.value })
-      addIfNotNull("user_id", userId)
-    }
-  }
-
-  /**
-   * Coroutine-aware variant of [listOrganizationMemberships]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [listOrganizationMemberships] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("listOrganizationMembershipsSuspend")
-  suspend fun listOrganizationMembershipsSuspend(
-    before: String? = null,
-    after: String? = null,
-    limit: Int? = null,
-    order: PaginationOrder? = null,
-    organizationId: String? = null,
-    statuses: List<OrganizationMembershipStatus>? = null,
-    userId: String? = null,
-    requestOptions: RequestOptions? = null
-  ): Page<UserOrganizationMembership> =
-    withContext(Dispatchers.IO) {
-      listOrganizationMemberships(before, after, limit, order, organizationId, statuses, userId, requestOptions)
-    }
-
-  /**
-   * Create an organization membership
-   *
-   * Creates a new `active` organization membership for the given organization and user.
-   *
-   * Calling this API with an organization and user that match an `inactive` organization membership will activate the membership with the specified role(s).
-   *
-   * @param userId The ID of the [user](https://workos.com/docs/reference/authkit/user).
-   * @param organizationId The ID of the [organization](https://workos.com/docs/reference/organization) which the user belongs to.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return the OrganizationMembership
-   */
-  @JvmOverloads
-  fun createOrganizationMembership(
-    createUserRole: CreateUserRole? = null,
-    userId: String,
-    organizationId: String,
-    requestOptions: RequestOptions? = null
-  ): OrganizationMembership {
-    val body =
-      bodyOf(
-        "user_id" to userId,
-        "organization_id" to organizationId
-      )
-    if (createUserRole != null) {
-      when (createUserRole) {
-        is CreateUserRole.Single -> body["role_slug"] = createUserRole.slug
-        is CreateUserRole.Multiple -> body["role_slugs"] = createUserRole.slugs
-      }
-    }
-    val config =
-      RequestConfig(
-        method = "POST",
-        path = "/user_management/organization_memberships",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, OrganizationMembership::class.java)
-  }
-
-  /**
-   * Coroutine-aware variant of [createOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [createOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("createOrganizationMembershipSuspend")
-  suspend fun createOrganizationMembershipSuspend(
-    createUserRole: CreateUserRole? = null,
-    userId: String,
-    organizationId: String,
-    requestOptions: RequestOptions? = null
-  ): OrganizationMembership =
-    withContext(Dispatchers.IO) {
-      createOrganizationMembership(createUserRole, userId, organizationId, requestOptions)
-    }
-
-  /**
-   * Get an organization membership
-   *
-   * Get the details of an existing organization membership.
-   *
-   * @param id The unique ID of the organization membership.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return the UserOrganizationMembership
-   */
-  @JvmOverloads
-  fun getOrganizationMembership(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership {
-    val config =
-      RequestConfig(
-        method = "GET",
-        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, UserOrganizationMembership::class.java)
-  }
-
-  /**
-   * Coroutine-aware variant of [getOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [getOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("getOrganizationMembershipSuspend")
-  suspend fun getOrganizationMembershipSuspend(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership =
-    withContext(Dispatchers.IO) {
-      getOrganizationMembership(id, requestOptions)
-    }
-
-  /**
-   * Update an organization membership
-   *
-   * Update the details of an existing organization membership.
-   *
-   * @param id The unique ID of the organization membership.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return the UserOrganizationMembership
-   */
-  @JvmOverloads
-  fun updateOrganizationMembership(
-    id: String,
-    createUserRole: CreateUserRole? = null,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
-    if (createUserRole != null) {
-      when (createUserRole) {
-        is CreateUserRole.Single -> body["role_slug"] = createUserRole.slug
-        is CreateUserRole.Multiple -> body["role_slugs"] = createUserRole.slugs
-      }
-    }
-    val config =
-      RequestConfig(
-        method = "PUT",
-        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, UserOrganizationMembership::class.java)
-  }
-
-  /**
-   * Coroutine-aware variant of [updateOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [updateOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("updateOrganizationMembershipSuspend")
-  suspend fun updateOrganizationMembershipSuspend(
-    id: String,
-    createUserRole: CreateUserRole? = null,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership =
-    withContext(Dispatchers.IO) {
-      updateOrganizationMembership(id, createUserRole, requestOptions)
-    }
-
-  /**
-   * Delete an organization membership
-   *
-   * Permanently deletes an existing organization membership. It cannot be undone.
-   *
-   * @param id The unique ID of the organization membership.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   */
-  @JvmOverloads
-  fun deleteOrganizationMembership(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ) {
-    val config =
-      RequestConfig(
-        method = "DELETE",
-        path = "/user_management/organization_memberships/${encodePathSegment(id)}",
-        requestOptions = requestOptions
-      )
-    workos.baseClient.requestVoid(config)
-  }
-
-  /**
-   * Coroutine-aware variant of [deleteOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [deleteOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("deleteOrganizationMembershipSuspend")
-  suspend fun deleteOrganizationMembershipSuspend(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ) = withContext(Dispatchers.IO) {
-    deleteOrganizationMembership(id, requestOptions)
-  }
-
-  /**
-   * Deactivate an organization membership
-   *
-   * Deactivates an `active` organization membership. Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful deactivation.
-   *
-   * - Deactivating an `inactive` membership is a no-op and does not emit an event.
-   * - Deactivating a `pending` membership returns an error. This membership should be [deleted](https://workos.com/docs/reference/authkit/organization-membership/delete) instead.
-   *
-   * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
-   *
-   * @param id The unique ID of the organization membership.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return the OrganizationMembership
-   */
-  @JvmOverloads
-  fun deactivateOrganizationMembership(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): OrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
-    val config =
-      RequestConfig(
-        method = "PUT",
-        path = "/user_management/organization_memberships/${encodePathSegment(id)}/deactivate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, OrganizationMembership::class.java)
-  }
-
-  /**
-   * Coroutine-aware variant of [deactivateOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [deactivateOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("deactivateOrganizationMembershipSuspend")
-  suspend fun deactivateOrganizationMembershipSuspend(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): OrganizationMembership =
-    withContext(Dispatchers.IO) {
-      deactivateOrganizationMembership(id, requestOptions)
-    }
-
-  /**
-   * Reactivate an organization membership
-   *
-   * Reactivates an `inactive` organization membership, retaining the pre-existing role(s). Emits an [organization_membership.updated](https://workos.com/docs/events/organization-membership) event upon successful reactivation.
-   *
-   * - Reactivating an `active` membership is a no-op and does not emit an event.
-   * - Reactivating a `pending` membership returns an error. The user needs to [accept the invitation](https://workos.com/docs/authkit/invitations) instead.
-   *
-   * See the [membership management documentation](https://workos.com/docs/authkit/users-organizations/organizations/membership-management) for additional details.
-   *
-   * @param id The unique ID of the organization membership.
-   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
-   *
-   * @return the UserOrganizationMembership
-   */
-  @JvmOverloads
-  fun reactivateOrganizationMembership(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership {
-    val body = linkedMapOf<String, Any?>()
-    val config =
-      RequestConfig(
-        method = "PUT",
-        path = "/user_management/organization_memberships/${encodePathSegment(id)}/reactivate",
-        body = body,
-        requestOptions = requestOptions
-      )
-    return workos.baseClient.request(config, UserOrganizationMembership::class.java)
-  }
-
-  /**
-   * Coroutine-aware variant of [reactivateOrganizationMembership]. Use this from
-   * a `suspend` function or coroutine scope.
-   *
-   * Delegates to the blocking [reactivateOrganizationMembership] under
-   * `withContext(Dispatchers.IO)`, so this is safe to call from any
-   * coroutine dispatcher (including `Dispatchers.Main`).
-   */
-  @JvmName("reactivateOrganizationMembershipSuspend")
-  suspend fun reactivateOrganizationMembershipSuspend(
-    id: String,
-    requestOptions: RequestOptions? = null
-  ): UserOrganizationMembership =
-    withContext(Dispatchers.IO) {
-      reactivateOrganizationMembership(id, requestOptions)
-    }
-
-  /**
    * Create a redirect URI
    *
    * Creates a new redirect URI for an environment.
@@ -2644,6 +2259,7 @@ class UserManagement(
    * @param name A descriptive name for the API key.
    * @param organizationId The ID of the organization the user API key is associated with. The user must have an active membership in this organization.
    * @param permissions The permission slugs to assign to the API key. Each permission must be enabled for user API keys.
+   * @param expiresAt The timestamp when the API key should expire. Must be a future timestamp. If omitted, the key does not expire.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserApiKeyWithValue
@@ -2654,13 +2270,15 @@ class UserManagement(
     name: String,
     organizationId: String,
     permissions: List<String>? = null,
+    expiresAt: OffsetDateTime? = null,
     requestOptions: RequestOptions? = null
   ): UserApiKeyWithValue {
     val body =
       bodyOf(
         "name" to name,
         "organization_id" to organizationId,
-        "permissions" to permissions
+        "permissions" to permissions,
+        "expires_at" to expiresAt
       )
     val config =
       RequestConfig(
@@ -2686,9 +2304,10 @@ class UserManagement(
     name: String,
     organizationId: String,
     permissions: List<String>? = null,
+    expiresAt: OffsetDateTime? = null,
     requestOptions: RequestOptions? = null
   ): UserApiKeyWithValue =
     withContext(Dispatchers.IO) {
-      createApiKey(userId, name, organizationId, permissions, requestOptions)
+      createApiKey(userId, name, organizationId, permissions, expiresAt, requestOptions)
     }
 }

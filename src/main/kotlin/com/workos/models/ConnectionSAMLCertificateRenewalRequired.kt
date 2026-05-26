@@ -19,15 +19,15 @@ data class ConnectionSAMLCertificateRenewalRequired(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"connection.saml_certificate_renewal_required"`. */
   @JsonProperty("event")
   override val event: String = "connection.saml_certificate_renewal_required",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

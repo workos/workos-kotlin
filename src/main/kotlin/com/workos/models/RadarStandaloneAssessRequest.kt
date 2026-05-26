@@ -26,13 +26,5 @@ data class RadarStandaloneAssessRequest(
 
   /** The action being performed. */
   @JsonProperty("action")
-  val action: RadarStandaloneAssessRequestAction,
-
-  /** An optional device fingerprint for the request. */
-  @JsonProperty("device_fingerprint")
-  val deviceFingerprint: String? = null,
-
-  /** An optional bot detection score for the request. */
-  @JsonProperty("bot_score")
-  val botScore: String? = null
+  val action: RadarStandaloneAssessRequestAction
 )

@@ -17,7 +17,7 @@ data class ApplicationCredentialsListItem(
 
   /** The timestamp when the client secret was last used, or null if never used. */
   @JsonProperty("last_used_at")
-  val lastUsedAt: String?,
+  val lastUsedAt: OffsetDateTime?,
 
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")

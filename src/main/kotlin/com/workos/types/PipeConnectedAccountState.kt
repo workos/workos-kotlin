@@ -5,13 +5,13 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid RadarAction values returned or accepted by the API. */
-enum class RadarAction(
+/** Enumeration of valid PipeConnectedAccountState values returned or accepted by the API. */
+enum class PipeConnectedAccountState(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Block("block"),
-  Allow("allow")
+  Connected("connected"),
+  NeedsReauthorization("needs_reauthorization")
 }

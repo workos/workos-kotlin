@@ -9,14 +9,14 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
-import com.workos.models.AuditLogActionJson
+import com.workos.models.AuditLogAction
 import com.workos.models.AuditLogEvent
 import com.workos.models.AuditLogEventCreateResponse
-import com.workos.models.AuditLogExportJson
-import com.workos.models.AuditLogSchemaActor
-import com.workos.models.AuditLogSchemaJson
-import com.workos.models.AuditLogSchemaTarget
-import com.workos.models.AuditLogsRetentionJson
+import com.workos.models.AuditLogExport
+import com.workos.models.AuditLogSchema
+import com.workos.models.AuditLogSchemaActorInput
+import com.workos.models.AuditLogSchemaTargetInput
+import com.workos.models.AuditLogsRetention
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,20 +38,20 @@ class AuditLogs(
    * @param id Unique identifier of the Organization.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogsRetentionJson
+   * @return the AuditLogsRetention
    */
   @JvmOverloads
   fun getAuditLogsRetention(
     id: String,
     requestOptions: RequestOptions? = null
-  ): AuditLogsRetentionJson {
+  ): AuditLogsRetention {
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/${encodePathSegment(id)}/audit_logs_retention",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
+    return workos.baseClient.request(config, AuditLogsRetention::class.java)
   }
 
   /**
@@ -66,7 +66,7 @@ class AuditLogs(
   suspend fun getAuditLogsRetentionSuspend(
     id: String,
     requestOptions: RequestOptions? = null
-  ): AuditLogsRetentionJson =
+  ): AuditLogsRetention =
     withContext(Dispatchers.IO) {
       getAuditLogsRetention(id, requestOptions)
     }
@@ -80,14 +80,14 @@ class AuditLogs(
    * @param retentionPeriodInDays The number of days Audit Log events will be retained. Valid values are `30` and `365`.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogsRetentionJson
+   * @return the AuditLogsRetention
    */
   @JvmOverloads
   fun updateAuditLogsRetention(
     id: String,
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null
-  ): AuditLogsRetentionJson {
+  ): AuditLogsRetention {
     val body =
       bodyOf(
         "retention_period_in_days" to retentionPeriodInDays
@@ -99,7 +99,7 @@ class AuditLogs(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogsRetentionJson::class.java)
+    return workos.baseClient.request(config, AuditLogsRetention::class.java)
   }
 
   /**
@@ -115,7 +115,7 @@ class AuditLogs(
     id: String,
     retentionPeriodInDays: Long,
     requestOptions: RequestOptions? = null
-  ): AuditLogsRetentionJson =
+  ): AuditLogsRetention =
     withContext(Dispatchers.IO) {
       updateAuditLogsRetention(id, retentionPeriodInDays, requestOptions)
     }
@@ -140,8 +140,8 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogActionJson> {
-    val itemType = object : TypeReference<AuditLogActionJson>() {}
+  ): Page<AuditLogAction> {
+    val itemType = object : TypeReference<AuditLogAction>() {}
     return workos.baseClient.requestPage(
       method = "GET",
       path = "/audit_logs/actions",
@@ -170,7 +170,7 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogActionJson> =
+  ): Page<AuditLogAction> =
     withContext(Dispatchers.IO) {
       listActions(before, after, limit, order, requestOptions)
     }
@@ -197,8 +197,8 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogSchemaJson> {
-    val itemType = object : TypeReference<AuditLogSchemaJson>() {}
+  ): Page<AuditLogSchema> {
+    val itemType = object : TypeReference<AuditLogSchema>() {}
     return workos.baseClient.requestPage(
       method = "GET",
       path = "/audit_logs/actions/${encodePathSegment(actionName)}/schemas",
@@ -228,7 +228,7 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogSchemaJson> =
+  ): Page<AuditLogSchema> =
     withContext(Dispatchers.IO) {
       listActionSchemas(actionName, before, after, limit, order, requestOptions)
     }
@@ -244,16 +244,16 @@ class AuditLogs(
    * @param metadata Optional JSON schema for event metadata.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogSchemaJson
+   * @return the AuditLogSchema
    */
   @JvmOverloads
   fun createSchema(
     actionName: String,
-    targets: List<AuditLogSchemaTarget>,
-    actor: AuditLogSchemaActor? = null,
+    targets: List<AuditLogSchemaTargetInput>,
+    actor: AuditLogSchemaActorInput? = null,
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogSchemaJson {
+  ): AuditLogSchema {
     val body =
       bodyOf(
         "targets" to targets,
@@ -267,7 +267,7 @@ class AuditLogs(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogSchemaJson::class.java)
+    return workos.baseClient.request(config, AuditLogSchema::class.java)
   }
 
   /**
@@ -281,11 +281,11 @@ class AuditLogs(
   @JvmName("createSchemaSuspend")
   suspend fun createSchemaSuspend(
     actionName: String,
-    targets: List<AuditLogSchemaTarget>,
-    actor: AuditLogSchemaActor? = null,
+    targets: List<AuditLogSchemaTargetInput>,
+    actor: AuditLogSchemaActorInput? = null,
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogSchemaJson =
+  ): AuditLogSchema =
     withContext(Dispatchers.IO) {
       createSchema(actionName, targets, actor, metadata, requestOptions)
     }
@@ -361,7 +361,7 @@ class AuditLogs(
    * @param targets List of target types to filter against.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogExportJson
+   * @return the AuditLogExport
    */
   @JvmOverloads
   fun createExport(
@@ -374,7 +374,7 @@ class AuditLogs(
     actorIds: List<String>? = null,
     targets: List<String>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogExportJson {
+  ): AuditLogExport {
     val body =
       bodyOf(
         "organization_id" to organizationId,
@@ -393,7 +393,7 @@ class AuditLogs(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogExportJson::class.java)
+    return workos.baseClient.request(config, AuditLogExport::class.java)
   }
 
   /**
@@ -415,7 +415,7 @@ class AuditLogs(
     actorIds: List<String>? = null,
     targets: List<String>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogExportJson =
+  ): AuditLogExport =
     withContext(Dispatchers.IO) {
       createExport(organizationId, rangeStart, rangeEnd, actions, actors, actorNames, actorIds, targets, requestOptions)
     }
@@ -428,20 +428,20 @@ class AuditLogs(
    * @param auditLogExportId The unique ID of the Audit Log Export.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogExportJson
+   * @return the AuditLogExport
    */
   @JvmOverloads
   fun getExport(
     auditLogExportId: String,
     requestOptions: RequestOptions? = null
-  ): AuditLogExportJson {
+  ): AuditLogExport {
     val config =
       RequestConfig(
         method = "GET",
         path = "/audit_logs/exports/${encodePathSegment(auditLogExportId)}",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogExportJson::class.java)
+    return workos.baseClient.request(config, AuditLogExport::class.java)
   }
 
   /**
@@ -456,7 +456,7 @@ class AuditLogs(
   suspend fun getExportSuspend(
     auditLogExportId: String,
     requestOptions: RequestOptions? = null
-  ): AuditLogExportJson =
+  ): AuditLogExport =
     withContext(Dispatchers.IO) {
       getExport(auditLogExportId, requestOptions)
     }
