@@ -1,5 +1,43 @@
 # Changelog
 
+## [6.0.0](https://github.com/workos/workos-kotlin/compare/v5.1.0...v6.0.0) (2026-05-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388))
+
+### Features
+
+* **api_keys:** Add expires_at field to API key models and creation methods ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **generated:** Add new Vault data models and event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **organization_membership:** Add new OrganizationMembershipService with membership and group operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **vault:** Add new Vault service with key encryption and object storage operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.nimbusds:nimbus-jose-jwt to v10 ([#384](https://github.com/workos/workos-kotlin/issues/384)) ([b866a33](https://github.com/workos/workos-kotlin/commit/b866a33c790fdaf91610435dbcd2db588ba07463))
+* **deps:** update dependency com.squareup.okhttp3:okhttp to v5 ([#385](https://github.com/workos/workos-kotlin/issues/385)) ([8d20796](https://github.com/workos/workos-kotlin/commit/8d20796f671c33862fc1987eb9ee7f2af490b34a))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.11.0 ([#381](https://github.com/workos/workos-kotlin/issues/381)) ([09130f0](https://github.com/workos/workos-kotlin/commit/09130f004d01b26eb0ef78cc33ac13c4c89439ae))
+
 ## [5.1.0](https://github.com/workos/workos-kotlin/compare/v5.0.0...v5.1.0) (2026-05-11)
 
 
