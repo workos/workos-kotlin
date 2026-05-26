@@ -15,6 +15,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+// @oagen-ignore-start
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
+// @oagen-ignore-end
 
 class VaultTest : TestBase() {
   private fun api() = Vault(createWorkOSClient())
@@ -206,4 +213,111 @@ class VaultTest : TestBase() {
       api().createDataKey(emptyMap<String, String>())
     }
   }
+
+  // @oagen-ignore-start
+
+  @Test
+  fun `encrypt then decrypt round-trips the plaintext through the stubbed vault`() {
+    val plaintextKey = randomAesKey()
+    val plaintextKeyB64 = Base64.getEncoder().encodeToString(plaintextKey)
+
+    wireMockRule.stubFor(
+      com.github.tomakehurst.wiremock.client.WireMock.post(
+        com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo("/vault/v1/keys/data-key")
+      )
+        .willReturn(
+          com.github.tomakehurst.wiremock.client.WireMock.aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody(
+              """{"context":{"env":"t"},"data_key":"$plaintextKeyB64","encrypted_keys":"d3JhcHBlZA==","id":"dk_1"}"""
+            )
+        )
+    )
+    wireMockRule.stubFor(
+      com.github.tomakehurst.wiremock.client.WireMock.post(
+        com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo("/vault/v1/keys/decrypt")
+      )
+        .willReturn(
+          com.github.tomakehurst.wiremock.client.WireMock.aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody("""{"data_key":"$plaintextKeyB64","id":"dk_1"}""")
+        )
+    )
+
+    val vault = api()
+    val plaintext = "hello, vault"
+    val encrypted = vault.encrypt(plaintext, mapOf("env" to "t"))
+    val decrypted = vault.decrypt(encrypted)
+    assertEquals(plaintext, decrypted)
+  }
+
+  @Test
+  fun `decrypt validates against an externally produced payload`() {
+    val plaintextKey = randomAesKey()
+    val iv = ByteArray(12).also { java.security.SecureRandom().nextBytes(it) }
+    val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+    cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(plaintextKey, "AES"), GCMParameterSpec(128, iv))
+    val plaintext = "round-trip"
+    val out = cipher.doFinal(plaintext.toByteArray(Charsets.UTF_8))
+    val ciphertext = out.copyOfRange(0, out.size - 16)
+    val tag = out.copyOfRange(out.size - 16, out.size)
+
+    val keyBlob = "blob-bytes".toByteArray()
+    val lenPrefix = leb128(keyBlob.size)
+    val combined =
+      ByteArray(iv.size + tag.size + lenPrefix.size + keyBlob.size + ciphertext.size).apply {
+        var off = 0
+        iv.copyInto(this, off)
+        off += iv.size
+        tag.copyInto(this, off)
+        off += tag.size
+        lenPrefix.copyInto(this, off)
+        off += lenPrefix.size
+        keyBlob.copyInto(this, off)
+        off += keyBlob.size
+        ciphertext.copyInto(this, off)
+      }
+    val payloadB64 = Base64.getEncoder().encodeToString(combined)
+
+    wireMockRule.stubFor(
+      com.github.tomakehurst.wiremock.client.WireMock.post(
+        com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo("/vault/v1/keys/decrypt")
+      )
+        .willReturn(
+          com.github.tomakehurst.wiremock.client.WireMock.aResponse()
+            .withStatus(200)
+            .withHeader("Content-Type", "application/json")
+            .withBody(
+              """{"data_key":"${Base64.getEncoder().encodeToString(plaintextKey)}","id":"dk_1"}"""
+            )
+        )
+    )
+    val result = api().decrypt(payloadB64)
+    assertEquals(plaintext, result)
+  }
+
+  private fun randomAesKeyBase64(): String = Base64.getEncoder().encodeToString(randomAesKey())
+
+  private fun randomAesKey(): ByteArray {
+    val gen = KeyGenerator.getInstance("AES")
+    gen.init(256)
+    return gen.generateKey().encoded
+  }
+
+  private fun leb128(value: Int): ByteArray {
+    var remaining = value
+    val bytes = mutableListOf<Byte>()
+    while (true) {
+      var byte = remaining and 0x7F
+      remaining = remaining ushr 7
+      if (remaining != 0) byte = byte or 0x80
+      bytes += byte.toByte()
+      if (remaining == 0) break
+    }
+    return ByteArray(bytes.size) { bytes[it] }
+  }
+
+  // @oagen-ignore-end
 }
