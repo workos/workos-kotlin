@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-05-26T19:15:40.621Z",
+  "generatedAt": "2026-05-26T19:20:18.801Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -287,7 +287,6 @@
     "src/main/kotlin/com/workos/models/MagicAuthCreated.kt",
     "src/main/kotlin/com/workos/models/MagicAuthCreatedData.kt",
     "src/main/kotlin/com/workos/models/NewConnectApplicationSecret.kt",
-    "src/main/kotlin/com/workos/models/Object.kt",
     "src/main/kotlin/com/workos/models/ObjectMetadata.kt",
     "src/main/kotlin/com/workos/models/ObjectSummary.kt",
     "src/main/kotlin/com/workos/models/ObjectVersion.kt",
@@ -453,6 +452,7 @@
     "src/main/kotlin/com/workos/models/VaultMetadataReadData.kt",
     "src/main/kotlin/com/workos/models/VaultNamesListed.kt",
     "src/main/kotlin/com/workos/models/VaultNamesListedData.kt",
+    "src/main/kotlin/com/workos/models/VaultObject.kt",
     "src/main/kotlin/com/workos/models/VerifyEmailAddress.kt",
     "src/main/kotlin/com/workos/models/VerifyEmailResponse.kt",
     "src/main/kotlin/com/workos/models/VersionListResponse.kt",

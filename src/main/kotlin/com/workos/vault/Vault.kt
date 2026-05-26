@@ -16,10 +16,10 @@ import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.CreateDataKeyResponse
 import com.workos.models.DecryptResponse
-import com.workos.models.Object
 import com.workos.models.ObjectMetadata
 import com.workos.models.ObjectSummary
 import com.workos.models.ObjectWithoutValue
+import com.workos.models.VaultObject
 import com.workos.models.VersionListResponse
 import com.workos.types.SortOrder
 import java.time.OffsetDateTime
@@ -308,20 +308,20 @@ class Vault(
    * @param name Unique name of the object.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the Object
+   * @return the VaultObject
    */
   @JvmOverloads
   fun getName(
     name: String,
     requestOptions: RequestOptions? = null
-  ): Object {
+  ): VaultObject {
     val config =
       RequestConfig(
         method = "GET",
         path = "/vault/v1/kv/name/${encodePathSegment(name)}",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, Object::class.java)
+    return workos.baseClient.request(config, VaultObject::class.java)
   }
 
   /**
@@ -336,7 +336,7 @@ class Vault(
   suspend fun getNameSuspend(
     name: String,
     requestOptions: RequestOptions? = null
-  ): Object =
+  ): VaultObject =
     withContext(Dispatchers.IO) {
       getName(name, requestOptions)
     }
@@ -349,20 +349,20 @@ class Vault(
    * @param id Unique identifier of the object.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the Object
+   * @return the VaultObject
    */
   @JvmOverloads
   fun getKv(
     id: String,
     requestOptions: RequestOptions? = null
-  ): Object {
+  ): VaultObject {
     val config =
       RequestConfig(
         method = "GET",
         path = "/vault/v1/kv/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, Object::class.java)
+    return workos.baseClient.request(config, VaultObject::class.java)
   }
 
   /**
@@ -377,7 +377,7 @@ class Vault(
   suspend fun getKvSuspend(
     id: String,
     requestOptions: RequestOptions? = null
-  ): Object =
+  ): VaultObject =
     withContext(Dispatchers.IO) {
       getKv(id, requestOptions)
     }

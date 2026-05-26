@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /** An encrypted object with its decrypted value and metadata. */
-data class Object(
+data class VaultObject(
   /** Unique identifier of the object. */
   @JsonProperty("id")
   val id: String,
