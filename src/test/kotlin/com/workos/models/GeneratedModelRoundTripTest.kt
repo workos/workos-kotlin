@@ -30,9 +30,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AuditLogSchemaActor round-trips through Jackson`() {
+  fun `AuditLogSchemaActorInput round-trips through Jackson`() {
     val json = "{\"metadata\": {}}"
-    val parsed = mapper.readValue(json, AuditLogSchemaActor::class.java)
+    val parsed = mapper.readValue(json, AuditLogSchemaActorInput::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -240,9 +240,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `Error round-trips through Jackson`() {
+  fun `ErrorResponse round-trips through Jackson`() {
     val json = "{\"error\": \"sample\"}"
-    val parsed = mapper.readValue(json, Error::class.java)
+    val parsed = mapper.readValue(json, ErrorResponse::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -274,6 +274,29 @@ class GeneratedModelRoundTripTest {
   fun `ExternalAuthCompleteResponse round-trips through Jackson`() {
     val json = "{\"redirect_uri\": \"sample\"}"
     val parsed = mapper.readValue(json, ExternalAuthCompleteResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `ConnectApplicationOAuthRedirectUris round-trips through Jackson`() {
+    val json = "{\"uri\": \"sample\", \"default\": false}"
+    val parsed = mapper.readValue(json, ConnectApplicationOAuthRedirectUris::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `ConnectApplicationM2M round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"connect_application\", \"id\": \"sample\", \"client_id\": \"sample\", \"description\": null, \"name\": " +
+        "\"sample\", \"scopes\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"application_type\": \"m2m\", \"organization_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, ConnectApplicationM2M::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1224,9 +1247,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AuditLogSchemaJsonActor round-trips through Jackson`() {
+  fun `AuditLogSchemaActor round-trips through Jackson`() {
     val json = "{\"metadata\": {}}"
-    val parsed = mapper.readValue(json, AuditLogSchemaJsonActor::class.java)
+    val parsed = mapper.readValue(json, AuditLogSchemaActor::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

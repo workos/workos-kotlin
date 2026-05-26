@@ -19,15 +19,15 @@ data class AuthenticationEmailVerificationFailed(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"authentication.email_verification_failed"`. */
   @JsonProperty("event")
   override val event: String = "authentication.email_verification_failed",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

@@ -5,8 +5,8 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid RadarAction values returned or accepted by the API. */
-enum class RadarAction(
+/** Enumeration of valid RadarListAction values returned or accepted by the API. */
+enum class RadarListAction(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {

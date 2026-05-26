@@ -5,8 +5,8 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** ConnectApplication model. */
-data class ConnectApplication(
+/** ConnectApplicationM2M model. */
+data class ConnectApplicationM2M(
   /** The unique ID of the connect application. */
   @JsonProperty("id")
   val id: String,
@@ -35,31 +35,15 @@ data class ConnectApplication(
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
 
+  /** The ID of the organization the application belongs to. */
+  @JsonProperty("organization_id")
+  val organizationId: String,
+
   /** Distinguishes the connect application object. */
   @JsonProperty("object")
   val objectType: String = "connect_application",
 
   /** The type of the application. */
   @JsonProperty("application_type")
-  val applicationType: String? = null,
-
-  /** The redirect URIs configured for this application. */
-  @JsonProperty("redirect_uris")
-  val redirectUris: List<ConnectApplicationRedirectUri>? = null,
-
-  /** Whether the application uses PKCE for authorization. */
-  @JsonProperty("uses_pkce")
-  val usesPkce: Boolean? = null,
-
-  /** Whether the application is a first-party application. */
-  @JsonProperty("is_first_party")
-  val isFirstParty: Boolean? = null,
-
-  /** Whether the application was dynamically registered. */
-  @JsonProperty("was_dynamically_registered")
-  val wasDynamicallyRegistered: Boolean? = null,
-
-  /** The ID of the organization the application belongs to. */
-  @JsonProperty("organization_id")
-  val organizationId: String? = null
+  val applicationType: String = "m2m"
 )

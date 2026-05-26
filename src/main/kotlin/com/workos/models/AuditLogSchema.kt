@@ -5,15 +5,15 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** AuditLogSchemaJson model. */
-data class AuditLogSchemaJson(
+/** AuditLogSchema model. */
+data class AuditLogSchema(
   /** The version of the schema. */
   @JsonProperty("version")
   val version: Long,
 
   /** The list of targets for the schema. */
   @JsonProperty("targets")
-  val targets: List<AuditLogSchemaJsonTarget>,
+  val targets: List<AuditLogSchemaTarget>,
 
   /** The timestamp when the Audit Log Schema was created. */
   @JsonProperty("created_at")
@@ -25,7 +25,7 @@ data class AuditLogSchemaJson(
 
   /** The metadata schema for the actor. */
   @JsonProperty("actor")
-  val actor: AuditLogSchemaJsonActor? = null,
+  val actor: AuditLogSchemaActor? = null,
 
   /** Additional data associated with the event or entity. */
   @JsonProperty("metadata")

@@ -19,15 +19,15 @@ data class AuthenticationRadarRiskDetected(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"authentication.radar_risk_detected"`. */
   @JsonProperty("event")
   override val event: String = "authentication.radar_risk_detected",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

@@ -13,7 +13,7 @@ data class AuditLogAction(
 
   /** The schema associated with the action. */
   @JsonProperty("schema")
-  val schema: AuditLogSchemaJson,
+  val schema: AuditLogSchema,
 
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")

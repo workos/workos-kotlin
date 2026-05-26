@@ -10,7 +10,7 @@ import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
-import com.workos.models.AuditLogSchemaTarget
+import com.workos.models.AuditLogSchemaTargetInput
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -66,7 +66,7 @@ class AuditLogsTest : TestBase() {
       200,
       "{\"object\": \"audit_log_schema\", \"version\": 0, \"targets\": [], \"created_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTarget>())
+    val result = api().createSchema("sample-arg", emptyList<AuditLogSchemaTargetInput>())
     assertNotNull(result)
     assertEquals("audit_log_schema", result.objectType)
     assertEquals(0L, result.version)

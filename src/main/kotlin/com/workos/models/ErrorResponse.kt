@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /** Error response body. */
-data class Error(
+data class ErrorResponse(
   /** A human-readable description of the error. */
   @JsonProperty("error")
   val error: String

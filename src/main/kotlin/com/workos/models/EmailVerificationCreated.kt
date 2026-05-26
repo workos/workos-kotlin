@@ -19,15 +19,15 @@ data class EmailVerificationCreated(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"email_verification.created"`. */
   @JsonProperty("event")
   override val event: String = "email_verification.created",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

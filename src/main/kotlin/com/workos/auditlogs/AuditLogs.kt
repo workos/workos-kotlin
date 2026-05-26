@@ -13,9 +13,9 @@ import com.workos.models.AuditLogAction
 import com.workos.models.AuditLogEvent
 import com.workos.models.AuditLogEventCreateResponse
 import com.workos.models.AuditLogExport
-import com.workos.models.AuditLogSchemaActor
-import com.workos.models.AuditLogSchemaJson
-import com.workos.models.AuditLogSchemaTarget
+import com.workos.models.AuditLogSchema
+import com.workos.models.AuditLogSchemaActorInput
+import com.workos.models.AuditLogSchemaTargetInput
 import com.workos.models.AuditLogsRetention
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
@@ -197,8 +197,8 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogSchemaJson> {
-    val itemType = object : TypeReference<AuditLogSchemaJson>() {}
+  ): Page<AuditLogSchema> {
+    val itemType = object : TypeReference<AuditLogSchema>() {}
     return workos.baseClient.requestPage(
       method = "GET",
       path = "/audit_logs/actions/${encodePathSegment(actionName)}/schemas",
@@ -228,7 +228,7 @@ class AuditLogs(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<AuditLogSchemaJson> =
+  ): Page<AuditLogSchema> =
     withContext(Dispatchers.IO) {
       listActionSchemas(actionName, before, after, limit, order, requestOptions)
     }
@@ -244,16 +244,16 @@ class AuditLogs(
    * @param metadata Optional JSON schema for event metadata.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the AuditLogSchemaJson
+   * @return the AuditLogSchema
    */
   @JvmOverloads
   fun createSchema(
     actionName: String,
-    targets: List<AuditLogSchemaTarget>,
-    actor: AuditLogSchemaActor? = null,
+    targets: List<AuditLogSchemaTargetInput>,
+    actor: AuditLogSchemaActorInput? = null,
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogSchemaJson {
+  ): AuditLogSchema {
     val body =
       bodyOf(
         "targets" to targets,
@@ -267,7 +267,7 @@ class AuditLogs(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, AuditLogSchemaJson::class.java)
+    return workos.baseClient.request(config, AuditLogSchema::class.java)
   }
 
   /**
@@ -281,11 +281,11 @@ class AuditLogs(
   @JvmName("createSchemaSuspend")
   suspend fun createSchemaSuspend(
     actionName: String,
-    targets: List<AuditLogSchemaTarget>,
-    actor: AuditLogSchemaActor? = null,
+    targets: List<AuditLogSchemaTargetInput>,
+    actor: AuditLogSchemaActorInput? = null,
     metadata: Map<String, Any>? = null,
     requestOptions: RequestOptions? = null
-  ): AuditLogSchemaJson =
+  ): AuditLogSchema =
     withContext(Dispatchers.IO) {
       createSchema(actionName, targets, actor, metadata, requestOptions)
     }

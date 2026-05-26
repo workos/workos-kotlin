@@ -19,15 +19,15 @@ data class PipesConnectedAccountDisconnected(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"pipes.connected_account.disconnected"`. */
   @JsonProperty("event")
   override val event: String = "pipes.connected_account.disconnected",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

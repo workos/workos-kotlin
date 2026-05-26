@@ -3,4 +3,4 @@
 package com.workos.models
 
 /** Alias for [AuditLogSchemaActor]. */
-typealias AuditLogSchemaJsonActor = AuditLogSchemaActor
+typealias AuditLogSchemaActorInput = AuditLogSchemaActor

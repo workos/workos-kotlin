@@ -4,15 +4,15 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** AuditLogSchemaDto model. */
-data class AuditLogSchemaDto(
+/** AuditLogSchemaInput model. */
+data class AuditLogSchemaInput(
   /** The list of targets for the schema. */
   @JsonProperty("targets")
-  val targets: List<AuditLogSchemaTarget>,
+  val targets: List<AuditLogSchemaTargetInput>,
 
   /** The metadata schema for the actor. */
   @JsonProperty("actor")
-  val actor: AuditLogSchemaActor? = null,
+  val actor: AuditLogSchemaActorInput? = null,
 
   /** Optional JSON schema for event metadata. */
   @JsonProperty("metadata")

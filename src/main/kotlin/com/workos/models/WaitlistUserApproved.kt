@@ -19,15 +19,15 @@ data class WaitlistUserApproved(
   @JsonProperty("created_at")
   override val createdAt: OffsetDateTime,
 
+  /** Distinguishes the Event object. */
+  @JsonProperty("object")
+  val objectType: String = "event",
+
   /** Always `"waitlist_user.approved"`. */
   @JsonProperty("event")
   override val event: String = "waitlist_user.approved",
 
   /** The context. */
   @JsonProperty("context")
-  val context: EventContext? = null,
-
-  /** Distinguishes the Event object. */
-  @JsonProperty("object")
-  val objectType: String = "event"
+  val context: EventContext? = null
 ) : WorkOSEvent

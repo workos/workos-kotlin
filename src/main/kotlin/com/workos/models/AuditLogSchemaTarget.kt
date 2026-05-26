@@ -10,7 +10,7 @@ data class AuditLogSchemaTarget(
   @JsonProperty("type")
   val type: String,
 
-  /** Optional JSON schema for target metadata. */
+  /** Additional data associated with the event or entity. */
   @JsonProperty("metadata")
   val metadata: Map<String, Any>? = null
 )
