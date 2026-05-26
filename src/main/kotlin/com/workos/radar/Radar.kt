@@ -32,8 +32,6 @@ class Radar(
    * @param email The email address of the user making the request.
    * @param authMethod The authentication method being used.
    * @param action The action being performed.
-   * @param deviceFingerprint An optional device fingerprint for the request.
-   * @param botScore An optional bot detection score for the request.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RadarStandaloneResponse
@@ -45,8 +43,6 @@ class Radar(
     email: String,
     authMethod: RadarStandaloneAssessRequestAuthMethod,
     action: RadarStandaloneAssessRequestAction,
-    deviceFingerprint: String? = null,
-    botScore: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse {
     val body =
@@ -55,9 +51,7 @@ class Radar(
         "user_agent" to userAgent,
         "email" to email,
         "auth_method" to authMethod,
-        "action" to action,
-        "device_fingerprint" to deviceFingerprint,
-        "bot_score" to botScore
+        "action" to action
       )
     val config =
       RequestConfig(
@@ -84,12 +78,10 @@ class Radar(
     email: String,
     authMethod: RadarStandaloneAssessRequestAuthMethod,
     action: RadarStandaloneAssessRequestAction,
-    deviceFingerprint: String? = null,
-    botScore: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse =
     withContext(Dispatchers.IO) {
-      createAttempt(ipAddress, userAgent, email, authMethod, action, deviceFingerprint, botScore, requestOptions)
+      createAttempt(ipAddress, userAgent, email, authMethod, action, requestOptions)
     }
 
   /**
