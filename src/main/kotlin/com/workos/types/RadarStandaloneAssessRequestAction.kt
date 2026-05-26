@@ -12,12 +12,6 @@ enum class RadarStandaloneAssessRequestAction(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Login("login"),
-  Signup("signup"),
   SignUp("sign-up"),
-  SignIn("sign-in"),
-  SignUp2("sign_up"),
-  SignIn2("sign_in"),
-  SignIn3("sign in"),
-  SignUp3("sign up")
+  SignIn("sign-in")
 }
