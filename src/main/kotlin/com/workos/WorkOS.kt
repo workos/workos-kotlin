@@ -16,12 +16,13 @@ import com.workos.featureflags.FeatureFlags
 import com.workos.groups.Groups
 import com.workos.multifactorauth.MultiFactorAuth
 import com.workos.organizationdomains.OrganizationDomains
+import com.workos.organizationmembership.OrganizationMembershipService
 import com.workos.organizations.Organizations
 import com.workos.pipes.Pipes
 import com.workos.radar.Radar
 import com.workos.sso.SSO
 import com.workos.usermanagement.UserManagement
-import com.workos.usermanagementorganizationmembershipgroups.UserManagementOrganizationMembershipGroups
+import com.workos.vault.Vault
 import com.workos.webhooks.Webhooks
 import com.workos.widgets.Widgets
 import okhttp3.OkHttpClient
@@ -233,8 +234,21 @@ open class WorkOS
     /** Lazily-constructed [Groups] accessor for this [WorkOS] client. */
     val groups: Groups by lazy { Groups(this) }
 
-    /** Lazily-constructed [UserManagementOrganizationMembershipGroups] accessor for this [WorkOS] client. */
-    val userManagementOrganizationMembershipGroups: UserManagementOrganizationMembershipGroups by lazy {
-      UserManagementOrganizationMembershipGroups(this)
-    }
+    /** Lazily-constructed [OrganizationMembershipService] accessor for this [WorkOS] client. */
+    val organizationMembership: OrganizationMembershipService
+      get() =
+        service(
+          OrganizationMembershipService::class
+        ) {
+          OrganizationMembershipService(this)
+        }
+
+    /** Lazily-constructed [Vault] accessor for this [WorkOS] client. */
+    val vault: Vault
+      get() =
+        service(
+          Vault::class
+        ) {
+          Vault(this)
+        }
   }
