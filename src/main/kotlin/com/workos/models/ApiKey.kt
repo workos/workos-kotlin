@@ -27,6 +27,10 @@ data class ApiKey(
   @JsonProperty("last_used_at")
   val lastUsedAt: OffsetDateTime?,
 
+  /** Timestamp when the API Key expires. Null means the key does not expire. */
+  @JsonProperty("expires_at")
+  val expiresAt: OffsetDateTime?,
+
   /** The permission slugs assigned to the API Key. */
   @JsonProperty("permissions")
   val permissions: List<String>,

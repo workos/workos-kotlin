@@ -15,6 +15,7 @@ import com.workos.models.OrganizationApiKeyWithValue
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.OffsetDateTime
 
 /**
  * API accessor for ApiKeys.
@@ -90,6 +91,7 @@ class ApiKeys(
    * @param organizationId Unique identifier of the Organization.
    * @param name The name for the API key.
    * @param permissions The permission slugs to assign to the API key.
+   * @param expiresAt The timestamp when the API key should expire. Must be a future timestamp. If omitted, the key does not expire.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the OrganizationApiKeyWithValue
@@ -99,12 +101,14 @@ class ApiKeys(
     organizationId: String,
     name: String,
     permissions: List<String>? = null,
+    expiresAt: OffsetDateTime? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationApiKeyWithValue {
     val body =
       bodyOf(
         "name" to name,
-        "permissions" to permissions
+        "permissions" to permissions,
+        "expires_at" to expiresAt
       )
     val config =
       RequestConfig(
@@ -129,10 +133,11 @@ class ApiKeys(
     organizationId: String,
     name: String,
     permissions: List<String>? = null,
+    expiresAt: OffsetDateTime? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationApiKeyWithValue =
     withContext(Dispatchers.IO) {
-      createOrganizationApiKey(organizationId, name, permissions, requestOptions)
+      createOrganizationApiKey(organizationId, name, permissions, expiresAt, requestOptions)
     }
 
   /**
