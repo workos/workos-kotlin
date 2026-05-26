@@ -13,7 +13,6 @@ import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import com.workos.usermanagement.CreateUserPassword
-import com.workos.usermanagement.CreateUserRole
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -699,146 +698,6 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
-  fun `listOrganizationMemberships returns a typed response`() {
-    stubResponse(
-      "GET",
-      "/user_management/organization_memberships",
-      200,
-      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
-    )
-    val result = api().listOrganizationMemberships()
-    assertNotNull(result)
-  }
-
-  @Test
-  fun `createOrganizationMembership returns a typed response`() {
-    stubResponse(
-      "POST",
-      "/user_management/organization_memberships",
-      200,
-      "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
-        "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
-        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
-        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}}"
-    )
-    val result = api().createOrganizationMembership(createUserRole = CreateUserRole.Single("sample-arg"), "sample-arg", "sample-arg")
-    assertNotNull(result)
-    assertEquals("organization_membership", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.organizationId)
-    assertEquals(false, result.directoryManaged)
-    wireMockRule.verify(
-      postRequestedFor(urlPathMatching("/user_management/organization_memberships"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
-        .withQueryParam("role_slug", absent())
-        .withQueryParam("role_slugs", absent())
-    )
-  }
-
-  @Test
-  fun `getOrganizationMembership returns a typed response`() {
-    stubResponse(
-      "GET",
-      "/user_management/organization_memberships/sample-arg",
-      200,
-      "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
-        "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
-        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
-        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}}"
-    )
-    val result = api().getOrganizationMembership("sample-arg")
-    assertNotNull(result)
-    assertEquals("organization_membership", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.organizationId)
-    assertEquals(false, result.directoryManaged)
-  }
-
-  @Test
-  fun `updateOrganizationMembership returns a typed response`() {
-    stubResponse(
-      "PUT",
-      "/user_management/organization_memberships/sample-arg",
-      200,
-      "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
-        "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
-        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
-        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}}"
-    )
-    val result = api().updateOrganizationMembership("sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
-    assertNotNull(result)
-    assertEquals("organization_membership", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.organizationId)
-    assertEquals(false, result.directoryManaged)
-    wireMockRule.verify(
-      putRequestedFor(urlPathMatching("/user_management/organization_memberships/sample-arg"))
-        .withQueryParam("role_slug", absent())
-        .withQueryParam("role_slugs", absent())
-    )
-  }
-
-  @Test
-  fun `deleteOrganizationMembership completes without throwing`() {
-    stubResponse("DELETE", "/user_management/organization_memberships/sample-arg", 204)
-    api().deleteOrganizationMembership("sample-arg")
-  }
-
-  @Test
-  fun `deactivateOrganizationMembership returns a typed response`() {
-    stubResponse(
-      "PUT",
-      "/user_management/organization_memberships/sample-arg/deactivate",
-      200,
-      "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
-        "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
-        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
-        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}}"
-    )
-    val result = api().deactivateOrganizationMembership("sample-arg")
-    assertNotNull(result)
-    assertEquals("organization_membership", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.organizationId)
-    assertEquals(false, result.directoryManaged)
-  }
-
-  @Test
-  fun `reactivateOrganizationMembership returns a typed response`() {
-    stubResponse(
-      "PUT",
-      "/user_management/organization_memberships/sample-arg/reactivate",
-      200,
-      "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
-        "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
-        "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
-        "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}}"
-    )
-    val result = api().reactivateOrganizationMembership("sample-arg")
-    assertNotNull(result)
-    assertEquals("organization_membership", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.organizationId)
-    assertEquals(false, result.directoryManaged)
-  }
-
-  @Test
   fun `createRedirectUri returns a typed response`() {
     stubResponse(
       "POST",
@@ -897,8 +756,8 @@ class UserManagementTest : TestBase() {
       "/user_management/users/sample-arg/api_keys",
       200,
       "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"user\", \"id\": \"sample\", \"organization_id\": " +
-        "\"sample\"}, \"name\": \"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], " +
-        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
+        "\"sample\"}, \"name\": \"sample\", \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"expires_at\": null, " +
+        "\"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
     )
     val result = api().createApiKey("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)

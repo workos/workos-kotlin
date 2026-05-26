@@ -32,8 +32,8 @@ class ApiKeysTest : TestBase() {
       "/organizations/sample-arg/api_keys",
       200,
       "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": \"sample\"," +
-        " \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"permissions\": [], \"created_at\": \"2024-01-01T00:00:00Z\", " +
-        "\"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
+        " \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"expires_at\": null, \"permissions\": [], \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"value\": \"sample\"}"
     )
     val result = api().createOrganizationApiKey("sample-arg", "sample-arg")
     assertNotNull(result)
