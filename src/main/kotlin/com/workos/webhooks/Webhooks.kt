@@ -11,10 +11,10 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
-import com.workos.models.WebhookEndpointJson
+import com.workos.models.WebhookEndpoint
 import com.workos.types.CreateWebhookEndpointEvents
 import com.workos.types.PaginationOrder
-import com.workos.types.WebhookEndpointJsonStatus
+import com.workos.types.WebhookEndpointStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -46,8 +46,8 @@ class Webhooks(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<WebhookEndpointJson> {
-    val itemType = object : TypeReference<WebhookEndpointJson>() {}
+  ): Page<WebhookEndpoint> {
+    val itemType = object : TypeReference<WebhookEndpoint>() {}
     return workos.baseClient.requestPage(
       method = "GET",
       path = "/webhook_endpoints",
@@ -76,7 +76,7 @@ class Webhooks(
     limit: Int? = null,
     order: PaginationOrder? = null,
     requestOptions: RequestOptions? = null
-  ): Page<WebhookEndpointJson> =
+  ): Page<WebhookEndpoint> =
     withContext(Dispatchers.IO) {
       listEndpoints(before, after, limit, order, requestOptions)
     }
@@ -90,14 +90,14 @@ class Webhooks(
    * @param events The events that the Webhook Endpoint is subscribed to.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the WebhookEndpointJson
+   * @return the WebhookEndpoint
    */
   @JvmOverloads
   fun createEndpoint(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
-  ): WebhookEndpointJson {
+  ): WebhookEndpoint {
     val body =
       bodyOf(
         "endpoint_url" to endpointUrl,
@@ -110,7 +110,7 @@ class Webhooks(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, WebhookEndpointJson::class.java)
+    return workos.baseClient.request(config, WebhookEndpoint::class.java)
   }
 
   /**
@@ -126,7 +126,7 @@ class Webhooks(
     endpointUrl: String,
     events: List<CreateWebhookEndpointEvents>,
     requestOptions: RequestOptions? = null
-  ): WebhookEndpointJson =
+  ): WebhookEndpoint =
     withContext(Dispatchers.IO) {
       createEndpoint(endpointUrl, events, requestOptions)
     }
@@ -142,16 +142,16 @@ class Webhooks(
    * @param events The events that the Webhook Endpoint is subscribed to.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the WebhookEndpointJson
+   * @return the WebhookEndpoint
    */
   @JvmOverloads
   fun updateEndpoint(
     id: String,
     endpointUrl: PatchField<String> = PatchField.Absent,
-    status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
+    status: PatchField<WebhookEndpointStatus> = PatchField.Absent,
     events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
     requestOptions: RequestOptions? = null
-  ): WebhookEndpointJson {
+  ): WebhookEndpoint {
     val body =
       patchBodyOf(
         "endpoint_url" to endpointUrl,
@@ -165,7 +165,7 @@ class Webhooks(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, WebhookEndpointJson::class.java)
+    return workos.baseClient.request(config, WebhookEndpoint::class.java)
   }
 
   /**
@@ -180,10 +180,10 @@ class Webhooks(
   suspend fun updateEndpointSuspend(
     id: String,
     endpointUrl: PatchField<String> = PatchField.Absent,
-    status: PatchField<WebhookEndpointJsonStatus> = PatchField.Absent,
+    status: PatchField<WebhookEndpointStatus> = PatchField.Absent,
     events: PatchField<List<CreateWebhookEndpointEvents>> = PatchField.Absent,
     requestOptions: RequestOptions? = null
-  ): WebhookEndpointJson =
+  ): WebhookEndpoint =
     withContext(Dispatchers.IO) {
       updateEndpoint(id, endpointUrl, status, events, requestOptions)
     }
