@@ -2,41 +2,97 @@
 
 ## [6.0.0](https://github.com/workos/workos-kotlin/compare/v5.1.0...v6.0.0) (2026-05-26)
 
-
-### ⚠ BREAKING CHANGES
-
-* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388))
-* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388))
-
-### Features
-
-* **api_keys:** Add expires_at field to API key models and creation methods ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **generated:** Add new Vault data models and event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **organization_membership:** Add new OrganizationMembershipService with membership and group operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **vault:** Add new Vault service with key encryption and object storage operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
-
-
 ### Bug Fixes
 
 * **deps:** update dependency com.nimbusds:nimbus-jose-jwt to v10 ([#384](https://github.com/workos/workos-kotlin/issues/384)) ([b866a33](https://github.com/workos/workos-kotlin/commit/b866a33c790fdaf91610435dbcd2db588ba07463))
 * **deps:** update dependency com.squareup.okhttp3:okhttp to v5 ([#385](https://github.com/workos/workos-kotlin/issues/385)) ([8d20796](https://github.com/workos/workos-kotlin/commit/8d20796f671c33862fc1987eb9ee7f2af490b34a))
 * **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.11.0 ([#381](https://github.com/workos/workos-kotlin/issues/381)) ([09130f0](https://github.com/workos/workos-kotlin/commit/09130f004d01b26eb0ef78cc33ac13c4c89439ae))
+
+* [#388](https://github.com/workos/workos-kotlin/pull/388) feat(generated)!: regenerate from spec (13 changes)
+
+  **⚠️ Breaking**
+  * **vault:** Rewrite Vault service from auto-generated spec
+    * Vault was previously a hand-maintained class; it is now auto-generated and accessible via `WorkOS.vault`
+    * Renamed methods: `listObjects` → `listKv`, `createObject` → `createKv`, `readObject`/`readObjectByName` → `getKv`/`getName`, `getObjectMetadata` → `listKvMetadata`, `updateObject` → `updateKv`, `deleteObject` → `deleteKv`, `listObjectVersions` → `listKvVersions`, `decryptDataKey` → `createDecrypt`
+    * Added new method: `createRekey`
+    * Removed types previously defined in `Vault.kt`: `DataKey`, `DataKeyPair`, `VaultObject`, `ObjectDigest`, `ObjectUpdateBy`, `ObjectMetadata`, `ObjectVersion`, and `KeyContext` type alias — replaced by generated models in `com.workos.models.*`
+    * Client-side `encrypt` and `decrypt` helper methods are preserved
+  * **user_management:** Move organization membership methods to separate service
+    * Removed organization membership methods from `UserManagement`: `listOrganizationMemberships`, `createOrganizationMembership`, `getOrganizationMembership`, `updateOrganizationMembership`, `deleteOrganizationMembership`, `deactivateOrganizationMembership`, `reactivateOrganizationMembership`
+    * These methods are now available on the new `OrganizationMembershipService` as `list`, `create`, `get`, `update`, `delete`, `deactivate`, `reactivate`
+    * Removed `CreateUserRole` class from `UserManagement` (now in `OrganizationMembershipService`)
+    * Deleted `UserManagementOrganizationMembershipGroups` class and its package
+    * Updated `WorkOS.userManagementOrganizationMembershipGroups` to `WorkOS.organizationMembership`
+  * **authorization:** Remove search parameter from listResources operations
+    * Removed `search` parameter from `listResources` method and related variants
+    * Removed `search` parameter from `listResourcesById`, `listResourcesByExternalId`, and their suspend variants
+    * Added new filter parameters to `listRoleAssignments`: `resourceId`, `resourceExternalId`, `resourceTypeSlug`
+    * Added new filter parameter to `listRoleAssignmentsForResourceByExternalId`: `roleSlug`
+    * Added new filter parameter to `listRoleAssignmentsForResource`: `roleSlug`
+  * **radar:** Remove device fingerprint and bot score parameters from createAttempt
+    * Removed `deviceFingerprint` parameter from `Radar.createAttempt` and `createAttemptSuspend`
+    * Removed `botScore` parameter from `Radar.createAttempt` and `createAttemptSuspend`
+    * Updated `RadarStandaloneAssessRequest` model to remove `device_fingerprint` and `bot_score` fields
+  * **radar:** Update RadarStandaloneAssessRequestAction enum values
+    * Removed enum values: `Login`, `Signup`, `SignUp2`, `SignIn2`, `SignIn3`, `SignUp3`
+    * Changed `SignUp` value from 'sign up' to 'sign-up'
+    * Changed `SignIn` value from 'sign in' to 'sign-in'
+  * **radar:** Remove enum values from RadarStandaloneResponseControl
+    * Removed `CredentialStuffing` enum value
+    * Removed `IpSignUpRateLimit` enum value
+  * **audit_logs:** Rename AuditLog model classes and update references
+    * Renamed `AuditLogActionJson` to `AuditLogAction`
+    * Renamed `AuditLogExportJson` to `AuditLogExport`
+    * Renamed `AuditLogsRetentionJson` to `AuditLogsRetention`
+    * Deleted `AuditLogSchemaJson`; its fields (`version`, `createdAt`, `objectType`) were absorbed into `AuditLogSchema`
+    * Renamed `AuditLogSchemaJsonActor` to `AuditLogSchemaActorInput`
+    * Renamed `AuditLogSchemaJsonTarget` to `AuditLogSchemaTargetInput`
+    * Added new `AuditLogSchemaInput` model for create/update operations
+    * Changed `AuditLogs.createSchema` parameter types from `AuditLogSchemaTarget`/`AuditLogSchemaActor` to `AuditLogSchemaTargetInput`/`AuditLogSchemaActorInput`
+    * Updated all method return types and parameter types in `AuditLogs` service
+  * **webhooks:** Rename WebhookEndpoint model and status enum
+    * Renamed `WebhookEndpointJson` to `WebhookEndpoint`
+    * Renamed `WebhookEndpointJsonStatus` to `WebhookEndpointStatus`
+    * Updated `UpdateWebhookEndpointStatus` to alias the renamed status enum
+    * Updated all Webhooks service method signatures and return types
+    * Updated parameter type for `status` in `updateEndpoint` method
+  * **generated:** Rename model classes and type aliases for consistency
+    * Changed `ApplicationCredentialsListItem.last_used_at` field type from `String?` to `OffsetDateTime?`
+    * Changed `NewConnectApplicationSecret.last_used_at` field type from `String?` to `OffsetDateTime?`
+    * Updated `FlagRuleUpdatedContextConfiguredTargetOrganization` to be an alias for `Actor`
+    * Updated `FlagRuleUpdatedContextPreviousAttributeContextConfiguredTargetOrganization` to be an alias for `Actor`
+    * Changed `UserManagementAuthenticationScreenHint` to be an alias for `RadarStandaloneAssessRequestAction`
+
+  **Features**
+  * **organization_membership:** Add new OrganizationMembershipService with membership and group operations
+    * New service `OrganizationMembershipService` providing organization membership management
+    * Includes `list`, `create`, `get`, `update`, `delete`, `deactivate`, `reactivate` operations for memberships
+    * Includes `listGroups` operation to list groups for a membership
+    * All operations available in blocking and suspend variants
+  * **vault:** Add `WorkOS.vault` accessor and new operations
+    * Vault is now accessible via `WorkOS.vault` (previously not exposed on the `WorkOS` class)
+    * Key operations: `createDataKey`, `createDecrypt`, `createRekey`
+    * Object operations: `listKv`, `createKv`, `getName`, `getKv`, `updateKv`, `deleteKv`, `listKvMetadata`, `listKvVersions`
+    * All operations available in blocking and suspend variants
+  * **api_keys:** Add expires_at field to API key models and creation methods
+    * Added `expires_at` field to `ApiKey`, `OrganizationApiKey`, `OrganizationApiKeyWithValue`, `UserApiKey`, `UserApiKeyWithValue` models
+    * Added `expires_at` optional parameter to `createOrganizationApiKey` method in `ApiKeys` service
+    * Added `expires_at` optional parameter to `createApiKey` method in `UserManagement` service
+    * Added `expires_at` field to request models: `CreateOrganizationApiKey`, `CreateUserApiKey`
+    * Added `expires_at` field to event data models: `ApiKeyCreatedData`, `ApiKeyRevokedData`
+  * **webhooks:** Add pipe connected account webhook event types
+    * Added three new webhook event types: `PIPES_CONNECTED_ACCOUNT_CONNECTED`, `PIPES_CONNECTED_ACCOUNT_DISCONNECTED`, `PIPES_CONNECTED_ACCOUNT_REAUTHORIZATION_NEEDED`
+    * Added to both `CreateWebhookEndpointEvents` and `UpdateWebhookEndpointEvents` enums
+    * Added corresponding event models: `PipesConnectedAccountConnected`, `PipesConnectedAccountDisconnected`, `PipesConnectedAccountReauthorizationNeeded`
+  * **generated:** Add new models and enums
+    * New Vault-related models: `CreateDataKeyRequest`, `CreateDataKeyResponse`, `CreateObjectRequest`, `DecryptRequest`, `DecryptResponse`, `DeleteObjectResponse`, `RekeyRequest`, `UpdateObjectRequest`
+    * New Vault-related models: `Object`, `ObjectMetadata`, `ObjectSummary`, `ObjectVersion`, `ObjectWithoutValue`, `VersionListResponse`, `ListMetadata`
+    * New general models: `Actor`, `ErrorResponse`
+    * New Connect models: `ConnectApplicationM2M`, `ConnectApplicationOAuth`, `ConnectApplicationOAuthRedirectUris`
+    * New enum: `PipeConnectedAccountState`
+    * New enum: `SortOrder`
+    * New event models: `PipeConnectedAccount`, `PipesConnectedAccountConnected`, `PipesConnectedAccountDisconnected`, `PipesConnectedAccountReauthorizationNeeded`
+    * Updated `WorkOSEvent` to include new Pipes webhook event types
 
 ## [5.1.0](https://github.com/workos/workos-kotlin/compare/v5.0.0...v5.1.0) (2026-05-11)
 
