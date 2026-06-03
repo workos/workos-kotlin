@@ -623,19 +623,16 @@ class UserManagement(
    * Revoke a [user session](https://workos.com/docs/reference/authkit/session).
    *
    * @param sessionId The ID of the session to revoke. This can be extracted from the `sid` claim of the access token.
-   * @param returnTo The URL to redirect the user to after session revocation.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
   fun revokeSession(
     sessionId: String,
-    returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ) {
     val body =
       bodyOf(
-        "session_id" to sessionId,
-        "return_to" to returnTo
+        "session_id" to sessionId
       )
     val config =
       RequestConfig(
@@ -658,10 +655,9 @@ class UserManagement(
   @JvmName("revokeSessionSuspend")
   suspend fun revokeSessionSuspend(
     sessionId: String,
-    returnTo: String? = null,
     requestOptions: RequestOptions? = null
   ) = withContext(Dispatchers.IO) {
-    revokeSession(sessionId, returnTo, requestOptions)
+    revokeSession(sessionId, requestOptions)
   }
 
   /**
@@ -963,6 +959,7 @@ class UserManagement(
    * @param email The email address of the user.
    * @param firstName The first name of the user.
    * @param lastName The last name of the user.
+   * @param name The user's full name.
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
@@ -976,6 +973,7 @@ class UserManagement(
     email: String,
     firstName: String? = null,
     lastName: String? = null,
+    name: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
@@ -986,6 +984,7 @@ class UserManagement(
         "email" to email,
         "first_name" to firstName,
         "last_name" to lastName,
+        "name" to name,
         "email_verified" to emailVerified,
         "metadata" to metadata,
         "external_id" to externalId
@@ -1023,13 +1022,14 @@ class UserManagement(
     email: String,
     firstName: String? = null,
     lastName: String? = null,
+    name: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
     requestOptions: RequestOptions? = null
   ): User =
     withContext(Dispatchers.IO) {
-      create(createUserPassword, email, firstName, lastName, emailVerified, metadata, externalId, requestOptions)
+      create(createUserPassword, email, firstName, lastName, name, emailVerified, metadata, externalId, requestOptions)
     }
 
   /**
@@ -1123,6 +1123,7 @@ class UserManagement(
    * @param email The email address of the user.
    * @param firstName The first name of the user.
    * @param lastName The last name of the user.
+   * @param name The user's full name.
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
@@ -1138,6 +1139,7 @@ class UserManagement(
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
+    name: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
@@ -1149,6 +1151,7 @@ class UserManagement(
         "email" to email,
         "first_name" to firstName,
         "last_name" to lastName,
+        "name" to name,
         "email_verified" to emailVerified,
         "metadata" to metadata,
         "external_id" to externalId,
@@ -1188,6 +1191,7 @@ class UserManagement(
     email: String? = null,
     firstName: String? = null,
     lastName: String? = null,
+    name: String? = null,
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
@@ -1195,7 +1199,7 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ): User =
     withContext(Dispatchers.IO) {
-      update(id, createUserPassword, email, firstName, lastName, emailVerified, metadata, externalId, locale, requestOptions)
+      update(id, createUserPassword, email, firstName, lastName, name, emailVerified, metadata, externalId, locale, requestOptions)
     }
 
   /**
