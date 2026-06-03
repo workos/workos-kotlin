@@ -17,5 +17,6 @@ enum class AuditLogConfigurationLogStreamType(
   GenericHttps("GenericHttps"),
   GoogleCloudStorage("GoogleCloudStorage"),
   S3("S3"),
+  Snowflake("Snowflake"),
   Splunk("Splunk")
 }
