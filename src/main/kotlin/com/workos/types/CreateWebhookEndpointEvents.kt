@@ -29,6 +29,7 @@ enum class CreateWebhookEndpointEvents(
   AuthenticationRadarRiskDetected("authentication.radar_risk_detected"),
   ApiKeyCreated("api_key.created"),
   ApiKeyRevoked("api_key.revoked"),
+  ApiKeyUpdated("api_key.updated"),
   ConnectionActivated("connection.activated"),
   ConnectionDeactivated("connection.deactivated"),
   ConnectionSAMLCertificateRenewalRequired("connection.saml_certificate_renewal_required"),
