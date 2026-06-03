@@ -51,6 +51,10 @@ data class User(
   @JsonProperty("object")
   val objectType: String = "user",
 
+  /** The user's full name. */
+  @JsonProperty("name")
+  val name: String? = null,
+
   /** Object containing metadata key/value pairs associated with the user. */
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null,
