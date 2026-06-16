@@ -12,7 +12,7 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "2.3.21"
+  id("org.jetbrains.kotlin.jvm") version "2.4.0"
 
   id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
@@ -37,20 +37,20 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.3")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.0")
 
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.3")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.0")
 
-  implementation("com.squareup.okhttp3:okhttp:5.3.2")
+  implementation("com.squareup.okhttp3:okhttp:5.4.0")
 
   // JWT verification + JWKS handling for session helpers (hand-maintained).
-  implementation("com.nimbusds:nimbus-jose-jwt:10.9")
+  implementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
 
-  testImplementation(platform("org.junit:junit-bom:6.0.3"))
+  testImplementation(platform("org.junit:junit-bom:6.1.0"))
 
   testImplementation(kotlin("test-junit5"))
 
