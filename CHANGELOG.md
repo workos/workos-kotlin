@@ -2,30 +2,50 @@
 
 ## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v7.0.0) (2026-06-17)
 
-
-### ⚠ BREAKING CHANGES
-
-* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391))
-* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391))
-* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391))
-
-### Features
-
-* **api_keys:** Add expire operation for API keys ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **audit_logs:** Add Snowflake to audit log stream types ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **directory_sync:** Add token lifecycle events for directory sync ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **directory_sync:** Remove DsyncDeactivated event and related models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **radar:** Remove DOMAIN_SIGN_UP_RATE_LIMIT from RadarStandaloneResponseControl ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
-
-
 ### Bug Fixes
 
-* **api_keys:** Make expires_at required in API key created/revoked events ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
 * **deps:** update minor and patch updates ([#393](https://github.com/workos/workos-kotlin/issues/393)) ([9c224b9](https://github.com/workos/workos-kotlin/commit/9c224b932547d3aeb080294982ab0bbb98abab54))
 * **renovate:** explicitly enable minor and patch updates ([#389](https://github.com/workos/workos-kotlin/issues/389)) ([bce61a6](https://github.com/workos/workos-kotlin/commit/bce61a67f13472a40c2a657614d92342d95dc130))
+
+- [#391](https://github.com/workos/workos-kotlin/pull/391) feat(generated)!: regenerate from spec (9 changes)
+
+  **⚠️ Breaking**
+  - **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
+    - Made `expires_at` required in API key models
+  - **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    - Removed model `DsyncDeactivated`
+    - Removed model `DsyncDeactivatedData`
+    - Removed model `DsyncDeactivatedDataDomain`
+    - Removed enum `DsyncDeactivatedDataType`
+    - Removed enum `DsyncDeactivatedDataState`
+  - **[radar](https://workos.com/docs/reference/radar)**:
+    - Removed `domain_sign_up_rate_limit` from `RadarStandaloneResponseControl`
+  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    - Removed `return_to` from `RevokeSession`
+
+  **Features**
+  - **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
+    - Added model `ExpireApiKey`
+    - Added model `ApiKeyUpdated`
+    - Added model `ApiKeyUpdatedData`
+    - Added model `ApiKeyUpdatedDataOwner`
+    - Added model `UserApiKeyUpdatedDataOwner`
+    - Added model `ApiKeyUpdatedDataPreviousAttribute`
+    - Added endpoint `POST /api_keys/{id}/expire`
+  - **[audit_logs](https://workos.com/docs/reference/audit-logs)**:
+    - Added `Snowflake` to `AuditLogConfigurationLogStreamType`
+  - **[connect](https://workos.com/docs/reference/workos-connect/standalone)**:
+    - Added `name` to `UserObject`
+  - **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    - Added model `DsyncTokenCreated`
+    - Added model `DsyncTokenCreatedData`
+    - Added model `DsyncTokenRevoked`
+    - Added model `DsyncTokenRevokedData`
+  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    - Added `name` to user management models
+  - **[webhooks](https://workos.com/docs/reference/webhooks)**:
+    - Added `api_key.updated` to `CreateWebhookEndpointEvents`
+    - Added `api_key.updated` to `UpdateWebhookEndpointEvents`
 
 ## [6.0.0](https://github.com/workos/workos-kotlin/compare/v5.1.0...v6.0.0) (2026-05-26)
 
