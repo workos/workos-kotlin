@@ -1390,7 +1390,7 @@ class UserManagement(
   /**
    * Send verification email
    *
-   * Sends an email that contains a one-time code used to verify a user’s email address.
+   * Sends an email that contains a one-time code used to verify a user's email address.
    *
    * @param id The ID of the user.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -2050,7 +2050,7 @@ class UserManagement(
   /**
    * Create a redirect URI
    *
-   * Creates a new redirect URI for an environment.
+   * Creates a new redirect URI for an application.
    *
    * @param uri The redirect URI to create.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
