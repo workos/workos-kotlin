@@ -17,6 +17,7 @@ import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
+import com.workos.models.ReplaceGroupRoleAssignmentEntry
 import com.workos.test.TestBase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -25,6 +26,85 @@ import org.junit.jupiter.api.Test
 
 class AuthorizationTest : TestBase() {
   private fun api() = Authorization(createWorkOSClient())
+
+  @Test
+  fun `listGroupRoleAssignments returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/groups/sample-arg/role_assignments",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listGroupRoleAssignments("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createGroupRoleAssignment returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/authorization/groups/sample-arg/role_assignments",
+      200,
+      "{\"object\": \"group_role_assignment\", \"id\": \"sample\", \"group_id\": \"sample\", \"role\": {\"slug\": \"sample\"}, " +
+        "\"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createGroupRoleAssignment("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("group_role_assignment", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.groupId)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/authorization/groups/sample-arg/role_assignments"))
+        .withRequestBody(matchingJsonPath("$.role_slug"))
+    )
+  }
+
+  @Test
+  fun `updateGroupRoleAssignments returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/authorization/groups/sample-arg/role_assignments",
+      200,
+      "{\"object\": \"list\", \"data\": [], \"list_metadata\": {}}"
+    )
+    val result = api().updateGroupRoleAssignments("sample-arg", emptyList<ReplaceGroupRoleAssignmentEntry>())
+    assertNotNull(result)
+    assertEquals("list", result.objectType)
+  }
+
+  @Test
+  fun `deleteGroupRoleAssignments completes without throwing`() {
+    stubResponse("DELETE", "/authorization/groups/sample-arg/role_assignments", 204)
+    api().deleteGroupRoleAssignments("sample-arg", "sample-arg")
+    wireMockRule.verify(
+      deleteRequestedFor(urlPathMatching("/authorization/groups/sample-arg/role_assignments"))
+        .withRequestBody(matchingJsonPath("$.role_slug"))
+    )
+  }
+
+  @Test
+  fun `getGroupRoleAssignment returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/authorization/groups/sample-arg/role_assignments/sample-arg",
+      200,
+      "{\"object\": \"group_role_assignment\", \"id\": \"sample\", \"group_id\": \"sample\", \"role\": {\"slug\": \"sample\"}, " +
+        "\"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getGroupRoleAssignment("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("group_role_assignment", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.groupId)
+  }
+
+  @Test
+  fun `deleteGroupRoleAssignment completes without throwing`() {
+    stubResponse("DELETE", "/authorization/groups/sample-arg/role_assignments/sample-arg", 204)
+    api().deleteGroupRoleAssignment("sample-arg", "sample-arg")
+  }
 
   @Test
   fun `check returns a typed response`() {

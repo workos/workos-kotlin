@@ -10,13 +10,13 @@ data class AuthorizationCodeSessionAuthenticateRequest(
   @JsonProperty("client_id")
   val clientId: String,
 
-  /** The client secret of the application. */
-  @JsonProperty("client_secret")
-  val clientSecret: String,
-
   /** The authorization code received from the redirect. */
   @JsonProperty("code")
   val code: String,
+
+  /** The client secret of the application. May be omitted by public clients that authenticate through other means, such as a PKCE `code_verifier`. */
+  @JsonProperty("client_secret")
+  val clientSecret: String? = null,
 
   /** Always `"authorization_code"`. */
   @JsonProperty("grant_type")
