@@ -31,9 +31,9 @@ class PipesTest : TestBase() {
   }
 
   @Test
-  fun `createDataIntegrationToken returns a typed response`() {
+  fun `getAccessToken returns a typed response`() {
     stubResponse("POST", "/data-integrations/sample-arg/token", 200, "{}")
-    val result = api().createDataIntegrationToken("sample-arg", "sample-arg")
+    val result = api().getAccessToken("sample-arg", "sample-arg")
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/token"))

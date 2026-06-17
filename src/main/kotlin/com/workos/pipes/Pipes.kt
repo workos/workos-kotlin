@@ -85,7 +85,7 @@ class Pipes(
    *
    * Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
    *
-   * @param slug The identifier of the integration.
+   * @param provider The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -93,8 +93,8 @@ class Pipes(
    * @return the DataIntegrationAccessTokenResponse
    */
   @JvmOverloads
-  fun createDataIntegrationToken(
-    slug: String,
+  fun getAccessToken(
+    provider: String,
     userId: String,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
@@ -107,7 +107,7 @@ class Pipes(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/data-integrations/${encodePathSegment(slug)}/token",
+        path = "/data-integrations/${encodePathSegment(provider)}/token",
         body = body,
         requestOptions = requestOptions
       )
@@ -115,22 +115,22 @@ class Pipes(
   }
 
   /**
-   * Coroutine-aware variant of [createDataIntegrationToken]. Use this from
+   * Coroutine-aware variant of [getAccessToken]. Use this from
    * a `suspend` function or coroutine scope.
    *
-   * Delegates to the blocking [createDataIntegrationToken] under
+   * Delegates to the blocking [getAccessToken] under
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
-  @JvmName("createDataIntegrationTokenSuspend")
-  suspend fun createDataIntegrationTokenSuspend(
-    slug: String,
+  @JvmName("getAccessTokenSuspend")
+  suspend fun getAccessTokenSuspend(
+    provider: String,
     userId: String,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse =
     withContext(Dispatchers.IO) {
-      createDataIntegrationToken(slug, userId, organizationId, requestOptions)
+      getAccessToken(provider, userId, organizationId, requestOptions)
     }
 
   /**
@@ -231,7 +231,7 @@ class Pipes(
   }
 
   /**
-   * List providers
+   * List providers for a user
    *
    * Retrieves a list of available providers and the user's connection status for each. Returns all providers configured for your environment, along with the user's [connected account](https://workos.com/docs/reference/pipes/connected-account) information where applicable.
    *

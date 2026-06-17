@@ -2,5 +2,15 @@
 
 package com.workos.models
 
-/** Alias for [ApiKeyOwner]. */
-typealias OrganizationApiKeyOwner = ApiKeyOwner
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** The entity that owns the API Key. */
+data class OrganizationApiKeyOwner(
+  /** Unique identifier of the API Key owner. */
+  @JsonProperty("id")
+  val id: String,
+
+  /** The type of the API Key owner. */
+  @JsonProperty("type")
+  val type: String = "organization"
+)

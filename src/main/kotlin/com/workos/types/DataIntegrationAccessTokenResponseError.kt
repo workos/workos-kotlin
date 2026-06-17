@@ -12,6 +12,6 @@ enum class DataIntegrationAccessTokenResponseError(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  NeedsReauthorization("needs_reauthorization"),
-  NotInstalled("not_installed")
+  NotInstalled("not_installed"),
+  NeedsReauthorization("needs_reauthorization")
 }
