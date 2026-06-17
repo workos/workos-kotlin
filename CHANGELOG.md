@@ -1,27 +1,13 @@
 # Changelog
 
-## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v7.0.0) (2026-06-17)
+## [6.1.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v6.1.0) (2026-06-17)
 
 ### Bug Fixes
 
 * **deps:** update minor and patch updates ([#393](https://github.com/workos/workos-kotlin/issues/393)) ([9c224b9](https://github.com/workos/workos-kotlin/commit/9c224b932547d3aeb080294982ab0bbb98abab54))
 * **renovate:** explicitly enable minor and patch updates ([#389](https://github.com/workos/workos-kotlin/issues/389)) ([bce61a6](https://github.com/workos/workos-kotlin/commit/bce61a67f13472a40c2a657614d92342d95dc130))
 
-- [#391](https://github.com/workos/workos-kotlin/pull/391) feat(generated)!: regenerate from spec (9 changes)
-
-  **⚠️ Breaking**
-  - **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
-    - Made `expires_at` required in API key models
-  - **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
-    - Removed model `DsyncDeactivated`
-    - Removed model `DsyncDeactivatedData`
-    - Removed model `DsyncDeactivatedDataDomain`
-    - Removed enum `DsyncDeactivatedDataType`
-    - Removed enum `DsyncDeactivatedDataState`
-  - **[radar](https://workos.com/docs/reference/radar)**:
-    - Removed `domain_sign_up_rate_limit` from `RadarStandaloneResponseControl`
-  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
-    - Removed `return_to` from `RevokeSession`
+- [#391](https://github.com/workos/workos-kotlin/pull/391) feat(generated): regenerate from spec (9 changes)
 
   **Features**
   - **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
