@@ -1,5 +1,38 @@
 # Changelog
 
+## [6.1.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v6.1.0) (2026-06-17)
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#393](https://github.com/workos/workos-kotlin/issues/393)) ([9c224b9](https://github.com/workos/workos-kotlin/commit/9c224b932547d3aeb080294982ab0bbb98abab54))
+* **renovate:** explicitly enable minor and patch updates ([#389](https://github.com/workos/workos-kotlin/issues/389)) ([bce61a6](https://github.com/workos/workos-kotlin/commit/bce61a67f13472a40c2a657614d92342d95dc130))
+
+- [#391](https://github.com/workos/workos-kotlin/pull/391) feat(generated): regenerate from spec (9 changes)
+
+  **Features**
+  - **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
+    - Added model `ExpireApiKey`
+    - Added model `ApiKeyUpdated`
+    - Added model `ApiKeyUpdatedData`
+    - Added model `ApiKeyUpdatedDataOwner`
+    - Added model `UserApiKeyUpdatedDataOwner`
+    - Added model `ApiKeyUpdatedDataPreviousAttribute`
+    - Added endpoint `POST /api_keys/{id}/expire`
+  - **[audit_logs](https://workos.com/docs/reference/audit-logs)**:
+    - Added `Snowflake` to `AuditLogConfigurationLogStreamType`
+  - **[connect](https://workos.com/docs/reference/workos-connect/standalone)**:
+    - Added `name` to `UserObject`
+  - **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    - Added model `DsyncTokenCreated`
+    - Added model `DsyncTokenCreatedData`
+    - Added model `DsyncTokenRevoked`
+    - Added model `DsyncTokenRevokedData`
+  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    - Added `name` to user management models
+  - **[webhooks](https://workos.com/docs/reference/webhooks)**:
+    - Added `api_key.updated` to `CreateWebhookEndpointEvents`
+    - Added `api_key.updated` to `UpdateWebhookEndpointEvents`
+
 ## [6.0.0](https://github.com/workos/workos-kotlin/compare/v5.1.0...v6.0.0) (2026-05-26)
 
 ### Bug Fixes
