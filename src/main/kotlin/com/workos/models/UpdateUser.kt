@@ -19,6 +19,10 @@ data class UpdateUser(
   @JsonProperty("last_name")
   val lastName: String? = null,
 
+  /** The user's full name. */
+  @JsonProperty("name")
+  val name: String? = null,
+
   /** Whether the user's email has been verified. */
   @JsonProperty("email_verified")
   val emailVerified: Boolean? = null,

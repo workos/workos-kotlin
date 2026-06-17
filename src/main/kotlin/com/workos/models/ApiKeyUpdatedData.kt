@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
 /** The event payload. */
-data class ApiKeyCreatedData(
+data class ApiKeyUpdatedData(
   /** Unique identifier of the API key. */
   @JsonProperty("id")
   val id: String,
 
   /** The owner of the API key. */
   @JsonProperty("owner")
-  val owner: ApiKeyCreatedDataOwner,
+  val owner: ApiKeyUpdatedDataOwner,
 
   /** The name of the API key. */
   @JsonProperty("name")
@@ -42,6 +42,10 @@ data class ApiKeyCreatedData(
   /** The timestamp when the API key was last updated. */
   @JsonProperty("updated_at")
   val updatedAt: String,
+
+  /** Previous API key attributes before the update. */
+  @JsonProperty("previous_attributes")
+  val previousAttributes: ApiKeyUpdatedDataPreviousAttribute,
 
   /** Distinguishes the API key object. */
   @JsonProperty("object")

@@ -22,6 +22,10 @@ data class UserObject(
   @JsonProperty("last_name")
   val lastName: String? = null,
 
+  /** The user's full name. */
+  @JsonProperty("name")
+  val name: String? = null,
+
   /** A set of key-value pairs to attach to the user. */
   @JsonProperty("metadata")
   val metadata: Map<String, String>? = null

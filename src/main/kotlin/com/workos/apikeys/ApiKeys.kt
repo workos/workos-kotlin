@@ -9,6 +9,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
+import com.workos.models.ApiKey
 import com.workos.models.ApiKeyValidationResponse
 import com.workos.models.OrganizationApiKey
 import com.workos.models.OrganizationApiKeyWithValue
@@ -223,4 +224,53 @@ class ApiKeys(
   ) = withContext(Dispatchers.IO) {
     delete(id, requestOptions)
   }
+
+  /**
+   * Expire an API key
+   *
+   * Expire an API key immediately, schedule a future expiration, or clear a scheduled future expiration.
+   *
+   * @param id The unique ID of the API key.
+   * @param expiresAt When the API key should expire. If omitted or in the past, the key expires immediately. Use null to clear a scheduled future expiration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ApiKey
+   */
+  @JvmOverloads
+  fun createExpire(
+    id: String,
+    expiresAt: OffsetDateTime? = null,
+    requestOptions: RequestOptions? = null
+  ): ApiKey {
+    val body =
+      bodyOf(
+        "expires_at" to expiresAt
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/api_keys/${encodePathSegment(id)}/expire",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ApiKey::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createExpire]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createExpire] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createExpireSuspend")
+  suspend fun createExpireSuspend(
+    id: String,
+    expiresAt: OffsetDateTime? = null,
+    requestOptions: RequestOptions? = null
+  ): ApiKey =
+    withContext(Dispatchers.IO) {
+      createExpire(id, expiresAt, requestOptions)
+    }
 }

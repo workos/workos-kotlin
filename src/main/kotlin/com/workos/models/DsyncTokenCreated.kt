@@ -5,15 +5,15 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** DsyncDeactivated model. */
-data class DsyncDeactivated(
+/** DsyncTokenCreated model. */
+data class DsyncTokenCreated(
   /** Unique identifier for the event. */
   @JsonProperty("id")
   override val id: String,
 
   /** The event payload. */
   @JsonProperty("data")
-  val data: DsyncDeactivatedData,
+  val data: DsyncTokenCreatedData,
 
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
@@ -23,9 +23,9 @@ data class DsyncDeactivated(
   @JsonProperty("object")
   val objectType: String = "event",
 
-  /** Always `"dsync.deactivated"`. */
+  /** Always `"dsync.token.created"`. */
   @JsonProperty("event")
-  override val event: String = "dsync.deactivated",
+  override val event: String = "dsync.token.created",
 
   /** The context. */
   @JsonProperty("context")

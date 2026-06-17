@@ -66,6 +66,24 @@ class ApiKeysTest : TestBase() {
   }
 
   @Test
+  fun `createExpire returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/api_keys/sample-arg/expire",
+      200,
+      "{\"object\": \"api_key\", \"id\": \"sample\", \"owner\": {\"type\": \"organization\", \"id\": \"sample\"}, \"name\": \"sample\"," +
+        " \"obfuscated_value\": \"sample\", \"last_used_at\": null, \"expires_at\": null, \"permissions\": [], \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createExpire("sample-arg")
+    assertNotNull(result)
+    assertEquals("api_key", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    assertEquals("sample", result.obfuscatedValue)
+  }
+
+  @Test
   fun `createValidation translates 401 to UnauthorizedException`() {
     stubResponse("POST", "/api_keys/validations", 401)
     assertThrows(UnauthorizedException::class.java) {

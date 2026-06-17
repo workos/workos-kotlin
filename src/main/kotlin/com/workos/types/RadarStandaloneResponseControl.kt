@@ -14,7 +14,6 @@ enum class RadarStandaloneResponseControl(
   Unknown("unknown"),
   BotDetection("bot_detection"),
   BruteForceAttack("brute_force_attack"),
-  DomainSignUpRateLimit("domain_sign_up_rate_limit"),
   ImpossibleTravel("impossible_travel"),
   RepeatSignUp("repeat_sign_up"),
   StaleAccount("stale_account"),
