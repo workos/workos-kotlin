@@ -1,5 +1,82 @@
 # Changelog
 
+## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.1.0...v7.0.0) (2026-06-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391))
+* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391))
+* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391))
+* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388))
+* Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357))
+
+### Features
+
+* Add `user` to organization membership response ([#369](https://github.com/workos/workos-kotlin/issues/369)) ([de6e1c4](https://github.com/workos/workos-kotlin/commit/de6e1c4f19410afa207aefeec29333db746a3b04))
+* Add Authorization (FGA) API endpoints ([#353](https://github.com/workos/workos-kotlin/issues/353)) ([23fdabd](https://github.com/workos/workos-kotlin/commit/23fdabdd3e0af24b69e5c759ae863df77858ebee))
+* Add custom_attributes field to OrganizationMembership ([#306](https://github.com/workos/workos-kotlin/issues/306)) ([7e4643e](https://github.com/workos/workos-kotlin/commit/7e4643ebb5f0f462ae9e0c9b30206ceca0e9fc29))
+* Add email field to DirectoryUser ([#321](https://github.com/workos/workos-kotlin/issues/321)) ([f6defcb](https://github.com/workos/workos-kotlin/commit/f6defcb72d498bc564ab0b103b34a62a4cb289a3))
+* Add external_id to User model ([#371](https://github.com/workos/workos-kotlin/issues/371)) ([6355ffc](https://github.com/workos/workos-kotlin/commit/6355ffc0bad787eab90ee9924699883be09405b5))
+* Add missing event models, types, and tests ([#347](https://github.com/workos/workos-kotlin/issues/347)) ([9f1ec27](https://github.com/workos/workos-kotlin/commit/9f1ec27f9f4f723a5af34de53d28c90e6311511c))
+* add organization_id to OrganizationDomain model ([#350](https://github.com/workos/workos-kotlin/issues/350)) ([a261a3e](https://github.com/workos/workos-kotlin/commit/a261a3efa6773bf3bcc27ebe3234b23b8fee841f))
+* add release-please for automated releases ([#322](https://github.com/workos/workos-kotlin/issues/322)) ([087273f](https://github.com/workos/workos-kotlin/commit/087273f10a4b89bd6261f2f786ae18b2a8d0d53c))
+* Add resourceExternalId optional filter param for listAuthorizationResources ([#368](https://github.com/workos/workos-kotlin/issues/368)) ([2219cf6](https://github.com/workos/workos-kotlin/commit/2219cf65024422ee1c7886a3fe6f670c3d81d0fe))
+* **api_keys:** Add expire operation for API keys ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **api_keys:** Add expires_at field to API key models and creation methods ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **audit_logs:** Add Snowflake to audit log stream types ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **audit_logs:** Rename AuditLog model classes and update references ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **authorization:** Remove search parameter from listResources operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **directory_sync:** Add token lifecycle events for directory sync ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **directory_sync:** Remove DsyncDeactivated event and related models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **generated:** Add new Vault data models and event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **generated:** Rename model classes and type aliases for consistency ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **organization_membership:** Add new OrganizationMembershipService with membership and group operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* publish Dokka API docs to GitHub Pages ([#379](https://github.com/workos/workos-kotlin/issues/379)) ([8dbce54](https://github.com/workos/workos-kotlin/commit/8dbce542d61fbaa7332d6ce7f0cc806ca987be4f))
+* **radar:** Remove device fingerprint and bot score parameters from createAttempt ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **radar:** Remove DOMAIN_SIGN_UP_RATE_LIMIT from RadarStandaloneResponseControl ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **radar:** Remove enum values from RadarStandaloneResponseControl ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **radar:** Update RadarStandaloneAssessRequestAction enum values ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* Release the next major SDK version ([#357](https://github.com/workos/workos-kotlin/issues/357)) ([0b2b9e8](https://github.com/workos/workos-kotlin/commit/0b2b9e86d63ed011ea7a4888fc14e39bc9326fcb))
+* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user_management:** Move organization membership methods to separate service ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user-management:** add directoryManaged to OrganizationMembership ([#336](https://github.com/workos/workos-kotlin/issues/336)) ([b0ad0d3](https://github.com/workos/workos-kotlin/commit/b0ad0d3f8d7579733c9eea78393317618528037c))
+* **vault:** Add new Vault service with key encryption and object storage operations ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **webhooks:** Add pipe connected account webhook event types ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+* **webhooks:** Rename WebhookEndpoint model and status enum ([#388](https://github.com/workos/workos-kotlin/issues/388)) ([1934fe4](https://github.com/workos/workos-kotlin/commit/1934fe470ac2808d9addcf66b01cb41a30b215c6))
+
+
+### Bug Fixes
+
+* Add missing portal intents ([#345](https://github.com/workos/workos-kotlin/issues/345)) ([912e64d](https://github.com/workos/workos-kotlin/commit/912e64d25f98c49b0b3b725e7b2095fb557d9ce3))
+* Add organization domain verification webhook events ([#346](https://github.com/workos/workos-kotlin/issues/346)) ([f92ac24](https://github.com/workos/workos-kotlin/commit/f92ac24dc63b5fe9501e9e58398db5dea98027ef))
+* **api_keys:** Make expires_at required in API key created/revoked events ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **deps:** update dependency com.nimbusds:nimbus-jose-jwt to v10 ([#384](https://github.com/workos/workos-kotlin/issues/384)) ([b866a33](https://github.com/workos/workos-kotlin/commit/b866a33c790fdaf91610435dbcd2db588ba07463))
+* **deps:** update dependency com.squareup.okhttp3:okhttp to v5 ([#385](https://github.com/workos/workos-kotlin/issues/385)) ([8d20796](https://github.com/workos/workos-kotlin/commit/8d20796f671c33862fc1987eb9ee7f2af490b34a))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.11.0 ([#381](https://github.com/workos/workos-kotlin/issues/381)) ([09130f0](https://github.com/workos/workos-kotlin/commit/09130f004d01b26eb0ef78cc33ac13c4c89439ae))
+* **deps:** update minor and patch updates ([#358](https://github.com/workos/workos-kotlin/issues/358)) ([74a45ff](https://github.com/workos/workos-kotlin/commit/74a45fff86e1b69fa562d8bea493a8ed6b6d048e))
+* **deps:** update minor and patch updates ([#393](https://github.com/workos/workos-kotlin/issues/393)) ([9c224b9](https://github.com/workos/workos-kotlin/commit/9c224b932547d3aeb080294982ab0bbb98abab54))
+* harden URL/token handling and webhook timestamp validation ([#380](https://github.com/workos/workos-kotlin/issues/380)) ([e10f2a3](https://github.com/workos/workos-kotlin/commit/e10f2a3d2a0f20378fb91b1fd2d30a75203317e5))
+* Make UserUpdated extend User for dsync.user.updated events ([#334](https://github.com/workos/workos-kotlin/issues/334)) ([7b1782f](https://github.com/workos/workos-kotlin/commit/7b1782f59b4fb0d3d5b58c7740f5c54252acfb01))
+* mask each line of decoded signing key in release workflow ([0aa1609](https://github.com/workos/workos-kotlin/commit/0aa1609c868455af6ca9f561064f7b69bed5c546))
+* pin explicit Kotlin version in published POM ([d8b0ba2](https://github.com/workos/workos-kotlin/commit/d8b0ba22079e08ec2c8004ffd1a723d44e745183))
+* remove @JsonCreator from all-default-param classes for Jackson 2.21.x compatibility ([#354](https://github.com/workos/workos-kotlin/issues/354)) ([118d1b3](https://github.com/workos/workos-kotlin/commit/118d1b382ef7a9e5f053f936814ec50c7374d68d))
+* Remove extractVersion from matchUpdateTypes rules ([#366](https://github.com/workos/workos-kotlin/issues/366)) ([581225c](https://github.com/workos/workos-kotlin/commit/581225c304328d5529cf4a42d3ba9a51adec1c38))
+* **renovate:** explicitly enable minor and patch updates ([#389](https://github.com/workos/workos-kotlin/issues/389)) ([bce61a6](https://github.com/workos/workos-kotlin/commit/bce61a67f13472a40c2a657614d92342d95dc130))
+* serialize list query params as comma-separated lowercase values ([#355](https://github.com/workos/workos-kotlin/issues/355)) ([f62826c](https://github.com/workos/workos-kotlin/commit/f62826cf30d0d8863c23f2f1dedc858bde7c81c5))
+* update renovate rules ([#319](https://github.com/workos/workos-kotlin/issues/319)) ([740b5fa](https://github.com/workos/workos-kotlin/commit/740b5fa7a942fa39185c66cc1eafeb8a3ade5fff))
+* use explicit JsonCreator.Mode.PROPERTIES for Jackson 2.21.0 compatibility ([#348](https://github.com/workos/workos-kotlin/issues/348)) ([52aed90](https://github.com/workos/workos-kotlin/commit/52aed907ee95a93ea61ba54698aaca153fc03580))
+
 ## [6.1.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v6.1.0) (2026-06-17)
 
 ### Bug Fixes
