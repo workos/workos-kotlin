@@ -17,5 +17,6 @@ enum class WidgetSessionTokenScopes(
   WidgetsSSOManage("widgets:sso:manage"),
   WidgetsApiKeysManage("widgets:api-keys:manage"),
   WidgetsDsyncManage("widgets:dsync:manage"),
-  WidgetsAuditLogStreamingManage("widgets:audit-log-streaming:manage")
+  WidgetsAuditLogStreamingManage("widgets:audit-log-streaming:manage"),
+  WidgetsPipesManage("widgets:pipes:manage")
 }

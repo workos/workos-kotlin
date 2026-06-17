@@ -2,11 +2,5 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** WidgetSessionTokenResponse model. */
-data class WidgetSessionTokenResponse(
-  /** The widget session token. */
-  @JsonProperty("token")
-  val token: String
-)
+/** Alias for [ClientApiTokenResponse]. */
+typealias WidgetSessionTokenResponse = ClientApiTokenResponse
