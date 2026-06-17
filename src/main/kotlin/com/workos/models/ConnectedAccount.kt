@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.ConnectedAccountAuthMethod
 import com.workos.types.ConnectedAccountState
 
 /** ConnectedAccount model. */
@@ -37,5 +38,13 @@ data class ConnectedAccount(
 
   /** Distinguishes the connected account object. */
   @JsonProperty("object")
-  val objectType: String = "connected_account"
+  val objectType: String = "connected_account",
+
+  /** The authentication method used for this connection (`oauth` or `api_key`). Defaults to `oauth` if absent. */
+  @JsonProperty("auth_method")
+  val authMethod: ConnectedAccountAuthMethod? = null,
+
+  /** The last four characters of the API key, or `null` for OAuth connections. */
+  @JsonProperty("api_key_last_4")
+  val apiKeyLast4: String? = null
 )
