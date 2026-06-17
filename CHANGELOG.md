@@ -1,5 +1,32 @@
 # Changelog
 
+## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v7.0.0) (2026-06-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391))
+* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391))
+* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391))
+
+### Features
+
+* **api_keys:** Add expire operation for API keys ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **audit_logs:** Add Snowflake to audit log stream types ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **directory_sync:** Add token lifecycle events for directory sync ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **directory_sync:** Remove DsyncDeactivated event and related models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **radar:** Remove DOMAIN_SIGN_UP_RATE_LIMIT from RadarStandaloneResponseControl ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user_management:** Add name field to email change confirmation user ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user_management:** Add name field to user models ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **user_management:** Remove returnTo parameter from revokeSession ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+
+
+### Bug Fixes
+
+* **api_keys:** Make expires_at required in API key created/revoked events ([#391](https://github.com/workos/workos-kotlin/issues/391)) ([10753e3](https://github.com/workos/workos-kotlin/commit/10753e392795926639834cbbf627467bc89f5a14))
+* **deps:** update minor and patch updates ([#393](https://github.com/workos/workos-kotlin/issues/393)) ([9c224b9](https://github.com/workos/workos-kotlin/commit/9c224b932547d3aeb080294982ab0bbb98abab54))
+* **renovate:** explicitly enable minor and patch updates ([#389](https://github.com/workos/workos-kotlin/issues/389)) ([bce61a6](https://github.com/workos/workos-kotlin/commit/bce61a67f13472a40c2a657614d92342d95dc130))
+
 ## [6.0.0](https://github.com/workos/workos-kotlin/compare/v5.1.0...v6.0.0) (2026-05-26)
 
 ### Bug Fixes
