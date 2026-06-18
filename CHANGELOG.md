@@ -1,5 +1,22 @@
 # Changelog
 
+## [6.2.0](https://github.com/workos/workos-kotlin/compare/v6.1.0...v6.2.0) (2026-06-18)
+
+
+### Features
+
+* **authorization:** Add authorization operations and models ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **client:** Add client API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **connect:** Add Connect API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **groups:** Add groups API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **organization_membership:** Add organization membership API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **organization_membership:** Change response for `UserManagementOrganizationMembership.list` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **pipes:** Add Pipes API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **pipes:** SDK surface change: Symbol "Pipes.createDataIntegrationToken" was removed ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **user_management:** Change response for `UserManagementInvitations.list` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **user_management:** Update user management API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+* **widgets:** Add `widgets:pipes:manage` to `WidgetSessionTokenScopes` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+
 ## [6.1.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v6.1.0) (2026-06-17)
 
 ### Bug Fixes
