@@ -6,6 +6,7 @@ import com.workos.adminportal.AdminPortal
 import com.workos.apikeys.ApiKeys
 import com.workos.auditlogs.AuditLogs
 import com.workos.authorization.Authorization
+import com.workos.clientapi.ClientApi
 import com.workos.common.http.BaseClient
 import com.workos.common.http.RetryConfig
 import com.workos.common.json.ObjectMapperFactory
@@ -19,6 +20,7 @@ import com.workos.organizationdomains.OrganizationDomains
 import com.workos.organizationmembership.OrganizationMembershipService
 import com.workos.organizations.Organizations
 import com.workos.pipes.Pipes
+import com.workos.pipesprovider.PipesProvider
 import com.workos.radar.Radar
 import com.workos.sso.SSO
 import com.workos.usermanagement.UserManagement
@@ -250,5 +252,23 @@ open class WorkOS
           Vault::class
         ) {
           Vault(this)
+        }
+
+    /** Lazily-constructed [ClientApi] accessor for this [WorkOS] client. */
+    val clientApi: ClientApi
+      get() =
+        service(
+          ClientApi::class
+        ) {
+          ClientApi(this)
+        }
+
+    /** Lazily-constructed [PipesProvider] accessor for this [WorkOS] client. */
+    val pipesProvider: PipesProvider
+      get() =
+        service(
+          PipesProvider::class
+        ) {
+          PipesProvider(this)
         }
   }

@@ -15,7 +15,10 @@ import com.workos.common.http.patchBodyOf
 import com.workos.models.AuthorizationCheck
 import com.workos.models.AuthorizationPermission
 import com.workos.models.AuthorizationResource
+import com.workos.models.GroupRoleAssignment
+import com.workos.models.GroupRoleAssignmentList
 import com.workos.models.Permission
+import com.workos.models.ReplaceGroupRoleAssignmentEntry
 import com.workos.models.Role
 import com.workos.models.RoleList
 import com.workos.models.UserOrganizationMembershipBaseListData
@@ -126,6 +129,317 @@ sealed class Parent {
 class Authorization(
   internal val workos: WorkOS
 ) {
+  /**
+   * List role assignments for a group
+   *
+   * List all role assignments granted to a group. Each assignment represents a role granted to the group on a resource.
+   *
+   * @param groupId The ID of the group.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listGroupRoleAssignments(
+    groupId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<GroupRoleAssignment> {
+    val itemType = object : TypeReference<GroupRoleAssignment>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listGroupRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listGroupRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listGroupRoleAssignmentsSuspend")
+  suspend fun listGroupRoleAssignmentsSuspend(
+    groupId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<GroupRoleAssignment> =
+    withContext(Dispatchers.IO) {
+      listGroupRoleAssignments(groupId, before, after, limit, order, requestOptions)
+    }
+
+  /**
+   * Assign a role to a group
+   *
+   * Assign a role to a group on a specific resource.
+   *
+   * @param groupId The ID of the group.
+   * @param roleSlug The slug of the role to assign to the group.
+   * @param resourceId The ID of the resource. Omit along with the external-id fields to target the organization itself.
+   * @param resourceExternalId The external ID of the resource.
+   * @param resourceTypeSlug The resource type slug.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the GroupRoleAssignment
+   */
+  @JvmOverloads
+  fun createGroupRoleAssignment(
+    groupId: String,
+    roleSlug: String,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignment {
+    val body =
+      bodyOf(
+        "role_slug" to roleSlug,
+        "resource_id" to resourceId,
+        "resource_external_id" to resourceExternalId,
+        "resource_type_slug" to resourceTypeSlug
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, GroupRoleAssignment::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createGroupRoleAssignment]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createGroupRoleAssignment] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createGroupRoleAssignmentSuspend")
+  suspend fun createGroupRoleAssignmentSuspend(
+    groupId: String,
+    roleSlug: String,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignment =
+    withContext(Dispatchers.IO) {
+      createGroupRoleAssignment(groupId, roleSlug, resourceId, resourceExternalId, resourceTypeSlug, requestOptions)
+    }
+
+  /**
+   * Replace all role assignments for a group
+   *
+   * Replace all role assignments for a group with the provided list. Existing assignments not in the list will be removed.
+   *
+   * @param groupId The ID of the group.
+   * @param roleAssignments The list of role assignments that should exist for the group. All existing assignments will be replaced.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the GroupRoleAssignmentList
+   */
+  @JvmOverloads
+  fun updateGroupRoleAssignments(
+    groupId: String,
+    roleAssignments: List<ReplaceGroupRoleAssignmentEntry>,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignmentList {
+    val body =
+      bodyOf(
+        "role_assignments" to roleAssignments
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, GroupRoleAssignmentList::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateGroupRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateGroupRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateGroupRoleAssignmentsSuspend")
+  suspend fun updateGroupRoleAssignmentsSuspend(
+    groupId: String,
+    roleAssignments: List<ReplaceGroupRoleAssignmentEntry>,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignmentList =
+    withContext(Dispatchers.IO) {
+      updateGroupRoleAssignments(groupId, roleAssignments, requestOptions)
+    }
+
+  /**
+   * Remove group role assignments by criteria
+   *
+   * Remove role assignments from a group that match the provided criteria. Returns 404 when no matching active assignment is found.
+   *
+   * @param groupId The ID of the group.
+   * @param roleSlug The slug of the role to remove assignments for.
+   * @param resourceId The ID of the resource. Mutually exclusive with `resource_external_id` and `resource_type_slug`.
+   * @param resourceExternalId The external ID of the resource.
+   * @param resourceTypeSlug The resource type slug.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteGroupRoleAssignments(
+    groupId: String,
+    roleSlug: String,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body =
+      bodyOf(
+        "role_slug" to roleSlug,
+        "resource_id" to resourceId,
+        "resource_external_id" to resourceExternalId,
+        "resource_type_slug" to resourceTypeSlug
+      )
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteGroupRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteGroupRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteGroupRoleAssignmentsSuspend")
+  suspend fun deleteGroupRoleAssignmentsSuspend(
+    groupId: String,
+    roleSlug: String,
+    resourceId: String? = null,
+    resourceExternalId: String? = null,
+    resourceTypeSlug: String? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteGroupRoleAssignments(groupId, roleSlug, resourceId, resourceExternalId, resourceTypeSlug, requestOptions)
+  }
+
+  /**
+   * Get a group role assignment
+   *
+   * Get a specific role assignment for a group by its ID.
+   *
+   * @param groupId The ID of the group.
+   * @param roleAssignmentId The ID of the group role assignment.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the GroupRoleAssignment
+   */
+  @JvmOverloads
+  fun getGroupRoleAssignment(
+    groupId: String,
+    roleAssignmentId: String,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignment {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments/${encodePathSegment(roleAssignmentId)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, GroupRoleAssignment::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getGroupRoleAssignment]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getGroupRoleAssignment] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getGroupRoleAssignmentSuspend")
+  suspend fun getGroupRoleAssignmentSuspend(
+    groupId: String,
+    roleAssignmentId: String,
+    requestOptions: RequestOptions? = null
+  ): GroupRoleAssignment =
+    withContext(Dispatchers.IO) {
+      getGroupRoleAssignment(groupId, roleAssignmentId, requestOptions)
+    }
+
+  /**
+   * Remove a group role assignment
+   *
+   * Remove a specific role assignment from a group by its ID.
+   *
+   * @param groupId The ID of the group.
+   * @param roleAssignmentId The ID of the group role assignment to remove.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteGroupRoleAssignment(
+    groupId: String,
+    roleAssignmentId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments/${encodePathSegment(roleAssignmentId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteGroupRoleAssignment]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteGroupRoleAssignment] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteGroupRoleAssignmentSuspend")
+  suspend fun deleteGroupRoleAssignmentSuspend(
+    groupId: String,
+    roleAssignmentId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteGroupRoleAssignment(groupId, roleAssignmentId, requestOptions)
+  }
+
   /**
    * Check authorization
    *

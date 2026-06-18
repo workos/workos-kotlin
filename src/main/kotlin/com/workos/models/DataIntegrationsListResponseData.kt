@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationsListResponseDataAuthMethods
 import com.workos.types.DataIntegrationsListResponseDataOwnership
 
 /** DataIntegrationsListResponseData model. */
@@ -53,5 +54,9 @@ data class DataIntegrationsListResponseData(
 
   /** Distinguishes the data provider object. */
   @JsonProperty("object")
-  val objectType: String = "data_provider"
+  val objectType: String = "data_provider",
+
+  /** The authentication methods supported by this provider (`oauth`, `api_key`, or both). Defaults to `["oauth"]` if absent. */
+  @JsonProperty("auth_methods")
+  val authMethods: List<DataIntegrationsListResponseDataAuthMethods>? = null
 )

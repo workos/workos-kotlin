@@ -10,13 +10,13 @@ data class RefreshTokenSessionAuthenticateRequest(
   @JsonProperty("client_id")
   val clientId: String,
 
-  /** The client secret of the application. */
-  @JsonProperty("client_secret")
-  val clientSecret: String,
-
   /** The refresh token to exchange for new tokens. */
   @JsonProperty("refresh_token")
   val refreshToken: String,
+
+  /** The client secret of the application. May be omitted by public clients that authenticate through other means, such as a PKCE `code_verifier`. */
+  @JsonProperty("client_secret")
+  val clientSecret: String? = null,
 
   /** Always `"refresh_token"`. */
   @JsonProperty("grant_type")

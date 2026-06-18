@@ -1,13 +1,14 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-06-03T19:20:03.184Z",
+  "generatedAt": "2026-06-17T20:55:33.100Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
     "src/main/kotlin/com/workos/apikeys/ApiKeys.kt",
     "src/main/kotlin/com/workos/auditlogs/AuditLogs.kt",
     "src/main/kotlin/com/workos/authorization/Authorization.kt",
+    "src/main/kotlin/com/workos/clientapi/ClientApi.kt",
     "src/main/kotlin/com/workos/connect/Connect.kt",
     "src/main/kotlin/com/workos/directorysync/DirectorySync.kt",
     "src/main/kotlin/com/workos/events/Events.kt",
@@ -118,6 +119,9 @@
     "src/main/kotlin/com/workos/models/AuthorizedConnectApplicationListData.kt",
     "src/main/kotlin/com/workos/models/ChallengeAuthenticationFactor.kt",
     "src/main/kotlin/com/workos/models/CheckAuthorization.kt",
+    "src/main/kotlin/com/workos/models/ClientApiToken.kt",
+    "src/main/kotlin/com/workos/models/ClientApiTokenResponse.kt",
+    "src/main/kotlin/com/workos/models/ConfigureDataIntegrationBody.kt",
     "src/main/kotlin/com/workos/models/ConfirmEmailChange.kt",
     "src/main/kotlin/com/workos/models/ConnectApplication.kt",
     "src/main/kotlin/com/workos/models/ConnectApplicationM2M.kt",
@@ -153,6 +157,7 @@
     "src/main/kotlin/com/workos/models/CreateDataKeyResponse.kt",
     "src/main/kotlin/com/workos/models/CreateGroup.kt",
     "src/main/kotlin/com/workos/models/CreateGroupMembership.kt",
+    "src/main/kotlin/com/workos/models/CreateGroupRoleAssignment.kt",
     "src/main/kotlin/com/workos/models/CreateM2MApplication.kt",
     "src/main/kotlin/com/workos/models/CreateMagicCodeAndReturn.kt",
     "src/main/kotlin/com/workos/models/CreateOAuthApplication.kt",
@@ -172,6 +177,9 @@
     "src/main/kotlin/com/workos/models/DataIntegrationAccessTokenResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationAccessTokenResponseAccessToken.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationAuthorizeUrlResponse.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationConfigurationListResponse.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationConfigurationResponse.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCredentials.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetDataIntegrationAuthorizeUrlRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetUserTokenRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponse.kt",
@@ -179,6 +187,7 @@
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponseDataConnectedAccount.kt",
     "src/main/kotlin/com/workos/models/DecryptRequest.kt",
     "src/main/kotlin/com/workos/models/DecryptResponse.kt",
+    "src/main/kotlin/com/workos/models/DeleteGroupRoleAssignmentsByCriteria.kt",
     "src/main/kotlin/com/workos/models/DeleteObjectResponse.kt",
     "src/main/kotlin/com/workos/models/DeviceAuthorizationResponse.kt",
     "src/main/kotlin/com/workos/models/DeviceCodeSessionAuthenticateRequest.kt",
@@ -272,6 +281,9 @@
     "src/main/kotlin/com/workos/models/GroupMemberAddedData.kt",
     "src/main/kotlin/com/workos/models/GroupMemberRemoved.kt",
     "src/main/kotlin/com/workos/models/GroupMemberRemovedData.kt",
+    "src/main/kotlin/com/workos/models/GroupRoleAssignment.kt",
+    "src/main/kotlin/com/workos/models/GroupRoleAssignmentList.kt",
+    "src/main/kotlin/com/workos/models/GroupRoleAssignmentResource.kt",
     "src/main/kotlin/com/workos/models/GroupUpdated.kt",
     "src/main/kotlin/com/workos/models/IntentOptions.kt",
     "src/main/kotlin/com/workos/models/Invitation.kt",
@@ -370,6 +382,8 @@
     "src/main/kotlin/com/workos/models/RefreshTokenSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/RekeyRequest.kt",
     "src/main/kotlin/com/workos/models/RemoveRole.kt",
+    "src/main/kotlin/com/workos/models/ReplaceGroupRoleAssignmentEntry.kt",
+    "src/main/kotlin/com/workos/models/ReplaceGroupRoleAssignments.kt",
     "src/main/kotlin/com/workos/models/ResendUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/ResetPasswordResponse.kt",
     "src/main/kotlin/com/workos/models/RevokeSession.kt",
@@ -476,6 +490,7 @@
     "src/main/kotlin/com/workos/organizationmembership/OrganizationMembershipService.kt",
     "src/main/kotlin/com/workos/organizations/Organizations.kt",
     "src/main/kotlin/com/workos/pipes/Pipes.kt",
+    "src/main/kotlin/com/workos/pipesprovider/PipesProvider.kt",
     "src/main/kotlin/com/workos/radar/Radar.kt",
     "src/main/kotlin/com/workos/sso/SSO.kt",
     "src/main/kotlin/com/workos/types/AuditLogConfigurationLogStreamState.kt",
@@ -488,6 +503,7 @@
     "src/main/kotlin/com/workos/types/AuthenticationFactorsCreateRequestType.kt",
     "src/main/kotlin/com/workos/types/AuthenticationRadarRiskDetectedDataAction.kt",
     "src/main/kotlin/com/workos/types/AuthorizationAssignment.kt",
+    "src/main/kotlin/com/workos/types/ConnectedAccountAuthMethod.kt",
     "src/main/kotlin/com/workos/types/ConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/ConnectionActivatedDataConnectionType.kt",
     "src/main/kotlin/com/workos/types/ConnectionActivatedDataState.kt",
@@ -507,6 +523,9 @@
     "src/main/kotlin/com/workos/types/CreateUserPasswordHashType.kt",
     "src/main/kotlin/com/workos/types/CreateWebhookEndpointEvents.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationAccessTokenResponseError.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationCredentialsCredentialsType.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountAuthMethod.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataOwnership.kt",
     "src/main/kotlin/com/workos/types/DirectoryState.kt",
@@ -608,6 +627,7 @@
     "src/test/kotlin/com/workos/apikeys/ApiKeysTest.kt",
     "src/test/kotlin/com/workos/auditlogs/AuditLogsTest.kt",
     "src/test/kotlin/com/workos/authorization/AuthorizationTest.kt",
+    "src/test/kotlin/com/workos/clientapi/ClientApiTest.kt",
     "src/test/kotlin/com/workos/connect/ConnectTest.kt",
     "src/test/kotlin/com/workos/directorysync/DirectorySyncTest.kt",
     "src/test/kotlin/com/workos/events/EventsTest.kt",
@@ -620,6 +640,7 @@
     "src/test/kotlin/com/workos/organizationmembership/OrganizationMembershipServiceTest.kt",
     "src/test/kotlin/com/workos/organizations/OrganizationsTest.kt",
     "src/test/kotlin/com/workos/pipes/PipesTest.kt",
+    "src/test/kotlin/com/workos/pipesprovider/PipesProviderTest.kt",
     "src/test/kotlin/com/workos/radar/RadarTest.kt",
     "src/test/kotlin/com/workos/sso/SSOTest.kt",
     "src/test/kotlin/com/workos/usermanagement/UserManagementTest.kt",
@@ -651,6 +672,30 @@
     "POST /authkit/oauth2/complete": {
       "sdkMethod": "completeOAuth2",
       "service": "connect"
+    },
+    "GET /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "listGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "POST /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "createGroupRoleAssignment",
+      "service": "authorization"
+    },
+    "PUT /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "updateGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "DELETE /authorization/groups/{group_id}/role_assignments": {
+      "sdkMethod": "deleteGroupRoleAssignments",
+      "service": "authorization"
+    },
+    "GET /authorization/groups/{group_id}/role_assignments/{role_assignment_id}": {
+      "sdkMethod": "getGroupRoleAssignment",
+      "service": "authorization"
+    },
+    "DELETE /authorization/groups/{group_id}/role_assignments/{role_assignment_id}": {
+      "sdkMethod": "deleteGroupRoleAssignment",
+      "service": "authorization"
     },
     "POST /authorization/organization_memberships/{organization_membership_id}/check": {
       "sdkMethod": "check",
@@ -808,6 +853,10 @@
       "sdkMethod": "deletePermission",
       "service": "authorization"
     },
+    "POST /client/token": {
+      "sdkMethod": "createToken",
+      "service": "clientApi"
+    },
     "GET /connect/applications": {
       "sdkMethod": "listApplications",
       "service": "connect"
@@ -862,8 +911,8 @@
       "sdkMethod": "authorizeDataIntegration",
       "service": "pipes"
     },
-    "POST /data-integrations/{slug}/token": {
-      "sdkMethod": "createDataIntegrationToken",
+    "POST /data-integrations/{provider}/token": {
+      "sdkMethod": "getAccessToken",
       "service": "pipes"
     },
     "GET /directories": {
@@ -981,6 +1030,14 @@
     "POST /organizations/{organizationId}/api_keys": {
       "sdkMethod": "createOrganizationApiKey",
       "service": "apiKeys"
+    },
+    "GET /organizations/{organizationId}/data_integration_configurations": {
+      "sdkMethod": "listOrganizationDataIntegrationConfigurations",
+      "service": "pipesProvider"
+    },
+    "PUT /organizations/{organizationId}/data_integration_configurations/{slug}": {
+      "sdkMethod": "updateOrganizationDataIntegrationConfiguration",
+      "service": "pipesProvider"
     },
     "GET /organizations/{organizationId}/feature-flags": {
       "sdkMethod": "listOrganizationFeatureFlags",

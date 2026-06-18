@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [ApiKeyOwner]. */
-typealias OrganizationApiKeyWithValueOwner = ApiKeyOwner
+/** Alias for [OrganizationApiKeyOwner]. */
+typealias OrganizationApiKeyWithValueOwner = OrganizationApiKeyOwner
