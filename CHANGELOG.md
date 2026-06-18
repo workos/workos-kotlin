@@ -2,20 +2,61 @@
 
 ## [6.2.0](https://github.com/workos/workos-kotlin/compare/v6.1.0...v6.2.0) (2026-06-18)
 
+- [#395](https://github.com/workos/workos-kotlin/pull/395) feat(generated)!: regenerate from spec (11 changes)
 
-### Features
+  **⚠️ Breaking**
+  - **[organization_membership](https://workos.com/docs/reference/authkit/organization-membership)**:
+    - Changed response of `UserManagementOrganizationMembership.list` from `UserOrganizationMembership` to `UserOrganizationMembershipList`
+  - **[pipes](https://workos.com/docs/reference/pipes)**:
+    - SDK surface change: `Pipes.createDataIntegrationToken` was renamed to `Pipes.getAccessToken`
+  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    - Changed response of `UserManagementInvitations.list` from `UserInvite` to `UserInviteList`
 
-* **authorization:** Add authorization operations and models ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **client:** Add client API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **connect:** Add Connect API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **groups:** Add groups API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **organization_membership:** Add organization membership API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **organization_membership:** Change response for `UserManagementOrganizationMembership.list` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **pipes:** Add Pipes API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **pipes:** SDK surface change: Symbol "Pipes.createDataIntegrationToken" was removed ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **user_management:** Change response for `UserManagementInvitations.list` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **user_management:** Update user management API surface ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
-* **widgets:** Add `widgets:pipes:manage` to `WidgetSessionTokenScopes` ([#395](https://github.com/workos/workos-kotlin/issues/395)) ([278f9de](https://github.com/workos/workos-kotlin/commit/278f9dedc7848184849d67f35bf2d09794be01a4))
+  **Features**
+  - **[authorization](https://workos.com/docs/reference/fga)**:
+    - Added model `ReplaceGroupRoleAssignmentEntry`
+    - Added model `ReplaceGroupRoleAssignments`
+    - Added model `DeleteGroupRoleAssignmentsByCriteria`
+    - Added endpoint `POST /authorization/groups/{group_id}/role_assignments`
+    - Added endpoint `PUT /authorization/groups/{group_id}/role_assignments`
+    - Added endpoint `DELETE /authorization/groups/{group_id}/role_assignments`
+    - Added endpoint `GET /authorization/groups/{group_id}/role_assignments/{role_assignment_id}`
+    - Added endpoint `DELETE /authorization/groups/{group_id}/role_assignments/{role_assignment_id}`
+  - **[client](https://workos.com/docs/reference)**:
+    - Added model `ClientApiToken`
+    - Added model `ClientApiTokenResponse`
+    - Added service `Client`
+  - **[connect](https://workos.com/docs/reference/workos-connect/standalone)**:
+    - Added `auth_method` to `ConnectedAccount`
+    - Added `api_key_last_4` to `ConnectedAccount`
+    - Added enum `ConnectedAccountAuthMethod`
+  - **[groups](https://workos.com/docs/reference/groups)**:
+    - Added model `CreateGroupRoleAssignment`
+    - Added model `GroupRoleAssignment`
+    - Added model `GroupRoleAssignmentList`
+    - Added model `GroupRoleAssignmentResource`
+  - **[organization_membership](https://workos.com/docs/reference/authkit/organization-membership)**:
+    - Added model `UserOrganizationMembershipList`
+    - Added model `UserOrganizationMembershipListListMetadata`
+  - **[pipes](https://workos.com/docs/reference/pipes)**:
+    - Added model `DataIntegrationCredentials`
+    - Added model `DataIntegrationConfigurationResponse`
+    - Added model `DataIntegrationConfigurationListResponse`
+    - Added model `ConfigureDataIntegrationBody`
+    - Added `auth_methods` to `DataIntegrationsListResponseData`
+    - Added `auth_method` to `DataIntegrationsListResponseDataConnectedAccount`
+    - Added `api_key_last_4` to `DataIntegrationsListResponseDataConnectedAccount`
+    - Added enum `DataIntegrationCredentialsCredentialsType`
+    - Added enum `DataIntegrationsListResponseDataAuthMethods`
+    - Added enum `DataIntegrationsListResponseDataConnectedAccountAuthMethod`
+    - Added service `PipesProvider`
+  - **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    - Added model `UserInviteList`
+    - Added model `UserInviteListListMetadata`
+    - Made `AuthorizationCodeSessionAuthenticateRequest.client_secret` optional
+    - Made `RefreshTokenSessionAuthenticateRequest.client_secret` optional
+  - **[widgets](https://workos.com/docs/reference/widgets)**:
+    - Added `widgets:pipes:manage` to `WidgetSessionTokenScopes`
 
 ## [6.1.0](https://github.com/workos/workos-kotlin/compare/v6.0.0...v6.1.0) (2026-06-17)
 
