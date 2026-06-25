@@ -934,9 +934,32 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `PipesConnectedAccountConnectionFailedData round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"connection_failed\", \"data_integration_id\": \"sample\", \"provider_slug\": \"sample\", \"user_id\": null, " +
+        "\"organization_id\": null, \"error_code\": \"sample\", \"error_reason\": null, \"provider_error\": null, " +
+        "\"provider_error_description\": null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
+    val parsed = mapper.readValue(json, PipesConnectedAccountConnectionFailedData::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `SessionCreatedDataImpersonator round-trips through Jackson`() {
     val json = "{\"email\": \"sample\", \"reason\": null}"
     val parsed = mapper.readValue(json, SessionCreatedDataImpersonator::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `SessionReauthenticatedDataImpersonator round-trips through Jackson`() {
+    val json = "{\"email\": \"sample\", \"reason\": null}"
+    val parsed = mapper.readValue(json, SessionReauthenticatedDataImpersonator::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -957,6 +980,16 @@ class GeneratedModelRoundTripTest {
   fun `DataIntegrationAuthorizeUrlResponse round-trips through Jackson`() {
     val json = "{\"url\": \"sample\"}"
     val parsed = mapper.readValue(json, DataIntegrationAuthorizeUrlResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `AuthMethodMismatchError round-trips through Jackson`() {
+    val json = "{\"code\": \"auth_method_mismatch\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, AuthMethodMismatchError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

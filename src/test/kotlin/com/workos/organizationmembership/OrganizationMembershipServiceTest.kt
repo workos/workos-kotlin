@@ -41,7 +41,7 @@ class OrganizationMembershipServiceTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"roles\": [], \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
         "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
@@ -70,7 +70,7 @@ class OrganizationMembershipServiceTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"roles\": [], \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
         "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
@@ -92,7 +92,7 @@ class OrganizationMembershipServiceTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"roles\": [], \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
         "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
@@ -125,7 +125,7 @@ class OrganizationMembershipServiceTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"roles\": [], \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
         "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
@@ -147,7 +147,7 @@ class OrganizationMembershipServiceTest : TestBase() {
       200,
       "{\"object\": \"organization_membership\", \"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": \"sample\", " +
         "\"status\": \"active\", \"directory_managed\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
+        "\"2024-01-01T00:00:00Z\", \"role\": {\"slug\": \"sample\"}, \"roles\": [], \"user\": {\"object\": \"user\", \"id\": \"sample\", " +
         "\"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": \"sample\", \"email_verified\": false, " +
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
