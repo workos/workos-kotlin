@@ -40,6 +40,10 @@ data class OrganizationMembership(
   @JsonProperty("role")
   val role: SlimRole,
 
+  /** The list of roles assigned to the user within the organization. */
+  @JsonProperty("roles")
+  val roles: List<SlimRole>,
+
   /** The user that belongs to the organization through this membership. */
   @JsonProperty("user")
   val user: User,
