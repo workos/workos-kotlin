@@ -901,7 +901,7 @@ class GeneratedModelRoundTripTest {
   fun `PermissionCreatedData round-trips through Jackson`() {
     val json =
       "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
-        "false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     val parsed = mapper.readValue(json, PermissionCreatedData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
@@ -913,7 +913,7 @@ class GeneratedModelRoundTripTest {
   fun `PermissionDeletedData round-trips through Jackson`() {
     val json =
       "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
-        "false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     val parsed = mapper.readValue(json, PermissionDeletedData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
@@ -925,7 +925,7 @@ class GeneratedModelRoundTripTest {
   fun `PermissionUpdatedData round-trips through Jackson`() {
     val json =
       "{\"object\": \"permission\", \"id\": \"sample\", \"slug\": \"sample\", \"name\": \"sample\", \"description\": null, \"system\": " +
-        "false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "false, \"resource_type_slug\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     val parsed = mapper.readValue(json, PermissionUpdatedData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
@@ -957,6 +957,16 @@ class GeneratedModelRoundTripTest {
   fun `DataIntegrationAuthorizeUrlResponse round-trips through Jackson`() {
     val json = "{\"url\": \"sample\"}"
     val parsed = mapper.readValue(json, DataIntegrationAuthorizeUrlResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `AuthMethodMismatchError round-trips through Jackson`() {
+    val json = "{\"code\": \"auth_method_mismatch\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, AuthMethodMismatchError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1140,6 +1150,18 @@ class GeneratedModelRoundTripTest {
   fun `UserApiKeyOwner round-trips through Jackson`() {
     val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
     val parsed = mapper.readValue(json, UserApiKeyOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `DataIntegrationCredentialsResponseCredential round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"credential\", \"auth_method\": \"oauth\", \"value\": \"sample\", \"expires_at\": null, \"scopes\": [], " +
+        "\"missing_scopes\": []}"
+    val parsed = mapper.readValue(json, DataIntegrationCredentialsResponseCredential::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
