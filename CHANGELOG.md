@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.0](https://github.com/workos/workos-kotlin/compare/v6.2.0...v6.3.0) (2026-06-30)
+
+
+### Features
+
+* **generated:** OrganizationMembership (batch 4a353f07) ([#398](https://github.com/workos/workos-kotlin/issues/398)) ([8e85669](https://github.com/workos/workos-kotlin/commit/8e856690cbba69fa83c6db24085d03e0b0d1e8a7))
+
 ## [6.2.0](https://github.com/workos/workos-kotlin/compare/v6.1.0...v6.2.0) (2026-06-18)
 
 - [#395](https://github.com/workos/workos-kotlin/pull/395) feat(generated)!: regenerate from spec (11 changes)
