@@ -11,6 +11,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.ConnectedAccount
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
+import com.workos.models.DataIntegrationCredentialsResponse
 import com.workos.models.DataIntegrationsListResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,6 +24,63 @@ import kotlinx.coroutines.withContext
 class Pipes(
   internal val workos: WorkOS
 ) {
+  /**
+   * Upsert an API key for a connected account
+   *
+   * Creates or updates an API-key-based installation for the specified integration and user. If an installation already exists, the stored API key is rotated to the new value.
+   *
+   * @param slug The identifier of the integration.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param secret The API key secret to store for this integration.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateDataIntegrationApiKey(
+    slug: String,
+    userId: String,
+    secret: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "secret" to secret,
+        "organization_id" to organizationId
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/data-integrations/${encodePathSegment(slug)}/api-key",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateDataIntegrationApiKey]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateDataIntegrationApiKey] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateDataIntegrationApiKeySuspend")
+  suspend fun updateDataIntegrationApiKeySuspend(
+    slug: String,
+    userId: String,
+    secret: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      updateDataIntegrationApiKey(slug, userId, secret, organizationId, requestOptions)
+    }
+
   /**
    * Get authorization URL
    *
@@ -78,6 +136,59 @@ class Pipes(
   ): DataIntegrationAuthorizeUrlResponse =
     withContext(Dispatchers.IO) {
       authorizeDataIntegration(slug, userId, organizationId, returnTo, requestOptions)
+    }
+
+  /**
+   * Vend credentials for a connected account
+   *
+   * Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
+   *
+   * @param slug The identifier of the integration.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegrationCredentialsResponse
+   */
+  @JvmOverloads
+  fun createDataIntegrationCredential(
+    slug: String,
+    userId: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationCredentialsResponse {
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "organization_id" to organizationId
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/data-integrations/${encodePathSegment(slug)}/credentials",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegrationCredentialsResponse::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createDataIntegrationCredential]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDataIntegrationCredential] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDataIntegrationCredentialSuspend")
+  suspend fun createDataIntegrationCredentialSuspend(
+    slug: String,
+    userId: String,
+    organizationId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationCredentialsResponse =
+    withContext(Dispatchers.IO) {
+      createDataIntegrationCredential(slug, userId, organizationId, requestOptions)
     }
 
   /**

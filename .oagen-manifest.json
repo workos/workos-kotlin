@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-06-17T20:55:33.100Z",
+  "generatedAt": "2026-06-30T23:28:28.846Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -53,6 +53,7 @@
     "src/main/kotlin/com/workos/models/AuditLogSchemaTarget.kt",
     "src/main/kotlin/com/workos/models/AuditLogSchemaTargetInput.kt",
     "src/main/kotlin/com/workos/models/AuditLogsRetention.kt",
+    "src/main/kotlin/com/workos/models/AuthMethodMismatchError.kt",
     "src/main/kotlin/com/workos/models/AuthenticateResponse.kt",
     "src/main/kotlin/com/workos/models/AuthenticateResponseImpersonator.kt",
     "src/main/kotlin/com/workos/models/AuthenticateResponseOAuthToken.kt",
@@ -180,11 +181,15 @@
     "src/main/kotlin/com/workos/models/DataIntegrationConfigurationListResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationConfigurationResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentials.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponse.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponseCredential.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetDataIntegrationAuthorizeUrlRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetUserTokenRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponseData.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponseDataConnectedAccount.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationsUpsertApiKeyRequest.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationsVendCredentialsRequest.kt",
     "src/main/kotlin/com/workos/models/DecryptRequest.kt",
     "src/main/kotlin/com/workos/models/DecryptResponse.kt",
     "src/main/kotlin/com/workos/models/DeleteGroupRoleAssignmentsByCriteria.kt",
@@ -524,6 +529,7 @@
     "src/main/kotlin/com/workos/types/CreateWebhookEndpointEvents.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationAccessTokenResponseError.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsCredentialsType.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationCredentialsResponseError.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountAuthMethod.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountState.kt",
@@ -1440,6 +1446,30 @@
     "GET /audit_logs/exports/{auditLogExportId}": {
       "sdkMethod": "getExport",
       "service": "auditLogs"
+    },
+    "POST /agents/credentials/validate": {
+      "sdkMethod": "createValidate",
+      "service": "agents"
+    },
+    "GET /agents/registrations/{id}": {
+      "sdkMethod": "getRegistration",
+      "service": "agents"
+    },
+    "PUT /data-integrations/{slug}/api-key": {
+      "sdkMethod": "updateDataIntegrationApiKey",
+      "service": "pipes"
+    },
+    "POST /data-integrations/{slug}/credentials": {
+      "sdkMethod": "createDataIntegrationCredential",
+      "service": "pipes"
+    },
+    "GET /user_management/cors_origins": {
+      "sdkMethod": "listCorsOrigins",
+      "service": "userManagement"
+    },
+    "GET /user_management/redirect_uris": {
+      "sdkMethod": "listRedirectUris",
+      "service": "userManagement"
     }
   }
 }
