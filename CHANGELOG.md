@@ -2,10 +2,11 @@
 
 ## [6.3.0](https://github.com/workos/workos-kotlin/compare/v6.2.0...v6.3.0) (2026-06-30)
 
+* [#398](https://github.com/workos/workos-kotlin/pull/398) fix(generated): regenerate from spec
 
-### Features
-
-* **generated:** OrganizationMembership (batch 4a353f07) ([#398](https://github.com/workos/workos-kotlin/issues/398)) ([8e85669](https://github.com/workos/workos-kotlin/commit/8e856690cbba69fa83c6db24085d03e0b0d1e8a7))
+  **Fixes**
+  * **[organization_membership](https://workos.com/docs/reference/authkit/organization-membership)**:
+    * Added `roles` to organization membership models
 
 ## [6.2.0](https://github.com/workos/workos-kotlin/compare/v6.1.0...v6.2.0) (2026-06-18)
 
