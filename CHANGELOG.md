@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.4.0](https://github.com/workos/workos-kotlin/compare/v6.3.0...v6.4.0) (2026-07-01)
+
+
+### Features
+
+* **generated:** AdminPortal, Authorization, Webhooks, UserManagement, AuditLogs (batch 08085e9d) ([#404](https://github.com/workos/workos-kotlin/issues/404)) ([a1b1691](https://github.com/workos/workos-kotlin/commit/a1b1691b658590d320078a236b598425f6779558))
+* **generated:** Pipes (batch 77e46600) ([#402](https://github.com/workos/workos-kotlin/issues/402)) ([32c36f0](https://github.com/workos/workos-kotlin/commit/32c36f06f2a6dd3ccf79e2ee4b9d93d956b77554))
+
 ## [6.3.0](https://github.com/workos/workos-kotlin/compare/v6.2.0...v6.3.0) (2026-06-30)
 
 * [#398](https://github.com/workos/workos-kotlin/pull/398) fix(generated): regenerate from spec
