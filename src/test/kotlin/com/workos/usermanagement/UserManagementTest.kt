@@ -195,6 +195,13 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `listCorsOrigins returns a typed response`() {
+    stubResponse("GET", "/user_management/cors_origins", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listCorsOrigins()
+    assertNotNull(result)
+  }
+
+  @Test
   fun `createCorsOrigin returns a typed response`() {
     stubResponse(
       "POST",
@@ -695,6 +702,13 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.userId)
     assertEquals("sample", result.email)
     assertEquals("sample", result.code)
+  }
+
+  @Test
+  fun `listRedirectUris returns a typed response`() {
+    stubResponse("GET", "/user_management/redirect_uris", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listRedirectUris()
+    assertNotNull(result)
   }
 
   @Test

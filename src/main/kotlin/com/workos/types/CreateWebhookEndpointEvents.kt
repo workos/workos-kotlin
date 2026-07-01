@@ -12,6 +12,11 @@ enum class CreateWebhookEndpointEvents(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
+  AgentRegistrationCreated("agent.registration.created"),
+  AgentRegistrationClaimAttemptCreated("agent.registration.claim.attempt.created"),
+  AgentRegistrationClaimCompleted("agent.registration.claim.completed"),
+  AgentRegistrationCredentialIssued("agent.registration.credential.issued"),
+  AgentRegistrationOrganizationSwitched("agent.registration.organization.switched"),
   AuthenticationEmailVerificationSucceeded("authentication.email_verification_succeeded"),
   AuthenticationMagicAuthFailed("authentication.magic_auth_failed"),
   AuthenticationMagicAuthSucceeded("authentication.magic_auth_succeeded"),
@@ -27,6 +32,7 @@ enum class CreateWebhookEndpointEvents(
   AuthenticationSSOSucceeded("authentication.sso_succeeded"),
   AuthenticationSSOTimedOut("authentication.sso_timed_out"),
   AuthenticationRadarRiskDetected("authentication.radar_risk_detected"),
+  AuthenticationReauthenticationSucceeded("authentication.reauthentication_succeeded"),
   ApiKeyCreated("api_key.created"),
   ApiKeyRevoked("api_key.revoked"),
   ApiKeyUpdated("api_key.updated"),
@@ -86,6 +92,7 @@ enum class CreateWebhookEndpointEvents(
   PermissionDeleted("permission.deleted"),
   PermissionUpdated("permission.updated"),
   PipesConnectedAccountConnected("pipes.connected_account.connected"),
+  PipesConnectedAccountConnectionFailed("pipes.connected_account.connection_failed"),
   PipesConnectedAccountDisconnected("pipes.connected_account.disconnected"),
   PipesConnectedAccountReauthorizationNeeded("pipes.connected_account.reauthorization_needed"),
   SessionCreated("session.created"),

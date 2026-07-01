@@ -12,7 +12,7 @@ data class AuditLogExport(
   @JsonProperty("id")
   val id: String,
 
-  /** The state of the export. Possible values: pending, ready, error. */
+  /** The state of the export. Possible values: pending, ready, error, expired. */
   @JsonProperty("state")
   val state: AuditLogExportState,
 
