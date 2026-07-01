@@ -4,6 +4,7 @@ package com.workos.pipes
 
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
@@ -19,6 +20,28 @@ class PipesTest : TestBase() {
   private fun api() = Pipes(createWorkOSClient())
 
   @Test
+  fun `updateDataIntegrationApiKey returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/data-integrations/sample-arg/api-key",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/api-key"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("$.secret"))
+    )
+  }
+
+  @Test
   fun `authorizeDataIntegration returns a typed response`() {
     stubResponse("POST", "/data-integrations/sample-arg/authorize", 200, "{\"url\": \"sample\"}")
     val result = api().authorizeDataIntegration("sample-arg", "sample-arg")
@@ -26,6 +49,17 @@ class PipesTest : TestBase() {
     assertEquals("sample", result.url)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+    )
+  }
+
+  @Test
+  fun `createDataIntegrationCredential returns a typed response`() {
+    stubResponse("POST", "/data-integrations/sample-arg/credentials", 200, "{}")
+    val result = api().createDataIntegrationCredential("sample-arg", "sample-arg")
+    assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/credentials"))
         .withRequestBody(matchingJsonPath("$.user_id"))
     )
   }
@@ -73,34 +107,34 @@ class PipesTest : TestBase() {
   }
 
   @Test
-  fun `authorizeDataIntegration translates 401 to UnauthorizedException`() {
-    stubResponse("POST", "/data-integrations/sample-arg/authorize", 401)
+  fun `updateDataIntegrationApiKey translates 401 to UnauthorizedException`() {
+    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().authorizeDataIntegration("sample-arg", "sample-arg")
+      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `authorizeDataIntegration translates 404 to NotFoundException`() {
-    stubResponse("POST", "/data-integrations/sample-arg/authorize", 404)
+  fun `updateDataIntegrationApiKey translates 404 to NotFoundException`() {
+    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 404)
     assertThrows(NotFoundException::class.java) {
-      api().authorizeDataIntegration("sample-arg", "sample-arg")
+      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `authorizeDataIntegration translates 429 to RateLimitException`() {
-    stubResponse("POST", "/data-integrations/sample-arg/authorize", 429)
+  fun `updateDataIntegrationApiKey translates 429 to RateLimitException`() {
+    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 429)
     assertThrows(RateLimitException::class.java) {
-      api().authorizeDataIntegration("sample-arg", "sample-arg")
+      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     }
   }
 
   @Test
-  fun `authorizeDataIntegration translates 500 to GenericServerException`() {
-    stubResponse("POST", "/data-integrations/sample-arg/authorize", 500)
+  fun `updateDataIntegrationApiKey translates 500 to GenericServerException`() {
+    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 500)
     assertThrows(GenericServerException::class.java) {
-      api().authorizeDataIntegration("sample-arg", "sample-arg")
+      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     }
   }
 }
