@@ -23,6 +23,10 @@ data class UserRoleAssignment(
   @JsonProperty("resource")
   val resource: UserRoleAssignmentResource,
 
+  /** The origin of the role assignment. */
+  @JsonProperty("source")
+  val source: UserRoleAssignmentSource,
+
   /** An ISO 8601 timestamp. */
   @JsonProperty("created_at")
   val createdAt: OffsetDateTime,

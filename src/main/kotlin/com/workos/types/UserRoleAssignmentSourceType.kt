@@ -5,15 +5,13 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid AuditLogExportState values returned or accepted by the API. */
-enum class AuditLogExportState(
+/** Enumeration of valid UserRoleAssignmentSourceType values returned or accepted by the API. */
+enum class UserRoleAssignmentSourceType(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Pending("pending"),
-  Ready("ready"),
-  Error("error"),
-  Expired("expired")
+  Direct("direct"),
+  Group("group")
 }

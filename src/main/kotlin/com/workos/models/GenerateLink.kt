@@ -23,10 +23,6 @@ data class GenerateLink(
   @JsonProperty("intent")
   val intent: GenerateLinkIntent? = null,
 
-  /** Options to configure the Admin Portal based on the intent. */
-  @JsonProperty("intent_options")
-  val intentOptions: IntentOptions? = null,
-
   /** The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails. */
   @JsonProperty("it_contact_emails")
   val itContactEmails: List<String>? = null

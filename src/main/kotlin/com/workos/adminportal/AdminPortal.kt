@@ -6,7 +6,6 @@ import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
-import com.workos.models.IntentOptions
 import com.workos.models.PortalLinkResponse
 import com.workos.types.GenerateLinkIntent
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,6 @@ class AdminPortal(
    * @param returnUrl The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
    * @param successUrl The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
    * @param intent The intent of the Admin Portal.
-   * @param intentOptions Options to configure the Admin Portal based on the intent.
    * @param itContactEmails The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -41,7 +39,6 @@ class AdminPortal(
     returnUrl: String? = null,
     successUrl: String? = null,
     intent: GenerateLinkIntent? = null,
-    intentOptions: IntentOptions? = null,
     itContactEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse {
@@ -51,7 +48,6 @@ class AdminPortal(
         "return_url" to returnUrl,
         "success_url" to successUrl,
         "intent" to intent,
-        "intent_options" to intentOptions,
         "it_contact_emails" to itContactEmails
       )
     val config =
@@ -78,11 +74,10 @@ class AdminPortal(
     returnUrl: String? = null,
     successUrl: String? = null,
     intent: GenerateLinkIntent? = null,
-    intentOptions: IntentOptions? = null,
     itContactEmails: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): PortalLinkResponse =
     withContext(Dispatchers.IO) {
-      generateLink(organization, returnUrl, successUrl, intent, intentOptions, itContactEmails, requestOptions)
+      generateLink(organization, returnUrl, successUrl, intent, itContactEmails, requestOptions)
     }
 }

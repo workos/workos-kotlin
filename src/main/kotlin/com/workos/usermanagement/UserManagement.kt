@@ -661,6 +661,61 @@ class UserManagement(
   }
 
   /**
+   * List CORS origins
+   *
+   * Lists the CORS origins for the current environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listCorsOrigins(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<CorsOriginResponse> {
+    val itemType = object : TypeReference<CorsOriginResponse>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/cors_origins",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listCorsOrigins]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listCorsOrigins] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listCorsOriginsSuspend")
+  suspend fun listCorsOriginsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<CorsOriginResponse> =
+    withContext(Dispatchers.IO) {
+      listCorsOrigins(before, after, limit, order, requestOptions)
+    }
+
+  /**
    * Create a CORS origin
    *
    * Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
@@ -2045,6 +2100,61 @@ class UserManagement(
   ): MagicAuth =
     withContext(Dispatchers.IO) {
       getMagicAuth(id, requestOptions)
+    }
+
+  /**
+   * List redirect URIs
+   *
+   * Lists the redirect URIs for an environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listRedirectUris(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<RedirectUri> {
+    val itemType = object : TypeReference<RedirectUri>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/redirect_uris",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listRedirectUris]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listRedirectUris] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listRedirectUrisSuspend")
+  suspend fun listRedirectUrisSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<RedirectUri> =
+    withContext(Dispatchers.IO) {
+      listRedirectUris(before, after, limit, order, requestOptions)
     }
 
   /**

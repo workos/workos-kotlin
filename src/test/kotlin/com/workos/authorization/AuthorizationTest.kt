@@ -180,8 +180,9 @@ class AuthorizationTest : TestBase() {
       "/authorization/organization_memberships/sample-arg/role_assignments",
       200,
       "{\"object\": \"role_assignment\", \"id\": \"sample\", \"organization_membership_id\": \"sample\", \"role\": {\"slug\": " +
-        "\"sample\"}, \"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, " +
-        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"sample\"}, \"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"source\": " +
+        "{\"type\": \"direct\", \"group_role_assignment_id\": null}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
     )
     val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)

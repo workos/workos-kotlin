@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-07-01T16:28:56.632Z",
+  "generatedAt": "2026-07-01T18:19:14.020Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -452,6 +452,7 @@
     "src/main/kotlin/com/workos/models/UserOrganizationMembershipBaseListData.kt",
     "src/main/kotlin/com/workos/models/UserRoleAssignment.kt",
     "src/main/kotlin/com/workos/models/UserRoleAssignmentResource.kt",
+    "src/main/kotlin/com/workos/models/UserRoleAssignmentSource.kt",
     "src/main/kotlin/com/workos/models/UserSessionsImpersonator.kt",
     "src/main/kotlin/com/workos/models/UserSessionsListItem.kt",
     "src/main/kotlin/com/workos/models/UserUpdated.kt",
@@ -610,6 +611,7 @@
     "src/main/kotlin/com/workos/types/UserManagementOrganizationMembershipStatuses.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipBaseListDataStatus.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipStatus.kt",
+    "src/main/kotlin/com/workos/types/UserRoleAssignmentSourceType.kt",
     "src/main/kotlin/com/workos/types/UserSessionsAuthMethod.kt",
     "src/main/kotlin/com/workos/types/UserSessionsStatus.kt",
     "src/main/kotlin/com/workos/types/VaultByokKeyProvider.kt",
