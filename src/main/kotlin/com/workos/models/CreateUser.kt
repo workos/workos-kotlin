@@ -35,6 +35,18 @@ data class CreateUser(
   @JsonProperty("external_id")
   val externalId: String? = null,
 
+  /** The IP address of the user's request. */
+  @JsonProperty("ip_address")
+  val ipAddress: String? = null,
+
+  /** The user agent string from the user's request. */
+  @JsonProperty("user_agent")
+  val userAgent: String? = null,
+
+  /** An optional Radar signals ID to correlate client-side signals with this request. */
+  @JsonProperty("signals_id")
+  val signalsId: String? = null,
+
   /** The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`. */
   @JsonProperty("password")
   val password: String? = null,
