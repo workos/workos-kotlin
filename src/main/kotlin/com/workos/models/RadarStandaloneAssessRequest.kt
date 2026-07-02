@@ -26,5 +26,9 @@ data class RadarStandaloneAssessRequest(
 
   /** The action being performed. */
   @JsonProperty("action")
-  val action: RadarStandaloneAssessRequestAction
+  val action: RadarStandaloneAssessRequestAction,
+
+  /** An optional Radar signals ID for the request. */
+  @JsonProperty("signals_id")
+  val signalsId: String? = null
 )

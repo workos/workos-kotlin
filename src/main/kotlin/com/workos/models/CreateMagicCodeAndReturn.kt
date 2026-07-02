@@ -12,5 +12,21 @@ data class CreateMagicCodeAndReturn(
 
   /** The invitation token to associate with this magic code. */
   @JsonProperty("invitation_token")
-  val invitationToken: String? = null
+  val invitationToken: String? = null,
+
+  /** The IP address of the user's request. */
+  @JsonProperty("ip_address")
+  val ipAddress: String? = null,
+
+  /** The user agent string from the user's request. */
+  @JsonProperty("user_agent")
+  val userAgent: String? = null,
+
+  /** The ID of an existing Radar authentication attempt to associate with this request. */
+  @JsonProperty("radar_auth_attempt_id")
+  val radarAuthAttemptId: String? = null,
+
+  /** An optional Radar signals ID to correlate client-side signals with this request. */
+  @JsonProperty("signals_id")
+  val signalsId: String? = null
 )

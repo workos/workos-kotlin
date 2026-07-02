@@ -32,6 +32,7 @@ class Radar(
    * @param email The email address of the user making the request.
    * @param authMethod The authentication method being used.
    * @param action The action being performed.
+   * @param signalsId An optional Radar signals ID for the request.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the RadarStandaloneResponse
@@ -43,6 +44,7 @@ class Radar(
     email: String,
     authMethod: RadarStandaloneAssessRequestAuthMethod,
     action: RadarStandaloneAssessRequestAction,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse {
     val body =
@@ -51,7 +53,8 @@ class Radar(
         "user_agent" to userAgent,
         "email" to email,
         "auth_method" to authMethod,
-        "action" to action
+        "action" to action,
+        "signals_id" to signalsId
       )
     val config =
       RequestConfig(
@@ -78,10 +81,11 @@ class Radar(
     email: String,
     authMethod: RadarStandaloneAssessRequestAuthMethod,
     action: RadarStandaloneAssessRequestAction,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
   ): RadarStandaloneResponse =
     withContext(Dispatchers.IO) {
-      createAttempt(ipAddress, userAgent, email, authMethod, action, requestOptions)
+      createAttempt(ipAddress, userAgent, email, authMethod, action, signalsId, requestOptions)
     }
 
   /**
