@@ -20,6 +20,83 @@ class PipesTest : TestBase() {
   private fun api() = Pipes(createWorkOSClient())
 
   @Test
+  fun `listDataIntegrations returns a typed response`() {
+    stubResponse("GET", "/data-integrations", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listDataIntegrations()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createDataIntegration returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/data-integrations",
+      200,
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
+        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createDataIntegration("sample-arg")
+    assertNotNull(result)
+    assertEquals("data_integration", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.integrationType)
+    assertEquals(false, result.enabled)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations"))
+        .withRequestBody(matchingJsonPath("$.provider"))
+    )
+  }
+
+  @Test
+  fun `getDataIntegration returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/data-integrations/sample-arg",
+      200,
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
+        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getDataIntegration("sample-arg")
+    assertNotNull(result)
+    assertEquals("data_integration", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.integrationType)
+    assertEquals(false, result.enabled)
+  }
+
+  @Test
+  fun `updateDataIntegration returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/data-integrations/sample-arg",
+      200,
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
+        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().updateDataIntegration("sample-arg")
+    assertNotNull(result)
+    assertEquals("data_integration", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.integrationType)
+    assertEquals(false, result.enabled)
+  }
+
+  @Test
+  fun `deleteDataIntegration completes without throwing`() {
+    stubResponse("DELETE", "/data-integrations/sample-arg", 204)
+    api().deleteDataIntegration("sample-arg")
+  }
+
+  @Test
   fun `updateDataIntegrationApiKey returns a typed response`() {
     stubResponse(
       "PUT",
@@ -93,6 +170,40 @@ class PipesTest : TestBase() {
   }
 
   @Test
+  fun `createUserConnectedAccount returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/users/sample-arg/connected_accounts/sample-arg",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().createUserConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
+  fun `updateUserConnectedAccount returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/user_management/users/sample-arg/connected_accounts/sample-arg",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().updateUserConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
   fun `deleteUserConnectedAccount completes without throwing`() {
     stubResponse("DELETE", "/user_management/users/sample-arg/connected_accounts/sample-arg", 204)
     api().deleteUserConnectedAccount("sample-arg", "sample-arg")
@@ -107,34 +218,34 @@ class PipesTest : TestBase() {
   }
 
   @Test
-  fun `updateDataIntegrationApiKey translates 401 to UnauthorizedException`() {
-    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 401)
+  fun `listDataIntegrations translates 401 to UnauthorizedException`() {
+    stubResponse("GET", "/data-integrations", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+      api().listDataIntegrations()
     }
   }
 
   @Test
-  fun `updateDataIntegrationApiKey translates 404 to NotFoundException`() {
-    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 404)
+  fun `listDataIntegrations translates 404 to NotFoundException`() {
+    stubResponse("GET", "/data-integrations", 404)
     assertThrows(NotFoundException::class.java) {
-      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+      api().listDataIntegrations()
     }
   }
 
   @Test
-  fun `updateDataIntegrationApiKey translates 429 to RateLimitException`() {
-    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 429)
+  fun `listDataIntegrations translates 429 to RateLimitException`() {
+    stubResponse("GET", "/data-integrations", 429)
     assertThrows(RateLimitException::class.java) {
-      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+      api().listDataIntegrations()
     }
   }
 
   @Test
-  fun `updateDataIntegrationApiKey translates 500 to GenericServerException`() {
-    stubResponse("PUT", "/data-integrations/sample-arg/api-key", 500)
+  fun `listDataIntegrations translates 500 to GenericServerException`() {
+    stubResponse("GET", "/data-integrations", 500)
     assertThrows(GenericServerException::class.java) {
-      api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+      api().listDataIntegrations()
     }
   }
 }

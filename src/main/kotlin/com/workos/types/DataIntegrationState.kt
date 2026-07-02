@@ -5,14 +5,14 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid DataIntegrationsListResponseDataConnectedAccountState values returned or accepted by the API. */
-enum class DataIntegrationsListResponseDataConnectedAccountState(
+/** Enumeration of valid DataIntegrationState values returned or accepted by the API. */
+enum class DataIntegrationState(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Connected("connected"),
-  NeedsReauthorization("needs_reauthorization"),
-  Disconnected("disconnected")
+  Valid("valid"),
+  Invalid("invalid"),
+  Requested("requested")
 }
