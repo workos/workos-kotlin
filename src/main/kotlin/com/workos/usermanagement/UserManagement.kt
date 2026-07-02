@@ -21,13 +21,16 @@ import com.workos.models.Invitation
 import com.workos.models.JWTTemplateResponse
 import com.workos.models.JwksResponse
 import com.workos.models.MagicAuth
+import com.workos.models.MagicAuthSendMagicAuthCodeAndReturnResponse
 import com.workos.models.PasswordReset
 import com.workos.models.RedirectUri
 import com.workos.models.ResetPasswordResponse
+import com.workos.models.SendRadarSmsChallengeResponse
 import com.workos.models.SendVerificationEmailResponse
 import com.workos.models.User
 import com.workos.models.UserApiKey
 import com.workos.models.UserApiKeyWithValue
+import com.workos.models.UserCreateResponse
 import com.workos.models.UserIdentitiesGetItem
 import com.workos.models.UserInvite
 import com.workos.models.UserSessionsListItem
@@ -618,6 +621,68 @@ class UserManagement(
     }
 
   /**
+   * Send a Radar SMS challenge
+   *
+   * Sends a one-time verification code over SMS to a user as part of a Radar challenge. Use the returned `verification_id` to authenticate the user with the `urn:workos:oauth:grant-type:radar-sms-challenge:code` grant type.
+   *
+   * @param userId The ID of the user to send the SMS challenge to.
+   * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt that triggered the Radar challenge.
+   * @param phoneNumber The phone number to send the SMS verification code to.
+   * @param ipAddress The IP address of the user's request.
+   * @param userAgent The user agent string from the user's request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SendRadarSmsChallengeResponse
+   */
+  @JvmOverloads
+  fun createRadarChallenge(
+    userId: String,
+    pendingAuthenticationToken: String,
+    phoneNumber: String,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): SendRadarSmsChallengeResponse {
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "pending_authentication_token" to pendingAuthenticationToken,
+        "phone_number" to phoneNumber,
+        "ip_address" to ipAddress,
+        "user_agent" to userAgent
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/radar_challenges",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SendRadarSmsChallengeResponse::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createRadarChallenge]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createRadarChallenge] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createRadarChallengeSuspend")
+  suspend fun createRadarChallengeSuspend(
+    userId: String,
+    pendingAuthenticationToken: String,
+    phoneNumber: String,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): SendRadarSmsChallengeResponse =
+    withContext(Dispatchers.IO) {
+      createRadarChallenge(userId, pendingAuthenticationToken, phoneNumber, ipAddress, userAgent, requestOptions)
+    }
+
+  /**
    * Revoke Session
    *
    * Revoke a [user session](https://workos.com/docs/reference/authkit/session).
@@ -1018,9 +1083,12 @@ class UserManagement(
    * @param emailVerified Whether the user's email has been verified.
    * @param metadata Object containing metadata key/value pairs associated with the user.
    * @param externalId The external ID of the user.
+   * @param ipAddress The IP address of the user's request.
+   * @param userAgent The user agent string from the user's request.
+   * @param signalsId An optional Radar signals ID to correlate client-side signals with this request.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the User
+   * @return the UserCreateResponse
    */
   @JvmOverloads
   fun create(
@@ -1032,8 +1100,11 @@ class UserManagement(
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
-  ): User {
+  ): UserCreateResponse {
     val body =
       bodyOf(
         "email" to email,
@@ -1042,7 +1113,10 @@ class UserManagement(
         "name" to name,
         "email_verified" to emailVerified,
         "metadata" to metadata,
-        "external_id" to externalId
+        "external_id" to externalId,
+        "ip_address" to ipAddress,
+        "user_agent" to userAgent,
+        "signals_id" to signalsId
       )
     if (createUserPassword != null) {
       when (createUserPassword) {
@@ -1060,7 +1134,7 @@ class UserManagement(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, User::class.java)
+    return workos.baseClient.request(config, UserCreateResponse::class.java)
   }
 
   /**
@@ -1081,10 +1155,26 @@ class UserManagement(
     emailVerified: Boolean? = null,
     metadata: Map<String, String>? = null,
     externalId: String? = null,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
-  ): User =
+  ): UserCreateResponse =
     withContext(Dispatchers.IO) {
-      create(createUserPassword, email, firstName, lastName, name, emailVerified, metadata, externalId, requestOptions)
+      create(
+        createUserPassword,
+        email,
+        firstName,
+        lastName,
+        name,
+        emailVerified,
+        metadata,
+        externalId,
+        ipAddress,
+        userAgent,
+        signalsId,
+        requestOptions
+      )
     }
 
   /**
@@ -2018,20 +2108,32 @@ class UserManagement(
    *
    * @param email The email address to send the magic code to.
    * @param invitationToken The invitation token to associate with this magic code.
+   * @param ipAddress The IP address of the user's request.
+   * @param userAgent The user agent string from the user's request.
+   * @param radarAuthAttemptId The ID of an existing Radar authentication attempt to associate with this request.
+   * @param signalsId An optional Radar signals ID to correlate client-side signals with this request.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the MagicAuth
+   * @return the MagicAuthSendMagicAuthCodeAndReturnResponse
    */
   @JvmOverloads
   fun createMagicAuth(
     email: String,
     invitationToken: String? = null,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    radarAuthAttemptId: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
-  ): MagicAuth {
+  ): MagicAuthSendMagicAuthCodeAndReturnResponse {
     val body =
       bodyOf(
         "email" to email,
-        "invitation_token" to invitationToken
+        "invitation_token" to invitationToken,
+        "ip_address" to ipAddress,
+        "user_agent" to userAgent,
+        "radar_auth_attempt_id" to radarAuthAttemptId,
+        "signals_id" to signalsId
       )
     val config =
       RequestConfig(
@@ -2040,7 +2142,7 @@ class UserManagement(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, MagicAuth::class.java)
+    return workos.baseClient.request(config, MagicAuthSendMagicAuthCodeAndReturnResponse::class.java)
   }
 
   /**
@@ -2055,10 +2157,14 @@ class UserManagement(
   suspend fun createMagicAuthSuspend(
     email: String,
     invitationToken: String? = null,
+    ipAddress: String? = null,
+    userAgent: String? = null,
+    radarAuthAttemptId: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
-  ): MagicAuth =
+  ): MagicAuthSendMagicAuthCodeAndReturnResponse =
     withContext(Dispatchers.IO) {
-      createMagicAuth(email, invitationToken, requestOptions)
+      createMagicAuth(email, invitationToken, ipAddress, userAgent, radarAuthAttemptId, signalsId, requestOptions)
     }
 
   /**

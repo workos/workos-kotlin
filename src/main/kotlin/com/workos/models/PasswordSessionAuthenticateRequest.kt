@@ -40,5 +40,13 @@ data class PasswordSessionAuthenticateRequest(
 
   /** The user agent string from the user's browser. */
   @JsonProperty("user_agent")
-  val userAgent: String? = null
+  val userAgent: String? = null,
+
+  /** An optional Radar signals ID to correlate client-side signals with this authentication attempt. */
+  @JsonProperty("signals_id")
+  val signalsId: String? = null,
+
+  /** The ID of an existing Radar authentication attempt to associate with this authentication. */
+  @JsonProperty("radar_auth_attempt_id")
+  val radarAuthAttemptId: String? = null
 )

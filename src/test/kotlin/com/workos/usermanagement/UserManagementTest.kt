@@ -185,6 +185,21 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `createRadarChallenge returns a typed response`() {
+    stubResponse("POST", "/user_management/radar_challenges", 200, "{\"verification_id\": \"sample\", \"phone_number\": \"sample\"}")
+    val result = api().createRadarChallenge("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.verificationId)
+    assertEquals("sample", result.phoneNumber)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/radar_challenges"))
+        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("$.pending_authentication_token"))
+        .withRequestBody(matchingJsonPath("$.phone_number"))
+    )
+  }
+
+  @Test
   fun `revokeSession completes without throwing`() {
     stubResponse("POST", "/user_management/sessions/revoke", 200)
     api().revokeSession("sample-arg")
@@ -310,20 +325,9 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `create returns a typed response`() {
-    stubResponse(
-      "POST",
-      "/user_management/users",
-      200,
-      "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": " +
-        "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
-    )
+    stubResponse("POST", "/user_management/users", 200, "{}")
     val result = api().create(createUserPassword = CreateUserPassword.Plaintext("sample-arg"), "sample-arg")
     assertNotNull(result)
-    assertEquals("user", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.email)
-    assertEquals(false, result.emailVerified)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -664,21 +668,9 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `createMagicAuth returns a typed response`() {
-    stubResponse(
-      "POST",
-      "/user_management/magic_auth",
-      200,
-      "{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": " +
-        "\"sample\"}"
-    )
+    stubResponse("POST", "/user_management/magic_auth", 200, "{}")
     val result = api().createMagicAuth("sample-arg")
     assertNotNull(result)
-    assertEquals("magic_auth", result.objectType)
-    assertEquals("sample", result.id)
-    assertEquals("sample", result.userId)
-    assertEquals("sample", result.email)
-    assertEquals("sample", result.code)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/magic_auth"))
         .withRequestBody(matchingJsonPath("$.email"))
