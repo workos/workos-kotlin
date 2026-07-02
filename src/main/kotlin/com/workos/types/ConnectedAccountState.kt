@@ -13,6 +13,5 @@ enum class ConnectedAccountState(
   @JsonEnumDefaultValue
   Unknown("unknown"),
   Connected("connected"),
-  NeedsReauthorization("needs_reauthorization"),
-  Disconnected("disconnected")
+  NeedsReauthorization("needs_reauthorization")
 }

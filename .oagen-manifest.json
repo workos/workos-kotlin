@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-07-01T18:19:14.020Z",
+  "generatedAt": "2026-07-02T14:58:53.718Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -130,6 +130,7 @@
     "src/main/kotlin/com/workos/models/ConnectApplicationOAuthRedirectUris.kt",
     "src/main/kotlin/com/workos/models/ConnectApplicationRedirectUri.kt",
     "src/main/kotlin/com/workos/models/ConnectedAccount.kt",
+    "src/main/kotlin/com/workos/models/ConnectedAccountDto.kt",
     "src/main/kotlin/com/workos/models/Connection.kt",
     "src/main/kotlin/com/workos/models/ConnectionActivated.kt",
     "src/main/kotlin/com/workos/models/ConnectionActivatedData.kt",
@@ -154,6 +155,7 @@
     "src/main/kotlin/com/workos/models/CreateAuthorizationPermission.kt",
     "src/main/kotlin/com/workos/models/CreateAuthorizationResource.kt",
     "src/main/kotlin/com/workos/models/CreateCorsOrigin.kt",
+    "src/main/kotlin/com/workos/models/CreateDataIntegration.kt",
     "src/main/kotlin/com/workos/models/CreateDataKeyRequest.kt",
     "src/main/kotlin/com/workos/models/CreateDataKeyResponse.kt",
     "src/main/kotlin/com/workos/models/CreateGroup.kt",
@@ -175,14 +177,19 @@
     "src/main/kotlin/com/workos/models/CreateUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/CreateUserOrganizationMembership.kt",
     "src/main/kotlin/com/workos/models/CreateWebhookEndpoint.kt",
+    "src/main/kotlin/com/workos/models/CustomProviderDefinition.kt",
+    "src/main/kotlin/com/workos/models/DataIntegration.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationAccessTokenResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationAccessTokenResponseAccessToken.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationAuthorizeUrlResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationConfigurationListResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationConfigurationResponse.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCredential.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentials.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCredentialsDto.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponseCredential.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationCustomProvider.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetDataIntegrationAuthorizeUrlRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsGetUserTokenRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponse.kt",
@@ -421,6 +428,8 @@
     "src/main/kotlin/com/workos/models/UpdateAuditLogsRetention.kt",
     "src/main/kotlin/com/workos/models/UpdateAuthorizationPermission.kt",
     "src/main/kotlin/com/workos/models/UpdateAuthorizationResource.kt",
+    "src/main/kotlin/com/workos/models/UpdateCustomProviderDefinition.kt",
+    "src/main/kotlin/com/workos/models/UpdateDataIntegration.kt",
     "src/main/kotlin/com/workos/models/UpdateGroup.kt",
     "src/main/kotlin/com/workos/models/UpdateJWTTemplate.kt",
     "src/main/kotlin/com/workos/models/UpdateOAuthApplication.kt",
@@ -528,9 +537,14 @@
     "src/main/kotlin/com/workos/types/CreateUserInviteOptionsLocale.kt",
     "src/main/kotlin/com/workos/types/CreateUserPasswordHashType.kt",
     "src/main/kotlin/com/workos/types/CreateWebhookEndpointEvents.kt",
+    "src/main/kotlin/com/workos/types/CustomProviderDefinitionAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationAccessTokenResponseError.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationCredentialType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsCredentialsType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsResponseError.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationCredentialsType.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationCustomProviderAuthenticateVia.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationState.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountAuthMethod.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountState.kt",
@@ -601,6 +615,7 @@
     "src/main/kotlin/com/workos/types/SessionRevokedDataAuthMethod.kt",
     "src/main/kotlin/com/workos/types/SessionRevokedDataStatus.kt",
     "src/main/kotlin/com/workos/types/SortOrder.kt",
+    "src/main/kotlin/com/workos/types/UpdateCustomProviderDefinitionAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/UpdateUserPasswordHashType.kt",
     "src/main/kotlin/com/workos/types/UpdateWebhookEndpointEvents.kt",
     "src/main/kotlin/com/workos/types/UpdateWebhookEndpointStatus.kt",
@@ -1464,6 +1479,38 @@
     "GET /user_management/redirect_uris": {
       "sdkMethod": "listRedirectUris",
       "service": "userManagement"
+    },
+    "GET /data-integrations": {
+      "sdkMethod": "listDataIntegrations",
+      "service": "pipes"
+    },
+    "POST /data-integrations": {
+      "sdkMethod": "createDataIntegration",
+      "service": "pipes"
+    },
+    "GET /data-integrations/{slug}": {
+      "sdkMethod": "getDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}": {
+      "sdkMethod": "updateDataIntegration",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}": {
+      "sdkMethod": "deleteDataIntegration",
+      "service": "pipes"
+    },
+    "POST /user_management/radar_challenges": {
+      "sdkMethod": "createRadarChallenge",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createUserConnectedAccount",
+      "service": "pipes"
+    },
+    "PUT /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateUserConnectedAccount",
+      "service": "pipes"
     }
   }
 }
