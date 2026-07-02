@@ -2,19 +2,28 @@
 
 package com.workos.pipes
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
+import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.ConnectedAccount
+import com.workos.models.CustomProviderDefinition
+import com.workos.models.DataIntegration
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
+import com.workos.models.DataIntegrationCredentialsDto
 import com.workos.models.DataIntegrationCredentialsResponse
 import com.workos.models.DataIntegrationsListResponse
+import com.workos.models.UpdateCustomProviderDefinition
+import com.workos.types.ConnectedAccountState
+import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.OffsetDateTime
 
 /**
  * API accessor for Pipes.
@@ -24,6 +33,271 @@ import kotlinx.coroutines.withContext
 class Pipes(
   internal val workos: WorkOS
 ) {
+  /**
+   * List data integrations
+   *
+   * Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listDataIntegrations(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DataIntegration> {
+    val itemType = object : TypeReference<DataIntegration>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/data-integrations",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listDataIntegrations]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listDataIntegrations] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listDataIntegrationsSuspend")
+  suspend fun listDataIntegrationsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DataIntegration> =
+    withContext(Dispatchers.IO) {
+      listDataIntegrations(before, after, limit, order, requestOptions)
+    }
+
+  /**
+   * Create a data integration
+   *
+   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+   *
+   * @param provider The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
+   * @param description An optional description of the Data Integration.
+   * @param enabled Whether the Data Integration is enabled. Defaults to `false`.
+   * @param scopes The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
+   * @param credentials The credentials to configure for the Data Integration. Required for both built-in and custom providers.
+   * @param customProvider The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegration
+   */
+  @JvmOverloads
+  fun createDataIntegration(
+    provider: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsDto? = null,
+    customProvider: CustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration {
+    val body =
+      bodyOf(
+        "provider" to provider,
+        "description" to description,
+        "enabled" to enabled,
+        "scopes" to scopes,
+        "credentials" to credentials,
+        "custom_provider" to customProvider
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/data-integrations",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createDataIntegration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDataIntegration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDataIntegrationSuspend")
+  suspend fun createDataIntegrationSuspend(
+    provider: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsDto? = null,
+    customProvider: CustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration =
+    withContext(Dispatchers.IO) {
+      createDataIntegration(provider, description, enabled, scopes, credentials, customProvider, requestOptions)
+    }
+
+  /**
+   * Get a data integration
+   *
+   * Retrieves a data integration by its slug.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegration
+   */
+  @JvmOverloads
+  fun getDataIntegration(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/data-integrations/${encodePathSegment(slug)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getDataIntegration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getDataIntegration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getDataIntegrationSuspend")
+  suspend fun getDataIntegrationSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration =
+    withContext(Dispatchers.IO) {
+      getDataIntegration(slug, requestOptions)
+    }
+
+  /**
+   * Update a data integration
+   *
+   * Updates the description, enabled state, or custom credentials of a data integration. For custom providers, `custom_provider` updates the OAuth definition.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param description An optional description of the Data Integration.
+   * @param enabled Whether the Data Integration is enabled.
+   * @param scopes The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
+   * @param credentials New credentials for the Data Integration. When provided, rotates the stored client secret.
+   * @param customProvider Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegration
+   */
+  @JvmOverloads
+  fun updateDataIntegration(
+    slug: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsDto? = null,
+    customProvider: UpdateCustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration {
+    val body =
+      bodyOf(
+        "description" to description,
+        "enabled" to enabled,
+        "scopes" to scopes,
+        "credentials" to credentials,
+        "custom_provider" to customProvider
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/data-integrations/${encodePathSegment(slug)}",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateDataIntegration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateDataIntegration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateDataIntegrationSuspend")
+  suspend fun updateDataIntegrationSuspend(
+    slug: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsDto? = null,
+    customProvider: UpdateCustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration =
+    withContext(Dispatchers.IO) {
+      updateDataIntegration(slug, description, enabled, scopes, credentials, customProvider, requestOptions)
+    }
+
+  /**
+   * Delete a data integration
+   *
+   * Deletes a data integration and all of its connected installations. For a custom provider, also deletes the custom provider definition.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteDataIntegration(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/data-integrations/${encodePathSegment(slug)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteDataIntegration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteDataIntegration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteDataIntegrationSuspend")
+  suspend fun deleteDataIntegrationSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteDataIntegration(slug, requestOptions)
+  }
+
   /**
    * Upsert an API key for a connected account
    *
@@ -292,6 +566,154 @@ class Pipes(
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
       getUserConnectedAccount(userId, slug, organizationId, requestOptions)
+    }
+
+  /**
+   * Import a connected account
+   *
+   * Imports a [connected account](https://workos.com/docs/reference/pipes/connected-account) for a user by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+   *
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param accessToken The OAuth access token for the connected account.
+   * @param refreshToken The OAuth refresh token for the connected account.
+   * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+   * @param scopes The OAuth scopes granted for this connection.
+   * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun createUserConnectedAccount(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: ConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val params = mutableListOf<Pair<String, String>>()
+    params.addIfNotNull("organization_id", organizationId)
+    val body =
+      bodyOf(
+        "access_token" to accessToken,
+        "refresh_token" to refreshToken,
+        "expires_at" to expiresAt,
+        "scopes" to scopes,
+        "state" to state
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/users/${encodePathSegment(userId)}/connected_accounts/${encodePathSegment(slug)}",
+        queryParams = params,
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createUserConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createUserConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createUserConnectedAccountSuspend")
+  suspend fun createUserConnectedAccountSuspend(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: ConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      createUserConnectedAccount(userId, slug, organizationId, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
+    }
+
+  /**
+   * Update a connected account
+   *
+   * Updates a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+   *
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param accessToken The OAuth access token for the connected account.
+   * @param refreshToken The OAuth refresh token for the connected account.
+   * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+   * @param scopes The OAuth scopes granted for this connection.
+   * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateUserConnectedAccount(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: ConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val params = mutableListOf<Pair<String, String>>()
+    params.addIfNotNull("organization_id", organizationId)
+    val body =
+      bodyOf(
+        "access_token" to accessToken,
+        "refresh_token" to refreshToken,
+        "expires_at" to expiresAt,
+        "scopes" to scopes,
+        "state" to state
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/user_management/users/${encodePathSegment(userId)}/connected_accounts/${encodePathSegment(slug)}",
+        queryParams = params,
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateUserConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateUserConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateUserConnectedAccountSuspend")
+  suspend fun updateUserConnectedAccountSuspend(
+    userId: String,
+    slug: String,
+    organizationId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: ConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      updateUserConnectedAccount(userId, slug, organizationId, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
     }
 
   /**

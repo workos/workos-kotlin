@@ -2,5 +2,17 @@
 
 package com.workos.types
 
-/** Alias for [ConnectedAccountState]. */
-typealias DataIntegrationsListResponseDataConnectedAccountState = ConnectedAccountState
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
+import com.fasterxml.jackson.annotation.JsonValue
+
+/** Enumeration of valid DataIntegrationsListResponseDataConnectedAccountState values returned or accepted by the API. */
+enum class DataIntegrationsListResponseDataConnectedAccountState(
+  /** The wire value sent to and received from the API. */
+  @JsonValue val value: String
+) {
+  @JsonEnumDefaultValue
+  Unknown("unknown"),
+  Connected("connected"),
+  NeedsReauthorization("needs_reauthorization"),
+  Disconnected("disconnected")
+}
