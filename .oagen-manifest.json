@@ -1,7 +1,7 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-07-01T18:19:14.020Z",
+  "generatedAt": "2026-07-02T14:11:04.160Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -309,6 +309,7 @@
     "src/main/kotlin/com/workos/models/MagicAuthCodeSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/MagicAuthCreated.kt",
     "src/main/kotlin/com/workos/models/MagicAuthCreatedData.kt",
+    "src/main/kotlin/com/workos/models/MagicAuthSendMagicAuthCodeAndReturnResponse.kt",
     "src/main/kotlin/com/workos/models/NewConnectApplicationSecret.kt",
     "src/main/kotlin/com/workos/models/ObjectMetadata.kt",
     "src/main/kotlin/com/workos/models/ObjectSummary.kt",
@@ -376,7 +377,9 @@
     "src/main/kotlin/com/workos/models/PipesConnectedAccountReauthorizationNeeded.kt",
     "src/main/kotlin/com/workos/models/PortalLinkResponse.kt",
     "src/main/kotlin/com/workos/models/Profile.kt",
+    "src/main/kotlin/com/workos/models/RadarEmailChallengeCodeSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/RadarListEntryAlreadyPresentResponse.kt",
+    "src/main/kotlin/com/workos/models/RadarSmsChallengeCodeSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/RadarStandaloneAssessRequest.kt",
     "src/main/kotlin/com/workos/models/RadarStandaloneDeleteRadarListEntryRequest.kt",
     "src/main/kotlin/com/workos/models/RadarStandaloneResponse.kt",
@@ -408,6 +411,8 @@
     "src/main/kotlin/com/workos/models/SSOTokenResponse.kt",
     "src/main/kotlin/com/workos/models/SSOTokenResponseOAuthToken.kt",
     "src/main/kotlin/com/workos/models/SendEmailChange.kt",
+    "src/main/kotlin/com/workos/models/SendRadarSmsChallenge.kt",
+    "src/main/kotlin/com/workos/models/SendRadarSmsChallengeResponse.kt",
     "src/main/kotlin/com/workos/models/SendVerificationEmailResponse.kt",
     "src/main/kotlin/com/workos/models/SessionCreated.kt",
     "src/main/kotlin/com/workos/models/SessionCreatedData.kt",
@@ -442,6 +447,7 @@
     "src/main/kotlin/com/workos/models/UserAuthenticationFactorEnrollResponse.kt",
     "src/main/kotlin/com/workos/models/UserConsentOption.kt",
     "src/main/kotlin/com/workos/models/UserConsentOptionChoice.kt",
+    "src/main/kotlin/com/workos/models/UserCreateResponse.kt",
     "src/main/kotlin/com/workos/models/UserCreated.kt",
     "src/main/kotlin/com/workos/models/UserDeleted.kt",
     "src/main/kotlin/com/workos/models/UserIdentitiesGetItem.kt",
@@ -1464,6 +1470,38 @@
     "GET /user_management/redirect_uris": {
       "sdkMethod": "listRedirectUris",
       "service": "userManagement"
+    },
+    "GET /data-integrations": {
+      "sdkMethod": "listDataIntegrations",
+      "service": "pipes"
+    },
+    "POST /data-integrations": {
+      "sdkMethod": "createDataIntegration",
+      "service": "pipes"
+    },
+    "GET /data-integrations/{slug}": {
+      "sdkMethod": "getDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}": {
+      "sdkMethod": "updateDataIntegration",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}": {
+      "sdkMethod": "deleteDataIntegration",
+      "service": "pipes"
+    },
+    "POST /user_management/radar_challenges": {
+      "sdkMethod": "createRadarChallenge",
+      "service": "userManagement"
+    },
+    "POST /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createUserConnectedAccount",
+      "service": "pipes"
+    },
+    "PUT /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateUserConnectedAccount",
+      "service": "pipes"
     }
   }
 }
