@@ -3,9 +3,66 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 
 /** UserCreateResponse model. */
 data class UserCreateResponse(
+  /** The unique ID of the user. */
+  @JsonProperty("id")
+  val id: String,
+
+  /** The first name of the user. */
+  @JsonProperty("first_name")
+  val firstName: String?,
+
+  /** The last name of the user. */
+  @JsonProperty("last_name")
+  val lastName: String?,
+
+  /** A URL reference to an image representing the user. */
+  @JsonProperty("profile_picture_url")
+  val profilePictureUrl: String?,
+
+  /** The email address of the user. */
+  @JsonProperty("email")
+  val email: String,
+
+  /** Whether the user's email has been verified. */
+  @JsonProperty("email_verified")
+  val emailVerified: Boolean,
+
+  /** The external ID of the user. */
+  @JsonProperty("external_id")
+  val externalId: String?,
+
+  /** The timestamp when the user last signed in. */
+  @JsonProperty("last_sign_in_at")
+  val lastSignInAt: OffsetDateTime?,
+
+  /** An ISO 8601 timestamp. */
+  @JsonProperty("created_at")
+  val createdAt: OffsetDateTime,
+
+  /** An ISO 8601 timestamp. */
+  @JsonProperty("updated_at")
+  val updatedAt: OffsetDateTime,
+
+  /** Distinguishes the user object. */
+  @JsonProperty("object")
+  val objectType: String = "user",
+
+  /** The user's full name. */
+  @JsonProperty("name")
+  val name: String? = null,
+
+  /** Object containing metadata key/value pairs associated with the user. */
+  @JsonProperty("metadata")
+  val metadata: Map<String, String>? = null,
+
+  /** The user's preferred locale. */
+  @JsonProperty("locale")
+  val locale: String? = null,
+
   /** The ID of the Radar authentication attempt created for this request when Radar is enabled. Pass this value to the authenticate endpoint to associate the subsequent authentication with this Radar attempt. */
   @JsonProperty("radar_auth_attempt_id")
   val radarAuthAttemptId: String? = null

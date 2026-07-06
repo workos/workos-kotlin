@@ -153,6 +153,8 @@ class UserManagement(
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
+   * @param signalsId An optional Radar signals ID to correlate client-side signals with this authentication attempt.
+   * @param radarAuthAttemptId The ID of an existing Radar authentication attempt to associate with this authentication.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -164,6 +166,8 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    signalsId: String? = null,
+    radarAuthAttemptId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     authenticate(
@@ -174,7 +178,9 @@ class UserManagement(
       "invitation_token" to invitationToken,
       "ip_address" to ipAddress,
       "device_id" to deviceId,
-      "user_agent" to userAgent
+      "user_agent" to userAgent,
+      "signals_id" to signalsId,
+      "radar_auth_attempt_id" to radarAuthAttemptId
     )
 
   /**
@@ -193,10 +199,22 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    signalsId: String? = null,
+    radarAuthAttemptId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     withContext(Dispatchers.IO) {
-      authenticateWithPassword(email, password, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+      authenticateWithPassword(
+        email,
+        password,
+        invitationToken,
+        ipAddress,
+        deviceId,
+        userAgent,
+        signalsId,
+        radarAuthAttemptId,
+        requestOptions
+      )
     }
 
   /**
@@ -208,6 +226,7 @@ class UserManagement(
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
+   * @param signalsId An optional Radar signals ID to correlate client-side signals with this authentication attempt.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -219,6 +238,7 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     authenticate(
@@ -229,7 +249,8 @@ class UserManagement(
       "invitation_token" to invitationToken,
       "ip_address" to ipAddress,
       "device_id" to deviceId,
-      "user_agent" to userAgent
+      "user_agent" to userAgent,
+      "signals_id" to signalsId
     )
 
   /**
@@ -248,10 +269,11 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    signalsId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     withContext(Dispatchers.IO) {
-      authenticateWithCode(code, codeVerifier, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+      authenticateWithCode(code, codeVerifier, invitationToken, ipAddress, deviceId, userAgent, signalsId, requestOptions)
     }
 
   /**
@@ -314,6 +336,7 @@ class UserManagement(
    * @param ipAddress the ip address of the request.
    * @param deviceId the device id of the request.
    * @param userAgent the user agent of the request.
+   * @param radarAuthAttemptId the radar auth attempt id of the request.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -325,6 +348,7 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    radarAuthAttemptId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     authenticate(
@@ -335,7 +359,8 @@ class UserManagement(
       "invitation_token" to invitationToken,
       "ip_address" to ipAddress,
       "device_id" to deviceId,
-      "user_agent" to userAgent
+      "user_agent" to userAgent,
+      "radar_auth_attempt_id" to radarAuthAttemptId
     )
 
   /**
@@ -354,10 +379,11 @@ class UserManagement(
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
+    radarAuthAttemptId: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthenticateResponse =
     withContext(Dispatchers.IO) {
-      authenticateWithMagicAuth(code, email, invitationToken, ipAddress, deviceId, userAgent, requestOptions)
+      authenticateWithMagicAuth(code, email, invitationToken, ipAddress, deviceId, userAgent, radarAuthAttemptId, requestOptions)
     }
 
   /**
@@ -572,6 +598,137 @@ class UserManagement(
   ): AuthenticateResponse =
     withContext(Dispatchers.IO) {
       authenticateWithDeviceCode(deviceCode, ipAddress, deviceId, userAgent, requestOptions)
+    }
+
+  /**
+   * Authenticate
+   *
+   * @param code the code of the request.
+   * @param radarChallengeId the radar challenge id of the request.
+   * @param pendingAuthenticationToken the pending authentication token of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   * @return the AuthenticateResponse
+   */
+  @JvmOverloads
+  fun authenticateWithRadarEmailChallenge(
+    code: String,
+    radarChallengeId: String,
+    pendingAuthenticationToken: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:radar-email-challenge:code",
+      requestOptions = requestOptions,
+      "code" to code,
+      "radar_challenge_id" to radarChallengeId,
+      "pending_authentication_token" to pendingAuthenticationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithRadarEmailChallenge]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithRadarEmailChallenge] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithRadarEmailChallengeSuspend")
+  suspend fun authenticateWithRadarEmailChallengeSuspend(
+    code: String,
+    radarChallengeId: String,
+    pendingAuthenticationToken: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithRadarEmailChallenge(
+        code,
+        radarChallengeId,
+        pendingAuthenticationToken,
+        ipAddress,
+        deviceId,
+        userAgent,
+        requestOptions
+      )
+    }
+
+  /**
+   * Authenticate
+   *
+   * @param code the code of the request.
+   * @param verificationId the verification id of the request.
+   * @param phoneNumber the phone number of the request.
+   * @param pendingAuthenticationToken the pending authentication token of the request.
+   * @param ipAddress the ip address of the request.
+   * @param deviceId the device id of the request.
+   * @param userAgent the user agent of the request.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   * @return the AuthenticateResponse
+   */
+  @JvmOverloads
+  fun authenticateWithRadarSmsChallenge(
+    code: String,
+    verificationId: String,
+    phoneNumber: String,
+    pendingAuthenticationToken: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    authenticate(
+      grantType = "urn:workos:oauth:grant-type:radar-sms-challenge:code",
+      requestOptions = requestOptions,
+      "code" to code,
+      "verification_id" to verificationId,
+      "phone_number" to phoneNumber,
+      "pending_authentication_token" to pendingAuthenticationToken,
+      "ip_address" to ipAddress,
+      "device_id" to deviceId,
+      "user_agent" to userAgent
+    )
+
+  /**
+   * Coroutine-aware variant of [authenticateWithRadarSmsChallenge]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [authenticateWithRadarSmsChallenge] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("authenticateWithRadarSmsChallengeSuspend")
+  suspend fun authenticateWithRadarSmsChallengeSuspend(
+    code: String,
+    verificationId: String,
+    phoneNumber: String,
+    pendingAuthenticationToken: String,
+    ipAddress: String? = null,
+    deviceId: String? = null,
+    userAgent: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthenticateResponse =
+    withContext(Dispatchers.IO) {
+      authenticateWithRadarSmsChallenge(
+        code,
+        verificationId,
+        phoneNumber,
+        pendingAuthenticationToken,
+        ipAddress,
+        deviceId,
+        userAgent,
+        requestOptions
+      )
     }
 
   /**
