@@ -165,6 +165,40 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `authenticateWithRadarEmailChallenge returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/authenticate",
+      200,
+      "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+        "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": " +
+        "\"sample\"}"
+    )
+    val result = api().authenticateWithRadarEmailChallenge("sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
+  }
+
+  @Test
+  fun `authenticateWithRadarSmsChallenge returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/authenticate",
+      200,
+      "{\"user\": {\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, " +
+        "\"email\": \"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": " +
+        "\"sample\"}"
+    )
+    val result = api().authenticateWithRadarSmsChallenge("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("sample", result.refreshToken)
+  }
+
+  @Test
   fun `createDevice returns a typed response`() {
     stubResponse(
       "POST",
@@ -325,9 +359,20 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `create returns a typed response`() {
-    stubResponse("POST", "/user_management/users", 200, "{}")
+    stubResponse(
+      "POST",
+      "/user_management/users",
+      200,
+      "{\"object\": \"user\", \"id\": \"sample\", \"first_name\": null, \"last_name\": null, \"profile_picture_url\": null, \"email\": " +
+        "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
     val result = api().create(createUserPassword = CreateUserPassword.Plaintext("sample-arg"), "sample-arg")
     assertNotNull(result)
+    assertEquals("user", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals(false, result.emailVerified)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users"))
         .withRequestBody(matchingJsonPath("$.email"))
@@ -668,9 +713,21 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `createMagicAuth returns a typed response`() {
-    stubResponse("POST", "/user_management/magic_auth", 200, "{}")
+    stubResponse(
+      "POST",
+      "/user_management/magic_auth",
+      200,
+      "{\"object\": \"magic_auth\", \"id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"expires_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"code\": " +
+        "\"sample\"}"
+    )
     val result = api().createMagicAuth("sample-arg")
     assertNotNull(result)
+    assertEquals("magic_auth", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+    assertEquals("sample", result.code)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/magic_auth"))
         .withRequestBody(matchingJsonPath("$.email"))

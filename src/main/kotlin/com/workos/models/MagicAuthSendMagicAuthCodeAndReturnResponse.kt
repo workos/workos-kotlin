@@ -2,5 +2,44 @@
 
 package com.workos.models
 
-/** Alias for [UserCreateResponse]. */
-typealias MagicAuthSendMagicAuthCodeAndReturnResponse = UserCreateResponse
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
+
+/** MagicAuthSendMagicAuthCodeAndReturnResponse model. */
+data class MagicAuthSendMagicAuthCodeAndReturnResponse(
+  /** The unique ID of the Magic Auth code. */
+  @JsonProperty("id")
+  val id: String,
+
+  /** The unique ID of the user. */
+  @JsonProperty("user_id")
+  val userId: String,
+
+  /** The email address of the user. */
+  @JsonProperty("email")
+  val email: String,
+
+  /** The timestamp when the Magic Auth code expires. */
+  @JsonProperty("expires_at")
+  val expiresAt: OffsetDateTime,
+
+  /** An ISO 8601 timestamp. */
+  @JsonProperty("created_at")
+  val createdAt: OffsetDateTime,
+
+  /** An ISO 8601 timestamp. */
+  @JsonProperty("updated_at")
+  val updatedAt: OffsetDateTime,
+
+  /** The code used to verify the Magic Auth code. */
+  @JsonProperty("code")
+  val code: String,
+
+  /** Distinguishes the Magic Auth object. */
+  @JsonProperty("object")
+  val objectType: String = "magic_auth",
+
+  /** The ID of the Radar authentication attempt created for this request when Radar is enabled. Pass this value to the authenticate endpoint to associate the subsequent authentication with this Radar attempt. */
+  @JsonProperty("radar_auth_attempt_id")
+  val radarAuthAttemptId: String? = null
+)

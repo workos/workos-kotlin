@@ -1,7 +1,6 @@
 {
   "version": 2,
   "language": "kotlin",
-  "generatedAt": "2026-07-02T17:29:47.526Z",
   "files": [
     "src/main/kotlin/com/workos/WorkOS.kt",
     "src/main/kotlin/com/workos/adminportal/AdminPortal.kt",
@@ -1171,6 +1170,14 @@
       },
       {
         "sdkMethod": "authenticateWithDeviceCode",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithRadarEmailChallenge",
+        "service": "userManagement"
+      },
+      {
+        "sdkMethod": "authenticateWithRadarSmsChallenge",
         "service": "userManagement"
       }
     ],
