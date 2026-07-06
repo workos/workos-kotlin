@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.0](https://github.com/workos/workos-kotlin/compare/v6.4.0...v6.5.0) (2026-07-06)
+
+
+### Features
+
+* **generated:** UserManagement, Radar (batch f510ddfb) ([#408](https://github.com/workos/workos-kotlin/issues/408)) ([2a6be2c](https://github.com/workos/workos-kotlin/commit/2a6be2c7cae9a3a63f8f5b9bc48af49618b2b1b0))
+
 ## [6.4.0](https://github.com/workos/workos-kotlin/compare/v6.3.0...v6.4.0) (2026-07-02)
 
 * [#402](https://github.com/workos/workos-kotlin/pull/402) fix(generated): regenerate from spec
