@@ -1,5 +1,21 @@
 # Changelog
 
+## [6.5.0](https://github.com/workos/workos-kotlin/compare/v6.4.0...v6.5.0) (2026-07-06)
+
+* [#408](https://github.com/workos/workos-kotlin/pull/408) fix(generated): regenerate from spec
+
+  **Features**
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Added model `UserRoleAssignmentSource`
+    * Added `source` to `UserRoleAssignment`
+    * Added enum `UserRoleAssignmentSourceType`
+    * Added parameter `UserManagementAuthentication.authorize.max_age`
+    * Added endpoint `GET /user_management/cors_origins`
+    * Added endpoint `GET /user_management/redirect_uris`
+
+  **Fixes**
+  * Restore mistakenly removed CreateMagicAuth logic from previous release
+
 ## [6.4.0](https://github.com/workos/workos-kotlin/compare/v6.3.0...v6.4.0) (2026-07-02)
 
 * [#402](https://github.com/workos/workos-kotlin/pull/402) fix(generated): regenerate from spec
