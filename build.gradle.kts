@@ -20,7 +20,7 @@ plugins {
 
   id("org.jetbrains.dokka-javadoc") version "2.2.0"
 
-  id("com.vanniktech.maven.publish") version "0.36.0"
+  id("com.vanniktech.maven.publish") version "0.37.0"
 
   `java-library`
 }
@@ -37,9 +37,9 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1")
 
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.0")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1")
 
   implementation("com.squareup.okhttp3:okhttp:5.4.0")
 
@@ -50,7 +50,7 @@ dependencies {
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
 
-  testImplementation(platform("org.junit:junit-bom:6.1.0"))
+  testImplementation(platform("org.junit:junit-bom:6.1.1"))
 
   testImplementation(kotlin("test-junit5"))
 
