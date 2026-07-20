@@ -288,11 +288,13 @@ workos.organizations.create(
   name = "Foo Corp",
   requestOptions =
     RequestOptions.builder()
-      .idempotencyKey(java.util.UUID.randomUUID().toString())
       .maxRetries(0)
       .build(),
 )
 ```
+
+> [!NOTE]
+> `RequestOptions` also accepts an `idempotencyKey`, which is sent as the `Idempotency-Key` header. The WorkOS API currently honors it only on the [Create Audit Log Event](https://workos.com/docs/reference/audit-logs/event) endpoint (`auditLogs.createEvent`). Other endpoints accept the header but do not deduplicate requests, so a retried mutation elsewhere can still create a duplicate.
 
 ## Unknown enum values
 
