@@ -22,9 +22,9 @@ class Widgets(
   /**
    * Generate a widget token
    *
-   * Generate a widget token scoped to an organization and user with the specified scopes.
+   * Generate a widget token for a user, optionally scoped to an organization. When an organization is specified, org-scoped widgets are enabled; omitting it issues a user-only token for widgets like `UserProfile` and `UserSecurity`.
    *
-   * @param organizationId The ID of the organization to scope the widget session to.
+   * @param organizationId The ID of the organization to scope the widget session to. Required when scopes are provided. Optional when issuing a token for user-only widgets (e.g. `UserProfile`, `UserSecurity`) that do not require organization context.
    * @param userId The ID of the user to issue the widget session token for.
    * @param scopes The scopes to grant the widget session.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -33,7 +33,7 @@ class Widgets(
    */
   @JvmOverloads
   fun createToken(
-    organizationId: String,
+    organizationId: String? = null,
     userId: String? = null,
     scopes: List<WidgetSessionTokenScopes>? = null,
     requestOptions: RequestOptions? = null
@@ -64,7 +64,7 @@ class Widgets(
    */
   @JvmName("createTokenSuspend")
   suspend fun createTokenSuspend(
-    organizationId: String,
+    organizationId: String? = null,
     userId: String? = null,
     scopes: List<WidgetSessionTokenScopes>? = null,
     requestOptions: RequestOptions? = null
