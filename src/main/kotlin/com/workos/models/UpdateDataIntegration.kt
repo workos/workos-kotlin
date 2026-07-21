@@ -18,9 +18,13 @@ data class UpdateDataIntegration(
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
 
-  /** New credentials for the Data Integration. When provided, rotates the stored client secret. */
+  /** New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`. */
   @JsonProperty("credentials")
-  val credentials: DataIntegrationCredentialsDto? = null,
+  val credentials: DataIntegrationCredentialsInput? = null,
+
+  /** An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`). */
+  @JsonProperty("api_key")
+  val apiKey: ApiKeyInstallation? = null,
 
   /** Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations. */
   @JsonProperty("custom_provider")

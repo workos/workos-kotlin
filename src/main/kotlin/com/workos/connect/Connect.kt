@@ -8,6 +8,7 @@ import com.workos.common.http.Page
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
+import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.ApplicationCredentialsListItem
@@ -17,6 +18,7 @@ import com.workos.models.NewConnectApplicationSecret
 import com.workos.models.RedirectUriInput
 import com.workos.models.UserConsentOption
 import com.workos.models.UserObject
+import com.workos.types.ApplicationsRegistrationTypes
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -101,6 +103,7 @@ class Connect(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param registrationTypes Filter Connect Applications by registration type. Specify multiple as a comma-separated list (e.g. `registration_types=dynamic,authenticated`). Defaults to `authenticated` only when not specified.
    * @param organizationId Filter Connect Applications by organization ID.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -112,6 +115,7 @@ class Connect(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    registrationTypes: List<ApplicationsRegistrationTypes>? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<ConnectApplication> {
@@ -126,6 +130,7 @@ class Connect(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      addJoinedIfNotNull("registration_types", registrationTypes?.map { it.value })
       addIfNotNull("organization_id", organizationId)
     }
   }
@@ -144,11 +149,12 @@ class Connect(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    registrationTypes: List<ApplicationsRegistrationTypes>? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<ConnectApplication> =
     withContext(Dispatchers.IO) {
-      listApplications(before, after, limit, order, organizationId, requestOptions)
+      listApplications(before, after, limit, order, registrationTypes, organizationId, requestOptions)
     }
 
   /**

@@ -51,7 +51,7 @@ data class Connection(
   @JsonProperty("organization_id")
   val organizationId: String? = null,
 
-  /** Configuration options for SAML connections. Only present for SAML connection types. */
-  @JsonProperty("options")
-  val options: ConnectionOption? = null
+  /** The immutable callback endpoint for this Connection. For SAML connections this is the ACS URL; for OIDC connections this is the redirect URI. */
+  @JsonProperty("callback_endpoint")
+  val callbackEndpoint: String? = null
 )

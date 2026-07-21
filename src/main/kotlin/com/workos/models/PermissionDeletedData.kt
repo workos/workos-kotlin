@@ -2,5 +2,5 @@
 
 package com.workos.models
 
-/** Alias for [PermissionCreatedData]. */
-typealias PermissionDeletedData = PermissionCreatedData
+/** Alias for [Permission]. */
+typealias PermissionDeletedData = Permission

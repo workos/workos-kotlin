@@ -23,6 +23,7 @@ import com.workos.models.JwksResponse
 import com.workos.models.MagicAuth
 import com.workos.models.MagicAuthSendMagicAuthCodeAndReturnResponse
 import com.workos.models.PasswordReset
+import com.workos.models.RadarChallenge
 import com.workos.models.RedirectUri
 import com.workos.models.ResetPasswordResponse
 import com.workos.models.SendRadarSmsChallengeResponse
@@ -330,13 +331,13 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param code the code of the request.
-   * @param email the email of the request.
-   * @param invitationToken the invitation token of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
-   * @param radarAuthAttemptId the radar auth attempt id of the request.
+   * @param code The one-time code for Magic Auth authentication.
+   * @param email The user's email address.
+   * @param invitationToken An invitation token to accept during authentication.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
+   * @param radarAuthAttemptId The ID of an existing Radar authentication attempt to associate with this authentication.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -389,11 +390,11 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param code the code of the request.
-   * @param pendingAuthenticationToken the pending authentication token of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
+   * @param code The email verification code.
+   * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -495,11 +496,11 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param pendingAuthenticationToken the pending authentication token of the request.
-   * @param organizationId the organization id of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
+   * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt.
+   * @param organizationId The ID of the organization the user selected.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -546,10 +547,10 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param deviceCode the device code of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
+   * @param deviceCode The device verification code.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -603,12 +604,12 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param code the code of the request.
-   * @param radarChallengeId the radar challenge id of the request.
-   * @param pendingAuthenticationToken the pending authentication token of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
+   * @param code The one-time code from the Radar email challenge.
+   * @param radarChallengeId The ID of the Radar email challenge being verified.
+   * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -666,13 +667,13 @@ class UserManagement(
   /**
    * Authenticate
    *
-   * @param code the code of the request.
-   * @param verificationId the verification id of the request.
-   * @param phoneNumber the phone number of the request.
-   * @param pendingAuthenticationToken the pending authentication token of the request.
-   * @param ipAddress the ip address of the request.
-   * @param deviceId the device id of the request.
-   * @param userAgent the user agent of the request.
+   * @param code The one-time code from the Radar SMS challenge.
+   * @param verificationId The ID of the Radar SMS verification being confirmed.
+   * @param phoneNumber The phone number the Radar SMS challenge was sent to.
+   * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt.
+   * @param ipAddress The IP address of the user's request.
+   * @param deviceId A unique identifier for the device.
+   * @param userAgent The user agent string from the user's browser.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    * @return the AuthenticateResponse
    */
@@ -840,6 +841,47 @@ class UserManagement(
     }
 
   /**
+   * Get Radar Challenge details
+   *
+   * Get the details of an existing Radar Challenge, including the OTP code.
+   *
+   * @param id The unique ID of the Radar Challenge.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the RadarChallenge
+   */
+  @JvmOverloads
+  fun getRadarChallenge(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): RadarChallenge {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/user_management/radar_challenges/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, RadarChallenge::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getRadarChallenge]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getRadarChallenge] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getRadarChallengeSuspend")
+  suspend fun getRadarChallengeSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): RadarChallenge =
+    withContext(Dispatchers.IO) {
+      getRadarChallenge(id, requestOptions)
+    }
+
+  /**
    * Revoke Session
    *
    * Revoke a [user session](https://workos.com/docs/reference/authkit/session).
@@ -940,7 +982,7 @@ class UserManagement(
   /**
    * Create a CORS origin
    *
-   * Creates a new CORS origin for the current environment. CORS origins allow browser-based applications to make requests to the WorkOS API.
+   * Creates a new CORS origin for the API key's application. CORS origins allow browser-based applications to make requests to the WorkOS API.
    *
    * @param origin The origin URL to allow for CORS requests.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -2465,6 +2507,44 @@ class UserManagement(
     withContext(Dispatchers.IO) {
       createRedirectUri(uri, requestOptions)
     }
+
+  /**
+   * Delete a redirect URI
+   *
+   * Deletes a redirect URI from an application.
+   *
+   * @param id The ID of the redirect URI to delete.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteRedirectUris(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/user_management/redirect_uris/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteRedirectUris]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteRedirectUris] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteRedirectUrisSuspend")
+  suspend fun deleteRedirectUrisSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteRedirectUris(id, requestOptions)
+  }
 
   /**
    * List authorized applications

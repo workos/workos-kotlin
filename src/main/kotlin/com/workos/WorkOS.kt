@@ -3,6 +3,7 @@
 package com.workos
 
 import com.workos.adminportal.AdminPortal
+import com.workos.agents.Agents
 import com.workos.apikeys.ApiKeys
 import com.workos.auditlogs.AuditLogs
 import com.workos.authorization.Authorization
@@ -270,5 +271,14 @@ open class WorkOS
           PipesProvider::class
         ) {
           PipesProvider(this)
+        }
+
+    /** Lazily-constructed [Agents] accessor for this [WorkOS] client. */
+    val agents: Agents
+      get() =
+        service(
+          Agents::class
+        ) {
+          Agents(this)
         }
   }

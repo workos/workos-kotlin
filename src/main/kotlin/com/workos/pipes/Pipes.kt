@@ -10,17 +10,19 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
+import com.workos.models.ApiKeyInstallation
 import com.workos.models.ConnectedAccount
 import com.workos.models.CustomProviderDefinition
 import com.workos.models.DataIntegration
 import com.workos.models.DataIntegrationAccessTokenResponse
 import com.workos.models.DataIntegrationAuthorizeUrlResponse
-import com.workos.models.DataIntegrationCredentialsDto
+import com.workos.models.DataIntegrationCredentialsInput
 import com.workos.models.DataIntegrationCredentialsResponse
 import com.workos.models.DataIntegrationsListResponse
 import com.workos.models.UpdateCustomProviderDefinition
-import com.workos.types.ConnectedAccountState
+import com.workos.types.ConnectedAccountAuthMethod
 import com.workos.types.PaginationOrder
+import com.workos.types.PipeConnectedAccountState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
@@ -36,7 +38,7 @@ class Pipes(
   /**
    * List data integrations
    *
-   * Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers.
+   * Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations.
    *
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
@@ -91,13 +93,15 @@ class Pipes(
   /**
    * Create a data integration
    *
-   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials, or `organization` to have each organization supply its own. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
    *
    * @param provider The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
    * @param description An optional description of the Data Integration.
    * @param enabled Whether the Data Integration is enabled. Defaults to `false`.
    * @param scopes The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
-   * @param credentials The credentials to configure for the Data Integration. Required for both built-in and custom providers.
+   * @param authMethods How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+   * @param credentials The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
+   * @param apiKey An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
    * @param customProvider The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -109,7 +113,9 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    credentials: DataIntegrationCredentialsDto? = null,
+    authMethods: List<ConnectedAccountAuthMethod>? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
     customProvider: CustomProviderDefinition? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegration {
@@ -119,7 +125,9 @@ class Pipes(
         "description" to description,
         "enabled" to enabled,
         "scopes" to scopes,
+        "auth_methods" to authMethods,
         "credentials" to credentials,
+        "api_key" to apiKey,
         "custom_provider" to customProvider
       )
     val config =
@@ -146,12 +154,14 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    credentials: DataIntegrationCredentialsDto? = null,
+    authMethods: List<ConnectedAccountAuthMethod>? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
     customProvider: CustomProviderDefinition? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegration =
     withContext(Dispatchers.IO) {
-      createDataIntegration(provider, description, enabled, scopes, credentials, customProvider, requestOptions)
+      createDataIntegration(provider, description, enabled, scopes, authMethods, credentials, apiKey, customProvider, requestOptions)
     }
 
   /**
@@ -204,7 +214,8 @@ class Pipes(
    * @param description An optional description of the Data Integration.
    * @param enabled Whether the Data Integration is enabled.
    * @param scopes The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
-   * @param credentials New credentials for the Data Integration. When provided, rotates the stored client secret.
+   * @param credentials New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`.
+   * @param apiKey An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`).
    * @param customProvider Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -216,7 +227,8 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    credentials: DataIntegrationCredentialsDto? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
     customProvider: UpdateCustomProviderDefinition? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegration {
@@ -226,6 +238,7 @@ class Pipes(
         "enabled" to enabled,
         "scopes" to scopes,
         "credentials" to credentials,
+        "api_key" to apiKey,
         "custom_provider" to customProvider
       )
     val config =
@@ -252,12 +265,13 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    credentials: DataIntegrationCredentialsDto? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
     customProvider: UpdateCustomProviderDefinition? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegration =
     withContext(Dispatchers.IO) {
-      updateDataIntegration(slug, description, enabled, scopes, credentials, customProvider, requestOptions)
+      updateDataIntegration(slug, description, enabled, scopes, credentials, apiKey, customProvider, requestOptions)
     }
 
   /**
@@ -594,7 +608,7 @@ class Pipes(
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
-    state: ConnectedAccountState? = null,
+    state: PipeConnectedAccountState? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
@@ -635,7 +649,7 @@ class Pipes(
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
-    state: ConnectedAccountState? = null,
+    state: PipeConnectedAccountState? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
@@ -668,7 +682,7 @@ class Pipes(
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
-    state: ConnectedAccountState? = null,
+    state: PipeConnectedAccountState? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
@@ -709,7 +723,7 @@ class Pipes(
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
-    state: ConnectedAccountState? = null,
+    state: PipeConnectedAccountState? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {

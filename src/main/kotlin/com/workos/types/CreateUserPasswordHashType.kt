@@ -15,6 +15,7 @@ enum class CreateUserPasswordHashType(
   Bcrypt("bcrypt"),
   FirebaseScrypt("firebase-scrypt"),
   Ssha("ssha"),
+  Ssha256("ssha256"),
   Scrypt("scrypt"),
   Pbkdf2("pbkdf2"),
   Argon2("argon2")

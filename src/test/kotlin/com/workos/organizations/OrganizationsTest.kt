@@ -114,6 +114,18 @@ class OrganizationsTest : TestBase() {
   }
 
   @Test
+  fun `listAuthorizedApplications returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg/authorized_applications",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listAuthorizedApplications("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
   fun `list translates 401 to UnauthorizedException`() {
     stubResponse("GET", "/organizations", 401)
     assertThrows(UnauthorizedException::class.java) {

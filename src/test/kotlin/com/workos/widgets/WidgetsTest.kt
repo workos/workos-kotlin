@@ -2,9 +2,6 @@
 
 package com.workos.widgets
 
-import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
-import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
@@ -21,20 +18,16 @@ class WidgetsTest : TestBase() {
   @Test
   fun `createToken returns a typed response`() {
     stubResponse("POST", "/widgets/token", 200, "{\"token\": \"sample\"}")
-    val result = api().createToken("sample-arg")
+    val result = api().createToken()
     assertNotNull(result)
     assertEquals("sample", result.token)
-    wireMockRule.verify(
-      postRequestedFor(urlPathMatching("/widgets/token"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
-    )
   }
 
   @Test
   fun `createToken translates 401 to UnauthorizedException`() {
     stubResponse("POST", "/widgets/token", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().createToken("sample-arg")
+      api().createToken()
     }
   }
 
@@ -42,7 +35,7 @@ class WidgetsTest : TestBase() {
   fun `createToken translates 404 to NotFoundException`() {
     stubResponse("POST", "/widgets/token", 404)
     assertThrows(NotFoundException::class.java) {
-      api().createToken("sample-arg")
+      api().createToken()
     }
   }
 
@@ -50,7 +43,7 @@ class WidgetsTest : TestBase() {
   fun `createToken translates 429 to RateLimitException`() {
     stubResponse("POST", "/widgets/token", 429)
     assertThrows(RateLimitException::class.java) {
-      api().createToken("sample-arg")
+      api().createToken()
     }
   }
 
@@ -58,7 +51,7 @@ class WidgetsTest : TestBase() {
   fun `createToken translates 500 to GenericServerException`() {
     stubResponse("POST", "/widgets/token", 500)
     assertThrows(GenericServerException::class.java) {
-      api().createToken("sample-arg")
+      api().createToken()
     }
   }
 }

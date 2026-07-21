@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationAuthMethods
 import com.workos.types.DataIntegrationState
 import java.time.OffsetDateTime
 
@@ -40,9 +41,17 @@ data class DataIntegration(
   @JsonProperty("redirect_uri")
   val redirectUri: String,
 
+  /** How accounts authenticate with the provider for this Data Integration. */
+  @JsonProperty("auth_methods")
+  val authMethods: List<DataIntegrationAuthMethods>,
+
   /** The credentials configured for the Data Integration. */
   @JsonProperty("credentials")
   val credentials: DataIntegrationCredential,
+
+  /** The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses. */
+  @JsonProperty("installation")
+  val installation: DataIntegrationInstallation?,
 
   /** The OAuth definition when this is a custom provider; `null` for built-in providers. */
   @JsonProperty("custom_provider")

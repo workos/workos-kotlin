@@ -285,6 +285,8 @@ class DirectorySync(
    * @param order the order to return records in. See [PaginationOrder].
    * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
    * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+   * @param idpId Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
+   * @param email Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -297,6 +299,8 @@ class DirectorySync(
     order: PaginationOrder? = null,
     directory: String? = null,
     group: String? = null,
+    idpId: String? = null,
+    email: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryUserWithGroups> {
     val itemType = object : TypeReference<DirectoryUserWithGroups>() {}
@@ -312,6 +316,8 @@ class DirectorySync(
       order?.let { add("order" to it.value) }
       addIfNotNull("directory", directory)
       addIfNotNull("group", group)
+      addIfNotNull("idp_id", idpId)
+      addIfNotNull("email", email)
     }
   }
 
@@ -331,10 +337,12 @@ class DirectorySync(
     order: PaginationOrder? = null,
     directory: String? = null,
     group: String? = null,
+    idpId: String? = null,
+    email: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryUserWithGroups> =
     withContext(Dispatchers.IO) {
-      listUsers(before, after, limit, order, directory, group, requestOptions)
+      listUsers(before, after, limit, order, directory, group, idpId, email, requestOptions)
     }
 
   /**

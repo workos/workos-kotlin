@@ -7,9 +7,9 @@ import com.workos.types.WidgetSessionTokenScopes
 
 /** WidgetSessionToken model. */
 data class WidgetSessionToken(
-  /** The ID of the organization to scope the widget session to. */
+  /** The ID of the organization to scope the widget session to. Required when scopes are provided. Optional when issuing a token for user-only widgets (e.g. `UserProfile`, `UserSecurity`) that do not require organization context. */
   @JsonProperty("organization_id")
-  val organizationId: String,
+  val organizationId: String? = null,
 
   /** The ID of the user to issue the widget session token for. */
   @JsonProperty("user_id")
