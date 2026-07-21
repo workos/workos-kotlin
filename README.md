@@ -96,9 +96,10 @@ WorkOS workos = WorkOS.builder()
     .build();
 ```
 
-Generated model and exception properties are exposed as Kotlin `val`s with
-`@JvmField`, which means Java callers read them as fields rather than
-through bean-style getters — `connection.id`, not `connection.getId()`.
+Exception and client-configuration properties are exposed with `@JvmField`,
+so Java callers read them as fields (`e.code`, `e.rawBody`). Generated model
+properties are regular Kotlin `val`s — from Java, use the bean-style getters
+(`connection.getId()`).
 Sealed-class operation parameters (e.g. `ResourceTarget`) include
 Java-friendly overloads that take the discriminating fields directly
 (`workos.getAuthorization().checkByExternalId(...)`) so you do not have to
@@ -112,14 +113,16 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 
 - `workos.sso`
 - `workos.userManagement`
-- `workos.userManagementOrganizationMembershipGroups`
 - `workos.passwordless` †
 - `workos.multiFactorAuth`
+- `workos.session` †
+- `workos.pkce` †
 
 ### Organizations and directories
 
 - `workos.organizations`
 - `workos.organizationDomains`
+- `workos.organizationMembership`
 - `workos.directorySync`
 - `workos.groups`
 
@@ -139,11 +142,13 @@ Once constructed, every WorkOS API surface is available as a property on the `Wo
 
 - `workos.connect`
 - `workos.pipes`
+- `workos.pipesProvider`
 - `workos.widgets`
 - `workos.apiKeys`
 - `workos.adminPortal`
+- `workos.clientApi`
 - `workos.actions` †
-- `workos.vault` †
+- `workos.vault`
 
 † Provided as a Kotlin extension property. From Java, access these via the
 generated static accessor on the corresponding `*Kt` file
@@ -215,13 +220,14 @@ try {
 The standalone `Webhook` helper validates signatures on inbound webhook
 payloads. Two flavors are available:
 
-- `constructTypedEvent(...)` returns a sealed `WorkOSEvent` you can
+- `constructTypedEvent(...)` returns a `WorkOSEvent` (a sealed interface
+  whose implementations are top-level types in `com.workos.models`) you can
   pattern-match against — preferred for the common case.
 - `constructEvent(...)` returns a raw `JsonNode`, which is useful if you
   need to handle event types the SDK does not yet model.
 
 ```kotlin
-import com.workos.models.WorkOSEvent
+import com.workos.models.UserCreated
 import com.workos.webhooks.Webhook
 
 val event = Webhook().constructTypedEvent(
@@ -231,7 +237,7 @@ val event = Webhook().constructTypedEvent(
 )
 
 when (event) {
-  is WorkOSEvent.UserCreated -> println("New user ${event.data.id}")
+  is UserCreated -> println("New user ${event.data.id}")
   else -> println("Other event ${event.event}")
 }
 ```
@@ -249,8 +255,8 @@ for examples.
 Every generated service method has both a blocking version and a
 coroutine-aware `<method>Suspend` variant that wraps the call in
 `withContext(Dispatchers.IO)`. Add `kotlinx-coroutines-core` to your
-classpath (already a transitive dependency of this SDK) and call from any
-`suspend` context:
+classpath (the SDK already pulls it in at runtime, but declare it yourself
+for compilation) and call from any `suspend` context:
 
 ```kotlin
 val org = workos.organizations.createSuspend(name = "Foo Corp")
@@ -288,11 +294,13 @@ workos.organizations.create(
   name = "Foo Corp",
   requestOptions =
     RequestOptions.builder()
-      .idempotencyKey(java.util.UUID.randomUUID().toString())
       .maxRetries(0)
       .build(),
 )
 ```
+
+> [!NOTE]
+> `RequestOptions` also accepts an `idempotencyKey`, which is sent as the `Idempotency-Key` header. When retries are enabled the SDK also automatically attaches a generated `Idempotency-Key` to every `POST` that lacks one. The WorkOS API currently honors the key only on the [Create Audit Log Event](https://workos.com/docs/reference/audit-logs/event) endpoint (`auditLogs.createEvent`). Other endpoints accept the header but do not deduplicate requests, so a retried mutation elsewhere can still create a duplicate.
 
 ## Unknown enum values
 
@@ -315,4 +323,3 @@ version boundary.
 - [User Management](https://workos.com/docs/user-management/guide)
 - [Admin Portal Guide](https://workos.com/docs/admin-portal/guide)
 - [Magic Link Guide](https://workos.com/docs/magic-link/guide)
-- [Example applications](https://github.com/workos-inc/java-example-applications)
