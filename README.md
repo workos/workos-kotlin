@@ -323,4 +323,3 @@ version boundary.
 - [User Management](https://workos.com/docs/user-management/guide)
 - [Admin Portal Guide](https://workos.com/docs/admin-portal/guide)
 - [Magic Link Guide](https://workos.com/docs/magic-link/guide)
-- [Example applications](https://github.com/workos/java-example-applications) (archived)
