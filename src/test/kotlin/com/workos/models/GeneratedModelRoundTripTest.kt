@@ -1586,14 +1586,4 @@ class GeneratedModelRoundTripTest {
     val tree2 = mapper.readTree(reserialized)
     assertEquals(tree1, tree2)
   }
-
-  @Test
-  fun `ConnectionOption round-trips through Jackson`() {
-    val json = "{\"signing_cert\": null}"
-    val parsed = mapper.readValue(json, ConnectionOption::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
 }
