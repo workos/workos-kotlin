@@ -8,5 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class ApiKeyValidationResponse(
   /** The api key. */
   @JsonProperty("api_key")
-  val apiKey: ApiKey?
+  val apiKey: ApiKey?,
+
+  /** The ID of the agent registration this API Key was issued for. Present only when the API Key is assigned to an agent registration. */
+  @JsonProperty("agent_registration_id")
+  val agentRegistrationId: String? = null
 )

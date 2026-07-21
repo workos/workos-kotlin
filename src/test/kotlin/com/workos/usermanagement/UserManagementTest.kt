@@ -234,6 +234,25 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `getRadarChallenge returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/radar_challenges/sample-arg",
+      200,
+      "{\"object\": \"radar_challenge\", \"id\": \"sample\", \"type\": \"email\", \"user_id\": \"sample\", \"email\": \"sample\", " +
+        "\"expires_at\": \"2024-01-01T00:00:00Z\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"code\": \"sample\"}"
+    )
+    val result = api().getRadarChallenge("sample-arg")
+    assertNotNull(result)
+    assertEquals("radar_challenge", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("email", result.type)
+    assertEquals("sample", result.userId)
+    assertEquals("sample", result.email)
+  }
+
+  @Test
   fun `revokeSession completes without throwing`() {
     stubResponse("POST", "/user_management/sessions/revoke", 200)
     api().revokeSession("sample-arg")
@@ -780,6 +799,12 @@ class UserManagementTest : TestBase() {
       postRequestedFor(urlPathMatching("/user_management/redirect_uris"))
         .withRequestBody(matchingJsonPath("$.uri"))
     )
+  }
+
+  @Test
+  fun `deleteRedirectUris completes without throwing`() {
+    stubResponse("DELETE", "/user_management/redirect_uris/sample-arg", 204)
+    api().deleteRedirectUris("sample-arg")
   }
 
   @Test

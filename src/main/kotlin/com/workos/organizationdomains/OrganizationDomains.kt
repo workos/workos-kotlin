@@ -8,7 +8,6 @@ import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.OrganizationDomain
-import com.workos.models.OrganizationDomainStandAlone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -78,20 +77,20 @@ class OrganizationDomains(
    * @param id Unique identifier of the organization domain.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the OrganizationDomainStandAlone
+   * @return the OrganizationDomain
    */
   @JvmOverloads
   fun get(
     id: String,
     requestOptions: RequestOptions? = null
-  ): OrganizationDomainStandAlone {
+  ): OrganizationDomain {
     val config =
       RequestConfig(
         method = "GET",
         path = "/organization_domains/${encodePathSegment(id)}",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)
+    return workos.baseClient.request(config, OrganizationDomain::class.java)
   }
 
   /**
@@ -106,7 +105,7 @@ class OrganizationDomains(
   suspend fun getSuspend(
     id: String,
     requestOptions: RequestOptions? = null
-  ): OrganizationDomainStandAlone =
+  ): OrganizationDomain =
     withContext(Dispatchers.IO) {
       get(id, requestOptions)
     }
@@ -157,13 +156,13 @@ class OrganizationDomains(
    * @param id Unique identifier of the organization domain.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the OrganizationDomainStandAlone
+   * @return the OrganizationDomain
    */
   @JvmOverloads
   fun verify(
     id: String,
     requestOptions: RequestOptions? = null
-  ): OrganizationDomainStandAlone {
+  ): OrganizationDomain {
     val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
@@ -172,7 +171,7 @@ class OrganizationDomains(
         body = body,
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, OrganizationDomainStandAlone::class.java)
+    return workos.baseClient.request(config, OrganizationDomain::class.java)
   }
 
   /**
@@ -187,7 +186,7 @@ class OrganizationDomains(
   suspend fun verifySuspend(
     id: String,
     requestOptions: RequestOptions? = null
-  ): OrganizationDomainStandAlone =
+  ): OrganizationDomain =
     withContext(Dispatchers.IO) {
       verify(id, requestOptions)
     }

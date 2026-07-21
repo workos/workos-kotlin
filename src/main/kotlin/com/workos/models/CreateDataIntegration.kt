@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.CreateDataIntegrationAuthMethods
 
 /** CreateDataIntegration model. */
 data class CreateDataIntegration(
@@ -22,9 +23,17 @@ data class CreateDataIntegration(
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
 
-  /** The credentials to configure for the Data Integration. Required for both built-in and custom providers. */
+  /** How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). */
+  @JsonProperty("auth_methods")
+  val authMethods: List<CreateDataIntegrationAuthMethods>? = null,
+
+  /** The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`. */
   @JsonProperty("credentials")
-  val credentials: DataIntegrationCredentialsDto? = null,
+  val credentials: DataIntegrationCredentialsInput? = null,
+
+  /** An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path. */
+  @JsonProperty("api_key")
+  val apiKey: ApiKeyInstallation? = null,
 
   /** The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider. */
   @JsonProperty("custom_provider")

@@ -13,6 +13,7 @@ import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.AuditLogConfiguration
 import com.workos.models.Organization
+import com.workos.models.OrganizationAuthorizedConnectApplicationListData
 import com.workos.models.OrganizationDomainData
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
@@ -387,5 +388,63 @@ class Organizations(
   ): AuditLogConfiguration =
     withContext(Dispatchers.IO) {
       getAuditLogConfiguration(id, requestOptions)
+    }
+
+  /**
+   * List authorized applications
+   *
+   * Get a list of all Connect applications that users in the organization have authorized.
+   *
+   * @param organizationId The ID of the organization.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listAuthorizedApplications(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<OrganizationAuthorizedConnectApplicationListData> {
+    val itemType = object : TypeReference<OrganizationAuthorizedConnectApplicationListData>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/organizations/${encodePathSegment(organizationId)}/authorized_applications",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listAuthorizedApplications]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listAuthorizedApplications] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listAuthorizedApplicationsSuspend")
+  suspend fun listAuthorizedApplicationsSuspend(
+    organizationId: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<OrganizationAuthorizedConnectApplicationListData> =
+    withContext(Dispatchers.IO) {
+      listAuthorizedApplications(organizationId, before, after, limit, order, requestOptions)
     }
 }

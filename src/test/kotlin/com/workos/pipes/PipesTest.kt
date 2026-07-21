@@ -33,9 +33,9 @@ class PipesTest : TestBase() {
       "/data-integrations",
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
-        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
+        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
+        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createDataIntegration("sample-arg")
     assertNotNull(result)
@@ -57,9 +57,9 @@ class PipesTest : TestBase() {
       "/data-integrations/sample-arg",
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
-        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
+        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
+        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getDataIntegration("sample-arg")
     assertNotNull(result)
@@ -77,9 +77,9 @@ class PipesTest : TestBase() {
       "/data-integrations/sample-arg",
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"credentials\": {\"type\": " +
-        "\"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"custom_provider\": null, \"created_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
+        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
+        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateDataIntegration("sample-arg")
     assertNotNull(result)
