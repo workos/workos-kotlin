@@ -163,7 +163,6 @@
     "src/main/kotlin/com/workos/models/ConnectApplicationOAuthRedirectUris.kt",
     "src/main/kotlin/com/workos/models/ConnectApplicationRedirectUri.kt",
     "src/main/kotlin/com/workos/models/ConnectedAccount.kt",
-    "src/main/kotlin/com/workos/models/ConnectedAccountDto.kt",
     "src/main/kotlin/com/workos/models/ConnectedAccountInput.kt",
     "src/main/kotlin/com/workos/models/Connection.kt",
     "src/main/kotlin/com/workos/models/ConnectionActivated.kt",
@@ -175,7 +174,6 @@
     "src/main/kotlin/com/workos/models/ConnectionDeleted.kt",
     "src/main/kotlin/com/workos/models/ConnectionDeletedData.kt",
     "src/main/kotlin/com/workos/models/ConnectionDomain.kt",
-    "src/main/kotlin/com/workos/models/ConnectionOption.kt",
     "src/main/kotlin/com/workos/models/ConnectionSAMLCertificateRenewalRequired.kt",
     "src/main/kotlin/com/workos/models/ConnectionSAMLCertificateRenewalRequiredData.kt",
     "src/main/kotlin/com/workos/models/ConnectionSAMLCertificateRenewalRequiredDataCertificate.kt",
@@ -220,7 +218,6 @@
     "src/main/kotlin/com/workos/models/DataIntegrationConfigurationResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredential.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentials.kt",
-    "src/main/kotlin/com/workos/models/DataIntegrationCredentialsDto.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentialsInput.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponse.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationCredentialsResponseCredential.kt",
@@ -247,7 +244,6 @@
     "src/main/kotlin/com/workos/models/DirectoryUserEmail.kt",
     "src/main/kotlin/com/workos/models/DirectoryUserWithGroups.kt",
     "src/main/kotlin/com/workos/models/DirectoryUserWithGroupsEmail.kt",
-    "src/main/kotlin/com/workos/models/DomainVerificationIntentOptions.kt",
     "src/main/kotlin/com/workos/models/DsyncActivated.kt",
     "src/main/kotlin/com/workos/models/DsyncActivatedData.kt",
     "src/main/kotlin/com/workos/models/DsyncActivatedDataDomain.kt",
@@ -333,7 +329,6 @@
     "src/main/kotlin/com/workos/models/GroupRoleAssignmentList.kt",
     "src/main/kotlin/com/workos/models/GroupRoleAssignmentResource.kt",
     "src/main/kotlin/com/workos/models/GroupUpdated.kt",
-    "src/main/kotlin/com/workos/models/IntentOptions.kt",
     "src/main/kotlin/com/workos/models/Invitation.kt",
     "src/main/kotlin/com/workos/models/InvitationAccepted.kt",
     "src/main/kotlin/com/workos/models/InvitationAcceptedData.kt",
@@ -376,7 +371,6 @@
     "src/main/kotlin/com/workos/models/OrganizationDomainData.kt",
     "src/main/kotlin/com/workos/models/OrganizationDomainDeleted.kt",
     "src/main/kotlin/com/workos/models/OrganizationDomainDeletedData.kt",
-    "src/main/kotlin/com/workos/models/OrganizationDomainStandAlone.kt",
     "src/main/kotlin/com/workos/models/OrganizationDomainUpdated.kt",
     "src/main/kotlin/com/workos/models/OrganizationDomainUpdatedData.kt",
     "src/main/kotlin/com/workos/models/OrganizationDomainVerificationFailed.kt",
@@ -454,7 +448,6 @@
     "src/main/kotlin/com/workos/models/RoleUpdatedData.kt",
     "src/main/kotlin/com/workos/models/SSOAuthorizeUrlResponse.kt",
     "src/main/kotlin/com/workos/models/SSODeviceAuthorizationRequest.kt",
-    "src/main/kotlin/com/workos/models/SSOIntentOptions.kt",
     "src/main/kotlin/com/workos/models/SSOLogoutAuthorizeRequest.kt",
     "src/main/kotlin/com/workos/models/SSOLogoutAuthorizeResponse.kt",
     "src/main/kotlin/com/workos/models/SSOTokenResponse.kt",
@@ -604,7 +597,6 @@
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsCredentialsType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsInputType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsResponseError.kt",
-    "src/main/kotlin/com/workos/types/DataIntegrationCredentialsType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCustomProviderAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationState.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
@@ -642,8 +634,6 @@
     "src/main/kotlin/com/workos/types/OrganizationDomainDataState.kt",
     "src/main/kotlin/com/workos/types/OrganizationDomainDeletedDataState.kt",
     "src/main/kotlin/com/workos/types/OrganizationDomainDeletedDataVerificationStrategy.kt",
-    "src/main/kotlin/com/workos/types/OrganizationDomainStandAloneState.kt",
-    "src/main/kotlin/com/workos/types/OrganizationDomainStandAloneVerificationStrategy.kt",
     "src/main/kotlin/com/workos/types/OrganizationDomainState.kt",
     "src/main/kotlin/com/workos/types/OrganizationDomainUpdatedDataState.kt",
     "src/main/kotlin/com/workos/types/OrganizationDomainUpdatedDataVerificationStrategy.kt",
@@ -736,6 +726,18 @@
     "src/test/kotlin/com/workos/widgets/WidgetsTest.kt"
   ],
   "operations": {
+    "PATCH /agents/claims/attempts": {
+      "sdkMethod": "updateAttempts",
+      "service": "agents"
+    },
+    "POST /agents/credentials/validate": {
+      "sdkMethod": "createValidate",
+      "service": "agents"
+    },
+    "GET /agents/registrations/{id}": {
+      "sdkMethod": "getRegistration",
+      "service": "agents"
+    },
     "POST /auth/challenges/{id}/verify": {
       "sdkMethod": "verifyChallenge",
       "service": "multiFactorAuth"
@@ -994,8 +996,36 @@
       "sdkMethod": "deleteConnection",
       "service": "sso"
     },
+    "GET /data-integrations": {
+      "sdkMethod": "listDataIntegrations",
+      "service": "pipes"
+    },
+    "POST /data-integrations": {
+      "sdkMethod": "createDataIntegration",
+      "service": "pipes"
+    },
+    "GET /data-integrations/{slug}": {
+      "sdkMethod": "getDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}": {
+      "sdkMethod": "updateDataIntegration",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}": {
+      "sdkMethod": "deleteDataIntegration",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}/api-key": {
+      "sdkMethod": "updateDataIntegrationApiKey",
+      "service": "pipes"
+    },
     "POST /data-integrations/{slug}/authorize": {
       "sdkMethod": "authorizeDataIntegration",
+      "service": "pipes"
+    },
+    "POST /data-integrations/{slug}/credentials": {
+      "sdkMethod": "createDataIntegrationCredential",
       "service": "pipes"
     },
     "POST /data-integrations/{provider}/token": {
@@ -1162,6 +1192,10 @@
       "sdkMethod": "deleteOrganizationMembership",
       "service": "groups"
     },
+    "GET /organizations/{organization_id}/authorized_applications": {
+      "sdkMethod": "listAuthorizedApplications",
+      "service": "organizations"
+    },
     "POST /portal/generate_link": {
       "sdkMethod": "generateLink",
       "service": "adminPortal"
@@ -1244,8 +1278,20 @@
       "sdkMethod": "createDevice",
       "service": "userManagement"
     },
+    "POST /user_management/radar_challenges": {
+      "sdkMethod": "createRadarChallenge",
+      "service": "userManagement"
+    },
+    "GET /user_management/radar_challenges/{id}": {
+      "sdkMethod": "getRadarChallenge",
+      "service": "userManagement"
+    },
     "POST /user_management/sessions/revoke": {
       "sdkMethod": "revokeSession",
+      "service": "userManagement"
+    },
+    "GET /user_management/cors_origins": {
+      "sdkMethod": "listCorsOrigins",
       "service": "userManagement"
     },
     "POST /user_management/cors_origins": {
@@ -1392,8 +1438,16 @@
       "sdkMethod": "listGroups",
       "service": "organizationMembership"
     },
+    "GET /user_management/redirect_uris": {
+      "sdkMethod": "listRedirectUris",
+      "service": "userManagement"
+    },
     "POST /user_management/redirect_uris": {
       "sdkMethod": "createRedirectUri",
+      "service": "userManagement"
+    },
+    "DELETE /user_management/redirect_uris/{id}": {
+      "sdkMethod": "deleteRedirectUris",
       "service": "userManagement"
     },
     "GET /user_management/users/{userId}/feature-flags": {
@@ -1410,6 +1464,14 @@
     },
     "GET /user_management/users/{user_id}/connected_accounts/{slug}": {
       "sdkMethod": "getUserConnectedAccount",
+      "service": "pipes"
+    },
+    "POST /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createUserConnectedAccount",
+      "service": "pipes"
+    },
+    "PUT /user_management/users/{user_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateUserConnectedAccount",
       "service": "pipes"
     },
     "DELETE /user_management/users/{user_id}/connected_accounts/{slug}": {
@@ -1535,78 +1597,6 @@
     "GET /audit_logs/exports/{auditLogExportId}": {
       "sdkMethod": "getExport",
       "service": "auditLogs"
-    },
-    "PUT /data-integrations/{slug}/api-key": {
-      "sdkMethod": "updateDataIntegrationApiKey",
-      "service": "pipes"
-    },
-    "POST /data-integrations/{slug}/credentials": {
-      "sdkMethod": "createDataIntegrationCredential",
-      "service": "pipes"
-    },
-    "GET /user_management/cors_origins": {
-      "sdkMethod": "listCorsOrigins",
-      "service": "userManagement"
-    },
-    "GET /user_management/redirect_uris": {
-      "sdkMethod": "listRedirectUris",
-      "service": "userManagement"
-    },
-    "GET /data-integrations": {
-      "sdkMethod": "listDataIntegrations",
-      "service": "pipes"
-    },
-    "POST /data-integrations": {
-      "sdkMethod": "createDataIntegration",
-      "service": "pipes"
-    },
-    "GET /data-integrations/{slug}": {
-      "sdkMethod": "getDataIntegration",
-      "service": "pipes"
-    },
-    "PUT /data-integrations/{slug}": {
-      "sdkMethod": "updateDataIntegration",
-      "service": "pipes"
-    },
-    "DELETE /data-integrations/{slug}": {
-      "sdkMethod": "deleteDataIntegration",
-      "service": "pipes"
-    },
-    "POST /user_management/radar_challenges": {
-      "sdkMethod": "createRadarChallenge",
-      "service": "userManagement"
-    },
-    "POST /user_management/users/{user_id}/connected_accounts/{slug}": {
-      "sdkMethod": "createUserConnectedAccount",
-      "service": "pipes"
-    },
-    "PUT /user_management/users/{user_id}/connected_accounts/{slug}": {
-      "sdkMethod": "updateUserConnectedAccount",
-      "service": "pipes"
-    },
-    "PATCH /agents/claims/attempts": {
-      "sdkMethod": "updateAttempts",
-      "service": "agents"
-    },
-    "POST /agents/credentials/validate": {
-      "sdkMethod": "createValidate",
-      "service": "agents"
-    },
-    "GET /agents/registrations/{id}": {
-      "sdkMethod": "getRegistration",
-      "service": "agents"
-    },
-    "GET /organizations/{organization_id}/authorized_applications": {
-      "sdkMethod": "listAuthorizedApplications",
-      "service": "organizations"
-    },
-    "GET /user_management/radar_challenges/{id}": {
-      "sdkMethod": "getRadarChallenge",
-      "service": "userManagement"
-    },
-    "DELETE /user_management/redirect_uris/{id}": {
-      "sdkMethod": "deleteRedirectUris",
-      "service": "userManagement"
     }
   }
 }
