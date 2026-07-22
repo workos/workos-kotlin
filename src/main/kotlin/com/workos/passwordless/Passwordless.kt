@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.WorkOS
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.encodePathSegment
 
 /** Options for creating a magic-link passwordless session. */
 data class CreatePasswordlessSessionOptions
@@ -89,7 +90,7 @@ class Passwordless(
     val config =
       RequestConfig(
         method = "POST",
-        path = "/passwordless/sessions/$sessionId/send",
+        path = "/passwordless/sessions/${encodePathSegment(sessionId)}/send",
         body = linkedMapOf<String, Any?>(),
         requestOptions = requestOptions
       )
