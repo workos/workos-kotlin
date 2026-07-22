@@ -1,5 +1,38 @@
 # Changelog
 
+## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.5.0...v7.0.0) (2026-07-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* **connect:** SDK surface change: Symbol "ConnectedAccountDto" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415))
+* **organization_domains:** SDK surface change: Symbol "DomainVerificationIntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415))
+* **pipes:** SDK surface change: Symbol "DataIntegrationCredentialsDto" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415))
+* **sso:** SDK surface change: Symbol "SSOIntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415))
+* **admin_portal:** SDK surface change: Symbol "IntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415))
+* **connect:** SDK surface change: `Connection.options` was renamed to `Connection.callback_endpoint` ([#414](https://github.com/workos/workos-kotlin/issues/414))
+* **pipes:** SDK surface change: Parameter type changed for "credentials" on "Pipes.createDataIntegration" ([#414](https://github.com/workos/workos-kotlin/issues/414))
+* **widgets:** SDK surface change: Parameter type changed for "organizationId" on "Widgets.createToken" ([#414](https://github.com/workos/workos-kotlin/issues/414))
+* **authorization:** SDK surface change: Symbol "PermissionCreatedData.created_at" was removed ([#414](https://github.com/workos/workos-kotlin/issues/414))
+
+### Features
+
+* **admin_portal:** SDK surface change: Symbol "IntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415)) ([d31d2ff](https://github.com/workos/workos-kotlin/commit/d31d2ff8ac7cf7dcaeb192b1d14499bda6e39413))
+* **authorization:** SDK surface change: Symbol "PermissionCreatedData.created_at" was removed ([#414](https://github.com/workos/workos-kotlin/issues/414)) ([e6d44df](https://github.com/workos/workos-kotlin/commit/e6d44df4d0e9934fecbe821619db849ffba37d86))
+* **connect:** SDK surface change: `Connection.options` was renamed to `Connection.callback_endpoint` ([#414](https://github.com/workos/workos-kotlin/issues/414)) ([e6d44df](https://github.com/workos/workos-kotlin/commit/e6d44df4d0e9934fecbe821619db849ffba37d86))
+* **connect:** SDK surface change: Symbol "ConnectedAccountDto" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415)) ([d31d2ff](https://github.com/workos/workos-kotlin/commit/d31d2ff8ac7cf7dcaeb192b1d14499bda6e39413))
+* **organization_domains:** SDK surface change: Symbol "DomainVerificationIntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415)) ([d31d2ff](https://github.com/workos/workos-kotlin/commit/d31d2ff8ac7cf7dcaeb192b1d14499bda6e39413))
+* **pipes:** SDK surface change: Parameter type changed for "credentials" on "Pipes.createDataIntegration" ([#414](https://github.com/workos/workos-kotlin/issues/414)) ([e6d44df](https://github.com/workos/workos-kotlin/commit/e6d44df4d0e9934fecbe821619db849ffba37d86))
+* **pipes:** SDK surface change: Symbol "DataIntegrationCredentialsDto" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415)) ([d31d2ff](https://github.com/workos/workos-kotlin/commit/d31d2ff8ac7cf7dcaeb192b1d14499bda6e39413))
+* **sso:** SDK surface change: Symbol "SSOIntentOptions" was removed ([#415](https://github.com/workos/workos-kotlin/issues/415)) ([d31d2ff](https://github.com/workos/workos-kotlin/commit/d31d2ff8ac7cf7dcaeb192b1d14499bda6e39413))
+* **widgets:** SDK surface change: Parameter type changed for "organizationId" on "Widgets.createToken" ([#414](https://github.com/workos/workos-kotlin/issues/414)) ([e6d44df](https://github.com/workos/workos-kotlin/commit/e6d44df4d0e9934fecbe821619db849ffba37d86))
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#411](https://github.com/workos/workos-kotlin/issues/411)) ([3508079](https://github.com/workos/workos-kotlin/commit/3508079a769c42726cdb96b6a8ca99d17b47cc2a))
+* Encode sessionId path segment in Passwordless.sendSession ([#416](https://github.com/workos/workos-kotlin/issues/416)) ([84bd99e](https://github.com/workos/workos-kotlin/commit/84bd99e0851f1f3d7af641ff0c48df81a1a37c44))
+
 ## [6.5.0](https://github.com/workos/workos-kotlin/compare/v6.4.0...v6.5.0) (2026-07-06)
 
 * [#408](https://github.com/workos/workos-kotlin/pull/408) fix(generated): regenerate from spec
