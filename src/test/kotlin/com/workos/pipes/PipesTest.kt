@@ -35,7 +35,7 @@ class PipesTest : TestBase() {
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
         "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createDataIntegration("sample-arg")
     assertNotNull(result)
@@ -46,7 +46,7 @@ class PipesTest : TestBase() {
     assertEquals(false, result.enabled)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations"))
-        .withRequestBody(matchingJsonPath("$.provider"))
+        .withRequestBody(matchingJsonPath("\$.provider"))
     )
   }
 
@@ -59,7 +59,7 @@ class PipesTest : TestBase() {
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
         "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getDataIntegration("sample-arg")
     assertNotNull(result)
@@ -79,7 +79,7 @@ class PipesTest : TestBase() {
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
         "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateDataIntegration("sample-arg")
     assertNotNull(result)
@@ -113,8 +113,8 @@ class PipesTest : TestBase() {
     assertEquals("sample", result.updatedAt)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/data-integrations/sample-arg/api-key"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
-        .withRequestBody(matchingJsonPath("$.secret"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.secret"))
     )
   }
 
@@ -126,7 +126,7 @@ class PipesTest : TestBase() {
     assertEquals("sample", result.url)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
     )
   }
 
@@ -137,7 +137,7 @@ class PipesTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/credentials"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
     )
   }
 
@@ -148,7 +148,7 @@ class PipesTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/token"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
     )
   }
 

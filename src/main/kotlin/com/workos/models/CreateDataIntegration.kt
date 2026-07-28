@@ -27,6 +27,10 @@ data class CreateDataIntegration(
   @JsonProperty("auth_methods")
   val authMethods: List<CreateDataIntegrationAuthMethods>? = null,
 
+  /** Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted. */
+  @JsonProperty("config")
+  val config: Map<String, String>? = null,
+
   /** The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`. */
   @JsonProperty("credentials")
   val credentials: DataIntegrationCredentialsInput? = null,

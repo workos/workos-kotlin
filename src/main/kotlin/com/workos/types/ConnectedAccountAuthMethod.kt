@@ -13,5 +13,6 @@ enum class ConnectedAccountAuthMethod(
   @JsonEnumDefaultValue
   Unknown("unknown"),
   OAuth("oauth"),
-  ApiKey("api_key")
+  ApiKey("api_key"),
+  ClientCredentials("client_credentials")
 }

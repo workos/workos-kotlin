@@ -45,7 +45,7 @@ data class DataIntegrationsListResponseDataConnectedAccount(
   @JsonProperty("object")
   val objectType: String = "connected_account",
 
-  /** The authentication method used for this connection (`oauth` or `api_key`). Defaults to `oauth` if absent. */
+  /** The authentication method used for this connection (`oauth`, `api_key`, or `client_credentials`). Defaults to `oauth` if absent. */
   @JsonProperty("auth_method")
   val authMethod: DataIntegrationsListResponseDataConnectedAccountAuthMethod? = null,
 

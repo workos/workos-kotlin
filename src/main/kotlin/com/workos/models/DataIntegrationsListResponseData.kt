@@ -56,7 +56,7 @@ data class DataIntegrationsListResponseData(
   @JsonProperty("object")
   val objectType: String = "data_provider",
 
-  /** The authentication methods supported by this provider (`oauth`, `api_key`, or both). Defaults to `["oauth"]` if absent. */
+  /** The authentication methods supported by this provider (`oauth`, `api_key`, `client_credentials`, or a combination). Defaults to `["oauth"]` if absent. */
   @JsonProperty("auth_methods")
   val authMethods: List<DataIntegrationsListResponseDataAuthMethods>? = null
 )

@@ -16,5 +16,9 @@ data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
 
   /** The URL to redirect the user to after authorization. */
   @JsonProperty("return_to")
-  val returnTo: String? = null
+  val returnTo: String? = null,
+
+  /** Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration. */
+  @JsonProperty("config")
+  val config: Map<String, String>? = null
 )
