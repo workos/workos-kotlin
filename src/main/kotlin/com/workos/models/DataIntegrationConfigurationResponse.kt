@@ -30,6 +30,10 @@ data class DataIntegrationConfigurationResponse(
   @JsonProperty("scopes")
   val scopes: List<String>?,
 
+  /** The provider-specific config values in effect for this organization, keyed by config field. Reflects the organization override for organization-credential providers, otherwise the provider root. Empty when none are configured. */
+  @JsonProperty("config")
+  val config: Map<String, String>,
+
   /** The timestamp when the configuration was created. */
   @JsonProperty("created_at")
   val createdAt: String,

@@ -53,6 +53,10 @@ data class DataIntegration(
   @JsonProperty("installation")
   val installation: DataIntegrationInstallation?,
 
+  /** Provider-specific config values set on the Data Integration (e.g. a Snowflake `account_identifier`), keyed by config field. Only fields the provider declares are accepted. */
+  @JsonProperty("config")
+  val config: Map<String, String>,
+
   /** The OAuth definition when this is a custom provider; `null` for built-in providers. */
   @JsonProperty("custom_provider")
   val customProvider: DataIntegrationCustomProvider?,

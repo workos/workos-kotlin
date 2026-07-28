@@ -214,7 +214,7 @@ class UserManagementTest : TestBase() {
     assertEquals(0.0, result.expiresIn)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/authorize/device"))
-        .withRequestBody(matchingJsonPath("$.client_id"))
+        .withRequestBody(matchingJsonPath("\$.client_id"))
     )
   }
 
@@ -227,9 +227,9 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.phoneNumber)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/radar_challenges"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
-        .withRequestBody(matchingJsonPath("$.pending_authentication_token"))
-        .withRequestBody(matchingJsonPath("$.phone_number"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.pending_authentication_token"))
+        .withRequestBody(matchingJsonPath("\$.phone_number"))
     )
   }
 
@@ -258,7 +258,7 @@ class UserManagementTest : TestBase() {
     api().revokeSession("sample-arg")
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/sessions/revoke"))
-        .withRequestBody(matchingJsonPath("$.session_id"))
+        .withRequestBody(matchingJsonPath("\$.session_id"))
     )
   }
 
@@ -285,7 +285,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.origin)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/cors_origins"))
-        .withRequestBody(matchingJsonPath("$.origin"))
+        .withRequestBody(matchingJsonPath("\$.origin"))
     )
   }
 
@@ -327,7 +327,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.passwordResetToken)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/password_reset"))
-        .withRequestBody(matchingJsonPath("$.email"))
+        .withRequestBody(matchingJsonPath("\$.email"))
     )
   }
 
@@ -345,8 +345,8 @@ class UserManagementTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/password_reset/confirm"))
-        .withRequestBody(matchingJsonPath("$.token"))
-        .withRequestBody(matchingJsonPath("$.new_password"))
+        .withRequestBody(matchingJsonPath("\$.token"))
+        .withRequestBody(matchingJsonPath("\$.new_password"))
     )
   }
 
@@ -394,7 +394,7 @@ class UserManagementTest : TestBase() {
     assertEquals(false, result.emailVerified)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users"))
-        .withRequestBody(matchingJsonPath("$.email"))
+        .withRequestBody(matchingJsonPath("\$.email"))
         .withQueryParam("password", absent())
         .withQueryParam("password_hash", absent())
         .withQueryParam("password_hash_type", absent())
@@ -482,7 +482,7 @@ class UserManagementTest : TestBase() {
     assertEquals("email_change_confirmation", result.objectType)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/confirm"))
-        .withRequestBody(matchingJsonPath("$.code"))
+        .withRequestBody(matchingJsonPath("\$.code"))
     )
   }
 
@@ -503,7 +503,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.newEmail)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_change/send"))
-        .withRequestBody(matchingJsonPath("$.new_email"))
+        .withRequestBody(matchingJsonPath("\$.new_email"))
     )
   }
 
@@ -521,7 +521,7 @@ class UserManagementTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/email_verification/confirm"))
-        .withRequestBody(matchingJsonPath("$.code"))
+        .withRequestBody(matchingJsonPath("\$.code"))
     )
   }
 
@@ -590,7 +590,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.acceptInvitationUrl)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/invitations"))
-        .withRequestBody(matchingJsonPath("$.email"))
+        .withRequestBody(matchingJsonPath("\$.email"))
     )
   }
 
@@ -726,7 +726,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.updatedAt)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/user_management/jwt_template"))
-        .withRequestBody(matchingJsonPath("$.content"))
+        .withRequestBody(matchingJsonPath("\$.content"))
     )
   }
 
@@ -749,7 +749,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.code)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/magic_auth"))
-        .withRequestBody(matchingJsonPath("$.email"))
+        .withRequestBody(matchingJsonPath("\$.email"))
     )
   }
 
@@ -797,7 +797,7 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.createdAt)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/redirect_uris"))
-        .withRequestBody(matchingJsonPath("$.uri"))
+        .withRequestBody(matchingJsonPath("\$.uri"))
     )
   }
 
@@ -856,8 +856,8 @@ class UserManagementTest : TestBase() {
     assertEquals("sample", result.value)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/api_keys"))
-        .withRequestBody(matchingJsonPath("$.name"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.name"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
     )
   }
 

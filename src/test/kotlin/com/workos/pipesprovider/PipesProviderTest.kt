@@ -30,7 +30,8 @@ class PipesProviderTest : TestBase() {
       "/organizations/sample-arg/data_integration_configurations/sample-arg",
       200,
       "{\"object\": \"data_integration_configuration\", \"id\": \"sample\", \"organization_id\": \"sample\", \"slug\": \"sample\", " +
-        "\"name\": \"sample\", \"enabled\": false, \"scopes\": null, \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+        "\"name\": \"sample\", \"enabled\": false, \"scopes\": null, \"config\": {}, \"created_at\": \"sample\", \"updated_at\": " +
+        "\"sample\"}"
     )
     val result = api().updateOrganizationDataIntegrationConfiguration("sample-arg", "sample-arg")
     assertNotNull(result)

@@ -72,6 +72,7 @@ class PipesProvider(
    * @param scopes The OAuth scopes to request for the organization. Pass `null` to inherit the provider scopes.
    * @param clientId The OAuth client ID of the organization's own application. Must be provided together with `client_secret`, and only for providers whose credentials are supplied by the organization.
    * @param clientSecret The OAuth client secret of the organization's own application. Must be provided together with `client_id`.
+   * @param config Provider-specific config values to set for the organization, keyed by config field. Only fields the provider declares are accepted, and each value must match that field's pattern. Accepted only for providers whose credentials are organization-managed; for shared or custom credential providers, config belongs on the integration itself (via the data-integrations API) and supplying it here is rejected.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationConfigurationResponse
@@ -84,6 +85,7 @@ class PipesProvider(
     scopes: List<String>? = null,
     clientId: String? = null,
     clientSecret: String? = null,
+    config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationConfigurationResponse {
     val body =
@@ -91,7 +93,8 @@ class PipesProvider(
         "enabled" to enabled,
         "scopes" to scopes,
         "client_id" to clientId,
-        "client_secret" to clientSecret
+        "client_secret" to clientSecret,
+        "config" to config
       )
     val config =
       RequestConfig(
@@ -119,9 +122,10 @@ class PipesProvider(
     scopes: List<String>? = null,
     clientId: String? = null,
     clientSecret: String? = null,
+    config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationConfigurationResponse =
     withContext(Dispatchers.IO) {
-      updateOrganizationDataIntegrationConfiguration(organizationId, slug, enabled, scopes, clientId, clientSecret, requestOptions)
+      updateOrganizationDataIntegrationConfiguration(organizationId, slug, enabled, scopes, clientId, clientSecret, config, requestOptions)
     }
 }

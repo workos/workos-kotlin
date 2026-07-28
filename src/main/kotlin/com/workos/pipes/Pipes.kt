@@ -20,7 +20,7 @@ import com.workos.models.DataIntegrationCredentialsInput
 import com.workos.models.DataIntegrationCredentialsResponse
 import com.workos.models.DataIntegrationsListResponse
 import com.workos.models.UpdateCustomProviderDefinition
-import com.workos.types.ConnectedAccountAuthMethod
+import com.workos.types.CreateDataIntegrationAuthMethods
 import com.workos.types.PaginationOrder
 import com.workos.types.PipeConnectedAccountState
 import kotlinx.coroutines.Dispatchers
@@ -100,6 +100,7 @@ class Pipes(
    * @param enabled Whether the Data Integration is enabled. Defaults to `false`.
    * @param scopes The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
    * @param authMethods How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
+   * @param config Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
    * @param credentials The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
    * @param apiKey An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
    * @param customProvider The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
@@ -113,7 +114,8 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    authMethods: List<ConnectedAccountAuthMethod>? = null,
+    authMethods: List<CreateDataIntegrationAuthMethods>? = null,
+    config: Map<String, String>? = null,
     credentials: DataIntegrationCredentialsInput? = null,
     apiKey: ApiKeyInstallation? = null,
     customProvider: CustomProviderDefinition? = null,
@@ -126,6 +128,7 @@ class Pipes(
         "enabled" to enabled,
         "scopes" to scopes,
         "auth_methods" to authMethods,
+        "config" to config,
         "credentials" to credentials,
         "api_key" to apiKey,
         "custom_provider" to customProvider
@@ -154,14 +157,26 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    authMethods: List<ConnectedAccountAuthMethod>? = null,
+    authMethods: List<CreateDataIntegrationAuthMethods>? = null,
+    config: Map<String, String>? = null,
     credentials: DataIntegrationCredentialsInput? = null,
     apiKey: ApiKeyInstallation? = null,
     customProvider: CustomProviderDefinition? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegration =
     withContext(Dispatchers.IO) {
-      createDataIntegration(provider, description, enabled, scopes, authMethods, credentials, apiKey, customProvider, requestOptions)
+      createDataIntegration(
+        provider,
+        description,
+        enabled,
+        scopes,
+        authMethods,
+        config,
+        credentials,
+        apiKey,
+        customProvider,
+        requestOptions
+      )
     }
 
   /**
@@ -378,6 +393,7 @@ class Pipes(
    * @param userId The ID of the user to authorize.
    * @param organizationId An organization ID to scope the authorization to a specific organization.
    * @param returnTo The URL to redirect the user to after authorization.
+   * @param config Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationAuthorizeUrlResponse
@@ -388,13 +404,15 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     returnTo: String? = null,
+    config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse {
     val body =
       bodyOf(
         "user_id" to userId,
         "organization_id" to organizationId,
-        "return_to" to returnTo
+        "return_to" to returnTo,
+        "config" to config
       )
     val config =
       RequestConfig(
@@ -420,10 +438,11 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     returnTo: String? = null,
+    config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse =
     withContext(Dispatchers.IO) {
-      authorizeDataIntegration(slug, userId, organizationId, returnTo, requestOptions)
+      authorizeDataIntegration(slug, userId, organizationId, returnTo, config, requestOptions)
     }
 
   /**
