@@ -58,7 +58,7 @@ class SSOTest : TestBase() {
     assertEquals("sample", result.logoutToken)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/sso/logout/authorize"))
-        .withRequestBody(matchingJsonPath("$.profile_id"))
+        .withRequestBody(matchingJsonPath("\$.profile_id"))
     )
   }
 
