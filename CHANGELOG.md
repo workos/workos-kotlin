@@ -2,11 +2,30 @@
 
 ## [7.1.0](https://github.com/workos/workos-kotlin/compare/v7.0.0...v7.1.0) (2026-07-28)
 
+* [#417](https://github.com/workos/workos-kotlin/pull/417) feat(generated)!: regenerate from spec (1 change)
 
-### Features
+  **Features**
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `config` to `DataIntegrationsGetDataIntegrationAuthorizeUrlRequest`
+    * Added `client_credentials` to `DataIntegrationAuthMethods`
+    * Added `client_credentials` to `DataIntegrationsListResponseDataAuthMethods`
+    * Added `client_credentials` to `DataIntegrationsListResponseDataConnectedAccountAuthMethod`
+    * Added `config` to Pipes models
+  * **[connect](https://workos.com/docs/reference/workos-connect/standalone)**:
+    * Added `client_credentials` to `ConnectedAccountAuthMethod`
 
-* **generated:** SSO (batch 16283437) ([#419](https://github.com/workos/workos-kotlin/issues/419)) ([77bd7af](https://github.com/workos/workos-kotlin/commit/77bd7af29e8389f70e7d130496a3236da304a15e))
-* **pipes:** SDK surface change: Parameter type changed for "authMethods" on "Pipes.createDataIntegration" ([#417](https://github.com/workos/workos-kotlin/issues/417)) ([b2c5907](https://github.com/workos/workos-kotlin/commit/b2c59078087b693c923cd380a403a6a42daf24f0))
+  **Fixes**
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Changed errors for endpoint `POST /user_management/invitations`
+    * Changed errors for endpoint `POST /user_management/invitations/{id}/resend`
+    * Changed errors for endpoint `POST /user_management/magic_auth`
+    * Changed errors for endpoint `POST /user_management/authenticate`
+
+* [#419](https://github.com/workos/workos-kotlin/pull/419) fix(generated): regenerate from spec
+
+  **Fixes**
+  * **[sso](https://workos.com/docs/reference/sso)**:
+    * Removed `callback_endpoint` from `Connection`
 
 ## [7.0.0](https://github.com/workos/workos-kotlin/compare/v6.5.0...v7.0.0) (2026-07-22)
 
