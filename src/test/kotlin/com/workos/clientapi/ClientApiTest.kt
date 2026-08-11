@@ -26,8 +26,8 @@ class ClientApiTest : TestBase() {
     assertEquals("sample", result.token)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/client/token"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
     )
   }
 

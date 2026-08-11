@@ -38,6 +38,7 @@ import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
+import com.workos.types.CreateUserPasswordSaltPosition
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -70,7 +71,9 @@ sealed class CreateUserPassword {
     /** The password hash. */
     val hash: String,
     /** The password hash type. */
-    val hashType: CreateUserPasswordHashType
+    val hashType: CreateUserPasswordHashType,
+    /** The password salt position. */
+    val saltPosition: CreateUserPasswordSaltPosition? = null
   ) : CreateUserPassword()
 }
 
@@ -668,9 +671,9 @@ class UserManagement(
    * Authenticate
    *
    * @param code The one-time code from the Radar SMS challenge.
-   * @param verificationId The ID of the Radar SMS verification being confirmed.
-   * @param phoneNumber The phone number the Radar SMS challenge was sent to.
    * @param pendingAuthenticationToken The pending authentication token from a previous authentication attempt.
+   * @param verificationId The ID of the Radar SMS verification being confirmed. Required for sign-up challenges; omitted for sign-in challenges, where the verification is resolved server-side.
+   * @param phoneNumber The phone number the Radar SMS challenge was sent to. Required for sign-up challenges; omitted for sign-in challenges, where the phone number on file is resolved server-side.
    * @param ipAddress The IP address of the user's request.
    * @param deviceId A unique identifier for the device.
    * @param userAgent The user agent string from the user's browser.
@@ -680,9 +683,9 @@ class UserManagement(
   @JvmOverloads
   fun authenticateWithRadarSmsChallenge(
     code: String,
-    verificationId: String,
-    phoneNumber: String,
     pendingAuthenticationToken: String,
+    verificationId: String? = null,
+    phoneNumber: String? = null,
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
@@ -692,9 +695,9 @@ class UserManagement(
       grantType = "urn:workos:oauth:grant-type:radar-sms-challenge:code",
       requestOptions = requestOptions,
       "code" to code,
+      "pending_authentication_token" to pendingAuthenticationToken,
       "verification_id" to verificationId,
       "phone_number" to phoneNumber,
-      "pending_authentication_token" to pendingAuthenticationToken,
       "ip_address" to ipAddress,
       "device_id" to deviceId,
       "user_agent" to userAgent
@@ -711,9 +714,9 @@ class UserManagement(
   @JvmName("authenticateWithRadarSmsChallengeSuspend")
   suspend fun authenticateWithRadarSmsChallengeSuspend(
     code: String,
-    verificationId: String,
-    phoneNumber: String,
     pendingAuthenticationToken: String,
+    verificationId: String? = null,
+    phoneNumber: String? = null,
     ipAddress: String? = null,
     deviceId: String? = null,
     userAgent: String? = null,
@@ -722,9 +725,9 @@ class UserManagement(
     withContext(Dispatchers.IO) {
       authenticateWithRadarSmsChallenge(
         code,
+        pendingAuthenticationToken,
         verificationId,
         phoneNumber,
-        pendingAuthenticationToken,
         ipAddress,
         deviceId,
         userAgent,
@@ -1323,6 +1326,7 @@ class UserManagement(
         is CreateUserPassword.Hashed -> {
           body["password_hash"] = createUserPassword.hash
           body["password_hash_type"] = createUserPassword.hashType
+          createUserPassword.saltPosition?.let { body["password_salt_position"] = it }
         }
       }
     }
@@ -1507,6 +1511,7 @@ class UserManagement(
         is CreateUserPassword.Hashed -> {
           body["password_hash"] = createUserPassword.hash
           body["password_hash_type"] = createUserPassword.hashType
+          createUserPassword.saltPosition?.let { body["password_salt_position"] = it }
         }
       }
     }

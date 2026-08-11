@@ -4,6 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.CreateUserPasswordHashType
+import com.workos.types.CreateUserPasswordSaltPosition
 
 /** CreateUser model. */
 data class CreateUser(
@@ -47,7 +48,7 @@ data class CreateUser(
   @JsonProperty("signals_id")
   val signalsId: String? = null,
 
-  /** The password to set for the user. Mutually exclusive with `password_hash` and `password_hash_type`. */
+  /** The password to set for the user. Mutually exclusive with `password_hash`, `password_hash_type`, and `password_salt_position`. */
   @JsonProperty("password")
   val password: String? = null,
 
@@ -57,5 +58,9 @@ data class CreateUser(
 
   /** The algorithm originally used to hash the password, used when providing a `password_hash`. Required with `password_hash`. Mutually exclusive with `password`. */
   @JsonProperty("password_hash_type")
-  val passwordHashType: CreateUserPasswordHashType? = null
+  val passwordHashType: CreateUserPasswordHashType? = null,
+
+  /** The position of the salt relative to the password when the `password_hash` digest was computed: `prefix` for `hash(salt + password)` or `suffix` for `hash(password + salt)`. Only supported with the `ssha256` hash type and only valid when a `password_hash` is provided. Defaults to `suffix`. Mutually exclusive with `password`. */
+  @JsonProperty("password_salt_position")
+  val passwordSaltPosition: CreateUserPasswordSaltPosition? = null
 )

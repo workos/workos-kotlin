@@ -42,7 +42,7 @@ class GroupsTest : TestBase() {
     assertEquals("sample", result.name)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations/sample-arg/groups"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 
@@ -115,7 +115,7 @@ class GroupsTest : TestBase() {
     assertEquals("sample", result.name)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations/sample-arg/groups/sample-arg/organization-memberships"))
-        .withRequestBody(matchingJsonPath("$.organization_membership_id"))
+        .withRequestBody(matchingJsonPath("\$.organization_membership_id"))
     )
   }
 

@@ -35,7 +35,7 @@ class AuditLogsTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
-        .withRequestBody(matchingJsonPath("$.retention_period_in_days"))
+        .withRequestBody(matchingJsonPath("\$.retention_period_in_days"))
     )
   }
 
@@ -87,9 +87,9 @@ class AuditLogsTest : TestBase() {
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/audit_logs/exports"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
-        .withRequestBody(matchingJsonPath("$.range_start"))
-        .withRequestBody(matchingJsonPath("$.range_end"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.range_start"))
+        .withRequestBody(matchingJsonPath("\$.range_end"))
     )
   }
 

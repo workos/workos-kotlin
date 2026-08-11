@@ -192,7 +192,7 @@ class UserManagementTest : TestBase() {
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"access_token\": \"sample\", \"refresh_token\": " +
         "\"sample\"}"
     )
-    val result = api().authenticateWithRadarSmsChallenge("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    val result = api().authenticateWithRadarSmsChallenge("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.accessToken)
     assertEquals("sample", result.refreshToken)
@@ -398,6 +398,7 @@ class UserManagementTest : TestBase() {
         .withQueryParam("password", absent())
         .withQueryParam("password_hash", absent())
         .withQueryParam("password_hash_type", absent())
+        .withQueryParam("password_salt_position", absent())
     )
   }
 
@@ -458,6 +459,7 @@ class UserManagementTest : TestBase() {
         .withQueryParam("password", absent())
         .withQueryParam("password_hash", absent())
         .withQueryParam("password_hash_type", absent())
+        .withQueryParam("password_salt_position", absent())
     )
   }
 

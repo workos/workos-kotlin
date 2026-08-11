@@ -46,6 +46,8 @@
     "src/main/kotlin/com/workos/models/AgentRegistrationExpiredData.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationOrganizationSwitched.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationOrganizationSwitchedData.kt",
+    "src/main/kotlin/com/workos/models/AgentRegistrationRefreshed.kt",
+    "src/main/kotlin/com/workos/models/AgentRegistrationRefreshedData.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationRevoked.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationRevokedData.kt",
     "src/main/kotlin/com/workos/models/ApiKey.kt",
@@ -229,6 +231,7 @@
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponseData.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsListResponseDataConnectedAccount.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsUpsertApiKeyRequest.kt",
+    "src/main/kotlin/com/workos/models/DataIntegrationsUpsertClientCredentialsRequest.kt",
     "src/main/kotlin/com/workos/models/DataIntegrationsVendCredentialsRequest.kt",
     "src/main/kotlin/com/workos/models/DecryptRequest.kt",
     "src/main/kotlin/com/workos/models/DecryptResponse.kt",
@@ -589,6 +592,7 @@
     "src/main/kotlin/com/workos/types/CreateDataIntegrationAuthMethods.kt",
     "src/main/kotlin/com/workos/types/CreateUserInviteOptionsLocale.kt",
     "src/main/kotlin/com/workos/types/CreateUserPasswordHashType.kt",
+    "src/main/kotlin/com/workos/types/CreateUserPasswordSaltPosition.kt",
     "src/main/kotlin/com/workos/types/CreateWebhookEndpointEvents.kt",
     "src/main/kotlin/com/workos/types/CustomProviderDefinitionAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationAccessTokenResponseError.kt",
@@ -669,6 +673,7 @@
     "src/main/kotlin/com/workos/types/SortOrder.kt",
     "src/main/kotlin/com/workos/types/UpdateCustomProviderDefinitionAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/UpdateUserPasswordHashType.kt",
+    "src/main/kotlin/com/workos/types/UpdateUserPasswordSaltPosition.kt",
     "src/main/kotlin/com/workos/types/UpdateWebhookEndpointEvents.kt",
     "src/main/kotlin/com/workos/types/UpdateWebhookEndpointStatus.kt",
     "src/main/kotlin/com/workos/types/UserIdentitiesGetItemProvider.kt",
@@ -1597,6 +1602,10 @@
     "GET /audit_logs/exports/{auditLogExportId}": {
       "sdkMethod": "getExport",
       "service": "auditLogs"
+    },
+    "PUT /data-integrations/{slug}/client-credentials": {
+      "sdkMethod": "updateDataIntegrationClientCredentials",
+      "service": "pipes"
     }
   }
 }

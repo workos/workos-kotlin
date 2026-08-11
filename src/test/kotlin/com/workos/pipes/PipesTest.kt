@@ -34,8 +34,8 @@ class PipesTest : TestBase() {
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createDataIntegration("sample-arg")
     assertNotNull(result)
@@ -58,8 +58,8 @@ class PipesTest : TestBase() {
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getDataIntegration("sample-arg")
     assertNotNull(result)
@@ -78,8 +78,8 @@ class PipesTest : TestBase() {
       200,
       "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
         "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": {\"type\": \"custom\", \"client_id\": null, \"redacted_client_secret\": null}, \"installation\": null, " +
-        "\"config\": {}, \"custom_provider\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateDataIntegration("sample-arg")
     assertNotNull(result)
@@ -127,6 +127,29 @@ class PipesTest : TestBase() {
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
         .withRequestBody(matchingJsonPath("\$.user_id"))
+    )
+  }
+
+  @Test
+  fun `updateDataIntegrationClientCredentials returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/data-integrations/sample-arg/client-credentials",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().updateDataIntegrationClientCredentials("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/client-credentials"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.client_id"))
+        .withRequestBody(matchingJsonPath("\$.client_secret"))
     )
   }
 

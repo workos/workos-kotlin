@@ -45,15 +45,15 @@ data class DataIntegration(
   @JsonProperty("auth_methods")
   val authMethods: List<DataIntegrationAuthMethods>,
 
-  /** The credentials configured for the Data Integration. */
+  /** The integration-level OAuth app credentials. `null` for `api_key` integrations, which hold no OAuth credentials (keys are installed per-tenant). */
   @JsonProperty("credentials")
-  val credentials: DataIntegrationCredential,
+  val credentials: DataIntegrationCredential?,
 
   /** The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses. */
   @JsonProperty("installation")
   val installation: DataIntegrationInstallation?,
 
-  /** Provider-specific config values set on the Data Integration (e.g. a Snowflake `account_identifier`), keyed by config field. Only fields the provider declares are accepted. */
+  /** Provider-specific config values set on the Data Integration (e.g. a Snowflake `account`), keyed by config field. Only fields the provider declares are accepted. */
   @JsonProperty("config")
   val config: Map<String, String>,
 

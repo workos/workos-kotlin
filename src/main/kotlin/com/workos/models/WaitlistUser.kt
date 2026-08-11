@@ -34,5 +34,9 @@ data class WaitlistUser(
 
   /** Distinguishes the Waitlist User object. */
   @JsonProperty("object")
-  val objectType: String = "waitlist_user"
+  val objectType: String = "waitlist_user",
+
+  /** The unique ID of the Waitlist that the Waitlist User joined. */
+  @JsonProperty("waitlist_id")
+  val waitlistId: String? = null
 )

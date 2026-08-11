@@ -27,11 +27,11 @@ class Events(
    *
    * List events for the current environment.
    *
+   * @param events Filter events by one or more event types (e.g. `dsync.user.created`).
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
-   * @param events Filter events by one or more event types (e.g. `dsync.user.created`).
    * @param rangeStart ISO-8601 date string to filter events created after this date.
    * @param rangeEnd ISO-8601 date string to filter events created before this date.
    * @param organizationId Filter events by the [Organization](https://workos.com/docs/reference/organization) that the event is associated with.
@@ -41,11 +41,11 @@ class Events(
    */
   @JvmOverloads
   fun list(
+    events: List<String>,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    events: List<String>? = null,
     rangeStart: OffsetDateTime? = null,
     rangeEnd: OffsetDateTime? = null,
     organizationId: String? = null,
@@ -60,9 +60,9 @@ class Events(
       before = before,
       after = after
     ) {
+      addJoinedIfNotNull("events", events)
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
-      addJoinedIfNotNull("events", events)
       rangeStart?.let { add("range_start" to it.toString()) }
       rangeEnd?.let { add("range_end" to it.toString()) }
       addIfNotNull("organization_id", organizationId)
@@ -79,17 +79,17 @@ class Events(
    */
   @JvmName("listSuspend")
   suspend fun listSuspend(
+    events: List<String>,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    events: List<String>? = null,
     rangeStart: OffsetDateTime? = null,
     rangeEnd: OffsetDateTime? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<EventSchema> =
     withContext(Dispatchers.IO) {
-      list(before, after, limit, order, events, rangeStart, rangeEnd, organizationId, requestOptions)
+      list(events, before, after, limit, order, rangeStart, rangeEnd, organizationId, requestOptions)
     }
 }

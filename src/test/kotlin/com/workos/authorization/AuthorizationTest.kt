@@ -56,7 +56,7 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.groupId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/groups/sample-arg/role_assignments"))
-        .withRequestBody(matchingJsonPath("$.role_slug"))
+        .withRequestBody(matchingJsonPath("\$.role_slug"))
     )
   }
 
@@ -79,7 +79,7 @@ class AuthorizationTest : TestBase() {
     api().deleteGroupRoleAssignments("sample-arg", "sample-arg")
     wireMockRule.verify(
       deleteRequestedFor(urlPathMatching("/authorization/groups/sample-arg/role_assignments"))
-        .withRequestBody(matchingJsonPath("$.role_slug"))
+        .withRequestBody(matchingJsonPath("\$.role_slug"))
     )
   }
 
@@ -114,7 +114,7 @@ class AuthorizationTest : TestBase() {
     assertEquals(false, result.authorized)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/check"))
-        .withRequestBody(matchingJsonPath("$.permission_slug"))
+        .withRequestBody(matchingJsonPath("\$.permission_slug"))
         .withQueryParam("resource_id", absent())
         .withQueryParam("resource_external_id", absent())
         .withQueryParam("resource_type_slug", absent())
@@ -191,7 +191,7 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.organizationMembershipId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
-        .withRequestBody(matchingJsonPath("$.role_slug"))
+        .withRequestBody(matchingJsonPath("\$.role_slug"))
         .withQueryParam("resource_id", absent())
         .withQueryParam("resource_external_id", absent())
         .withQueryParam("resource_type_slug", absent())
@@ -204,7 +204,7 @@ class AuthorizationTest : TestBase() {
     api().removeRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     wireMockRule.verify(
       deleteRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
-        .withRequestBody(matchingJsonPath("$.role_slug"))
+        .withRequestBody(matchingJsonPath("\$.role_slug"))
     )
   }
 
@@ -241,7 +241,7 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 
@@ -308,7 +308,7 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/roles/sample-arg/permissions"))
-        .withRequestBody(matchingJsonPath("$.slug"))
+        .withRequestBody(matchingJsonPath("\$.slug"))
     )
   }
 
@@ -454,10 +454,10 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.externalId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/resources"))
-        .withRequestBody(matchingJsonPath("$.external_id"))
-        .withRequestBody(matchingJsonPath("$.name"))
-        .withRequestBody(matchingJsonPath("$.resource_type_slug"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.external_id"))
+        .withRequestBody(matchingJsonPath("\$.name"))
+        .withRequestBody(matchingJsonPath("\$.resource_type_slug"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
         .withQueryParam("parent_resource_id", absent())
         .withQueryParam("parent_resource_external_id", absent())
         .withQueryParam("parent_resource_type_slug", absent())
@@ -569,8 +569,8 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/roles"))
-        .withRequestBody(matchingJsonPath("$.slug"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.slug"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 
@@ -631,7 +631,7 @@ class AuthorizationTest : TestBase() {
     assertEquals("sample", result.resourceTypeSlug)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/roles/sample-arg/permissions"))
-        .withRequestBody(matchingJsonPath("$.slug"))
+        .withRequestBody(matchingJsonPath("\$.slug"))
     )
   }
 
@@ -679,8 +679,8 @@ class AuthorizationTest : TestBase() {
     assertEquals(false, result.system)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/authorization/permissions"))
-        .withRequestBody(matchingJsonPath("$.slug"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.slug"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 

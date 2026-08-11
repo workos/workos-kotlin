@@ -37,11 +37,11 @@ class RadarTest : TestBase() {
     assertEquals("sample", result.attemptId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/radar/attempts"))
-        .withRequestBody(matchingJsonPath("$.ip_address"))
-        .withRequestBody(matchingJsonPath("$.user_agent"))
-        .withRequestBody(matchingJsonPath("$.email"))
-        .withRequestBody(matchingJsonPath("$.auth_method"))
-        .withRequestBody(matchingJsonPath("$.action"))
+        .withRequestBody(matchingJsonPath("\$.ip_address"))
+        .withRequestBody(matchingJsonPath("\$.user_agent"))
+        .withRequestBody(matchingJsonPath("\$.email"))
+        .withRequestBody(matchingJsonPath("\$.auth_method"))
+        .withRequestBody(matchingJsonPath("\$.action"))
     )
   }
 
@@ -59,7 +59,7 @@ class RadarTest : TestBase() {
     assertEquals("sample", result.message)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
-        .withRequestBody(matchingJsonPath("$.entry"))
+        .withRequestBody(matchingJsonPath("\$.entry"))
     )
   }
 
@@ -69,7 +69,7 @@ class RadarTest : TestBase() {
     api().removeListEntry("sample-arg", "sample-arg", "sample-arg")
     wireMockRule.verify(
       deleteRequestedFor(urlPathMatching("/radar/lists/sample-arg/sample-arg"))
-        .withRequestBody(matchingJsonPath("$.entry"))
+        .withRequestBody(matchingJsonPath("\$.entry"))
     )
   }
 

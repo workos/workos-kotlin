@@ -31,8 +31,8 @@ class AgentsTest : TestBase() {
     assertEquals(false, result.valid)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/agents/credentials/validate"))
-        .withRequestBody(matchingJsonPath("$.type"))
-        .withRequestBody(matchingJsonPath("$.credential"))
+        .withRequestBody(matchingJsonPath("\$.type"))
+        .withRequestBody(matchingJsonPath("\$.credential"))
     )
   }
 
