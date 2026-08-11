@@ -51,5 +51,17 @@ data class DataIntegrationsListResponseDataConnectedAccount(
 
   /** The last four characters of the API key, or `null` for OAuth connections. */
   @JsonProperty("api_key_last_4")
-  val apiKeyLast4: String? = null
+  val apiKeyLast4: String? = null,
+
+  /** The client ID supplied for this connection. Only present when `auth_method` is `client_credentials`. */
+  @JsonProperty("client_id")
+  val clientId: String? = null,
+
+  /** The last four characters of the client secret supplied for this connection, or `null` when it can't be read. Only present when `auth_method` is `client_credentials`. */
+  @JsonProperty("client_secret_last_4")
+  val clientSecretLast4: String? = null,
+
+  /** The connection-level configuration values stored for this connection — the fields the provider declares at `installation` scope, excluding any it declares as secret. Only present when `auth_method` is `client_credentials`. */
+  @JsonProperty("config")
+  val config: Map<String, String>? = null
 )

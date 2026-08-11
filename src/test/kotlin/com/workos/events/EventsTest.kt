@@ -17,7 +17,7 @@ class EventsTest : TestBase() {
   @Test
   fun `list returns a typed response`() {
     stubResponse("GET", "/events", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().list()
+    val result = api().list(emptyList<String>())
     assertNotNull(result)
   }
 
@@ -25,7 +25,7 @@ class EventsTest : TestBase() {
   fun `list translates 401 to UnauthorizedException`() {
     stubResponse("GET", "/events", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().list()
+      api().list(emptyList<String>())
     }
   }
 
@@ -33,7 +33,7 @@ class EventsTest : TestBase() {
   fun `list translates 404 to NotFoundException`() {
     stubResponse("GET", "/events", 404)
     assertThrows(NotFoundException::class.java) {
-      api().list()
+      api().list(emptyList<String>())
     }
   }
 
@@ -41,7 +41,7 @@ class EventsTest : TestBase() {
   fun `list translates 429 to RateLimitException`() {
     stubResponse("GET", "/events", 429)
     assertThrows(RateLimitException::class.java) {
-      api().list()
+      api().list(emptyList<String>())
     }
   }
 
@@ -49,7 +49,7 @@ class EventsTest : TestBase() {
   fun `list translates 500 to GenericServerException`() {
     stubResponse("GET", "/events", 500)
     assertThrows(GenericServerException::class.java) {
-      api().list()
+      api().list(emptyList<String>())
     }
   }
 }

@@ -17,6 +17,7 @@ enum class CreateWebhookEndpointEvents(
   AgentRegistrationClaimCompleted("agent.registration.claim.completed"),
   AgentRegistrationCredentialIssued("agent.registration.credential.issued"),
   AgentRegistrationDeleted("agent.registration.deleted"),
+  AgentRegistrationRefreshed("agent.registration.refreshed"),
   AgentRegistrationExpired("agent.registration.expired"),
   AgentRegistrationOrganizationSwitched("agent.registration.organization.switched"),
   AgentRegistrationRevoked("agent.registration.revoked"),
