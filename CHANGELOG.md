@@ -1,5 +1,14 @@
 # Changelog
 
+## [7.2.0](https://github.com/workos/workos-kotlin/compare/v7.1.0...v7.2.0) (2026-08-11)
+
+
+### Features
+
+* **events:** Change required status for parameter `Events.list.events` ([#420](https://github.com/workos/workos-kotlin/issues/420)) ([7ff46fd](https://github.com/workos/workos-kotlin/commit/7ff46fdc4abb9b681283e520665e6f0fecf1063d))
+* **pipes:** SDK surface change: Parameter type changed for "authMethods" on "Pipes.createDataIntegration" ([#420](https://github.com/workos/workos-kotlin/issues/420)) ([7ff46fd](https://github.com/workos/workos-kotlin/commit/7ff46fdc4abb9b681283e520665e6f0fecf1063d))
+* **user_management:** SDK surface change: Parameter type changed for "verificationId" on "UserManagement.authenticateWithRadarSmsChallenge" ([#420](https://github.com/workos/workos-kotlin/issues/420)) ([7ff46fd](https://github.com/workos/workos-kotlin/commit/7ff46fdc4abb9b681283e520665e6f0fecf1063d))
+
 ## [7.1.0](https://github.com/workos/workos-kotlin/compare/v7.0.0...v7.1.0) (2026-07-28)
 
 * [#417](https://github.com/workos/workos-kotlin/pull/417) feat(generated)!: regenerate from spec (1 change)
