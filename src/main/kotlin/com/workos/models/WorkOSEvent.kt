@@ -38,6 +38,7 @@ import java.time.OffsetDateTime
   JsonSubTypes.Type(value = AgentRegistrationDeleted::class, name = "agent.registration.deleted"),
   JsonSubTypes.Type(value = AgentRegistrationExpired::class, name = "agent.registration.expired"),
   JsonSubTypes.Type(value = AgentRegistrationOrganizationSwitched::class, name = "agent.registration.organization.switched"),
+  JsonSubTypes.Type(value = AgentRegistrationRefreshed::class, name = "agent.registration.refreshed"),
   JsonSubTypes.Type(value = AgentRegistrationRevoked::class, name = "agent.registration.revoked"),
   JsonSubTypes.Type(value = ApiKeyCreated::class, name = "api_key.created"),
   JsonSubTypes.Type(value = ApiKeyRevoked::class, name = "api_key.revoked"),

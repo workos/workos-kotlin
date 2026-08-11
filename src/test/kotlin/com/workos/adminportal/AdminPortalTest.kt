@@ -26,7 +26,7 @@ class AdminPortalTest : TestBase() {
     assertEquals("sample", result.link)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/portal/generate_link"))
-        .withRequestBody(matchingJsonPath("$.organization"))
+        .withRequestBody(matchingJsonPath("\$.organization"))
     )
   }
 

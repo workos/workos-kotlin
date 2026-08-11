@@ -54,7 +54,7 @@ class VaultTest : TestBase() {
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/vault/v1/keys/decrypt"))
-        .withRequestBody(matchingJsonPath("$.keys"))
+        .withRequestBody(matchingJsonPath("\$.keys"))
     )
   }
 
@@ -73,7 +73,7 @@ class VaultTest : TestBase() {
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/vault/v1/keys/rekey"))
-        .withRequestBody(matchingJsonPath("$.encrypted_keys"))
+        .withRequestBody(matchingJsonPath("\$.encrypted_keys"))
     )
   }
 
@@ -100,8 +100,8 @@ class VaultTest : TestBase() {
     assertEquals("sample", result.keyId)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/vault/v1/kv"))
-        .withRequestBody(matchingJsonPath("$.name"))
-        .withRequestBody(matchingJsonPath("$.value"))
+        .withRequestBody(matchingJsonPath("\$.name"))
+        .withRequestBody(matchingJsonPath("\$.value"))
     )
   }
 
@@ -154,7 +154,7 @@ class VaultTest : TestBase() {
     assertEquals("sample", result.name)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/vault/v1/kv/sample-arg"))
-        .withRequestBody(matchingJsonPath("$.value"))
+        .withRequestBody(matchingJsonPath("\$.value"))
     )
   }
 

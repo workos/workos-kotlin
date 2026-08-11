@@ -23,11 +23,11 @@ data class CreateDataIntegration(
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
 
-  /** How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). */
+  /** How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). Use `["client_credentials"]` to declare a client-credentials integration; `credentials` is likewise not required and client credentials are supplied per-tenant. */
   @JsonProperty("auth_methods")
   val authMethods: List<CreateDataIntegrationAuthMethods>? = null,
 
-  /** Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted. */
+  /** Provider-specific config values (e.g. a Snowflake `account`), keyed by the config field. Only fields the built-in provider declares are accepted. */
   @JsonProperty("config")
   val config: Map<String, String>? = null,
 

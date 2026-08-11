@@ -502,6 +502,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `AgentRegistrationRefreshedData round-trips through Jackson`() {
+    val json = "{\"agent_registration_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, AgentRegistrationRefreshedData::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `AgentRegistrationRevokedData round-trips through Jackson`() {
     val json = "{\"agent_registration_id\": \"sample\"}"
     val parsed = mapper.readValue(json, AgentRegistrationRevokedData::class.java)

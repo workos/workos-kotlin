@@ -33,7 +33,7 @@ class MultiFactorAuthTest : TestBase() {
     assertEquals(false, result.valid)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/challenges/sample-arg/verify"))
-        .withRequestBody(matchingJsonPath("$.code"))
+        .withRequestBody(matchingJsonPath("\$.code"))
     )
   }
 
@@ -55,7 +55,7 @@ class MultiFactorAuthTest : TestBase() {
     assertEquals("sample", result.id)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/auth/factors/enroll"))
-        .withRequestBody(matchingJsonPath("$.type"))
+        .withRequestBody(matchingJsonPath("\$.type"))
     )
   }
 
@@ -123,7 +123,7 @@ class MultiFactorAuthTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/users/sample-arg/auth_factors"))
-        .withRequestBody(matchingJsonPath("$.type"))
+        .withRequestBody(matchingJsonPath("\$.type"))
     )
   }
 

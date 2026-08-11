@@ -55,8 +55,8 @@ class OrganizationMembershipServiceTest : TestBase() {
     assertEquals(false, result.directoryManaged)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/user_management/organization_memberships"))
-        .withRequestBody(matchingJsonPath("$.user_id"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
         .withQueryParam("role_slug", absent())
         .withQueryParam("role_slugs", absent())
     )

@@ -18,6 +18,8 @@ enum class UserIdentitiesGetItemProvider(
   GithubOAuth("GithubOAuth"),
   GitLabOAuth("GitLabOAuth"),
   GoogleOAuth("GoogleOAuth"),
+  GrokOAuth("GrokOAuth"),
+  XoAuth("XOAuth"),
   IntuitOAuth("IntuitOAuth"),
   LinkedInOAuth("LinkedInOAuth"),
   MicrosoftOAuth("MicrosoftOAuth"),

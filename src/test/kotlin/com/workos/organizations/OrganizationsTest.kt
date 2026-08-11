@@ -41,7 +41,7 @@ class OrganizationsTest : TestBase() {
     assertEquals("sample", result.name)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 

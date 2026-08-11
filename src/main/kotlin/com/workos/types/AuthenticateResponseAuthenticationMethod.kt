@@ -23,6 +23,8 @@ enum class AuthenticateResponseAuthenticationMethod(
   GitHubOAuth("GitHubOAuth"),
   GitLabOAuth("GitLabOAuth"),
   GoogleOAuth("GoogleOAuth"),
+  GrokOAuth("GrokOAuth"),
+  XoAuth("XOAuth"),
   IntuitOAuth("IntuitOAuth"),
   LinkedInOAuth("LinkedInOAuth"),
   MicrosoftOAuth("MicrosoftOAuth"),

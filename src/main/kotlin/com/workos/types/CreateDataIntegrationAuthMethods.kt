@@ -2,16 +2,5 @@
 
 package com.workos.types
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import com.fasterxml.jackson.annotation.JsonValue
-
-/** Enumeration of valid CreateDataIntegrationAuthMethods values returned or accepted by the API. */
-enum class CreateDataIntegrationAuthMethods(
-  /** The wire value sent to and received from the API. */
-  @JsonValue val value: String
-) {
-  @JsonEnumDefaultValue
-  Unknown("unknown"),
-  OAuth("oauth"),
-  ApiKey("api_key")
-}
+/** Alias for [ConnectedAccountAuthMethod]. */
+typealias CreateDataIntegrationAuthMethods = ConnectedAccountAuthMethod

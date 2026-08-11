@@ -44,7 +44,7 @@ class ApiKeysTest : TestBase() {
     assertEquals("sample", result.value)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organizations/sample-arg/api_keys"))
-        .withRequestBody(matchingJsonPath("$.name"))
+        .withRequestBody(matchingJsonPath("\$.name"))
     )
   }
 
@@ -55,7 +55,7 @@ class ApiKeysTest : TestBase() {
     assertNotNull(result)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/api_keys/validations"))
-        .withRequestBody(matchingJsonPath("$.value"))
+        .withRequestBody(matchingJsonPath("\$.value"))
     )
   }
 

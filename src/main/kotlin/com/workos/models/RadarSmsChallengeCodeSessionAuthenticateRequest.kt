@@ -18,14 +18,6 @@ data class RadarSmsChallengeCodeSessionAuthenticateRequest(
   @JsonProperty("code")
   val code: String,
 
-  /** The ID of the Radar SMS verification being confirmed. */
-  @JsonProperty("verification_id")
-  val verificationId: String,
-
-  /** The phone number the Radar SMS challenge was sent to. */
-  @JsonProperty("phone_number")
-  val phoneNumber: String,
-
   /** The pending authentication token from a previous authentication attempt. */
   @JsonProperty("pending_authentication_token")
   val pendingAuthenticationToken: String,
@@ -33,6 +25,14 @@ data class RadarSmsChallengeCodeSessionAuthenticateRequest(
   /** Always `"urn:workos:oauth:grant-type:radar-sms-challenge:code"`. */
   @JsonProperty("grant_type")
   val grantType: String = "urn:workos:oauth:grant-type:radar-sms-challenge:code",
+
+  /** The ID of the Radar SMS verification being confirmed. Required for sign-up challenges; omitted for sign-in challenges, where the verification is resolved server-side. */
+  @JsonProperty("verification_id")
+  val verificationId: String? = null,
+
+  /** The phone number the Radar SMS challenge was sent to. Required for sign-up challenges; omitted for sign-in challenges, where the phone number on file is resolved server-side. */
+  @JsonProperty("phone_number")
+  val phoneNumber: String? = null,
 
   /** The IP address of the user's request. */
   @JsonProperty("ip_address")

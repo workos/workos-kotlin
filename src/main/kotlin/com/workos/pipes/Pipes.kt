@@ -20,7 +20,7 @@ import com.workos.models.DataIntegrationCredentialsInput
 import com.workos.models.DataIntegrationCredentialsResponse
 import com.workos.models.DataIntegrationsListResponse
 import com.workos.models.UpdateCustomProviderDefinition
-import com.workos.types.CreateDataIntegrationAuthMethods
+import com.workos.types.ConnectedAccountAuthMethod
 import com.workos.types.PaginationOrder
 import com.workos.types.PipeConnectedAccountState
 import kotlinx.coroutines.Dispatchers
@@ -93,14 +93,14 @@ class Pipes(
   /**
    * Create a data integration
    *
-   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
    *
    * @param provider The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
    * @param description An optional description of the Data Integration.
    * @param enabled Whether the Data Integration is enabled. Defaults to `false`.
    * @param scopes The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
-   * @param authMethods How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request).
-   * @param config Provider-specific config values (e.g. a Snowflake `account_identifier`), keyed by the config field. Only fields the built-in provider declares are accepted.
+   * @param authMethods How accounts authenticate with the provider. Defaults to `["oauth"]`. Use `["api_key"]` to declare an API key integration; `credentials` is then not required and keys are supplied per-tenant (optionally via `api_key` on this request). Use `["client_credentials"]` to declare a client-credentials integration; `credentials` is likewise not required and client credentials are supplied per-tenant.
+   * @param config Provider-specific config values (e.g. a Snowflake `account`), keyed by the config field. Only fields the built-in provider declares are accepted.
    * @param credentials The OAuth credentials to configure for the Data Integration. Required for OAuth integrations; omit when `auth_methods` is `["api_key"]`.
    * @param apiKey An optional API key to install for the first tenant on an `api_key` integration. Omit to declare a keyless integration; tenants can be added later via the per-installation API key path.
    * @param customProvider The OAuth definition for a custom provider. Supply this to define a custom provider; omit it to create an integration for a built-in provider.
@@ -114,7 +114,7 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    authMethods: List<CreateDataIntegrationAuthMethods>? = null,
+    authMethods: List<ConnectedAccountAuthMethod>? = null,
     config: Map<String, String>? = null,
     credentials: DataIntegrationCredentialsInput? = null,
     apiKey: ApiKeyInstallation? = null,
@@ -157,7 +157,7 @@ class Pipes(
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
-    authMethods: List<CreateDataIntegrationAuthMethods>? = null,
+    authMethods: List<ConnectedAccountAuthMethod>? = null,
     config: Map<String, String>? = null,
     credentials: DataIntegrationCredentialsInput? = null,
     apiKey: ApiKeyInstallation? = null,
@@ -443,6 +443,71 @@ class Pipes(
   ): DataIntegrationAuthorizeUrlResponse =
     withContext(Dispatchers.IO) {
       authorizeDataIntegration(slug, userId, organizationId, returnTo, config, requestOptions)
+    }
+
+  /**
+   * Upsert client credentials for a connected account
+   *
+   * Creates or updates a client-credentials-based installation for the specified integration and user. If an installation already exists, the stored client credentials are rotated to the new values.
+   *
+   * @param slug The identifier of the integration.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
+   * @param clientId The OAuth client ID to store for this integration.
+   * @param clientSecret The OAuth client secret to store for this integration.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param config Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateDataIntegrationClientCredentials(
+    slug: String,
+    userId: String,
+    clientId: String,
+    clientSecret: String,
+    organizationId: String? = null,
+    config: Map<String, String>? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val body =
+      bodyOf(
+        "user_id" to userId,
+        "client_id" to clientId,
+        "client_secret" to clientSecret,
+        "organization_id" to organizationId,
+        "config" to config
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/data-integrations/${encodePathSegment(slug)}/client-credentials",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateDataIntegrationClientCredentials]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateDataIntegrationClientCredentials] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateDataIntegrationClientCredentialsSuspend")
+  suspend fun updateDataIntegrationClientCredentialsSuspend(
+    slug: String,
+    userId: String,
+    clientId: String,
+    clientSecret: String,
+    organizationId: String? = null,
+    config: Map<String, String>? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      updateDataIntegrationClientCredentials(slug, userId, clientId, clientSecret, organizationId, config, requestOptions)
     }
 
   /**

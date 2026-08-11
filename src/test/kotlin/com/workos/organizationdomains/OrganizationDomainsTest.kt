@@ -35,8 +35,8 @@ class OrganizationDomainsTest : TestBase() {
     assertEquals("sample", result.domain)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/organization_domains"))
-        .withRequestBody(matchingJsonPath("$.domain"))
-        .withRequestBody(matchingJsonPath("$.organization_id"))
+        .withRequestBody(matchingJsonPath("\$.domain"))
+        .withRequestBody(matchingJsonPath("\$.organization_id"))
     )
   }
 

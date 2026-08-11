@@ -43,7 +43,7 @@ class WebhooksTest : TestBase() {
     assertEquals("sample", result.secret)
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/webhook_endpoints"))
-        .withRequestBody(matchingJsonPath("$.endpoint_url"))
+        .withRequestBody(matchingJsonPath("\$.endpoint_url"))
     )
   }
 

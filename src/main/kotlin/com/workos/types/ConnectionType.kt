@@ -35,6 +35,8 @@ enum class ConnectionType(
   GoogleOAuth("GoogleOAuth"),
   GoogleOidc("GoogleOIDC"),
   GoogleSAML("GoogleSAML"),
+  GrokOAuth("GrokOAuth"),
+  XoAuth("XOAuth"),
   IntuitOAuth("IntuitOAuth"),
   JumpCloudSAML("JumpCloudSAML"),
   KeycloakSAML("KeycloakSAML"),
