@@ -12,7 +12,7 @@ if (!project.hasProperty("release")) {
 }
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "2.4.0"
+  id("org.jetbrains.kotlin.jvm") version "2.4.10"
 
   id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
@@ -50,7 +50,7 @@ dependencies {
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
 
-  testImplementation(platform("org.junit:junit-bom:6.1.1"))
+  testImplementation(platform("org.junit:junit-bom:6.1.3"))
 
   testImplementation(kotlin("test-junit5"))
 
