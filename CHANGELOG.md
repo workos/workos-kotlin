@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.2.1](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.2.1) (2026-08-17)
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#424](https://github.com/workos/workos-kotlin/issues/424)) ([c40d8a6](https://github.com/workos/workos-kotlin/commit/c40d8a63b474f910dd269e9b958e17d7e6a71b2e))
+
 ## [7.2.0](https://github.com/workos/workos-kotlin/compare/v7.1.0...v7.2.0) (2026-08-11)
 
 * [#420](https://github.com/workos/workos-kotlin/pull/420) feat(generated)!: regenerate from spec (3 changes)
