@@ -210,6 +210,7 @@
     "src/main/kotlin/com/workos/models/CreateUserApiKey.kt",
     "src/main/kotlin/com/workos/models/CreateUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/CreateUserOrganizationMembership.kt",
+    "src/main/kotlin/com/workos/models/CreateWaitlistEntry.kt",
     "src/main/kotlin/com/workos/models/CreateWebhookEndpoint.kt",
     "src/main/kotlin/com/workos/models/CustomProviderDefinition.kt",
     "src/main/kotlin/com/workos/models/DataIntegration.kt",
@@ -538,6 +539,8 @@
     "src/main/kotlin/com/workos/models/VerifyEmailAddress.kt",
     "src/main/kotlin/com/workos/models/VerifyEmailResponse.kt",
     "src/main/kotlin/com/workos/models/VersionListResponse.kt",
+    "src/main/kotlin/com/workos/models/Waitlist.kt",
+    "src/main/kotlin/com/workos/models/WaitlistEntry.kt",
     "src/main/kotlin/com/workos/models/WaitlistUser.kt",
     "src/main/kotlin/com/workos/models/WaitlistUserApproved.kt",
     "src/main/kotlin/com/workos/models/WaitlistUserCreated.kt",
@@ -681,6 +684,7 @@
     "src/main/kotlin/com/workos/types/UserManagementAuthenticationProvider.kt",
     "src/main/kotlin/com/workos/types/UserManagementAuthenticationScreenHint.kt",
     "src/main/kotlin/com/workos/types/UserManagementOrganizationMembershipStatuses.kt",
+    "src/main/kotlin/com/workos/types/UserManagementWaitlistsState.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipBaseListDataStatus.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipStatus.kt",
     "src/main/kotlin/com/workos/types/UserRoleAssignmentSourceType.kt",
@@ -697,6 +701,7 @@
     "src/main/kotlin/com/workos/types/VaultKekDeletedDataActorSource.kt",
     "src/main/kotlin/com/workos/types/VaultMetadataReadDataActorSource.kt",
     "src/main/kotlin/com/workos/types/VaultNamesListedDataActorSource.kt",
+    "src/main/kotlin/com/workos/types/WaitlistEntryState.kt",
     "src/main/kotlin/com/workos/types/WaitlistUserState.kt",
     "src/main/kotlin/com/workos/types/WebhookEndpointStatus.kt",
     "src/main/kotlin/com/workos/types/WidgetSessionTokenScopes.kt",
@@ -1606,6 +1611,146 @@
     "PUT /data-integrations/{slug}/client-credentials": {
       "sdkMethod": "updateDataIntegrationClientCredentials",
       "service": "pipes"
+    },
+    "GET /agents/blueprints": {
+      "sdkMethod": "listBlueprints",
+      "service": "agents"
+    },
+    "POST /agents/blueprints": {
+      "sdkMethod": "createBlueprint",
+      "service": "agents"
+    },
+    "GET /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "getBlueprint",
+      "service": "agents"
+    },
+    "PATCH /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "updateBlueprint",
+      "service": "agents"
+    },
+    "DELETE /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "deleteBlueprint",
+      "service": "agents"
+    },
+    "POST /agents/blueprints/{agent_blueprint_id}/tokens": {
+      "sdkMethod": "createBlueprintToken",
+      "service": "agents"
+    },
+    "GET /agents/instances": {
+      "sdkMethod": "listInstances",
+      "service": "agents"
+    },
+    "GET /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "getInstance",
+      "service": "agents"
+    },
+    "DELETE /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "deleteInstance",
+      "service": "agents"
+    },
+    "GET /agents/sessions": {
+      "sdkMethod": "listSessions",
+      "service": "agents"
+    },
+    "GET /agents/sessions/{agent_instance_session_id}": {
+      "sdkMethod": "getSession",
+      "service": "agents"
+    },
+    "POST /agents/sessions/{agent_instance_session_id}/revoke": {
+      "sdkMethod": "revokeSession",
+      "service": "agents"
+    },
+    "POST /connections": {
+      "sdkMethod": "createConnection",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "listConnectionSAMLIdpSigningCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "createConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_idp_signing_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "listConnectionSAMLSpEncryptionCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "createConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_encryption_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "listConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "createConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_signing_cert/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "PATCH /connections/{id}": {
+      "sdkMethod": "updateConnection",
+      "service": "sso"
+    },
+    "GET /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "listItContacts",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "createItContact",
+      "service": "organizations"
+    },
+    "DELETE /organizations/{organization_id}/it_contacts/{contact_id}": {
+      "sdkMethod": "deleteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/invite": {
+      "sdkMethod": "inviteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/revoke": {
+      "sdkMethod": "revokeItContact",
+      "service": "organizations"
+    },
+    "DELETE /user_management/waitlist_entries/{id}": {
+      "sdkMethod": "deleteWaitlistEntry",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/approve": {
+      "sdkMethod": "createWaitlistEntryApprove",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/deny": {
+      "sdkMethod": "createWaitlistEntryDeny",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists": {
+      "sdkMethod": "listWaitlists",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}": {
+      "sdkMethod": "getWaitlist",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "listWaitlistEntries",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "createWaitlistEntry",
+      "service": "userManagement"
     }
   }
 }

@@ -180,16 +180,6 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `TokenQuery round-trips through Jackson`() {
-    val json = "{\"client_id\": \"sample\", \"client_secret\": \"sample\", \"code\": \"sample\", \"grant_type\": \"authorization_code\"}"
-    val parsed = mapper.readValue(json, TokenQuery::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
   fun `Actor round-trips through Jackson`() {
     val json = "{\"id\": \"sample\", \"name\": \"sample\"}"
     val parsed = mapper.readValue(json, Actor::class.java)
@@ -631,18 +621,6 @@ class GeneratedModelRoundTripTest {
   fun `AuthenticationOAuthFailedDataError round-trips through Jackson`() {
     val json = "{\"code\": \"sample\", \"message\": \"sample\"}"
     val parsed = mapper.readValue(json, AuthenticationOAuthFailedDataError::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
-  fun `AuthenticationOAuthSucceededData round-trips through Jackson`() {
-    val json =
-      "{\"type\": \"oauth\", \"status\": \"succeeded\", \"ip_address\": null, \"user_agent\": null, \"user_id\": null, \"email\": " +
-        "\"sample\"}"
-    val parsed = mapper.readValue(json, AuthenticationOAuthSucceededData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1176,6 +1154,18 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `Waitlist round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"waitlist\", \"id\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    val parsed = mapper.readValue(json, Waitlist::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `WidgetSessionTokenResponse round-trips through Jackson`() {
     val json = "{\"token\": \"sample\"}"
     val parsed = mapper.readValue(json, WidgetSessionTokenResponse::class.java)
@@ -1591,6 +1581,28 @@ class GeneratedModelRoundTripTest {
   fun `ConnectApplicationRedirectUri round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\", \"default\": false}"
     val parsed = mapper.readValue(json, ConnectApplicationRedirectUri::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `TokenQuery round-trips through Jackson`() {
+    val json = "{\"client_id\": \"sample\", \"client_secret\": \"sample\", \"code\": \"sample\", \"grant_type\": \"authorization_code\"}"
+    val parsed = mapper.readValue(json, TokenQuery::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `AuthenticationOAuthSucceededData round-trips through Jackson`() {
+    val json =
+      "{\"type\": \"oauth\", \"status\": \"succeeded\", \"ip_address\": null, \"user_agent\": null, \"user_id\": null, \"email\": " +
+        "\"sample\"}"
+    val parsed = mapper.readValue(json, AuthenticationOAuthSucceededData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
