@@ -28,5 +28,9 @@ data class AuthenticationOAuthSucceededData(
 
   /** Always `"succeeded"`. */
   @JsonProperty("status")
-  val status: String = "succeeded"
+  val status: String = "succeeded",
+
+  /** The OAuth provider used for authentication. */
+  @JsonProperty("provider")
+  val provider: String? = null
 )

@@ -37,7 +37,7 @@ data class DataIntegration(
   @JsonProperty("scopes")
   val scopes: List<String>?,
 
-  /** The OAuth redirect URI to register with the provider when configuring the custom application. */
+  /** The OAuth redirect URI to register with the provider when configuring the custom application. Empty for `api_key` and `client_credentials` integrations, which run no authorization redirect. */
   @JsonProperty("redirect_uri")
   val redirectUri: String,
 
@@ -45,7 +45,7 @@ data class DataIntegration(
   @JsonProperty("auth_methods")
   val authMethods: List<DataIntegrationAuthMethods>,
 
-  /** The integration-level OAuth app credentials. `null` for `api_key` integrations, which hold no OAuth credentials (keys are installed per-tenant). */
+  /** The integration-level OAuth app credentials. `null` for `api_key` and `client_credentials` integrations, which hold no integration-level credentials (secrets are installed per-tenant). */
   @JsonProperty("credentials")
   val credentials: DataIntegrationCredential?,
 

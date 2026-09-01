@@ -5,19 +5,90 @@ package com.workos.sso
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
 import com.workos.common.http.Page
+import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
+import com.workos.common.http.patchBodyOf
 import com.workos.models.Connection
+import com.workos.models.CreateConnectionAttributeMaps
+import com.workos.models.CreateConnectionOidcOptions
+import com.workos.models.CreateConnectionSAMLOptions
+import com.workos.models.PatchConnectionAttributeMaps
+import com.workos.models.PatchConnectionOidcOptions
+import com.workos.models.PatchConnectionSAMLOptions
 import com.workos.models.Profile
+import com.workos.models.SAMLIdpSigningCertificate
+import com.workos.models.SAMLIdpSigningCertificateList
+import com.workos.models.SAMLSpEncryptionCertificate
+import com.workos.models.SAMLSpEncryptionCertificateList
+import com.workos.models.SAMLSpSigningCertificate
 import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+/**
+ * Mutually exclusive protocol options parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: CreateProtocolOptions = CreateProtocolOptions.SAML(samlOptions = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * CreateProtocolOptions target = new CreateProtocolOptions.SAML("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
+sealed class CreateProtocolOptions {
+  /** Variant: saml. */
+  data class SAML(
+    /** The saml options. */
+    val samlOptions: CreateConnectionSAMLOptions
+  ) : CreateProtocolOptions()
+
+  /** Variant: oidc. */
+  data class Oidc(
+    /** The oidc options. */
+    val oidcOptions: CreateConnectionOidcOptions
+  ) : CreateProtocolOptions()
+}
+
+/**
+ * Mutually exclusive protocol options parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: PatchProtocolOptions = PatchProtocolOptions.SAML(samlOptions = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * PatchProtocolOptions target = new PatchProtocolOptions.SAML("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
+sealed class PatchProtocolOptions {
+  /** Variant: saml. */
+  data class SAML(
+    /** The saml options. */
+    val samlOptions: PatchConnectionSAMLOptions
+  ) : PatchProtocolOptions()
+
+  /** Variant: oidc. */
+  data class Oidc(
+    /** The oidc options. */
+    val oidcOptions: PatchConnectionOidcOptions
+  ) : PatchProtocolOptions()
+}
 
 /**
  * API accessor for SSO.
@@ -99,6 +170,455 @@ class SSO(
     }
 
   /**
+   * Create a Connection
+   *
+   * Creates a new connection for an organization. Provide `saml_options` or `oidc_options` to configure the identity provider. When `external_id` matches an existing connection in the organization, that connection is returned instead of creating a duplicate.
+   *
+   * @param organizationId Unique identifier for the Organization in which the Connection resides.
+   * @param name A human-readable name for the Connection. This will most commonly be the organization's name.
+   * @param externalId The customer-owned identifier for the Connection.
+   * @param connectionType The type of the Connection. Only SAML and OIDC connection types may be created. When omitted, the type is inferred from the provided options.
+   * @param attributeMaps How IdP attributes or claims map onto WorkOS profile fields. Provided fields override the defaults for the connection type.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the Connection
+   */
+  @JvmOverloads
+  fun createConnection(
+    createProtocolOptions: CreateProtocolOptions,
+    organizationId: String,
+    name: String? = null,
+    externalId: String? = null,
+    connectionType: String? = null,
+    attributeMaps: CreateConnectionAttributeMaps? = null,
+    requestOptions: RequestOptions? = null
+  ): Connection {
+    val body =
+      bodyOf(
+        "organization_id" to organizationId,
+        "name" to name,
+        "external_id" to externalId,
+        "connection_type" to connectionType,
+        "attribute_maps" to attributeMaps
+      )
+    when (createProtocolOptions) {
+      is CreateProtocolOptions.SAML -> body["saml_options"] = createProtocolOptions.samlOptions
+      is CreateProtocolOptions.Oidc -> body["oidc_options"] = createProtocolOptions.oidcOptions
+    }
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/connections",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, Connection::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createConnection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createConnection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createConnectionSuspend")
+  suspend fun createConnectionSuspend(
+    createProtocolOptions: CreateProtocolOptions,
+    organizationId: String,
+    name: String? = null,
+    externalId: String? = null,
+    connectionType: String? = null,
+    attributeMaps: CreateConnectionAttributeMaps? = null,
+    requestOptions: RequestOptions? = null
+  ): Connection =
+    withContext(Dispatchers.IO) {
+      createConnection(createProtocolOptions, organizationId, name, externalId, connectionType, attributeMaps, requestOptions)
+    }
+
+  /**
+   * List IdP signing certificates
+   *
+   * Lists every Identity Provider signing certificate on the connection, including expired ones, oldest first.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLIdpSigningCertificateList
+   */
+  @JvmOverloads
+  fun listConnectionSAMLIdpSigningCerts(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLIdpSigningCertificateList {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_idp_signing_certs",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLIdpSigningCertificateList::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listConnectionSAMLIdpSigningCerts]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listConnectionSAMLIdpSigningCerts] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listConnectionSAMLIdpSigningCertsSuspend")
+  suspend fun listConnectionSAMLIdpSigningCertsSuspend(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLIdpSigningCertificateList =
+    withContext(Dispatchers.IO) {
+      listConnectionSAMLIdpSigningCerts(connectionId, requestOptions)
+    }
+
+  /**
+   * Create an IdP signing certificate
+   *
+   * Adds an Identity Provider signing certificate to the connection, so SAML responses signed with its key can be verified. Use this to import a new certificate ahead of an Identity Provider rotation — the existing certificates keep working until they are deleted or expire.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param value The PEM-encoded X.509 certificate.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLIdpSigningCertificate
+   */
+  @JvmOverloads
+  fun createConnectionSAMLIdpSigningCert(
+    connectionId: String,
+    value: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLIdpSigningCertificate {
+    val body =
+      bodyOf(
+        "value" to value
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_idp_signing_certs",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLIdpSigningCertificate::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createConnectionSAMLIdpSigningCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createConnectionSAMLIdpSigningCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createConnectionSAMLIdpSigningCertSuspend")
+  suspend fun createConnectionSAMLIdpSigningCertSuspend(
+    connectionId: String,
+    value: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLIdpSigningCertificate =
+    withContext(Dispatchers.IO) {
+      createConnectionSAMLIdpSigningCert(connectionId, value, requestOptions)
+    }
+
+  /**
+   * Delete an IdP signing certificate
+   *
+   * Removes an Identity Provider signing certificate from the connection. The last remaining certificate cannot be deleted. A certificate still published in the Identity Provider metadata may be restored by a metadata refresh.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param certificateId Unique identifier for the Identity Provider signing certificate.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteConnectionSAMLIdpSigningCert(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_idp_signing_certs/${encodePathSegment(certificateId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteConnectionSAMLIdpSigningCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteConnectionSAMLIdpSigningCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteConnectionSAMLIdpSigningCertSuspend")
+  suspend fun deleteConnectionSAMLIdpSigningCertSuspend(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteConnectionSAMLIdpSigningCert(connectionId, certificateId, requestOptions)
+  }
+
+  /**
+   * List SP encryption certificates
+   *
+   * Lists the public certificates the Identity Provider can use to encrypt SAML responses sent to WorkOS, including expired ones, oldest first.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLSpEncryptionCertificateList
+   */
+  @JvmOverloads
+  fun listConnectionSAMLSpEncryptionCerts(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpEncryptionCertificateList {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_encryption_certs",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLSpEncryptionCertificateList::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listConnectionSAMLSpEncryptionCerts]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listConnectionSAMLSpEncryptionCerts] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listConnectionSAMLSpEncryptionCertsSuspend")
+  suspend fun listConnectionSAMLSpEncryptionCertsSuspend(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpEncryptionCertificateList =
+    withContext(Dispatchers.IO) {
+      listConnectionSAMLSpEncryptionCerts(connectionId, requestOptions)
+    }
+
+  /**
+   * Create an SP encryption certificate
+   *
+   * Generates a new encryption key pair for the connection and returns its public certificate. WorkOS holds the private key, so the request takes no body — to bring your own key pairs, provide `saml_options.sp_encryption_key_pairs` when creating the connection instead. Creating a certificate appends rather than replaces: every active private key is tried when decrypting, which lets a rotation overlap the old and new certificates.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLSpEncryptionCertificate
+   */
+  @JvmOverloads
+  fun createConnectionSAMLSpEncryptionCert(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpEncryptionCertificate {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_encryption_certs",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLSpEncryptionCertificate::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createConnectionSAMLSpEncryptionCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createConnectionSAMLSpEncryptionCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createConnectionSAMLSpEncryptionCertSuspend")
+  suspend fun createConnectionSAMLSpEncryptionCertSuspend(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpEncryptionCertificate =
+    withContext(Dispatchers.IO) {
+      createConnectionSAMLSpEncryptionCert(connectionId, requestOptions)
+    }
+
+  /**
+   * Delete an SP encryption certificate
+   *
+   * Removes an encryption key pair from the connection. SAML responses encrypted with its certificate can no longer be decrypted, so remove the certificate from the Identity Provider first when rotating.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param certificateId Unique identifier for the Service Provider encryption key pair. WorkOS holds the corresponding private key, which is never exposed.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteConnectionSAMLSpEncryptionCert(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_encryption_certs/${encodePathSegment(certificateId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteConnectionSAMLSpEncryptionCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteConnectionSAMLSpEncryptionCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteConnectionSAMLSpEncryptionCertSuspend")
+  suspend fun deleteConnectionSAMLSpEncryptionCertSuspend(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteConnectionSAMLSpEncryptionCert(connectionId, certificateId, requestOptions)
+  }
+
+  /**
+   * Get the SP signing certificate
+   *
+   * Returns the public certificate the Identity Provider can use to verify the signature of SAML requests sent by WorkOS. Responds with `404` when the connection has no request signing key pair.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLSpSigningCertificate
+   */
+  @JvmOverloads
+  fun listConnectionSAMLSpSigningCert(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpSigningCertificate {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_signing_cert",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLSpSigningCertificate::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listConnectionSAMLSpSigningCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listConnectionSAMLSpSigningCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listConnectionSAMLSpSigningCertSuspend")
+  suspend fun listConnectionSAMLSpSigningCertSuspend(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpSigningCertificate =
+    withContext(Dispatchers.IO) {
+      listConnectionSAMLSpSigningCert(connectionId, requestOptions)
+    }
+
+  /**
+   * Create an SP signing certificate
+   *
+   * Generates a new request signing key pair for the connection and returns its public certificate. WorkOS holds the private key, so the request takes no body — to bring your own key pair, provide `saml_options.sp_signing_key_pair` when creating the connection instead. A connection signs with one key pair at a time: delete the existing certificate before creating its replacement.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the SAMLSpSigningCertificate
+   */
+  @JvmOverloads
+  fun createConnectionSAMLSpSigningCert(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpSigningCertificate {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_signing_cert",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, SAMLSpSigningCertificate::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createConnectionSAMLSpSigningCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createConnectionSAMLSpSigningCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createConnectionSAMLSpSigningCertSuspend")
+  suspend fun createConnectionSAMLSpSigningCertSuspend(
+    connectionId: String,
+    requestOptions: RequestOptions? = null
+  ): SAMLSpSigningCertificate =
+    withContext(Dispatchers.IO) {
+      createConnectionSAMLSpSigningCert(connectionId, requestOptions)
+    }
+
+  /**
+   * Delete the SP signing certificate
+   *
+   * Removes the request signing key pair from the connection, after which SAML requests are sent unsigned. Delete the certificate before creating its replacement when rotating.
+   *
+   * @param connectionId Unique identifier for the Connection.
+   * @param certificateId Unique identifier for the Service Provider signing key pair. WorkOS holds the corresponding private key, which is never exposed.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteConnectionSAMLSpSigningCert(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/connections/${encodePathSegment(connectionId)}/saml_sp_signing_cert/${encodePathSegment(certificateId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteConnectionSAMLSpSigningCert]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteConnectionSAMLSpSigningCert] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteConnectionSAMLSpSigningCertSuspend")
+  suspend fun deleteConnectionSAMLSpSigningCertSuspend(
+    connectionId: String,
+    certificateId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteConnectionSAMLSpSigningCert(connectionId, certificateId, requestOptions)
+  }
+
+  /**
    * Get a Connection
    *
    * Get the details of an existing connection.
@@ -137,6 +657,75 @@ class SSO(
   ): Connection =
     withContext(Dispatchers.IO) {
       getConnection(id, requestOptions)
+    }
+
+  /**
+   * Update a Connection
+   *
+   * Updates an existing connection. Only the provided fields are changed; fields that accept `null` are reset to their default behavior.
+   *
+   * @param id Unique identifier for the Connection.
+   * @param name A human-readable name for the Connection.
+   * @param externalId The customer-owned identifier for the Connection. Set to `null` to stop tracking one.
+   * @param connectionType The type of the Connection. Immutable after creation — it may be sent, but only with the Connection current type.
+   * @param attributeMaps How IdP attributes or claims map onto WorkOS profile fields. Only the provided fields are updated.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the Connection
+   */
+  @JvmOverloads
+  fun updateConnection(
+    id: String,
+    patchProtocolOptions: PatchProtocolOptions? = null,
+    name: PatchField<String> = PatchField.Absent,
+    externalId: PatchField<String?> = PatchField.Absent,
+    connectionType: PatchField<String> = PatchField.Absent,
+    attributeMaps: PatchField<PatchConnectionAttributeMaps> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): Connection {
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "external_id" to externalId,
+        "connection_type" to connectionType,
+        "attribute_maps" to attributeMaps
+      )
+    if (patchProtocolOptions != null) {
+      when (patchProtocolOptions) {
+        is PatchProtocolOptions.SAML -> body["saml_options"] = patchProtocolOptions.samlOptions
+        is PatchProtocolOptions.Oidc -> body["oidc_options"] = patchProtocolOptions.oidcOptions
+      }
+    }
+    val config =
+      RequestConfig(
+        method = "PATCH",
+        path = "/connections/${encodePathSegment(id)}",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, Connection::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateConnection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateConnection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateConnectionSuspend")
+  suspend fun updateConnectionSuspend(
+    id: String,
+    patchProtocolOptions: PatchProtocolOptions? = null,
+    name: PatchField<String> = PatchField.Absent,
+    externalId: PatchField<String?> = PatchField.Absent,
+    connectionType: PatchField<String> = PatchField.Absent,
+    attributeMaps: PatchField<PatchConnectionAttributeMaps> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): Connection =
+    withContext(Dispatchers.IO) {
+      updateConnection(id, patchProtocolOptions, name, externalId, connectionType, attributeMaps, requestOptions)
     }
 
   /**
@@ -262,21 +851,30 @@ class SSO(
    *
    * Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
    *
-   * @param code The authorization code received from the authorization callback.
+   * @param code The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
+   * @param subjectToken The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+   * @param subjectTokenType The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
+   * @param organizationId The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the SSOTokenResponse
    */
   @JvmOverloads
   fun getProfileAndToken(
-    code: String,
+    code: String? = null,
+    subjectToken: String? = null,
+    subjectTokenType: String? = null,
+    organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse {
     val params = mutableListOf<Pair<String, String>>()
-    params += "code" to code
+    params.addIfNotNull("code", code)
     val body =
       bodyOf(
         "code" to code,
+        "subject_token" to subjectToken,
+        "subject_token_type" to subjectTokenType,
+        "organization_id" to organizationId,
         "grant_type" to "authorization_code",
         "client_id" to workos.clientId,
         "client_secret" to workos.apiKey
@@ -302,10 +900,13 @@ class SSO(
    */
   @JvmName("getProfileAndTokenSuspend")
   suspend fun getProfileAndTokenSuspend(
-    code: String,
+    code: String? = null,
+    subjectToken: String? = null,
+    subjectTokenType: String? = null,
+    organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse =
     withContext(Dispatchers.IO) {
-      getProfileAndToken(code, requestOptions)
+      getProfileAndToken(code, subjectToken, subjectTokenType, organizationId, requestOptions)
     }
 }

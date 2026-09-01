@@ -2,11 +2,5 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** CreatePasswordResetToken model. */
-data class CreatePasswordResetToken(
-  /** The email address of the user requesting a password reset. */
-  @JsonProperty("email")
-  val email: String
-)
+/** Alias for [CreateItContact]. */
+typealias CreatePasswordResetToken = CreateItContact

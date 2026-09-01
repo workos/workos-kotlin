@@ -2,16 +2,19 @@
 
 package com.workos.auditlogs
 
+import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
+import com.workos.auditlogs.Retention
 import com.workos.common.exceptions.GenericServerException
 import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.models.AuditLogSchemaTargetInput
 import com.workos.test.TestBase
+import com.workos.types.UpdateAuditLogsRetentionRetentionPeriod
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -31,11 +34,22 @@ class AuditLogsTest : TestBase() {
   @Test
   fun `updateAuditLogsRetention returns a typed response`() {
     stubResponse("PUT", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
-    val result = api().updateAuditLogsRetention("sample-arg", 0)
+    val result =
+      api().updateAuditLogsRetention(
+        "sample-arg",
+        retention =
+          Retention.Period(
+            UpdateAuditLogsRetentionRetentionPeriod.values().first {
+              it !=
+                UpdateAuditLogsRetentionRetentionPeriod.Unknown
+            }
+          )
+      )
     assertNotNull(result)
     wireMockRule.verify(
       putRequestedFor(urlPathMatching("/organizations/sample-arg/audit_logs_retention"))
-        .withRequestBody(matchingJsonPath("\$.retention_period_in_days"))
+        .withQueryParam("retention_period", absent())
+        .withQueryParam("retention_period_in_days", absent())
     )
   }
 

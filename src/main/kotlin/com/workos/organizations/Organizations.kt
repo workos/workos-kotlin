@@ -12,9 +12,12 @@ import com.workos.common.http.addJoinedIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.AuditLogConfiguration
+import com.workos.models.ItContact
+import com.workos.models.ItContactList
 import com.workos.models.Organization
 import com.workos.models.OrganizationAuthorizedConnectApplicationListData
 import com.workos.models.OrganizationDomainData
+import com.workos.types.InviteItContactIntents
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -97,7 +100,7 @@ class Organizations(
    *
    * @param name The name of the organization.
    * @param allowProfilesOutsideOrganization Whether the organization allows profiles from outside the organization to sign in.
-   * @param domains The domains associated with the organization. Deprecated in favor of `domain_data`.
+   * @param domains **Deprecated.** The domains associated with the organization. Deprecated in favor of `domain_data`.
    * @param domainData The domains associated with the organization, including verification state.
    * @param metadata Object containing [metadata](https://workos.com/docs/authkit/metadata) key/value pairs associated with the Organization.
    * @param externalId An external identifier for the Organization.
@@ -447,4 +450,227 @@ class Organizations(
     withContext(Dispatchers.IO) {
       listAuthorizedApplications(organizationId, before, after, limit, order, requestOptions)
     }
+
+  /**
+   * List IT contacts
+   *
+   * Get the IT contacts for an organization.
+   *
+   * @param organizationId The ID of the organization.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ItContactList
+   */
+  @JvmOverloads
+  fun listItContacts(
+    organizationId: String,
+    requestOptions: RequestOptions? = null
+  ): ItContactList {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/organizations/${encodePathSegment(organizationId)}/it_contacts",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ItContactList::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listItContacts]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listItContacts] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listItContactsSuspend")
+  suspend fun listItContactsSuspend(
+    organizationId: String,
+    requestOptions: RequestOptions? = null
+  ): ItContactList =
+    withContext(Dispatchers.IO) {
+      listItContacts(organizationId, requestOptions)
+    }
+
+  /**
+   * Create an IT contact
+   *
+   * Add an IT contact to an organization. No Admin Portal invitation is sent, though the contact is notified if the organization has a connection certificate nearing expiry.
+   *
+   * @param organizationId The ID of the organization.
+   * @param email The email address of the IT contact.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ItContact
+   */
+  @JvmOverloads
+  fun createItContact(
+    organizationId: String,
+    email: String,
+    requestOptions: RequestOptions? = null
+  ): ItContact {
+    val body =
+      bodyOf(
+        "email" to email
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/organizations/${encodePathSegment(organizationId)}/it_contacts",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ItContact::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createItContact]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createItContact] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createItContactSuspend")
+  suspend fun createItContactSuspend(
+    organizationId: String,
+    email: String,
+    requestOptions: RequestOptions? = null
+  ): ItContact =
+    withContext(Dispatchers.IO) {
+      createItContact(organizationId, email, requestOptions)
+    }
+
+  /**
+   * Delete an IT contact
+   *
+   * Remove an IT contact from an organization and revoke the contact's active setup links.
+   *
+   * @param organizationId The ID of the organization.
+   * @param contactId The ID of the IT contact.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteItContact(
+    organizationId: String,
+    contactId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/organizations/${encodePathSegment(organizationId)}/it_contacts/${encodePathSegment(contactId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteItContact]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteItContact] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteItContactSuspend")
+  suspend fun deleteItContactSuspend(
+    organizationId: String,
+    contactId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteItContact(organizationId, contactId, requestOptions)
+  }
+
+  /**
+   * Invite an IT contact
+   *
+   * Create an Admin Portal setup link and email it to the IT contact. An organization can have at most one active invitation.
+   *
+   * @param organizationId The ID of the organization.
+   * @param contactId The ID of the IT contact.
+   * @param intents The Admin Portal features that the IT contact can configure.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun inviteItContact(
+    organizationId: String,
+    contactId: String,
+    intents: List<InviteItContactIntents>,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body =
+      bodyOf(
+        "intents" to intents
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/organizations/${encodePathSegment(organizationId)}/it_contacts/${encodePathSegment(contactId)}/invite",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [inviteItContact]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [inviteItContact] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("inviteItContactSuspend")
+  suspend fun inviteItContactSuspend(
+    organizationId: String,
+    contactId: String,
+    intents: List<InviteItContactIntents>,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    inviteItContact(organizationId, contactId, intents, requestOptions)
+  }
+
+  /**
+   * Revoke an IT contact's invitation
+   *
+   * Revoke the organization's active Admin Portal invitation.
+   *
+   * @param organizationId The ID of the organization.
+   * @param contactId The ID of the IT contact.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun revokeItContact(
+    organizationId: String,
+    contactId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/organizations/${encodePathSegment(organizationId)}/it_contacts/${encodePathSegment(contactId)}/revoke",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [revokeItContact]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [revokeItContact] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("revokeItContactSuspend")
+  suspend fun revokeItContactSuspend(
+    organizationId: String,
+    contactId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    revokeItContact(organizationId, contactId, requestOptions)
+  }
 }

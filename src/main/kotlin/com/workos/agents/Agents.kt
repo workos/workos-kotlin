@@ -2,18 +2,31 @@
 
 package com.workos.agents
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.WorkOS
+import com.workos.common.http.Page
 import com.workos.common.http.PatchField
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
+import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.AgentAdminLinkClaimAttemptToExternalUserRequestUser
+import com.workos.models.AgentBlueprint
+import com.workos.models.AgentBlueprintsCreateRequestInvocableBy
+import com.workos.models.AgentBlueprintsCreateRequestSessionSetting
+import com.workos.models.AgentBlueprintsUpdateRequestInvocableBy
+import com.workos.models.AgentBlueprintsUpdateRequestSessionSetting
 import com.workos.models.AgentCredentialValidation
+import com.workos.models.AgentInstance
+import com.workos.models.AgentInstanceSession
 import com.workos.models.AgentRegistration
+import com.workos.models.AgentToken
 import com.workos.models.ClaimViewResponse
 import com.workos.types.AgentAdminValidateCredentialRequestType
+import com.workos.types.AgentBlueprintsTokenMintTokenRequestType
+import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -25,6 +38,336 @@ import kotlinx.coroutines.withContext
 class Agents(
   internal val workos: WorkOS
 ) {
+  /**
+   * List agent blueprints
+   *
+   * Lists the agent blueprints in the current environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listBlueprints(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentBlueprint> {
+    val itemType = object : TypeReference<AgentBlueprint>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/agents/blueprints",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listBlueprints]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listBlueprints] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listBlueprintsSuspend")
+  suspend fun listBlueprintsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentBlueprint> =
+    withContext(Dispatchers.IO) {
+      listBlueprints(before, after, limit, order, requestOptions)
+    }
+
+  /**
+   * Create an agent blueprint
+   *
+   * Creates an agent blueprint: the template describing what an agent may do (its permission ceiling), who may invoke it, and the lifetimes of its sessions.
+   *
+   * @param name Human-readable name of the agent blueprint.
+   * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint.
+   * @param description Human-readable description of the agent blueprint.
+   * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+   * @param invocableBy Who may mint sessions from this blueprint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentBlueprint
+   */
+  @JvmOverloads
+  fun createBlueprint(
+    name: String,
+    sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
+    description: String? = null,
+    permissions: List<String>? = null,
+    invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint {
+    val body =
+      bodyOf(
+        "name" to name,
+        "session_settings" to sessionSettings,
+        "description" to description,
+        "permissions" to permissions,
+        "invocable_by" to invocableBy
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/agents/blueprints",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentBlueprint::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createBlueprint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createBlueprint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createBlueprintSuspend")
+  suspend fun createBlueprintSuspend(
+    name: String,
+    sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
+    description: String? = null,
+    permissions: List<String>? = null,
+    invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint =
+    withContext(Dispatchers.IO) {
+      createBlueprint(name, sessionSettings, description, permissions, invocableBy, requestOptions)
+    }
+
+  /**
+   * Get an agent blueprint
+   *
+   * Retrieves an agent blueprint by ID.
+   *
+   * @param agentBlueprintId The unique ID of the agent blueprint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentBlueprint
+   */
+  @JvmOverloads
+  fun getBlueprint(
+    agentBlueprintId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/agents/blueprints/${encodePathSegment(agentBlueprintId)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentBlueprint::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getBlueprint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getBlueprint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getBlueprintSuspend")
+  suspend fun getBlueprintSuspend(
+    agentBlueprintId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint =
+    withContext(Dispatchers.IO) {
+      getBlueprint(agentBlueprintId, requestOptions)
+    }
+
+  /**
+   * Update an agent blueprint
+   *
+   * Updates an agent blueprint. Omitted fields are left unchanged; provided lists replace the existing configuration.
+   *
+   * @param agentBlueprintId The unique ID of the agent blueprint.
+   * @param name Human-readable name of the agent blueprint.
+   * @param description Human-readable description of the agent blueprint. Pass `null` to clear it.
+   * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+   * @param invocableBy Who may mint sessions from this blueprint. Omitted lists are left unchanged.
+   * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentBlueprint
+   */
+  @JvmOverloads
+  fun updateBlueprint(
+    agentBlueprintId: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    permissions: PatchField<List<String>> = PatchField.Absent,
+    invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
+    sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint {
+    val body =
+      patchBodyOf(
+        "name" to name,
+        "description" to description,
+        "permissions" to permissions,
+        "invocable_by" to invocableBy,
+        "session_settings" to sessionSettings
+      )
+    val config =
+      RequestConfig(
+        method = "PATCH",
+        path = "/agents/blueprints/${encodePathSegment(agentBlueprintId)}",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentBlueprint::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateBlueprint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateBlueprint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateBlueprintSuspend")
+  suspend fun updateBlueprintSuspend(
+    agentBlueprintId: String,
+    name: PatchField<String> = PatchField.Absent,
+    description: PatchField<String?> = PatchField.Absent,
+    permissions: PatchField<List<String>> = PatchField.Absent,
+    invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
+    sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ): AgentBlueprint =
+    withContext(Dispatchers.IO) {
+      updateBlueprint(agentBlueprintId, name, description, permissions, invocableBy, sessionSettings, requestOptions)
+    }
+
+  /**
+   * Delete an agent blueprint
+   *
+   * Deletes an agent blueprint along with its configuration, instances, and sessions.
+   *
+   * @param agentBlueprintId The unique ID of the agent blueprint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteBlueprint(
+    agentBlueprintId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/agents/blueprints/${encodePathSegment(agentBlueprintId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteBlueprint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteBlueprint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteBlueprintSuspend")
+  suspend fun deleteBlueprintSuspend(
+    agentBlueprintId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteBlueprint(agentBlueprintId, requestOptions)
+  }
+
+  /**
+   * Mint an agent token
+   *
+   * Mint an agent access token (and backing session) from an agent blueprint. The session can be user-delegated (exchanging a user access token), autonomous (the agent acting as itself in an organization), agent-delegated (the agent exchanging its own access token for a new session on the same instance), or a refresh of a previously issued refresh token.
+   *
+   * @param agentBlueprintId The unique ID of the agent blueprint.
+   * @param type How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`.
+   * @param userAccessToken The access token of the user delegating to the agent. The token identifies the user and organization; effective permissions are resolved server-side.
+   * @param intent Optional caller-supplied context, echoed as an object with a `text` field in the `intent` claim of the minted access token.
+   * @param organizationId The organization the agent acts within when operating as itself.
+   * @param agentAccessToken The agent's own access token to exchange for a new session on the same instance. The token must have been minted from this blueprint; permissions are re-derived from current authority.
+   * @param refreshToken The refresh token issued with a previous agent access token. Refresh tokens are single-use: each refresh rotates it.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentToken
+   */
+  @JvmOverloads
+  fun createBlueprintToken(
+    agentBlueprintId: String,
+    type: AgentBlueprintsTokenMintTokenRequestType,
+    userAccessToken: String? = null,
+    intent: String? = null,
+    organizationId: String? = null,
+    agentAccessToken: String? = null,
+    refreshToken: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AgentToken {
+    val body =
+      bodyOf(
+        "type" to type,
+        "user_access_token" to userAccessToken,
+        "intent" to intent,
+        "organization_id" to organizationId,
+        "agent_access_token" to agentAccessToken,
+        "refresh_token" to refreshToken
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/agents/blueprints/${encodePathSegment(agentBlueprintId)}/tokens",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentToken::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createBlueprintToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createBlueprintToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createBlueprintTokenSuspend")
+  suspend fun createBlueprintTokenSuspend(
+    agentBlueprintId: String,
+    type: AgentBlueprintsTokenMintTokenRequestType,
+    userAccessToken: String? = null,
+    intent: String? = null,
+    organizationId: String? = null,
+    agentAccessToken: String? = null,
+    refreshToken: String? = null,
+    requestOptions: RequestOptions? = null
+  ): AgentToken =
+    withContext(Dispatchers.IO) {
+      createBlueprintToken(agentBlueprintId, type, userAccessToken, intent, organizationId, agentAccessToken, refreshToken, requestOptions)
+    }
+
   /**
    * Link a claim attempt to an external user
    *
@@ -176,5 +519,294 @@ class Agents(
   ): AgentRegistration =
     withContext(Dispatchers.IO) {
       getRegistration(id, requestOptions)
+    }
+
+  /**
+   * List agent instances
+   *
+   * Lists the agent instances in the current environment. Instances are created implicitly when tokens are minted.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param organizationId Only return instances acting within this organization.
+   * @param agentBlueprintId Only return instances minted from this blueprint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listInstances(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    agentBlueprintId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentInstance> {
+    val itemType = object : TypeReference<AgentInstance>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/agents/instances",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
+      addIfNotNull("agent_blueprint_id", agentBlueprintId)
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listInstances]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listInstances] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listInstancesSuspend")
+  suspend fun listInstancesSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    organizationId: String? = null,
+    agentBlueprintId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentInstance> =
+    withContext(Dispatchers.IO) {
+      listInstances(before, after, limit, order, organizationId, agentBlueprintId, requestOptions)
+    }
+
+  /**
+   * Get an agent instance
+   *
+   * Retrieves an agent instance by ID.
+   *
+   * @param agentInstanceId The unique ID of the agent instance.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentInstance
+   */
+  @JvmOverloads
+  fun getInstance(
+    agentInstanceId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstance {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/agents/instances/${encodePathSegment(agentInstanceId)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentInstance::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getInstance]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getInstance] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getInstanceSuspend")
+  suspend fun getInstanceSuspend(
+    agentInstanceId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstance =
+    withContext(Dispatchers.IO) {
+      getInstance(agentInstanceId, requestOptions)
+    }
+
+  /**
+   * Delete an agent instance
+   *
+   * Deletes an agent instance along with its sessions, invalidating their refresh tokens.
+   *
+   * @param agentInstanceId The unique ID of the agent instance.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteInstance(
+    agentInstanceId: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/agents/instances/${encodePathSegment(agentInstanceId)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteInstance]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteInstance] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteInstanceSuspend")
+  suspend fun deleteInstanceSuspend(
+    agentInstanceId: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteInstance(agentInstanceId, requestOptions)
+  }
+
+  /**
+   * List agent instance sessions
+   *
+   * Lists the agent instance sessions in the current environment. Sessions are created when tokens are minted.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param agentBlueprintId Only return sessions of instances minted from this blueprint.
+   * @param agentInstanceId Only return sessions belonging to this agent instance.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listSessions(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    agentBlueprintId: String? = null,
+    agentInstanceId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentInstanceSession> {
+    val itemType = object : TypeReference<AgentInstanceSession>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/agents/sessions",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("agent_blueprint_id", agentBlueprintId)
+      addIfNotNull("agent_instance_id", agentInstanceId)
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listSessions]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listSessions] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listSessionsSuspend")
+  suspend fun listSessionsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    agentBlueprintId: String? = null,
+    agentInstanceId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AgentInstanceSession> =
+    withContext(Dispatchers.IO) {
+      listSessions(before, after, limit, order, agentBlueprintId, agentInstanceId, requestOptions)
+    }
+
+  /**
+   * Get an agent instance session
+   *
+   * Retrieves an agent instance session by ID.
+   *
+   * @param agentInstanceSessionId The unique ID of the agent instance session.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentInstanceSession
+   */
+  @JvmOverloads
+  fun getSession(
+    agentInstanceSessionId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstanceSession {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/agents/sessions/${encodePathSegment(agentInstanceSessionId)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentInstanceSession::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getSession]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getSession] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getSessionSuspend")
+  suspend fun getSessionSuspend(
+    agentInstanceSessionId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstanceSession =
+    withContext(Dispatchers.IO) {
+      getSession(agentInstanceSessionId, requestOptions)
+    }
+
+  /**
+   * Revoke an agent instance session
+   *
+   * Revokes an agent instance session, invalidating its refresh token and every access token minted under it. Revocation is idempotent: revoking an already-revoked session keeps the original `revoked_at`, and revoking an already-expired session returns the session with `status: expired` and a null `revoked_at`.
+   *
+   * @param agentInstanceSessionId The unique ID of the agent instance session.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentInstanceSession
+   */
+  @JvmOverloads
+  fun revokeSession(
+    agentInstanceSessionId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstanceSession {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/agents/sessions/${encodePathSegment(agentInstanceSessionId)}/revoke",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentInstanceSession::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [revokeSession]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [revokeSession] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("revokeSessionSuspend")
+  suspend fun revokeSessionSuspend(
+    agentInstanceSessionId: String,
+    requestOptions: RequestOptions? = null
+  ): AgentInstanceSession =
+    withContext(Dispatchers.IO) {
+      revokeSession(agentInstanceSessionId, requestOptions)
     }
 }

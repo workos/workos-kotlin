@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.TokenQueryGrantType
 
 /** TokenQuery model. */
 data class TokenQuery(
@@ -14,11 +15,23 @@ data class TokenQuery(
   @JsonProperty("client_secret")
   val clientSecret: String,
 
-  /** The authorization code received from the authorization callback. */
-  @JsonProperty("code")
-  val code: String,
-
   /** The grant type for the token request. */
   @JsonProperty("grant_type")
-  val grantType: String = "authorization_code"
+  val grantType: TokenQueryGrantType,
+
+  /** The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`. */
+  @JsonProperty("code")
+  val code: String? = null,
+
+  /** The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body. */
+  @JsonProperty("subject_token")
+  val subjectToken: String? = null,
+
+  /** The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body. */
+  @JsonProperty("subject_token_type")
+  val subjectTokenType: String? = null,
+
+  /** The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body. */
+  @JsonProperty("organization_id")
+  val organizationId: String? = null
 )

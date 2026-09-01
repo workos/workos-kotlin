@@ -8,19 +8,19 @@ import java.time.OffsetDateTime
 
 /** WaitlistUser model. */
 data class WaitlistUser(
-  /** The unique ID of the Waitlist User. */
+  /** The unique ID of the waitlist entry. */
   @JsonProperty("id")
   val id: String,
 
-  /** The email address of the Waitlist User. */
+  /** The email address of the user on the waitlist. */
   @JsonProperty("email")
   val email: String,
 
-  /** The state of the Waitlist User. */
+  /** The state of the waitlist entry. */
   @JsonProperty("state")
   val state: WaitlistUserState,
 
-  /** The timestamp when the Waitlist User was approved, or null if not yet approved. */
+  /** The timestamp when the entry was approved, or null if not yet approved. */
   @JsonProperty("approved_at")
   val approvedAt: OffsetDateTime?,
 
@@ -32,11 +32,15 @@ data class WaitlistUser(
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
 
+  /** Additional fields submitted when the user joined the waitlist. Values are user-provided — treat them as untrusted input when rendering or exporting. */
+  @JsonProperty("additional_fields")
+  val additionalFields: Map<String, String>? = null,
+
+  /** The unique ID of the waitlist the entry belongs to. */
+  @JsonProperty("waitlist_id")
+  val waitlistId: String? = null,
+
   /** Distinguishes the Waitlist User object. */
   @JsonProperty("object")
-  val objectType: String = "waitlist_user",
-
-  /** The unique ID of the Waitlist that the Waitlist User joined. */
-  @JsonProperty("waitlist_id")
-  val waitlistId: String? = null
+  val objectType: String = "waitlist_user"
 )

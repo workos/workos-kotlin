@@ -3,10 +3,18 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.UpdateAuditLogsRetentionRetentionPeriod
 
 /** UpdateAuditLogsRetention model. */
 data class UpdateAuditLogsRetention(
-  /** The number of days Audit Log events will be retained. Valid values are `30` and `365`. */
+  /** The period Audit Log events will be retained. Valid values are `1_MONTH` through `11_MONTHS` in one-month increments and `1_YEAR` through `10_YEARS` in one-year increments. Mutually exclusive with `retention_period_in_days`. */
+  @JsonProperty("retention_period")
+  val retentionPeriod: UpdateAuditLogsRetentionRetentionPeriod? = null,
+
+  /** The number of days Audit Log events will be retained. Valid values are `30` through `330` in 30-day increments and `365` through `3650` in 365-day increments. Deprecated: use `retention_period` instead. Mutually exclusive with `retention_period`. */
   @JsonProperty("retention_period_in_days")
-  val retentionPeriodInDays: Long
+  @Deprecated(
+    "The number of days Audit Log events will be retained. Valid values are `30` through `330` in 30-day increments and `365` through `3650` in 365-day increments. Deprecated: use `retention_period` instead. Mutually exclusive with `retention_period`."
+  )
+  val retentionPeriodInDays: Long? = null
 )

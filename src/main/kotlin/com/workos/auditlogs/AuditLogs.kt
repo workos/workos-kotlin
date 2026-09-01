@@ -18,9 +18,39 @@ import com.workos.models.AuditLogSchemaActorInput
 import com.workos.models.AuditLogSchemaTargetInput
 import com.workos.models.AuditLogsRetention
 import com.workos.types.PaginationOrder
+import com.workos.types.UpdateAuditLogsRetentionRetentionPeriod
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
+
+/**
+ * Mutually exclusive retention parameter variants.
+ *
+ * Usage from Kotlin:
+ * ```kotlin
+ * val target: Retention = Retention.Period(period = "...")
+ * ```
+ *
+ * Usage from Java:
+ * ```java
+ * Retention target = new Retention.Period("...");
+ * ```
+ *
+ * Java callers may also use the per-variant overloads on the surrounding API class to skip variant construction entirely.
+ */
+sealed class Retention {
+  /** Variant: period. */
+  data class Period(
+    /** The retention period. */
+    val period: UpdateAuditLogsRetentionRetentionPeriod
+  ) : Retention()
+
+  /** Variant: period in days. */
+  data class PeriodInDays(
+    /** The retention period in days. */
+    val periodInDays: Long
+  ) : Retention()
+}
 
 /**
  * API accessor for AuditLogs.
@@ -77,7 +107,6 @@ class AuditLogs(
    * Set the event retention period for the given Organization.
    *
    * @param id Unique identifier of the Organization.
-   * @param retentionPeriodInDays The number of days Audit Log events will be retained. Valid values are `30` and `365`.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuditLogsRetention
@@ -85,13 +114,14 @@ class AuditLogs(
   @JvmOverloads
   fun updateAuditLogsRetention(
     id: String,
-    retentionPeriodInDays: Long,
+    retention: Retention,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetention {
-    val body =
-      bodyOf(
-        "retention_period_in_days" to retentionPeriodInDays
-      )
+    val body = linkedMapOf<String, Any?>()
+    when (retention) {
+      is Retention.Period -> body["retention_period"] = retention.period
+      is Retention.PeriodInDays -> body["retention_period_in_days"] = retention.periodInDays
+    }
     val config =
       RequestConfig(
         method = "PUT",
@@ -113,11 +143,11 @@ class AuditLogs(
   @JvmName("updateAuditLogsRetentionSuspend")
   suspend fun updateAuditLogsRetentionSuspend(
     id: String,
-    retentionPeriodInDays: Long,
+    retention: Retention,
     requestOptions: RequestOptions? = null
   ): AuditLogsRetention =
     withContext(Dispatchers.IO) {
-      updateAuditLogsRetention(id, retentionPeriodInDays, requestOptions)
+      updateAuditLogsRetention(id, retention, requestOptions)
     }
 
   /**
