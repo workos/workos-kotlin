@@ -1,5 +1,26 @@
 # Changelog
 
+## [7.3.0](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.3.0) (2026-09-01)
+
+
+### Features
+
+* **agents:** Add blueprint, instance, and session endpoints ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **audit_logs:** Replace retentionPeriodInDays param with retention union supporting retention periods ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **generated:** Agents (batch 13ebc8c1) ([#430](https://github.com/workos/workos-kotlin/issues/430)) ([a06c9b2](https://github.com/workos/workos-kotlin/commit/a06c9b258b8843f566dc18d973c48f10bac5af8f))
+* **organizations:** Add IT contacts endpoints ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **platform_teams:** Add Platform Teams service ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **sso:** Add connection management and SAML certificate endpoints ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **sso:** Make code optional on getProfileAndToken ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **user_management:** Add email-completion grant and waitlist endpoints ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+* **webhooks:** Add agent instance and blueprint webhook event types ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#424](https://github.com/workos/workos-kotlin/issues/424)) ([c40d8a6](https://github.com/workos/workos-kotlin/commit/c40d8a63b474f910dd269e9b958e17d7e6a71b2e))
+* **sso:** Remove DiscordOAuth, GrokOAuth, and XOAuth from connection type enums ([#428](https://github.com/workos/workos-kotlin/issues/428)) ([78d9aa5](https://github.com/workos/workos-kotlin/commit/78d9aa57b691cf0828eefd9efc0d1f17281484fa))
+
 ## [7.2.0](https://github.com/workos/workos-kotlin/compare/v7.1.0...v7.2.0) (2026-08-11)
 
 * [#420](https://github.com/workos/workos-kotlin/pull/420) feat(generated)!: regenerate from spec (3 changes)
