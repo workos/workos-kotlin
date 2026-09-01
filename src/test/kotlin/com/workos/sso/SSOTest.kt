@@ -2,7 +2,6 @@
 
 package com.workos.sso
 
-import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
@@ -24,6 +23,108 @@ class SSOTest : TestBase() {
     stubResponse("GET", "/connections", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listConnections()
     assertNotNull(result)
+  }
+
+  @Test
+  fun `listConnectionSAMLIdpSigningCerts returns a typed response`() {
+    stubResponse("GET", "/connections/sample-arg/saml_idp_signing_certs", 200, "{\"object\": \"list\", \"data\": []}")
+    val result = api().listConnectionSAMLIdpSigningCerts("sample-arg")
+    assertNotNull(result)
+    assertEquals("list", result.objectType)
+  }
+
+  @Test
+  fun `createConnectionSAMLIdpSigningCert returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/connections/sample-arg/saml_idp_signing_certs",
+      200,
+      "{\"object\": \"saml_idp_signing_certificate\", \"id\": \"sample\", \"value\": \"sample\", \"not_before\": null, \"not_after\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createConnectionSAMLIdpSigningCert("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("saml_idp_signing_certificate", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.value)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/connections/sample-arg/saml_idp_signing_certs"))
+        .withRequestBody(matchingJsonPath("\$.value"))
+    )
+  }
+
+  @Test
+  fun `deleteConnectionSAMLIdpSigningCert completes without throwing`() {
+    stubResponse("DELETE", "/connections/sample-arg/saml_idp_signing_certs/sample-arg", 204)
+    api().deleteConnectionSAMLIdpSigningCert("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `listConnectionSAMLSpEncryptionCerts returns a typed response`() {
+    stubResponse("GET", "/connections/sample-arg/saml_sp_encryption_certs", 200, "{\"object\": \"list\", \"data\": []}")
+    val result = api().listConnectionSAMLSpEncryptionCerts("sample-arg")
+    assertNotNull(result)
+    assertEquals("list", result.objectType)
+  }
+
+  @Test
+  fun `createConnectionSAMLSpEncryptionCert returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/connections/sample-arg/saml_sp_encryption_certs",
+      200,
+      "{\"object\": \"saml_sp_encryption_certificate\", \"id\": \"sample\", \"value\": \"sample\", \"not_before\": null, " +
+        "\"not_after\": null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createConnectionSAMLSpEncryptionCert("sample-arg")
+    assertNotNull(result)
+    assertEquals("saml_sp_encryption_certificate", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.value)
+  }
+
+  @Test
+  fun `deleteConnectionSAMLSpEncryptionCert completes without throwing`() {
+    stubResponse("DELETE", "/connections/sample-arg/saml_sp_encryption_certs/sample-arg", 204)
+    api().deleteConnectionSAMLSpEncryptionCert("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `listConnectionSAMLSpSigningCert returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/connections/sample-arg/saml_sp_signing_cert",
+      200,
+      "{\"object\": \"saml_sp_signing_certificate\", \"id\": \"sample\", \"value\": \"sample\", \"not_before\": null, \"not_after\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().listConnectionSAMLSpSigningCert("sample-arg")
+    assertNotNull(result)
+    assertEquals("saml_sp_signing_certificate", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.value)
+  }
+
+  @Test
+  fun `createConnectionSAMLSpSigningCert returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/connections/sample-arg/saml_sp_signing_cert",
+      200,
+      "{\"object\": \"saml_sp_signing_certificate\", \"id\": \"sample\", \"value\": \"sample\", \"not_before\": null, \"not_after\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createConnectionSAMLSpSigningCert("sample-arg")
+    assertNotNull(result)
+    assertEquals("saml_sp_signing_certificate", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.value)
+  }
+
+  @Test
+  fun `deleteConnectionSAMLSpSigningCert completes without throwing`() {
+    stubResponse("DELETE", "/connections/sample-arg/saml_sp_signing_cert/sample-arg", 204)
+    api().deleteConnectionSAMLSpSigningCert("sample-arg", "sample-arg")
   }
 
   @Test
@@ -91,15 +192,11 @@ class SSOTest : TestBase() {
         "\"sample\", \"organization_id\": null, \"connection_id\": \"sample\", \"connection_type\": \"Pending\", \"idp_id\": \"sample\", " +
         "\"email\": \"sample\", \"first_name\": null, \"last_name\": null, \"name\": null, \"raw_attributes\": {}}}"
     )
-    val result = api().getProfileAndToken("sample-arg")
+    val result = api().getProfileAndToken()
     assertNotNull(result)
     assertEquals("Bearer", result.tokenType)
     assertEquals("sample", result.accessToken)
     assertEquals(0L, result.expiresIn)
-    wireMockRule.verify(
-      postRequestedFor(urlPathMatching("/sso/token"))
-        .withQueryParam("code", matching("sample-arg"))
-    )
   }
 
   @Test
