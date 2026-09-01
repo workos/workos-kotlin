@@ -10,10 +10,6 @@ data class AgentBlueprintsCreateRequest(
   @JsonProperty("name")
   val name: String,
 
-  /** Token and session lifetimes for sessions minted from this blueprint. */
-  @JsonProperty("session_settings")
-  val sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
-
   /** Human-readable description of the agent blueprint. */
   @JsonProperty("description")
   val description: String? = null,
@@ -24,5 +20,9 @@ data class AgentBlueprintsCreateRequest(
 
   /** Who may mint sessions from this blueprint. */
   @JsonProperty("invocable_by")
-  val invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null
+  val invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+
+  /** Token and session lifetimes for sessions minted from this blueprint. */
+  @JsonProperty("session_settings")
+  val sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null
 )
