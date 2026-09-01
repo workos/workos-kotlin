@@ -41,6 +41,7 @@
     "src/main/kotlin/com/workos/models/AgentBlueprintsCreateRequestInvocableBy.kt",
     "src/main/kotlin/com/workos/models/AgentBlueprintsCreateRequestSessionSetting.kt",
     "src/main/kotlin/com/workos/models/AgentBlueprintsTokenMintTokenRequest.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsTokenValidateTokenRequest.kt",
     "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequest.kt",
     "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequestInvocableBy.kt",
     "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequestSessionSetting.kt",
@@ -81,6 +82,7 @@
     "src/main/kotlin/com/workos/models/AgentRegistrationRevoked.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationRevokedData.kt",
     "src/main/kotlin/com/workos/models/AgentToken.kt",
+    "src/main/kotlin/com/workos/models/AgentTokenValidation.kt",
     "src/main/kotlin/com/workos/models/ApiKey.kt",
     "src/main/kotlin/com/workos/models/ApiKeyCreated.kt",
     "src/main/kotlin/com/workos/models/ApiKeyCreatedData.kt",
@@ -1843,6 +1845,10 @@
     "POST /user_management/waitlists/{id}/entries": {
       "sdkMethod": "createWaitlistEntry",
       "service": "userManagement"
+    },
+    "POST /agents/blueprints/{agent_blueprint_id}/tokens/validate": {
+      "sdkMethod": "validateBlueprintToken",
+      "service": "agents"
     }
   }
 }
