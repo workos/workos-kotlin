@@ -16,6 +16,7 @@ data class OrganizationInput(
 
   /** The domains associated with the organization. Deprecated in favor of `domain_data`. */
   @JsonProperty("domains")
+  @Deprecated("The domains associated with the organization. Deprecated in favor of `domain_data`.")
   val domains: List<String>? = null,
 
   /** The domains associated with the organization, including verification state. */

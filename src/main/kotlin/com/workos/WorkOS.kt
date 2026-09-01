@@ -22,6 +22,7 @@ import com.workos.organizationmembership.OrganizationMembershipService
 import com.workos.organizations.Organizations
 import com.workos.pipes.Pipes
 import com.workos.pipesprovider.PipesProvider
+import com.workos.platformteams.PlatformTeams
 import com.workos.radar.Radar
 import com.workos.sso.SSO
 import com.workos.usermanagement.UserManagement
@@ -280,5 +281,14 @@ open class WorkOS
           Agents::class
         ) {
           Agents(this)
+        }
+
+    /** Lazily-constructed [PlatformTeams] accessor for this [WorkOS] client. */
+    val platformTeams: PlatformTeams
+      get() =
+        service(
+          PlatformTeams::class
+        ) {
+          PlatformTeams(this)
         }
   }

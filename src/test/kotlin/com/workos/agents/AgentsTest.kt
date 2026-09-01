@@ -11,6 +11,7 @@ import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
 import com.workos.types.AgentAdminValidateCredentialRequestType
+import com.workos.types.AgentBlueprintsTokenMintTokenRequestType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -18,6 +19,81 @@ import org.junit.jupiter.api.Test
 
 class AgentsTest : TestBase() {
   private fun api() = Agents(createWorkOSClient())
+
+  @Test
+  fun `listBlueprints returns a typed response`() {
+    stubResponse("GET", "/agents/blueprints", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listBlueprints()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getBlueprint returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/agents/blueprints/sample-arg",
+      200,
+      "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
+        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getBlueprint("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_blueprint", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+  }
+
+  @Test
+  fun `updateBlueprint returns a typed response`() {
+    stubResponse(
+      "PATCH",
+      "/agents/blueprints/sample-arg",
+      200,
+      "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
+        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().updateBlueprint("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_blueprint", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+  }
+
+  @Test
+  fun `deleteBlueprint completes without throwing`() {
+    stubResponse("DELETE", "/agents/blueprints/sample-arg", 204)
+    api().deleteBlueprint("sample-arg")
+  }
+
+  @Test
+  fun `createBlueprintToken returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/agents/blueprints/sample-arg/tokens",
+      200,
+      "{\"access_token\": \"sample\", \"token_type\": \"Bearer\", \"expires_in\": 0, \"refresh_token\": \"sample\", " +
+        "\"agent_instance_id\": \"sample\", \"new_instance\": false, \"agent_instance_session_id\": \"sample\", \"permissions\": []}"
+    )
+    val result =
+      api().createBlueprintToken(
+        "sample-arg",
+        AgentBlueprintsTokenMintTokenRequestType.values().first { it != AgentBlueprintsTokenMintTokenRequestType.Unknown }
+      )
+    assertNotNull(result)
+    assertEquals("sample", result.accessToken)
+    assertEquals("Bearer", result.tokenType)
+    assertEquals(0L, result.expiresIn)
+    assertEquals("sample", result.refreshToken)
+    assertEquals("sample", result.agentInstanceId)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/agents/blueprints/sample-arg/tokens"))
+        .withRequestBody(matchingJsonPath("\$.type"))
+    )
+  }
 
   @Test
   fun `createValidate returns a typed response`() {
@@ -54,46 +130,106 @@ class AgentsTest : TestBase() {
   }
 
   @Test
-  fun `createValidate translates 401 to UnauthorizedException`() {
-    stubResponse("POST", "/agents/credentials/validate", 401)
+  fun `listInstances returns a typed response`() {
+    stubResponse("GET", "/agents/instances", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listInstances()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getInstance returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/agents/instances/sample-arg",
+      200,
+      "{\"object\": \"agent_instance\", \"id\": \"sample\", \"agent_blueprint_id\": \"sample\", \"organization_id\": \"sample\", " +
+        "\"organization_membership_id\": null, \"type\": \"delegated\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getInstance("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_instance", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.agentBlueprintId)
+    assertEquals("sample", result.organizationId)
+  }
+
+  @Test
+  fun `deleteInstance completes without throwing`() {
+    stubResponse("DELETE", "/agents/instances/sample-arg", 204)
+    api().deleteInstance("sample-arg")
+  }
+
+  @Test
+  fun `listSessions returns a typed response`() {
+    stubResponse("GET", "/agents/sessions", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listSessions()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getSession returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/agents/sessions/sample-arg",
+      200,
+      "{\"object\": \"agent_instance_session\", \"id\": \"sample\", \"agent_instance_id\": \"sample\", \"status\": \"active\", " +
+        "\"expires_at\": \"2024-01-01T00:00:00Z\", \"revoked_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getSession("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_instance_session", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.agentInstanceId)
+  }
+
+  @Test
+  fun `revokeSession returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/agents/sessions/sample-arg/revoke",
+      200,
+      "{\"object\": \"agent_instance_session\", \"id\": \"sample\", \"agent_instance_id\": \"sample\", \"status\": \"active\", " +
+        "\"expires_at\": \"2024-01-01T00:00:00Z\", \"revoked_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().revokeSession("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_instance_session", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.agentInstanceId)
+  }
+
+  @Test
+  fun `listBlueprints translates 401 to UnauthorizedException`() {
+    stubResponse("GET", "/agents/blueprints", 401)
     assertThrows(UnauthorizedException::class.java) {
-      api().createValidate(
-        AgentAdminValidateCredentialRequestType.values().first { it != AgentAdminValidateCredentialRequestType.Unknown },
-        "sample-arg"
-      )
+      api().listBlueprints()
     }
   }
 
   @Test
-  fun `createValidate translates 404 to NotFoundException`() {
-    stubResponse("POST", "/agents/credentials/validate", 404)
+  fun `listBlueprints translates 404 to NotFoundException`() {
+    stubResponse("GET", "/agents/blueprints", 404)
     assertThrows(NotFoundException::class.java) {
-      api().createValidate(
-        AgentAdminValidateCredentialRequestType.values().first { it != AgentAdminValidateCredentialRequestType.Unknown },
-        "sample-arg"
-      )
+      api().listBlueprints()
     }
   }
 
   @Test
-  fun `createValidate translates 429 to RateLimitException`() {
-    stubResponse("POST", "/agents/credentials/validate", 429)
+  fun `listBlueprints translates 429 to RateLimitException`() {
+    stubResponse("GET", "/agents/blueprints", 429)
     assertThrows(RateLimitException::class.java) {
-      api().createValidate(
-        AgentAdminValidateCredentialRequestType.values().first { it != AgentAdminValidateCredentialRequestType.Unknown },
-        "sample-arg"
-      )
+      api().listBlueprints()
     }
   }
 
   @Test
-  fun `createValidate translates 500 to GenericServerException`() {
-    stubResponse("POST", "/agents/credentials/validate", 500)
+  fun `listBlueprints translates 500 to GenericServerException`() {
+    stubResponse("GET", "/agents/blueprints", 500)
     assertThrows(GenericServerException::class.java) {
-      api().createValidate(
-        AgentAdminValidateCredentialRequestType.values().first { it != AgentAdminValidateCredentialRequestType.Unknown },
-        "sample-arg"
-      )
+      api().listBlueprints()
     }
   }
 }

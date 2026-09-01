@@ -382,8 +382,8 @@ class AuthorizationTest : TestBase() {
     wireMockRule.verify(
       patchRequestedFor(urlPathMatching("/authorization/organizations/sample-arg/resources/sample-arg/sample-arg"))
         .withQueryParam("parent_resource_id", absent())
-        .withQueryParam("parent_resource_external_id", absent())
         .withQueryParam("parent_resource_type_slug", absent())
+        .withQueryParam("parent_resource_external_id", absent())
     )
   }
 
@@ -459,8 +459,8 @@ class AuthorizationTest : TestBase() {
         .withRequestBody(matchingJsonPath("\$.resource_type_slug"))
         .withRequestBody(matchingJsonPath("\$.organization_id"))
         .withQueryParam("parent_resource_id", absent())
-        .withQueryParam("parent_resource_external_id", absent())
         .withQueryParam("parent_resource_type_slug", absent())
+        .withQueryParam("parent_resource_external_id", absent())
     )
   }
 
@@ -503,8 +503,8 @@ class AuthorizationTest : TestBase() {
     wireMockRule.verify(
       patchRequestedFor(urlPathMatching("/authorization/resources/sample-arg"))
         .withQueryParam("parent_resource_id", absent())
-        .withQueryParam("parent_resource_external_id", absent())
         .withQueryParam("parent_resource_type_slug", absent())
+        .withQueryParam("parent_resource_external_id", absent())
     )
   }
 

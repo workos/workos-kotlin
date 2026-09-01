@@ -11,15 +11,15 @@ data class UpdateCustomProviderDefinition(
   @JsonProperty("name")
   val name: String? = null,
 
-  /** The provider's OAuth authorization endpoint. */
+  /** The provider's OAuth authorization endpoint. Must be a static URL: `${config.…}` placeholders are resolved against a provider's declared config fields, which custom providers cannot declare. */
   @JsonProperty("authorization_url")
   val authorizationUrl: String? = null,
 
-  /** The provider's OAuth token endpoint. */
+  /** The provider's OAuth token endpoint. Must be a static URL: `${config.…}` placeholders are resolved against a provider's declared config fields, which custom providers cannot declare. */
   @JsonProperty("token_url")
   val tokenUrl: String? = null,
 
-  /** The endpoint used to refresh tokens, if different from the token endpoint. */
+  /** The endpoint used to refresh tokens, if different from the token endpoint. Must be a static URL, like the other endpoints. */
   @JsonProperty("refresh_token_url")
   val refreshTokenUrl: String? = null,
 

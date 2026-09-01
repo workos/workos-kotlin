@@ -24,7 +24,37 @@
     "src/main/kotlin/com/workos/models/AgentAdminLinkClaimAttemptToExternalUserRequest.kt",
     "src/main/kotlin/com/workos/models/AgentAdminLinkClaimAttemptToExternalUserRequestUser.kt",
     "src/main/kotlin/com/workos/models/AgentAdminValidateCredentialRequest.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprint.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintCreated.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintCreatedData.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintCreatedDataInvocableBy.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintCreatedDataSessionSetting.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintDeleted.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintDeletedData.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintInvocableBy.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintSessionSetting.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintUpdated.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintUpdatedData.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintUpdatedDataInvocableBy.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintUpdatedDataSessionSetting.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsCreateRequest.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsCreateRequestInvocableBy.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsCreateRequestSessionSetting.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsTokenMintTokenRequest.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequest.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequestInvocableBy.kt",
+    "src/main/kotlin/com/workos/models/AgentBlueprintsUpdateRequestSessionSetting.kt",
     "src/main/kotlin/com/workos/models/AgentCredentialValidation.kt",
+    "src/main/kotlin/com/workos/models/AgentInstance.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceCreated.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceCreatedData.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceDeleted.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceDeletedData.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceSession.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceSessionCreated.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceSessionCreatedData.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceSessionRevoked.kt",
+    "src/main/kotlin/com/workos/models/AgentInstanceSessionRevokedData.kt",
     "src/main/kotlin/com/workos/models/AgentRegistration.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationAgentIdentity.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationClaim.kt",
@@ -50,6 +80,7 @@
     "src/main/kotlin/com/workos/models/AgentRegistrationRefreshedData.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationRevoked.kt",
     "src/main/kotlin/com/workos/models/AgentRegistrationRevokedData.kt",
+    "src/main/kotlin/com/workos/models/AgentToken.kt",
     "src/main/kotlin/com/workos/models/ApiKey.kt",
     "src/main/kotlin/com/workos/models/ApiKeyCreated.kt",
     "src/main/kotlin/com/workos/models/ApiKeyCreatedData.kt",
@@ -188,6 +219,12 @@
     "src/main/kotlin/com/workos/models/CreateApplicationSecret.kt",
     "src/main/kotlin/com/workos/models/CreateAuthorizationPermission.kt",
     "src/main/kotlin/com/workos/models/CreateAuthorizationResource.kt",
+    "src/main/kotlin/com/workos/models/CreateConnection.kt",
+    "src/main/kotlin/com/workos/models/CreateConnectionAttributeMaps.kt",
+    "src/main/kotlin/com/workos/models/CreateConnectionKeyPair.kt",
+    "src/main/kotlin/com/workos/models/CreateConnectionOidcOptions.kt",
+    "src/main/kotlin/com/workos/models/CreateConnectionSAMLOptions.kt",
+    "src/main/kotlin/com/workos/models/CreateConnectionStandardAttributes.kt",
     "src/main/kotlin/com/workos/models/CreateCorsOrigin.kt",
     "src/main/kotlin/com/workos/models/CreateDataIntegration.kt",
     "src/main/kotlin/com/workos/models/CreateDataKeyRequest.kt",
@@ -195,6 +232,7 @@
     "src/main/kotlin/com/workos/models/CreateGroup.kt",
     "src/main/kotlin/com/workos/models/CreateGroupMembership.kt",
     "src/main/kotlin/com/workos/models/CreateGroupRoleAssignment.kt",
+    "src/main/kotlin/com/workos/models/CreateItContact.kt",
     "src/main/kotlin/com/workos/models/CreateM2MApplication.kt",
     "src/main/kotlin/com/workos/models/CreateMagicCodeAndReturn.kt",
     "src/main/kotlin/com/workos/models/CreateOAuthApplication.kt",
@@ -206,10 +244,13 @@
     "src/main/kotlin/com/workos/models/CreatePasswordResetToken.kt",
     "src/main/kotlin/com/workos/models/CreateRedirectUri.kt",
     "src/main/kotlin/com/workos/models/CreateRole.kt",
+    "src/main/kotlin/com/workos/models/CreateSAMLIdpSigningCertificate.kt",
+    "src/main/kotlin/com/workos/models/CreateTeam.kt",
     "src/main/kotlin/com/workos/models/CreateUser.kt",
     "src/main/kotlin/com/workos/models/CreateUserApiKey.kt",
     "src/main/kotlin/com/workos/models/CreateUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/CreateUserOrganizationMembership.kt",
+    "src/main/kotlin/com/workos/models/CreateWaitlistEntry.kt",
     "src/main/kotlin/com/workos/models/CreateWebhookEndpoint.kt",
     "src/main/kotlin/com/workos/models/CustomProviderDefinition.kt",
     "src/main/kotlin/com/workos/models/DataIntegration.kt",
@@ -272,6 +313,7 @@
     "src/main/kotlin/com/workos/models/EmailChange.kt",
     "src/main/kotlin/com/workos/models/EmailChangeConfirmation.kt",
     "src/main/kotlin/com/workos/models/EmailChangeConfirmationUser.kt",
+    "src/main/kotlin/com/workos/models/EmailCompletionSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/EmailVerification.kt",
     "src/main/kotlin/com/workos/models/EmailVerificationCodeSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/EmailVerificationCreated.kt",
@@ -341,6 +383,10 @@
     "src/main/kotlin/com/workos/models/InvitationResentData.kt",
     "src/main/kotlin/com/workos/models/InvitationRevoked.kt",
     "src/main/kotlin/com/workos/models/InvitationRevokedData.kt",
+    "src/main/kotlin/com/workos/models/InviteItContact.kt",
+    "src/main/kotlin/com/workos/models/ItContact.kt",
+    "src/main/kotlin/com/workos/models/ItContactList.kt",
+    "src/main/kotlin/com/workos/models/ItContactListListMetadata.kt",
     "src/main/kotlin/com/workos/models/JWTTemplateResponse.kt",
     "src/main/kotlin/com/workos/models/JwksResponse.kt",
     "src/main/kotlin/com/workos/models/JwksResponseKeys.kt",
@@ -405,6 +451,11 @@
     "src/main/kotlin/com/workos/models/PasswordResetSucceeded.kt",
     "src/main/kotlin/com/workos/models/PasswordResetSucceededData.kt",
     "src/main/kotlin/com/workos/models/PasswordSessionAuthenticateRequest.kt",
+    "src/main/kotlin/com/workos/models/PatchConnection.kt",
+    "src/main/kotlin/com/workos/models/PatchConnectionAttributeMaps.kt",
+    "src/main/kotlin/com/workos/models/PatchConnectionOidcOptions.kt",
+    "src/main/kotlin/com/workos/models/PatchConnectionSAMLOptions.kt",
+    "src/main/kotlin/com/workos/models/PatchConnectionStandardAttributes.kt",
     "src/main/kotlin/com/workos/models/Permission.kt",
     "src/main/kotlin/com/workos/models/PermissionCreated.kt",
     "src/main/kotlin/com/workos/models/PermissionCreatedData.kt",
@@ -440,6 +491,14 @@
     "src/main/kotlin/com/workos/models/ReplaceGroupRoleAssignments.kt",
     "src/main/kotlin/com/workos/models/ResendUserInviteOptions.kt",
     "src/main/kotlin/com/workos/models/ResetPasswordResponse.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportCompleted.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportCompletedData.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportCreated.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportCreatedData.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportDownloaded.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportDownloadedData.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportFailed.kt",
+    "src/main/kotlin/com/workos/models/ResourceExportFailedData.kt",
     "src/main/kotlin/com/workos/models/RevokeSession.kt",
     "src/main/kotlin/com/workos/models/Role.kt",
     "src/main/kotlin/com/workos/models/RoleCreated.kt",
@@ -449,6 +508,11 @@
     "src/main/kotlin/com/workos/models/RoleList.kt",
     "src/main/kotlin/com/workos/models/RoleUpdated.kt",
     "src/main/kotlin/com/workos/models/RoleUpdatedData.kt",
+    "src/main/kotlin/com/workos/models/SAMLIdpSigningCertificate.kt",
+    "src/main/kotlin/com/workos/models/SAMLIdpSigningCertificateList.kt",
+    "src/main/kotlin/com/workos/models/SAMLSpEncryptionCertificate.kt",
+    "src/main/kotlin/com/workos/models/SAMLSpEncryptionCertificateList.kt",
+    "src/main/kotlin/com/workos/models/SAMLSpSigningCertificate.kt",
     "src/main/kotlin/com/workos/models/SSOAuthorizeUrlResponse.kt",
     "src/main/kotlin/com/workos/models/SSODeviceAuthorizationRequest.kt",
     "src/main/kotlin/com/workos/models/SSOLogoutAuthorizeRequest.kt",
@@ -467,6 +531,7 @@
     "src/main/kotlin/com/workos/models/SessionRevokedDataImpersonator.kt",
     "src/main/kotlin/com/workos/models/SetRolePermissions.kt",
     "src/main/kotlin/com/workos/models/SlimRole.kt",
+    "src/main/kotlin/com/workos/models/Team.kt",
     "src/main/kotlin/com/workos/models/TokenQuery.kt",
     "src/main/kotlin/com/workos/models/UpdateAuditLogsRetention.kt",
     "src/main/kotlin/com/workos/models/UpdateAuthorizationPermission.kt",
@@ -538,6 +603,8 @@
     "src/main/kotlin/com/workos/models/VerifyEmailAddress.kt",
     "src/main/kotlin/com/workos/models/VerifyEmailResponse.kt",
     "src/main/kotlin/com/workos/models/VersionListResponse.kt",
+    "src/main/kotlin/com/workos/models/Waitlist.kt",
+    "src/main/kotlin/com/workos/models/WaitlistEntry.kt",
     "src/main/kotlin/com/workos/models/WaitlistUser.kt",
     "src/main/kotlin/com/workos/models/WaitlistUserApproved.kt",
     "src/main/kotlin/com/workos/models/WaitlistUserCreated.kt",
@@ -552,9 +619,15 @@
     "src/main/kotlin/com/workos/organizations/Organizations.kt",
     "src/main/kotlin/com/workos/pipes/Pipes.kt",
     "src/main/kotlin/com/workos/pipesprovider/PipesProvider.kt",
+    "src/main/kotlin/com/workos/platformteams/PlatformTeams.kt",
     "src/main/kotlin/com/workos/radar/Radar.kt",
     "src/main/kotlin/com/workos/sso/SSO.kt",
     "src/main/kotlin/com/workos/types/AgentAdminValidateCredentialRequestType.kt",
+    "src/main/kotlin/com/workos/types/AgentBlueprintsTokenMintTokenRequestType.kt",
+    "src/main/kotlin/com/workos/types/AgentInstanceCreatedDataType.kt",
+    "src/main/kotlin/com/workos/types/AgentInstanceDeletedDataType.kt",
+    "src/main/kotlin/com/workos/types/AgentInstanceSessionStatus.kt",
+    "src/main/kotlin/com/workos/types/AgentInstanceType.kt",
     "src/main/kotlin/com/workos/types/AgentRegistrationCreatedDataKind.kt",
     "src/main/kotlin/com/workos/types/AgentRegistrationCreatedDataMethod.kt",
     "src/main/kotlin/com/workos/types/AgentRegistrationCreatedDataStatus.kt",
@@ -589,6 +662,8 @@
     "src/main/kotlin/com/workos/types/ConnectionStatus.kt",
     "src/main/kotlin/com/workos/types/ConnectionType.kt",
     "src/main/kotlin/com/workos/types/ConnectionsConnectionType.kt",
+    "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
+    "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsTokenAuthenticationMethod.kt",
     "src/main/kotlin/com/workos/types/CreateDataIntegrationAuthMethods.kt",
     "src/main/kotlin/com/workos/types/CreateUserInviteOptionsLocale.kt",
     "src/main/kotlin/com/workos/types/CreateUserPasswordHashType.kt",
@@ -629,6 +704,7 @@
     "src/main/kotlin/com/workos/types/InvitationResentDataState.kt",
     "src/main/kotlin/com/workos/types/InvitationRevokedDataState.kt",
     "src/main/kotlin/com/workos/types/InvitationState.kt",
+    "src/main/kotlin/com/workos/types/InviteItContactIntents.kt",
     "src/main/kotlin/com/workos/types/OrganizationCreatedDataDomainState.kt",
     "src/main/kotlin/com/workos/types/OrganizationCreatedDataDomainVerificationStrategy.kt",
     "src/main/kotlin/com/workos/types/OrganizationDeletedDataDomainState.kt",
@@ -654,6 +730,8 @@
     "src/main/kotlin/com/workos/types/OrganizationUpdatedDataDomainState.kt",
     "src/main/kotlin/com/workos/types/OrganizationUpdatedDataDomainVerificationStrategy.kt",
     "src/main/kotlin/com/workos/types/PaginationOrder.kt",
+    "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
+    "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsTokenAuthenticationMethod.kt",
     "src/main/kotlin/com/workos/types/PipeConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/ProfileConnectionType.kt",
     "src/main/kotlin/com/workos/types/RadarListAction.kt",
@@ -664,13 +742,21 @@
     "src/main/kotlin/com/workos/types/RadarStandaloneResponseControl.kt",
     "src/main/kotlin/com/workos/types/RadarStandaloneResponseVerdict.kt",
     "src/main/kotlin/com/workos/types/ResendUserInviteOptionsLocale.kt",
+    "src/main/kotlin/com/workos/types/ResourceExportCompletedDataResourceType.kt",
+    "src/main/kotlin/com/workos/types/ResourceExportCreatedDataResourceType.kt",
+    "src/main/kotlin/com/workos/types/ResourceExportDownloadedDataResourceType.kt",
+    "src/main/kotlin/com/workos/types/ResourceExportFailedDataResourceType.kt",
     "src/main/kotlin/com/workos/types/RoleType.kt",
+    "src/main/kotlin/com/workos/types/SSOGrantType.kt",
     "src/main/kotlin/com/workos/types/SSOProvider.kt",
     "src/main/kotlin/com/workos/types/SessionCreatedDataAuthMethod.kt",
     "src/main/kotlin/com/workos/types/SessionCreatedDataStatus.kt",
     "src/main/kotlin/com/workos/types/SessionRevokedDataAuthMethod.kt",
     "src/main/kotlin/com/workos/types/SessionRevokedDataStatus.kt",
     "src/main/kotlin/com/workos/types/SortOrder.kt",
+    "src/main/kotlin/com/workos/types/TeamProductionState.kt",
+    "src/main/kotlin/com/workos/types/TokenQueryGrantType.kt",
+    "src/main/kotlin/com/workos/types/UpdateAuditLogsRetentionRetentionPeriod.kt",
     "src/main/kotlin/com/workos/types/UpdateCustomProviderDefinitionAuthenticateVia.kt",
     "src/main/kotlin/com/workos/types/UpdateUserPasswordHashType.kt",
     "src/main/kotlin/com/workos/types/UpdateUserPasswordSaltPosition.kt",
@@ -681,6 +767,7 @@
     "src/main/kotlin/com/workos/types/UserManagementAuthenticationProvider.kt",
     "src/main/kotlin/com/workos/types/UserManagementAuthenticationScreenHint.kt",
     "src/main/kotlin/com/workos/types/UserManagementOrganizationMembershipStatuses.kt",
+    "src/main/kotlin/com/workos/types/UserManagementWaitlistsState.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipBaseListDataStatus.kt",
     "src/main/kotlin/com/workos/types/UserOrganizationMembershipStatus.kt",
     "src/main/kotlin/com/workos/types/UserRoleAssignmentSourceType.kt",
@@ -697,6 +784,7 @@
     "src/main/kotlin/com/workos/types/VaultKekDeletedDataActorSource.kt",
     "src/main/kotlin/com/workos/types/VaultMetadataReadDataActorSource.kt",
     "src/main/kotlin/com/workos/types/VaultNamesListedDataActorSource.kt",
+    "src/main/kotlin/com/workos/types/WaitlistEntryState.kt",
     "src/main/kotlin/com/workos/types/WaitlistUserState.kt",
     "src/main/kotlin/com/workos/types/WebhookEndpointStatus.kt",
     "src/main/kotlin/com/workos/types/WidgetSessionTokenScopes.kt",
@@ -723,6 +811,7 @@
     "src/test/kotlin/com/workos/organizations/OrganizationsTest.kt",
     "src/test/kotlin/com/workos/pipes/PipesTest.kt",
     "src/test/kotlin/com/workos/pipesprovider/PipesProviderTest.kt",
+    "src/test/kotlin/com/workos/platformteams/PlatformTeamsTest.kt",
     "src/test/kotlin/com/workos/radar/RadarTest.kt",
     "src/test/kotlin/com/workos/sso/SSOTest.kt",
     "src/test/kotlin/com/workos/usermanagement/UserManagementTest.kt",
@@ -1606,6 +1695,154 @@
     "PUT /data-integrations/{slug}/client-credentials": {
       "sdkMethod": "updateDataIntegrationClientCredentials",
       "service": "pipes"
+    },
+    "GET /agents/blueprints": {
+      "sdkMethod": "listBlueprints",
+      "service": "agents"
+    },
+    "POST /agents/blueprints": {
+      "sdkMethod": "createBlueprint",
+      "service": "agents"
+    },
+    "GET /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "getBlueprint",
+      "service": "agents"
+    },
+    "PATCH /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "updateBlueprint",
+      "service": "agents"
+    },
+    "DELETE /agents/blueprints/{agent_blueprint_id}": {
+      "sdkMethod": "deleteBlueprint",
+      "service": "agents"
+    },
+    "POST /agents/blueprints/{agent_blueprint_id}/tokens": {
+      "sdkMethod": "createBlueprintToken",
+      "service": "agents"
+    },
+    "GET /agents/instances": {
+      "sdkMethod": "listInstances",
+      "service": "agents"
+    },
+    "GET /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "getInstance",
+      "service": "agents"
+    },
+    "DELETE /agents/instances/{agent_instance_id}": {
+      "sdkMethod": "deleteInstance",
+      "service": "agents"
+    },
+    "GET /agents/sessions": {
+      "sdkMethod": "listSessions",
+      "service": "agents"
+    },
+    "GET /agents/sessions/{agent_instance_session_id}": {
+      "sdkMethod": "getSession",
+      "service": "agents"
+    },
+    "POST /agents/sessions/{agent_instance_session_id}/revoke": {
+      "sdkMethod": "revokeSession",
+      "service": "agents"
+    },
+    "POST /connections": {
+      "sdkMethod": "createConnection",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "listConnectionSAMLIdpSigningCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_idp_signing_certs": {
+      "sdkMethod": "createConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_idp_signing_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLIdpSigningCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "listConnectionSAMLSpEncryptionCerts",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_encryption_certs": {
+      "sdkMethod": "createConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_encryption_certs/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpEncryptionCert",
+      "service": "sso"
+    },
+    "GET /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "listConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "POST /connections/{connectionId}/saml_sp_signing_cert": {
+      "sdkMethod": "createConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "DELETE /connections/{connectionId}/saml_sp_signing_cert/{certificateId}": {
+      "sdkMethod": "deleteConnectionSAMLSpSigningCert",
+      "service": "sso"
+    },
+    "PATCH /connections/{id}": {
+      "sdkMethod": "updateConnection",
+      "service": "sso"
+    },
+    "GET /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "listItContacts",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts": {
+      "sdkMethod": "createItContact",
+      "service": "organizations"
+    },
+    "DELETE /organizations/{organization_id}/it_contacts/{contact_id}": {
+      "sdkMethod": "deleteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/invite": {
+      "sdkMethod": "inviteItContact",
+      "service": "organizations"
+    },
+    "POST /organizations/{organization_id}/it_contacts/{contact_id}/revoke": {
+      "sdkMethod": "revokeItContact",
+      "service": "organizations"
+    },
+    "POST /platform/teams": {
+      "sdkMethod": "createTeam",
+      "service": "platformTeams"
+    },
+    "GET /platform/teams/{team_id}": {
+      "sdkMethod": "getTeam",
+      "service": "platformTeams"
+    },
+    "DELETE /user_management/waitlist_entries/{id}": {
+      "sdkMethod": "deleteWaitlistEntry",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/approve": {
+      "sdkMethod": "createWaitlistEntryApprove",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlist_entries/{id}/deny": {
+      "sdkMethod": "createWaitlistEntryDeny",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists": {
+      "sdkMethod": "listWaitlists",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}": {
+      "sdkMethod": "getWaitlist",
+      "service": "userManagement"
+    },
+    "GET /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "listWaitlistEntries",
+      "service": "userManagement"
+    },
+    "POST /user_management/waitlists/{id}/entries": {
+      "sdkMethod": "createWaitlistEntry",
+      "service": "userManagement"
     }
   }
 }

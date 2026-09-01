@@ -10,6 +10,7 @@ import com.workos.common.exceptions.NotFoundException
 import com.workos.common.exceptions.RateLimitException
 import com.workos.common.exceptions.UnauthorizedException
 import com.workos.test.TestBase
+import com.workos.types.InviteItContactIntents
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -123,6 +124,57 @@ class OrganizationsTest : TestBase() {
     )
     val result = api().listAuthorizedApplications("sample-arg")
     assertNotNull(result)
+  }
+
+  @Test
+  fun `listItContacts returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg/it_contacts",
+      200,
+      "{\"object\": \"list\", \"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listItContacts("sample-arg")
+    assertNotNull(result)
+    assertEquals("list", result.objectType)
+  }
+
+  @Test
+  fun `createItContact returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/organizations/sample-arg/it_contacts",
+      200,
+      "{\"object\": \"it_contact\", \"id\": \"sample\", \"email\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createItContact("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("it_contact", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/organizations/sample-arg/it_contacts"))
+        .withRequestBody(matchingJsonPath("\$.email"))
+    )
+  }
+
+  @Test
+  fun `deleteItContact completes without throwing`() {
+    stubResponse("DELETE", "/organizations/sample-arg/it_contacts/sample-arg", 204)
+    api().deleteItContact("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `inviteItContact completes without throwing`() {
+    stubResponse("POST", "/organizations/sample-arg/it_contacts/sample-arg/invite", 200)
+    api().inviteItContact("sample-arg", "sample-arg", emptyList<InviteItContactIntents>())
+  }
+
+  @Test
+  fun `revokeItContact completes without throwing`() {
+    stubResponse("POST", "/organizations/sample-arg/it_contacts/sample-arg/revoke", 200)
+    api().revokeItContact("sample-arg", "sample-arg")
   }
 
   @Test

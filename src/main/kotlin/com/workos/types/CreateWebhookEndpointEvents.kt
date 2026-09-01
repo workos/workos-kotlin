@@ -12,6 +12,13 @@ enum class CreateWebhookEndpointEvents(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
+  AgentBlueprintCreated("agent.blueprint.created"),
+  AgentBlueprintDeleted("agent.blueprint.deleted"),
+  AgentBlueprintUpdated("agent.blueprint.updated"),
+  AgentInstanceCreated("agent.instance.created"),
+  AgentInstanceDeleted("agent.instance.deleted"),
+  AgentInstanceSessionCreated("agent.instance.session.created"),
+  AgentInstanceSessionRevoked("agent.instance.session.revoked"),
   AgentRegistrationCreated("agent.registration.created"),
   AgentRegistrationClaimAttemptCreated("agent.registration.claim.attempt.created"),
   AgentRegistrationClaimCompleted("agent.registration.claim.completed"),

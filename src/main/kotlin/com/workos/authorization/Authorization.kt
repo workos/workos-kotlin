@@ -768,7 +768,7 @@ class Authorization(
   /**
    * List effective permissions for an organization membership on a resource
    *
-   * Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources.
+   * Returns all permissions the organization membership effectively has on a resource, including permissions inherited through roles assigned to ancestor resources. Results are not filtered by the resource type: a permission is returned whenever a check for it on this resource would be authorized, and each permission is labeled with the resource type it is declared on.
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param resourceId The ID of the authorization resource.
@@ -831,7 +831,7 @@ class Authorization(
   /**
    * List effective permissions for an organization membership on a resource by external ID
    *
-   * Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources.
+   * Returns all permissions the organization membership effectively has on a resource identified by its external ID, including permissions inherited through roles assigned to ancestor resources. Results are not filtered by the resource type: a permission is returned whenever a check for it on this resource would be authorized, and each permission is labeled with the resource type it is declared on.
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param resourceTypeSlug The slug of the resource type.
@@ -1770,8 +1770,8 @@ class Authorization(
       when (parentResource) {
         is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
         is ParentResource.ByExternalId -> {
-          body["parent_resource_external_id"] = parentResource.externalId
           body["parent_resource_type_slug"] = parentResource.typeSlug
+          body["parent_resource_external_id"] = parentResource.externalId
         }
       }
     }
@@ -1868,8 +1868,8 @@ class Authorization(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
-    parentResourceExternalId: String,
     typeSlug: String,
+    parentResourceExternalId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
@@ -1878,7 +1878,7 @@ class Authorization(
       organizationId = organizationId,
       resourceTypeSlug = resourceTypeSlug,
       externalId = externalId,
-      parentResource = ParentResource.ByExternalId(externalId = parentResourceExternalId, typeSlug = typeSlug),
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = parentResourceExternalId),
       name = name,
       description = description,
       requestOptions = requestOptions
@@ -1897,8 +1897,8 @@ class Authorization(
     organizationId: String,
     resourceTypeSlug: String,
     externalId: String,
-    parentResourceExternalId: String,
     typeSlug: String,
+    parentResourceExternalId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
@@ -1908,8 +1908,8 @@ class Authorization(
         organizationId,
         resourceTypeSlug,
         externalId,
-        parentResourceExternalId,
         typeSlug,
+        parentResourceExternalId,
         name,
         description,
         requestOptions
@@ -2368,8 +2368,8 @@ class Authorization(
       when (parentResource) {
         is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
         is ParentResource.ByExternalId -> {
-          body["parent_resource_external_id"] = parentResource.externalId
           body["parent_resource_type_slug"] = parentResource.typeSlug
+          body["parent_resource_external_id"] = parentResource.externalId
         }
       }
     }
@@ -2461,8 +2461,8 @@ class Authorization(
    * need to construct `ParentResource.ByExternalId` explicitly.
    */
   fun createResourceByExternalId(
-    parentResourceExternalId: String,
     typeSlug: String,
+    parentResourceExternalId: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
@@ -2471,7 +2471,7 @@ class Authorization(
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     createResource(
-      parentResource = ParentResource.ByExternalId(externalId = parentResourceExternalId, typeSlug = typeSlug),
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = parentResourceExternalId),
       externalId = externalId,
       name = name,
       resourceTypeSlug = resourceTypeSlug,
@@ -2490,8 +2490,8 @@ class Authorization(
    */
   @JvmName("createResourceByExternalIdSuspend")
   suspend fun createResourceByExternalIdSuspend(
-    parentResourceExternalId: String,
     typeSlug: String,
+    parentResourceExternalId: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
@@ -2501,8 +2501,8 @@ class Authorization(
   ): AuthorizationResource =
     withContext(Dispatchers.IO) {
       createResourceByExternalId(
-        parentResourceExternalId,
         typeSlug,
+        parentResourceExternalId,
         externalId,
         name,
         resourceTypeSlug,
@@ -2582,8 +2582,8 @@ class Authorization(
       when (parentResource) {
         is ParentResource.ById -> body["parent_resource_id"] = parentResource.id
         is ParentResource.ByExternalId -> {
-          body["parent_resource_external_id"] = parentResource.externalId
           body["parent_resource_type_slug"] = parentResource.typeSlug
+          body["parent_resource_external_id"] = parentResource.externalId
         }
       }
     }
@@ -2668,15 +2668,15 @@ class Authorization(
    */
   fun updateResourceByExternalId(
     resourceId: String,
-    externalId: String,
     typeSlug: String,
+    externalId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     updateResource(
       resourceId = resourceId,
-      parentResource = ParentResource.ByExternalId(externalId = externalId, typeSlug = typeSlug),
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = externalId),
       name = name,
       description = description,
       requestOptions = requestOptions
@@ -2693,14 +2693,14 @@ class Authorization(
   @JvmName("updateResourceByExternalIdSuspend")
   suspend fun updateResourceByExternalIdSuspend(
     resourceId: String,
-    externalId: String,
     typeSlug: String,
+    externalId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     withContext(Dispatchers.IO) {
-      updateResourceByExternalId(resourceId, externalId, typeSlug, name, description, requestOptions)
+      updateResourceByExternalId(resourceId, typeSlug, externalId, name, description, requestOptions)
     }
 
   /**

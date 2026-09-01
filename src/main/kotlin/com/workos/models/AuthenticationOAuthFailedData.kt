@@ -32,5 +32,9 @@ data class AuthenticationOAuthFailedData(
 
   /** Always `"failed"`. */
   @JsonProperty("status")
-  val status: String = "failed"
+  val status: String = "failed",
+
+  /** The OAuth provider used for authentication. */
+  @JsonProperty("provider")
+  val provider: String? = null
 )
