@@ -204,7 +204,7 @@ class UserManagementTest : TestBase() {
       "POST",
       "/user_management/authorize/device",
       200,
-      "{\"device_code\": \"sample\", \"user_code\": \"sample\", \"verification_uri\": \"sample\", \"expires_in\": 0}"
+      "{\"device_code\": \"sample\", \"user_code\": \"sample\", \"verification_uri\": \"sample\", \"expires_in\": 0.0}"
     )
     val result = api().createDevice("sample-arg")
     assertNotNull(result)
@@ -825,6 +825,97 @@ class UserManagementTest : TestBase() {
   fun `deleteAuthorizedApplication completes without throwing`() {
     stubResponse("DELETE", "/user_management/users/sample-arg/authorized_applications/sample-arg", 204)
     api().deleteAuthorizedApplication("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `deleteWaitlistEntry completes without throwing`() {
+    stubResponse("DELETE", "/user_management/waitlist_entries/sample-arg", 204)
+    api().deleteWaitlistEntry("sample-arg")
+  }
+
+  @Test
+  fun `createWaitlistEntryApprove returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/waitlist_entries/sample-arg/approve",
+      200,
+      "{\"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"approved_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"object\": \"waitlist_entry\"}"
+    )
+    val result = api().createWaitlistEntryApprove("sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("waitlist_entry", result.objectType)
+  }
+
+  @Test
+  fun `createWaitlistEntryDeny returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/waitlist_entries/sample-arg/deny",
+      200,
+      "{\"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"approved_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"object\": \"waitlist_entry\"}"
+    )
+    val result = api().createWaitlistEntryDeny("sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("waitlist_entry", result.objectType)
+  }
+
+  @Test
+  fun `listWaitlists returns a typed response`() {
+    stubResponse("GET", "/user_management/waitlists", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listWaitlists()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getWaitlist returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/waitlists/sample-arg",
+      200,
+      "{\"object\": \"waitlist\", \"id\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getWaitlist("sample-arg")
+    assertNotNull(result)
+    assertEquals("waitlist", result.objectType)
+    assertEquals("sample", result.id)
+  }
+
+  @Test
+  fun `listWaitlistEntries returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/waitlists/sample-arg/entries",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listWaitlistEntries("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createWaitlistEntry returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/waitlists/sample-arg/entries",
+      200,
+      "{\"id\": \"sample\", \"email\": \"sample\", \"state\": \"pending\", \"approved_at\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"object\": \"waitlist_entry\"}"
+    )
+    val result = api().createWaitlistEntry("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.email)
+    assertEquals("waitlist_entry", result.objectType)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/waitlists/sample-arg/entries"))
+        .withRequestBody(matchingJsonPath("\$.email"))
+    )
   }
 
   @Test
