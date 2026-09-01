@@ -343,6 +343,18 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `AgentTokenValidation round-trips through Jackson`() {
+    val json =
+      "{\"valid\": true, \"agent_instance_id\": \"sample\", \"agent_instance_session_id\": \"sample\", \"organization_id\": \"sample\"," +
+        " \"permissions\": [], \"intent\": null, \"acting_user_id\": null, \"session_expires_at\": \"sample\"}"
+    val parsed = mapper.readValue(json, AgentTokenValidation::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `ConnectApplicationOAuthRedirectUris round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\", \"default\": false}"
     val parsed = mapper.readValue(json, ConnectApplicationOAuthRedirectUris::class.java)
@@ -1642,6 +1654,16 @@ class GeneratedModelRoundTripTest {
   fun `AgentBlueprintsCreateRequestSessionSetting round-trips through Jackson`() {
     val json = "{\"max_age_seconds\": 0, \"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}"
     val parsed = mapper.readValue(json, AgentBlueprintsCreateRequestSessionSetting::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `AgentBlueprintsTokenValidateTokenRequest round-trips through Jackson`() {
+    val json = "{\"agent_access_token\": \"sample\"}"
+    val parsed = mapper.readValue(json, AgentBlueprintsTokenValidateTokenRequest::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

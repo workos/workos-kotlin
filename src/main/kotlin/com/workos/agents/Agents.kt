@@ -23,6 +23,7 @@ import com.workos.models.AgentInstance
 import com.workos.models.AgentInstanceSession
 import com.workos.models.AgentRegistration
 import com.workos.models.AgentToken
+import com.workos.models.AgentTokenValidation
 import com.workos.models.ClaimViewResponse
 import com.workos.types.AgentAdminValidateCredentialRequestType
 import com.workos.types.AgentBlueprintsTokenMintTokenRequestType
@@ -99,10 +100,10 @@ class Agents(
    * Creates an agent blueprint: the template describing what an agent may do (its permission ceiling), who may invoke it, and the lifetimes of its sessions.
    *
    * @param name Human-readable name of the agent blueprint.
-   * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint.
    * @param description Human-readable description of the agent blueprint.
    * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
    * @param invocableBy Who may mint sessions from this blueprint.
+   * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AgentBlueprint
@@ -110,19 +111,19 @@ class Agents(
   @JvmOverloads
   fun createBlueprint(
     name: String,
-    sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint {
     val body =
       bodyOf(
         "name" to name,
-        "session_settings" to sessionSettings,
         "description" to description,
         "permissions" to permissions,
-        "invocable_by" to invocableBy
+        "invocable_by" to invocableBy,
+        "session_settings" to sessionSettings
       )
     val config =
       RequestConfig(
@@ -145,14 +146,14 @@ class Agents(
   @JvmName("createBlueprintSuspend")
   suspend fun createBlueprintSuspend(
     name: String,
-    sessionSettings: AgentBlueprintsCreateRequestSessionSetting,
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint =
     withContext(Dispatchers.IO) {
-      createBlueprint(name, sessionSettings, description, permissions, invocableBy, requestOptions)
+      createBlueprint(name, description, permissions, invocableBy, sessionSettings, requestOptions)
     }
 
   /**
@@ -366,6 +367,55 @@ class Agents(
   ): AgentToken =
     withContext(Dispatchers.IO) {
       createBlueprintToken(agentBlueprintId, type, userAccessToken, intent, organizationId, agentAccessToken, refreshToken, requestOptions)
+    }
+
+  /**
+   * Validate an agent token
+   *
+   * Validates an agent access token: verifies its signature against the environment, that it was minted under this blueprint, and that the backing session is live (not revoked or expired, and — for delegated sessions — that the delegating user session has not ended). Returns the token claims and session metadata when valid; invalid tokens are reported as errors with stable codes.
+   *
+   * @param agentBlueprintId The unique ID of the agent blueprint.
+   * @param agentAccessToken The agent access token (a JWT) to validate.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentTokenValidation
+   */
+  @JvmOverloads
+  fun validateBlueprintToken(
+    agentBlueprintId: String,
+    agentAccessToken: String,
+    requestOptions: RequestOptions? = null
+  ): AgentTokenValidation {
+    val body =
+      bodyOf(
+        "agent_access_token" to agentAccessToken
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/agents/blueprints/${encodePathSegment(agentBlueprintId)}/tokens/validate",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentTokenValidation::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [validateBlueprintToken]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [validateBlueprintToken] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("validateBlueprintTokenSuspend")
+  suspend fun validateBlueprintTokenSuspend(
+    agentBlueprintId: String,
+    agentAccessToken: String,
+    requestOptions: RequestOptions? = null
+  ): AgentTokenValidation =
+    withContext(Dispatchers.IO) {
+      validateBlueprintToken(agentBlueprintId, agentAccessToken, requestOptions)
     }
 
   /**

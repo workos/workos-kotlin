@@ -28,6 +28,28 @@ class AgentsTest : TestBase() {
   }
 
   @Test
+  fun `createBlueprint returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/agents/blueprints",
+      200,
+      "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
+        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().createBlueprint("sample-arg")
+    assertNotNull(result)
+    assertEquals("agent_blueprint", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.name)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/agents/blueprints"))
+        .withRequestBody(matchingJsonPath("\$.name"))
+    )
+  }
+
+  @Test
   fun `getBlueprint returns a typed response`() {
     stubResponse(
       "GET",
@@ -92,6 +114,28 @@ class AgentsTest : TestBase() {
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/agents/blueprints/sample-arg/tokens"))
         .withRequestBody(matchingJsonPath("\$.type"))
+    )
+  }
+
+  @Test
+  fun `validateBlueprintToken returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/agents/blueprints/sample-arg/tokens/validate",
+      200,
+      "{\"valid\": true, \"agent_instance_id\": \"sample\", \"agent_instance_session_id\": \"sample\", \"organization_id\": \"sample\"," +
+        " \"permissions\": [], \"intent\": null, \"acting_user_id\": null, \"session_expires_at\": \"sample\"}"
+    )
+    val result = api().validateBlueprintToken("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals(true, result.valid)
+    assertEquals("sample", result.agentInstanceId)
+    assertEquals("sample", result.agentInstanceSessionId)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.sessionExpiresAt)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/agents/blueprints/sample-arg/tokens/validate"))
+        .withRequestBody(matchingJsonPath("\$.agent_access_token"))
     )
   }
 
