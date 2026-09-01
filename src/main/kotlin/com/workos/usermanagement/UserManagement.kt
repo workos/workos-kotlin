@@ -36,10 +36,13 @@ import com.workos.models.UserIdentitiesGetItem
 import com.workos.models.UserInvite
 import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
+import com.workos.models.Waitlist
+import com.workos.models.WaitlistEntry
 import com.workos.types.CreateUserInviteOptionsLocale
 import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.CreateUserPasswordSaltPosition
 import com.workos.types.PaginationOrder
+import com.workos.types.WaitlistUserState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
@@ -63,7 +66,7 @@ sealed class CreateUserPassword {
   /** Variant: plaintext. */
   data class Plaintext(
     /** The password. */
-    val password: String
+    val password: String?
   ) : CreateUserPassword()
 
   /** Variant: hashed. */
@@ -2649,6 +2652,335 @@ class UserManagement(
   ) = withContext(Dispatchers.IO) {
     deleteAuthorizedApplication(userId, applicationId, requestOptions)
   }
+
+  /**
+   * Delete a waitlist entry
+   *
+   * Remove the entry from the waitlist. Its email address can join again unless a user with that email now exists in the environment. Deleting the entry does not revoke an invitation created by approving it — [revoke that invitation](https://workos.com/docs/reference/authkit/invitation/revoke) separately to withdraw access.
+   *
+   * @param id The unique ID of the waitlist entry.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteWaitlistEntry(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/user_management/waitlist_entries/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteWaitlistEntry]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteWaitlistEntry] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteWaitlistEntrySuspend")
+  suspend fun deleteWaitlistEntrySuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteWaitlistEntry(id, requestOptions)
+  }
+
+  /**
+   * Approve a waitlist entry
+   *
+   * Approve a waitlist entry, create an invitation for its email address, and send the invitation email. Approving a denied entry reverses the denial. The approval is saved even when the invitation steps fail, so instead of retrying the approval, recover based on the outcome:
+   *
+   * - `200` — the entry is approved. If invitation creation failed, no invitation exists yet; [send](https://workos.com/docs/reference/authkit/invitation/send) one.
+   * - `422` with code `invitation_email_not_sent` — the entry is approved and an invitation exists, but its email was not sent; [resend](https://workos.com/docs/reference/authkit/invitation/resend) it.
+   * - `422` with code `invalid_state` — the entry was already approved.
+   *
+   * @param id The unique ID of the waitlist entry.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the WaitlistEntry
+   */
+  @JvmOverloads
+  fun createWaitlistEntryApprove(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/waitlist_entries/${encodePathSegment(id)}/approve",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, WaitlistEntry::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createWaitlistEntryApprove]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createWaitlistEntryApprove] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createWaitlistEntryApproveSuspend")
+  suspend fun createWaitlistEntryApproveSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry =
+    withContext(Dispatchers.IO) {
+      createWaitlistEntryApprove(id, requestOptions)
+    }
+
+  /**
+   * Deny a waitlist entry
+   *
+   * Deny a pending waitlist entry. Denying an entry that is not pending fails with the code `invalid_state`. A denial can be reversed by approving the entry.
+   *
+   * @param id The unique ID of the waitlist entry.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the WaitlistEntry
+   */
+  @JvmOverloads
+  fun createWaitlistEntryDeny(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/waitlist_entries/${encodePathSegment(id)}/deny",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, WaitlistEntry::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createWaitlistEntryDeny]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createWaitlistEntryDeny] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createWaitlistEntryDenySuspend")
+  suspend fun createWaitlistEntryDenySuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry =
+    withContext(Dispatchers.IO) {
+      createWaitlistEntryDeny(id, requestOptions)
+    }
+
+  /**
+   * List waitlists
+   *
+   * Get a list of the waitlists in the environment. All waitlists are returned in a single response — this endpoint is not paginated, so the `list_metadata` cursors are always `null`.
+   *
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listWaitlists(requestOptions: RequestOptions? = null): Page<Waitlist> {
+    val itemType = object : TypeReference<Waitlist>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/waitlists",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = null,
+      after = null
+    ) {
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listWaitlists]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listWaitlists] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listWaitlistsSuspend")
+  suspend fun listWaitlistsSuspend(requestOptions: RequestOptions? = null): Page<Waitlist> =
+    withContext(Dispatchers.IO) {
+      listWaitlists(requestOptions)
+    }
+
+  /**
+   * Get a waitlist
+   *
+   * Get the details of an existing waitlist.
+   *
+   * @param id The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. The default waitlist is created when its first entry is added, so read requests for `default` return a `404` until then.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the Waitlist
+   */
+  @JvmOverloads
+  fun getWaitlist(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Waitlist {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/user_management/waitlists/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, Waitlist::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getWaitlist]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getWaitlist] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getWaitlistSuspend")
+  suspend fun getWaitlistSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): Waitlist =
+    withContext(Dispatchers.IO) {
+      getWaitlist(id, requestOptions)
+    }
+
+  /**
+   * List waitlist entries
+   *
+   * Get a list of entries on a waitlist matching the criteria specified.
+   *
+   * @param id The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. The default waitlist is created when its first entry is added, so read requests for `default` return a `404` until then.
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param state Filter waitlist entries by their state.
+   * @param email Filter waitlist entries by their exact email address.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listWaitlistEntries(
+    id: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    state: WaitlistUserState? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<WaitlistEntry> {
+    val itemType = object : TypeReference<WaitlistEntry>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/waitlists/${encodePathSegment(id)}/entries",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      state?.let { add("state" to it.value) }
+      addIfNotNull("email", email)
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listWaitlistEntries]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listWaitlistEntries] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listWaitlistEntriesSuspend")
+  suspend fun listWaitlistEntriesSuspend(
+    id: String,
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    state: WaitlistUserState? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<WaitlistEntry> =
+    withContext(Dispatchers.IO) {
+      listWaitlistEntries(id, before, after, limit, order, state, email, requestOptions)
+    }
+
+  /**
+   * Create a waitlist entry
+   *
+   * Add an email address to the waitlist. Email addresses are normalized and unique per environment: a request for an email address already on the waitlist returns the existing entry unchanged (still with status `201`) and does not send another confirmation email. If a user with the email address already exists in the environment, the request fails with the code `user_already_exists`.
+   *
+   * @param id The unique ID of the waitlist, or the literal `default` for the environment's default waitlist. Use `default` when adding the first entry — the default waitlist is created automatically.
+   * @param email The email address of the user joining the waitlist.
+   * @param additionalFields Object containing additional key/value pairs collected with the waitlist entry. Supports up to 50 string pairs, with keys up to 40 characters and values up to 600 characters. Values are user-provided — treat them as untrusted input when rendering or exporting.
+   * @param sendConfirmationEmail Whether to send the waitlist confirmation email to the user. Defaults to `false`. No email is sent when the waitlist confirmation email is disabled in the environment, even if `send_confirmation_email` is `true`.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the WaitlistEntry
+   */
+  @JvmOverloads
+  fun createWaitlistEntry(
+    id: String,
+    email: String,
+    additionalFields: Map<String, String>? = null,
+    sendConfirmationEmail: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry {
+    val body =
+      bodyOf(
+        "email" to email,
+        "additional_fields" to additionalFields,
+        "send_confirmation_email" to sendConfirmationEmail
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/waitlists/${encodePathSegment(id)}/entries",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, WaitlistEntry::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createWaitlistEntry]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createWaitlistEntry] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createWaitlistEntrySuspend")
+  suspend fun createWaitlistEntrySuspend(
+    id: String,
+    email: String,
+    additionalFields: Map<String, String>? = null,
+    sendConfirmationEmail: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): WaitlistEntry =
+    withContext(Dispatchers.IO) {
+      createWaitlistEntry(id, email, additionalFields, sendConfirmationEmail, requestOptions)
+    }
 
   /**
    * List API keys for a user
