@@ -52,6 +52,10 @@ data class DataIntegrationsListResponseData(
   @JsonProperty("connected_account")
   val connectedAccount: DataIntegrationsListResponseDataConnectedAccount?,
 
+  /** The user's connected accounts for this provider in the requested ownership context. */
+  @JsonProperty("connected_accounts")
+  val connectedAccounts: List<DataIntegrationsListResponseDataConnectedAccount>,
+
   /** Distinguishes the data provider object. */
   @JsonProperty("object")
   val objectType: String = "data_provider",
