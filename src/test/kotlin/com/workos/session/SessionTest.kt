@@ -131,6 +131,46 @@ class SessionTest : TestBase() {
   }
 
   @Test
+  fun `authenticate ignores the issuer when none is configured`() {
+    val result = authenticateWithIssuers(issuers = null, iss = "https://issuer.example")
+    assertTrue(result is AuthenticateSessionResult.Success)
+  }
+
+  @Test
+  fun `authenticate accepts a token whose iss matches a configured issuer`() {
+    val result = authenticateWithIssuers(listOf("https://issuer.example"), iss = "https://issuer.example")
+    assertTrue(result is AuthenticateSessionResult.Success)
+  }
+
+  @Test
+  fun `authenticate returns INVALID_JWT when iss does not match the configured issuer`() {
+    val result = authenticateWithIssuers(listOf("https://issuer.example"), iss = "https://other.example")
+    val failure = result as AuthenticateSessionResult.Failure
+    assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
+  }
+
+  @Test
+  fun `authenticate returns INVALID_JWT when iss is absent and an issuer is configured`() {
+    val result = authenticateWithIssuers(listOf("https://issuer.example"), iss = null)
+    val failure = result as AuthenticateSessionResult.Failure
+    assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
+  }
+
+  @Test
+  fun `authenticate accepts any issuer in the configured list`() {
+    val issuers = listOf("https://api.workos.com", "https://api.workos.com/user_management/client_123")
+    assertTrue(authenticateWithIssuers(issuers, iss = issuers[0]) is AuthenticateSessionResult.Success)
+    assertTrue(authenticateWithIssuers(issuers, iss = issuers[1]) is AuthenticateSessionResult.Success)
+  }
+
+  @Test
+  fun `authenticate rejects every token when the issuer list is empty`() {
+    val result = authenticateWithIssuers(emptyList(), iss = "https://issuer.example")
+    val failure = result as AuthenticateSessionResult.Failure
+    assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
+  }
+
+  @Test
   fun `refresh exchanges the token, reseals, and returns success`() {
     val workos = workOSForTest()
     val rsaKey = RSAKeyGenerator(2048).keyID("k1").keyUse(KeyUse.SIGNATURE).generate()
@@ -254,6 +294,19 @@ class SessionTest : TestBase() {
     }
   }
 
+  private fun authenticateWithIssuers(
+    issuers: List<String>?,
+    iss: String?
+  ): AuthenticateSessionResult {
+    val workos = workOSForTest()
+    val rsaKey = RSAKeyGenerator(2048).keyID("k1").keyUse(KeyUse.SIGNATURE).generate()
+    stubJwks(clientIdOf(workos), jwksJson(rsaKey))
+    val accessToken = signJwt(rsaKey, sessionId = "sess_iss", orgId = null, issuer = iss)
+    val cookieJson = mapper.writeValueAsString(mapOf("accessToken" to accessToken, "refreshToken" to "r"))
+    val sealed = Iron.seal(cookieJson, cookiePassword)
+    return workos.session.authenticateWithSessionCookie(sealed, cookiePassword, issuers)
+  }
+
   private fun stubJwks(
     clientId: String,
     jwksJson: String
@@ -272,18 +325,19 @@ class SessionTest : TestBase() {
   private fun signJwt(
     key: RSAKey,
     sessionId: String,
-    orgId: String?
+    orgId: String?,
+    issuer: String? = "https://api.workos.com/"
   ): String {
     val claimsBuilder =
       JWTClaimsSet
         .Builder()
-        .issuer("https://api.workos.com/")
         .subject("user_1")
         .jwtID(UUID.randomUUID().toString())
         .issueTime(Date())
         .expirationTime(Date(System.currentTimeMillis() + 60_000))
         .claim("sid", sessionId)
     if (orgId != null) claimsBuilder.claim("org_id", orgId)
+    if (issuer != null) claimsBuilder.issuer(issuer)
     val jwt =
       SignedJWT(
         JWSHeader.Builder(JWSAlgorithm.RS256).keyID(key.keyID).build(),
