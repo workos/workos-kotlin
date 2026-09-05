@@ -175,11 +175,21 @@ class SessionCookie
     sessionData: String?,
     private var cookiePassword: String,
     private val objectMapper: ObjectMapper = defaultObjectMapper(),
-    private val issuers: List<String>? = null
+    issuers: List<String>?
   ) {
+    @JvmOverloads
+    constructor(
+      userManagement: UserManagement,
+      sessionData: String?,
+      cookiePassword: String,
+      objectMapper: ObjectMapper = defaultObjectMapper()
+    ) : this(userManagement, sessionData, cookiePassword, objectMapper, null)
+
     init {
       require(cookiePassword.isNotEmpty()) { "cookiePassword is required" }
     }
+
+    private val issuers: List<String>? = issuers?.toList()
 
     private var sessionData: String? = sessionData
 
