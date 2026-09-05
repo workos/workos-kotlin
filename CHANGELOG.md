@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-05)
+
+
+### Features
+
+* **generated:** Pipes (batch 8ad8e447) ([#431](https://github.com/workos/workos-kotlin/issues/431)) ([41b0f3f](https://github.com/workos/workos-kotlin/commit/41b0f3ff2bdbb771a71316c13eb9c7684a3417b5))
+
 ## [7.3.0](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.3.0) (2026-09-01)
 
 ### Bug Fixes
