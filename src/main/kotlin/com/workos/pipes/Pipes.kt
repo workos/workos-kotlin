@@ -518,6 +518,7 @@ class Pipes(
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationCredentialsResponse
@@ -527,12 +528,14 @@ class Pipes(
     slug: String,
     userId: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationCredentialsResponse {
     val body =
       bodyOf(
         "user_id" to userId,
-        "organization_id" to organizationId
+        "organization_id" to organizationId,
+        "connected_account_id" to connectedAccountId
       )
     val config =
       RequestConfig(
@@ -557,10 +560,11 @@ class Pipes(
     slug: String,
     userId: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationCredentialsResponse =
     withContext(Dispatchers.IO) {
-      createDataIntegrationCredential(slug, userId, organizationId, requestOptions)
+      createDataIntegrationCredential(slug, userId, organizationId, connectedAccountId, requestOptions)
     }
 
   /**
@@ -571,6 +575,7 @@ class Pipes(
    * @param provider The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationAccessTokenResponse
@@ -580,12 +585,14 @@ class Pipes(
     provider: String,
     userId: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse {
     val body =
       bodyOf(
         "user_id" to userId,
-        "organization_id" to organizationId
+        "organization_id" to organizationId,
+        "connected_account_id" to connectedAccountId
       )
     val config =
       RequestConfig(
@@ -610,10 +617,11 @@ class Pipes(
     provider: String,
     userId: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse =
     withContext(Dispatchers.IO) {
-      getAccessToken(provider, userId, organizationId, requestOptions)
+      getAccessToken(provider, userId, organizationId, connectedAccountId, requestOptions)
     }
 
   /**
@@ -624,6 +632,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
@@ -633,10 +642,12 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    params.addIfNotNull("connected_account_id", connectedAccountId)
     val config =
       RequestConfig(
         method = "GET",
@@ -660,10 +671,11 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      getUserConnectedAccount(userId, slug, organizationId, requestOptions)
+      getUserConnectedAccount(userId, slug, organizationId, connectedAccountId, requestOptions)
     }
 
   /**
@@ -748,6 +760,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
@@ -762,6 +775,7 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -771,6 +785,7 @@ class Pipes(
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    params.addIfNotNull("connected_account_id", connectedAccountId)
     val body =
       bodyOf(
         "access_token" to accessToken,
@@ -803,6 +818,7 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -811,7 +827,18 @@ class Pipes(
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      updateUserConnectedAccount(userId, slug, organizationId, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
+      updateUserConnectedAccount(
+        userId,
+        slug,
+        organizationId,
+        connectedAccountId,
+        accessToken,
+        refreshToken,
+        expiresAt,
+        scopes,
+        state,
+        requestOptions
+      )
     }
 
   /**
@@ -822,6 +849,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
@@ -829,10 +857,12 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    params.addIfNotNull("connected_account_id", connectedAccountId)
     val config =
       RequestConfig(
         method = "DELETE",
@@ -856,9 +886,10 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ) = withContext(Dispatchers.IO) {
-    deleteUserConnectedAccount(userId, slug, organizationId, requestOptions)
+    deleteUserConnectedAccount(userId, slug, organizationId, connectedAccountId, requestOptions)
   }
 
   /**

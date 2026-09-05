@@ -12,5 +12,9 @@ data class DataIntegrationsVendCredentialsRequest(
 
   /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. */
   @JsonProperty("organization_id")
-  val organizationId: String? = null
+  val organizationId: String? = null,
+
+  /** A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider. */
+  @JsonProperty("connected_account_id")
+  val connectedAccountId: String? = null
 )
