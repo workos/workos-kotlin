@@ -16,6 +16,8 @@ import com.nimbusds.jwt.SignedJWT
 import com.workos.WorkOS
 import com.workos.common.http.RetryConfig
 import com.workos.common.json.ObjectMapperFactory
+import com.workos.models.AuthenticateResponse
+import com.workos.models.AuthenticateResponseImpersonator
 import com.workos.test.TestBase
 import com.workos.usermanagement.UserManagement
 import okhttp3.OkHttpClient
@@ -171,49 +173,68 @@ class SessionTest : TestBase() {
   }
 
   @Test
-  fun `refresh exchanges the token, reseals, and returns success`() {
+  fun `refresh exchanges the token and reseals current user and impersonator`() {
+    assertRefreshedIdentity(
+      mapOf("impersonator" to mapOf("email" to "new-admin@example.com", "reason" to "New support request"))
+    )
+  }
+
+  @Test
+  fun `refresh clears the old impersonator when omitted from the response`() {
+    assertRefreshedIdentity(emptyMap())
+  }
+
+  @Test
+  fun `refresh clears the old impersonator when null in the response`() {
+    assertRefreshedIdentity(mapOf("impersonator" to null))
+  }
+
+  private fun assertRefreshedIdentity(impersonatorFields: Map<String, Any?>) {
     val workos = workOSForTest()
     val rsaKey = RSAKeyGenerator(2048).keyID("k1").keyUse(KeyUse.SIGNATURE).generate()
     val newAccessToken = signJwt(rsaKey, sessionId = "sess_new", orgId = "org_new")
     stubJwks(clientIdOf(workos), jwksJson(rsaKey))
+    val responseJson =
+      mapper.writeValueAsString(
+        mapOf(
+          "user" to
+            mapOf(
+              "object" to "user",
+              "id" to "user_1",
+              "email" to "user@example.com",
+              "first_name" to null,
+              "last_name" to null,
+              "email_verified" to true,
+              "profile_picture_url" to null,
+              "last_sign_in_at" to null,
+              "created_at" to "2024-01-01T00:00:00Z",
+              "updated_at" to "2024-01-01T00:00:00Z",
+              "external_id" to null,
+              "metadata" to emptyMap<String, Any>()
+            ),
+          "access_token" to newAccessToken,
+          "refresh_token" to "refresh_new",
+          "organization_id" to "org_new"
+        ) + impersonatorFields
+      )
+    val response = mapper.readValue(responseJson, AuthenticateResponse::class.java)
     wireMockRule.stubFor(
       post(urlPathEqualTo("/user_management/authenticate"))
         .willReturn(
           aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody(
-              mapper.writeValueAsString(
-                mapOf(
-                  "user" to
-                    mapOf(
-                      "object" to "user",
-                      "id" to "user_1",
-                      "email" to "user@example.com",
-                      "first_name" to null,
-                      "last_name" to null,
-                      "email_verified" to true,
-                      "profile_picture_url" to null,
-                      "last_sign_in_at" to null,
-                      "created_at" to "2024-01-01T00:00:00Z",
-                      "updated_at" to "2024-01-01T00:00:00Z",
-                      "external_id" to null,
-                      "metadata" to emptyMap<String, Any>()
-                    ),
-                  "access_token" to newAccessToken,
-                  "refresh_token" to "refresh_new",
-                  "organization_id" to "org_new"
-                )
-              )
-            )
+            .withBody(responseJson)
         )
     )
 
     val oldCookieJson =
       mapper.writeValueAsString(
-        mapOf(
-          "accessToken" to "old.access.token",
-          "refreshToken" to "refresh_old"
+        SessionCookieData(
+          accessToken = "old.access.token",
+          refreshToken = "refresh_old",
+          user = response.user.copy(email = "old@example.com", emailVerified = false),
+          impersonator = AuthenticateResponseImpersonator("old-admin@example.com", "Old support request")
         )
       )
     val oldSealed = Iron.seal(oldCookieJson, cookiePassword)
@@ -224,10 +245,19 @@ class SessionTest : TestBase() {
     assertEquals("sess_new", success.sessionId)
     assertEquals("org_new", success.organizationId)
     assertNotNull(success.sealedSession)
+    assertEquals(response.user, success.user)
+    assertEquals(response.impersonator, success.impersonator)
 
-    // After refresh, authenticate should succeed with the new sealed session.
-    val reauth = helper.authenticate()
-    assertTrue(reauth is AuthenticateSessionResult.Success)
+    val resealed = unsealSessionData(success.sealedSession, cookiePassword, mapper)
+    assertEquals(newAccessToken, resealed.accessToken)
+    assertEquals("refresh_new", resealed.refreshToken)
+    assertEquals(response.user, resealed.user)
+    assertEquals(response.impersonator, resealed.impersonator)
+
+    // After refresh, authenticate should see the current identity in the helper's state.
+    val reauth = helper.authenticate() as AuthenticateSessionResult.Success
+    assertEquals(response.user, reauth.user)
+    assertEquals(response.impersonator, reauth.impersonator)
   }
 
   @Test

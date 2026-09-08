@@ -274,9 +274,9 @@ class SessionCookie
         SessionCookieData(
           accessToken = response.accessToken,
           refreshToken = response.refreshToken,
-          user = session.user,
+          user = response.user,
           authenticationMethod = response.authenticationMethod?.value ?: session.authenticationMethod,
-          impersonator = session.impersonator
+          impersonator = response.impersonator
         )
       val sealed = Iron.seal(objectMapper.writeValueAsString(newSession), newPassword)
       this.sessionData = sealed
@@ -292,9 +292,9 @@ class SessionCookie
         permissions = claims.getStringListClaim("permissions"),
         entitlements = claims.getStringListClaim("entitlements"),
         featureFlags = claims.getStringListClaim("feature_flags"),
-        user = session.user,
+        user = newSession.user,
         authenticationMethod = newSession.authenticationMethod,
-        impersonator = session.impersonator
+        impersonator = newSession.impersonator
       )
     }
 
