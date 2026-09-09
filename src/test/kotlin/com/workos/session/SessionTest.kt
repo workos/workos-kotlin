@@ -72,6 +72,29 @@ class SessionTest : TestBase() {
   }
 
   @Test
+  fun `authenticate returns INVALID_SESSION_COOKIE for malformed base64`() {
+    val workos = workOSForTest()
+    val result = workos.session.authenticateWithSessionCookie("Fe26.2*1*aa*bb*cc**dd*!!", cookiePassword)
+    val failure = result as AuthenticateSessionResult.Failure
+    assertEquals(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE, failure.reason)
+  }
+
+  @Test
+  fun `refresh returns INVALID_SESSION_COOKIE for malformed base64`() {
+    val workos = workOSForTest()
+    val helper = workos.session.loadSealedSession("Fe26.2*1*aa*bb*cc**dd*!!", cookiePassword)
+    val failure = helper.refresh() as RefreshSessionResult.Failure
+    assertEquals(RefreshSessionFailureReason.INVALID_SESSION_COOKIE, failure.reason)
+  }
+
+  @Test
+  fun `unsealData returns an empty map for malformed base64`() {
+    val workos = workOSForTest()
+    val out = workos.session.unsealData("Fe26.2*1*aa*bb*cc**dd*!!", cookiePassword)
+    assertTrue(out.isEmpty())
+  }
+
+  @Test
   fun `authenticate succeeds for a valid session cookie against a real JWKS`() {
     val workos = workOSForTest()
     val rsaKey = RSAKeyGenerator(2048).keyID("k1").keyUse(KeyUse.SIGNATURE).generate()
