@@ -2,6 +2,7 @@
 package com.workos.common.http
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class EncodePathSegmentTest {
@@ -38,11 +39,22 @@ class EncodePathSegmentTest {
   }
 
   @Test
+  fun `rejects empty and dot segments`() {
+    for (value in listOf("", ".", "..")) {
+      assertThrows(IllegalArgumentException::class.java, { encodePathSegment(value) }, "value: '$value'")
+    }
+  }
+
+  @Test
+  fun `preserves dots within identifiers and encodes literal percent escapes`() {
+    assertEquals("...", encodePathSegment("..."))
+    assertEquals("group.name", encodePathSegment("group.name"))
+    assertEquals("%252e%252E", encodePathSegment("%2e%2E"))
+    assertEquals(".%252e", encodePathSegment(".%2e"))
+  }
+
+  @Test
   fun `prevents path traversal by encoding slashes`() {
-    // A literal `..` is not by itself dangerous (the server resolves it as a
-    // segment), but any embedded `/` must be encoded so a malicious id
-    // cannot escape its own segment.
-    assertEquals("..", encodePathSegment(".."))
     assertEquals("..%2Fadmin", encodePathSegment("../admin"))
     assertEquals("foo%2F..%2Fbar", encodePathSegment("foo/../bar"))
   }
