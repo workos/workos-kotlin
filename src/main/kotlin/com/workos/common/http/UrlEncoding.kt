@@ -21,9 +21,15 @@ import java.net.URLEncoder
  * Percent-encode [value] for safe interpolation as a single URI path segment
  * per RFC 3986 §3.3. All reserved characters (`/`, `?`, `#`, etc.) and
  * sub-delims that could change parsing are encoded; `~` and other unreserved
- * characters are left alone.
+ * characters are left alone within non-dot segments.
+ *
+ * @throws IllegalArgumentException if [value] is empty, `.` or `..`.
  */
 fun encodePathSegment(value: String): String {
+  // OkHttp removes dot segments even when the dots are percent-encoded.
+  require(value.isNotEmpty() && value != "." && value != "..") {
+    "Path segment must not be empty, '.' or '..'"
+  }
   val formEncoded = URLEncoder.encode(value, Charsets.UTF_8)
   val out = StringBuilder(formEncoded.length)
   var i = 0

@@ -226,12 +226,16 @@ open class BaseClient(
     idempotencyKey: String?
   ): Request {
     val effectiveBase = config.requestOptions?.baseUrl ?: apiBaseUrl
-    val urlBuilder =
+    val url =
       effectiveBase
         .trimEnd('/')
         .let { "$it${config.path}" }
         .toHttpUrl()
-        .newBuilder()
+    require(url.encodedPath == config.path) {
+      "Resolved URL path must match RequestConfig.path; apiBaseUrl/baseUrl must have no path prefix, " +
+        "and the request path must be encoded without '.' or '..' segments"
+    }
+    val urlBuilder = url.newBuilder()
     for ((name, value) in config.queryParams) {
       urlBuilder.addQueryParameter(name, value)
     }
