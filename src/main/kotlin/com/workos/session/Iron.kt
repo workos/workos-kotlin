@@ -113,23 +113,28 @@ object Iron {
         expiration
       ).joinToString("*")
 
-    val intKey = deriveKey(password, intSaltHex, INT_KEY_BITS / 8)
-    val expectedHmac = hmacSha256(intKey, macBase.toByteArray(Charsets.UTF_8))
-    val givenHmac = URL_DECODER.decode(hmacB64)
-    if (!constantTimeEquals(expectedHmac, givenHmac)) {
-      throw IronException("Bad hmac value")
-    }
+    try {
+      val intKey = deriveKey(password, intSaltHex, INT_KEY_BITS / 8)
+      val expectedHmac = hmacSha256(intKey, macBase.toByteArray(Charsets.UTF_8))
+      val givenHmac = URL_DECODER.decode(hmacB64)
+      if (!constantTimeEquals(expectedHmac, givenHmac)) {
+        throw IronException("Bad hmac value")
+      }
 
-    if (expiration.isNotEmpty()) {
-      val exp = expiration.toLongOrNull() ?: throw IronException("Invalid expiration")
-      if (nowMillis() > exp) throw IronException("Expired seal")
-    }
+      if (expiration.isNotEmpty()) {
+        val exp = expiration.toLongOrNull() ?: throw IronException("Invalid expiration")
+        if (nowMillis() > exp) throw IronException("Expired seal")
+      }
 
-    val encKey = deriveKey(password, encSaltHex, ENC_KEY_BITS / 8)
-    val iv = URL_DECODER.decode(ivB64)
-    val ct = URL_DECODER.decode(ctB64)
-    val plaintext = aesCbcDecrypt(ct, encKey, iv)
-    return String(plaintext, Charsets.UTF_8)
+      val encKey = deriveKey(password, encSaltHex, ENC_KEY_BITS / 8)
+      val iv = URL_DECODER.decode(ivB64)
+      val ct = URL_DECODER.decode(ctB64)
+      val plaintext = aesCbcDecrypt(ct, encKey, iv)
+      return String(plaintext, Charsets.UTF_8)
+    } catch (_: IllegalArgumentException) {
+      // Invalid base64 or salt input is a bad seal, not a password configuration error.
+      throw IronException("Invalid seal encoding")
+    }
   }
 
   private fun randomBytes(length: Int): ByteArray = ByteArray(length).also { random.nextBytes(it) }

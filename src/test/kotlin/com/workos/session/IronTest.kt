@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.util.Base64
+import javax.crypto.Mac
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
 
 class IronTest {
   private val password = "this-is-at-least-thirty-two-chars!"
@@ -57,6 +62,51 @@ class IronTest {
   }
 
   @Test
+  fun `unseal rejects malformed base64 hmac with IronException`() {
+    for (hmac in listOf("!!", "A", "ab=c")) {
+      val ex = assertThrows(IronException::class.java) { Iron.unseal("Fe26.2*1*aa*bb*cc**dd*$hmac", password) }
+      assertEquals("Invalid seal encoding", ex.message)
+    }
+  }
+
+  @Test
+  fun `unseal rejects authenticated malformed base64 iv and ciphertext with IronException`() {
+    for (field in listOf(3, 4)) {
+      for (encoding in listOf("!!", "A", "ab=c")) {
+        val parts = Iron.seal("payload", password).split("*").toMutableList()
+        parts[field] = encoding
+        val ex = assertThrows(IronException::class.java) { Iron.unseal(resign(parts), password) }
+        assertEquals("Invalid seal encoding", ex.message)
+      }
+    }
+  }
+
+  @Test
+  fun `unseal rejects an empty integrity salt with IronException`() {
+    val parts = Iron.seal("payload", password).split("*").toMutableList()
+    parts[6] = ""
+    val ex = assertThrows(IronException::class.java) { Iron.unseal(parts.joinToString("*"), password) }
+    assertEquals("Invalid seal encoding", ex.message)
+  }
+
+  @Test
+  fun `unseal rejects an authenticated empty encryption salt with IronException`() {
+    val parts = Iron.seal("payload", password).split("*").toMutableList()
+    parts[2] = ""
+    val ex = assertThrows(IronException::class.java) { Iron.unseal(resign(parts), password) }
+    assertEquals("Invalid seal encoding", ex.message)
+  }
+
+  @Test
+  fun `unseal still rejects short passwords with IllegalArgumentException`() {
+    val ex =
+      assertThrows(IllegalArgumentException::class.java) {
+        Iron.unseal("Fe26.2*1*aa*bb*cc**dd*!!", "too-short")
+      }
+    assertEquals("Password must be at least 32 characters", ex.message)
+  }
+
+  @Test
   fun `seal rejects short passwords`() {
     assertThrows(IllegalArgumentException::class.java) { Iron.seal("x", "too-short") }
   }
@@ -67,6 +117,17 @@ class IronTest {
     Thread.sleep(10)
     val ex = assertThrows(IronException::class.java) { Iron.unseal(sealed, password) }
     assert(ex.message!!.contains("Expired"))
+  }
+
+  // Recompute the HMAC so malformed encrypted fields reach their decoding paths.
+  private fun resign(parts: MutableList<String>): String {
+    val spec = PBEKeySpec(password.toCharArray(), parts[6].toByteArray(Charsets.UTF_8), 1, 256)
+    val key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1").generateSecret(spec).encoded
+    val mac = Mac.getInstance("HmacSHA256")
+    mac.init(SecretKeySpec(key, "HmacSHA256"))
+    val hmac = mac.doFinal(parts.take(6).joinToString("*").toByteArray(Charsets.UTF_8))
+    parts[7] = Base64.getUrlEncoder().withoutPadding().encodeToString(hmac)
+    return parts.joinToString("*")
   }
 
   @Test
