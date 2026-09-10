@@ -1,5 +1,45 @@
 # Changelog
 
+## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-10)
+
+### Features
+
+* Add optional issuers check to session authentication ([#433](https://github.com/workos/workos-kotlin/issues/433)) ([253da76](https://github.com/workos/workos-kotlin/commit/253da76028dfa8e610e985ee4aab4f2297308e4d))
+
+
+### Bug Fixes
+
+* **http:** Prevent dot segments from retargeting requests ([#435](https://github.com/workos/workos-kotlin/issues/435)) ([e9323b4](https://github.com/workos/workos-kotlin/commit/e9323b49cb71b15e365e6f3d1d3a62cf8903b895))
+* **http:** Redact sensitive query values in 404 errors ([#436](https://github.com/workos/workos-kotlin/issues/436)) ([67dbb81](https://github.com/workos/workos-kotlin/commit/67dbb81504d1ec3dc3387fd77efc5f7e95a4f84a))
+* **session:** Refresh sealed identity from response ([#434](https://github.com/workos/workos-kotlin/issues/434)) ([d9bdf49](https://github.com/workos/workos-kotlin/commit/d9bdf493633baf15120c6855c49716bb07654370))
+* **session:** Reject malformed seal encodings ([#437](https://github.com/workos/workos-kotlin/issues/437)) ([8c900bf](https://github.com/workos/workos-kotlin/commit/8c900bf77cd741836683ffd91783e98f666e17f4))
+* **session:** Validate Iron token password ID ([#440](https://github.com/workos/workos-kotlin/issues/440)) ([a272cb5](https://github.com/workos/workos-kotlin/commit/a272cb5bec30d62563eb0c8c39c727432bc1b2dc))
+
+* [#431](https://github.com/workos/workos-kotlin/pull/431) fix(generated): regenerate from spec
+
+  **Features**
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `connected_account_id` to `DataIntegrationsVendCredentialsRequest`
+    * Added `connected_account_id` to `DataIntegrationsGetUserTokenRequest`
+    * Added parameter `UserManagementDataProviders.getUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `GET /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added parameter `UserManagementDataProviders.updateUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `PUT /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added parameter `UserManagementDataProviders.deleteUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `DELETE /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added `connected_accounts` to `DataIntegrationsListResponseData`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/api-key`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/client-credentials`
+    * Changed errors for endpoint `POST /data-integrations/{slug}/credentials`
+    * Changed errors for endpoint `POST /data-integrations/{provider}/token`
+
+* [#439](https://github.com/workos/workos-kotlin/pull/439) fix(generated): regenerate from spec
+
+    **Fixes**
+    * **[sso](https://workos.com/docs/reference/sso)**:
+      * remove incorrect parameter from getProfileAndToken.
+
 ## [7.3.0](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.3.0) (2026-09-01)
 
 ### Bug Fixes
