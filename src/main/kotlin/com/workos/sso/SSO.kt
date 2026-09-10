@@ -867,8 +867,6 @@ class SSO(
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse {
-    val params = mutableListOf<Pair<String, String>>()
-    params.addIfNotNull("code", code)
     val body =
       bodyOf(
         "code" to code,
@@ -883,7 +881,6 @@ class SSO(
       RequestConfig(
         method = "POST",
         path = "/sso/token",
-        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
