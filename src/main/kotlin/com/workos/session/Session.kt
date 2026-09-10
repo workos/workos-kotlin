@@ -166,7 +166,12 @@ sealed class RefreshSessionResult {
  *
  * Pass [issuers] to additionally require the access token's `iss` claim to
  * match one of the given values. When null (the default) the issuer is not
- * checked.
+ * checked. The match is exact (case-sensitive string equality). The `iss`
+ * value WorkOS mints varies by environment — `https://api.workos.com`,
+ * `https://api.workos.com/user_management/<clientId>`, or a custom auth
+ * domain — so pass the precise value(s) your tokens actually carry. The
+ * issuer policy is applied by [authenticate] only; [refresh] does not
+ * validate the access token.
  */
 class SessionCookie
   @JvmOverloads
@@ -235,7 +240,8 @@ class SessionCookie
     /**
      * Exchange the embedded refresh token for a new access token, reseal the
      * updated session, and update this helper's state so subsequent
-     * [authenticate] calls see the new token.
+     * [authenticate] calls see the new token. The issuer policy is not
+     * applied here; it is enforced on [authenticate].
      */
     @JvmOverloads
     fun refresh(
@@ -338,7 +344,11 @@ class Session internal constructor(
    * Build a [SessionCookie] handler for an inbound sealed-cookie value.
    *
    * @param issuers accepted values for the access token's `iss` claim; when
-   *   null (the default) the issuer is not checked.
+   *   null (the default) the issuer is not checked. The match is exact
+   *   (case-sensitive). The `iss` value WorkOS mints varies by environment —
+   *   `https://api.workos.com`, `https://api.workos.com/user_management/<clientId>`,
+   *   or a custom auth domain — so pass the precise value(s) your tokens
+   *   actually carry.
    */
   @JvmOverloads
   fun loadSealedSession(
@@ -347,7 +357,16 @@ class Session internal constructor(
     issuers: List<String>? = null
   ): SessionCookie = SessionCookie(UserManagement(workos), sessionData, cookiePassword, objectMapper, issuers)
 
-  /** Convenience: authenticate a sealed cookie in one call. */
+  /**
+   * Convenience: authenticate a sealed cookie in one call.
+   *
+   * @param issuers accepted values for the access token's `iss` claim; when
+   *   null (the default) the issuer is not checked. The match is exact
+   *   (case-sensitive). The `iss` value WorkOS mints varies by environment —
+   *   `https://api.workos.com`, `https://api.workos.com/user_management/<clientId>`,
+   *   or a custom auth domain — so pass the precise value(s) your tokens
+   *   actually carry.
+   */
   @JvmOverloads
   fun authenticateWithSessionCookie(
     sessionData: String?,
