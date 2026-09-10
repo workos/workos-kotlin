@@ -95,6 +95,7 @@ object Iron {
     val parts = sealed.split("*")
     if (parts.size != 8) throw IronException("Incorrect number of sealed components")
     val prefix = parts[0]
+    val passwordId = parts[1]
     val encSaltHex = parts[2]
     val ivB64 = parts[3]
     val ctB64 = parts[4]
@@ -102,11 +103,12 @@ object Iron {
     val intSaltHex = parts[6]
     val hmacB64 = parts[7]
     if (prefix != MAC_PREFIX) throw IronException("Wrong mac prefix")
+    if (passwordId != PASSWORD_ID) throw IronException("Unknown password id")
 
     val macBase =
       listOf(
         MAC_PREFIX,
-        PASSWORD_ID,
+        passwordId,
         encSaltHex,
         ivB64,
         ctB64,

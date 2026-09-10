@@ -45,6 +45,18 @@ class IronTest {
   }
 
   @Test
+  fun `unseal rejects a seal whose password id was tampered with`() {
+    val sealed = Iron.seal("payload", password)
+    for (passwordId in listOf("2", "ZZZ", "")) {
+      val parts = sealed.split("*").toMutableList()
+      parts[1] = passwordId
+      val bad = parts.joinToString("*")
+      val ex = assertThrows(IronException::class.java, { Iron.unseal(bad, password) }, "Password ID: '$passwordId'")
+      assertEquals("Unknown password id", ex.message)
+    }
+  }
+
+  @Test
   fun `unseal rejects the wrong password`() {
     val sealed = Iron.seal("payload", password)
     val otherPassword = "a-different-password-at-least-32chars"
