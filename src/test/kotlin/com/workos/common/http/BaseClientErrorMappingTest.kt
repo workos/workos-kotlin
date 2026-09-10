@@ -91,6 +91,7 @@ class BaseClientErrorMappingTest : TestBase() {
   fun `404 maps to NotFoundException`() {
     val ex = runErrorCase<NotFoundException>(404, """{"message": "Not here"}""")
     assertEquals("Not here", ex.message)
+    assertEquals("${wireMockRule.baseUrl()}/errors", ex.path)
   }
 
   /**
@@ -166,6 +167,51 @@ class BaseClientErrorMappingTest : TestBase() {
       path = "/user_management/magic_auth/super-secret-magic-000",
       redactedPath = "/user_management/magic_auth/[REDACTED]"
     )
+  }
+
+  @Test
+  fun `404 redacts sensitive query values while preserving non-sensitive params`() {
+    stubResponse("GET", "/errors", 404)
+    val queryParams =
+      listOf(
+        "code" to "super-secret-code",
+        "domain" to "example.com",
+        "token" to "super-secret-token",
+        "client_secret" to "super-secret-client-secret",
+        "code" to "another-secret-code"
+      )
+    val client = createWorkOSClient()
+    val ex =
+      assertThrows(NotFoundException::class.java) {
+        client.baseClient.request(
+          RequestConfig(method = "GET", path = "/errors", queryParams = queryParams),
+          Map::class.java
+        )
+      }
+    assertEquals(
+      "${wireMockRule.baseUrl()}/errors?code=[REDACTED]&domain=example.com" +
+        "&token=[REDACTED]&client_secret=[REDACTED]&code=[REDACTED]",
+      ex.path
+    )
+    for ((name, value) in queryParams) {
+      if (name != "domain") {
+        assertTrue(!ex.path!!.contains(value), "exception path leaked sensitive query value")
+      }
+    }
+  }
+
+  @Test
+  fun `404 leaves non-sensitive query params unredacted`() {
+    stubResponse("GET", "/errors", 404)
+    val client = createWorkOSClient()
+    val ex =
+      assertThrows(NotFoundException::class.java) {
+        client.baseClient.request(
+          RequestConfig(method = "GET", path = "/errors", queryParams = listOf("domain" to "example.com")),
+          Map::class.java
+        )
+      }
+    assertEquals("${wireMockRule.baseUrl()}/errors?domain=example.com", ex.path)
   }
 
   @Test

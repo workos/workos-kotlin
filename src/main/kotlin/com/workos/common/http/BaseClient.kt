@@ -332,7 +332,7 @@ open class BaseClient(
   }
 
   /**
-   * Redact bearer-equivalent path segments before they get embedded in
+   * Redact bearer-equivalent path segments and sensitive query values before they get embedded in
    * exception messages or downstream logs (security finding #51, mirrors
    * the Ruby `base_client.rb` redaction list from #44).
    *
@@ -342,16 +342,19 @@ open class BaseClient(
    * Anyone with read access to a 404's exception trail would otherwise be
    * able to replay the token. We replace the secret segment with
    * `[REDACTED]` while keeping the route prefix intact for debuggability.
+   * Query values for `code`, `token`, and `client_secret` are also redacted,
+   * preserving non-sensitive parameters.
    */
   private fun redactSensitivePath(url: String): String {
     var redacted = url
     for (pattern in SENSITIVE_PATH_PATTERNS) {
       redacted = pattern.replace(redacted, "$1[REDACTED]")
     }
-    return redacted
+    return SENSITIVE_QUERY_PATTERN.replace(redacted, "$1[REDACTED]")
   }
 
   private companion object {
+    private val SENSITIVE_QUERY_PATTERN = Regex("([?&](?:code|token|client_secret)=)[^&#]*")
     private val SENSITIVE_PATH_PATTERNS: List<Regex> =
       listOf(
         Regex("(/user_management/invitations/by_token/)[^/?#]+"),
