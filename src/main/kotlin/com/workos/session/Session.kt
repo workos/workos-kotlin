@@ -163,6 +163,15 @@ sealed class RefreshSessionResult {
  * [authenticate] to validate the cookie and decode claims; [refresh] to
  * exchange the embedded refresh token for a new sealed session;
  * [getLogoutUrl] to derive the logout URL.
+ *
+ * Pass [issuers] to additionally require the access token's `iss` claim to
+ * match one of the given values. When null (the default) the issuer is not
+ * checked. The match is exact (case-sensitive string equality). The `iss`
+ * value WorkOS mints varies by environment — `https://api.workos.com`,
+ * `https://api.workos.com/user_management/<clientId>`, or a custom auth
+ * domain — so pass the precise value(s) your tokens actually carry. The
+ * issuer policy is applied by [authenticate] only; [refresh] does not
+ * validate the access token.
  */
 class SessionCookie
   @JvmOverloads
@@ -170,11 +179,22 @@ class SessionCookie
     private val userManagement: UserManagement,
     sessionData: String?,
     private var cookiePassword: String,
-    private val objectMapper: ObjectMapper = defaultObjectMapper()
+    private val objectMapper: ObjectMapper = defaultObjectMapper(),
+    issuers: List<String>?
   ) {
+    @JvmOverloads
+    constructor(
+      userManagement: UserManagement,
+      sessionData: String?,
+      cookiePassword: String,
+      objectMapper: ObjectMapper = defaultObjectMapper()
+    ) : this(userManagement, sessionData, cookiePassword, objectMapper, null)
+
     init {
       require(cookiePassword.isNotEmpty()) { "cookiePassword is required" }
     }
+
+    private val issuers: List<String>? = issuers?.toList()
 
     private var sessionData: String? = sessionData
 
@@ -196,7 +216,7 @@ class SessionCookie
         return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.INVALID_SESSION_COOKIE)
       }
 
-      if (!Jwks.isValidJwt(userManagement.workos, session.accessToken)) {
+      if (!Jwks.isValidJwt(userManagement.workos, session.accessToken, issuers)) {
         return AuthenticateSessionResult.Failure(AuthenticateSessionFailureReason.INVALID_JWT)
       }
 
@@ -220,7 +240,8 @@ class SessionCookie
     /**
      * Exchange the embedded refresh token for a new access token, reseal the
      * updated session, and update this helper's state so subsequent
-     * [authenticate] calls see the new token.
+     * [authenticate] calls see the new token. The issuer policy is not
+     * applied here; it is enforced on [authenticate].
      */
     @JvmOverloads
     fun refresh(
@@ -319,17 +340,39 @@ class Session internal constructor(
 ) {
   private val objectMapper = defaultObjectMapper()
 
-  /** Build a [SessionCookie] handler for an inbound sealed-cookie value. */
+  /**
+   * Build a [SessionCookie] handler for an inbound sealed-cookie value.
+   *
+   * @param issuers accepted values for the access token's `iss` claim; when
+   *   null (the default) the issuer is not checked. The match is exact
+   *   (case-sensitive). The `iss` value WorkOS mints varies by environment —
+   *   `https://api.workos.com`, `https://api.workos.com/user_management/<clientId>`,
+   *   or a custom auth domain — so pass the precise value(s) your tokens
+   *   actually carry.
+   */
+  @JvmOverloads
   fun loadSealedSession(
     sessionData: String?,
-    cookiePassword: String
-  ): SessionCookie = SessionCookie(UserManagement(workos), sessionData, cookiePassword, objectMapper)
+    cookiePassword: String,
+    issuers: List<String>? = null
+  ): SessionCookie = SessionCookie(UserManagement(workos), sessionData, cookiePassword, objectMapper, issuers)
 
-  /** Convenience: authenticate a sealed cookie in one call. */
+  /**
+   * Convenience: authenticate a sealed cookie in one call.
+   *
+   * @param issuers accepted values for the access token's `iss` claim; when
+   *   null (the default) the issuer is not checked. The match is exact
+   *   (case-sensitive). The `iss` value WorkOS mints varies by environment —
+   *   `https://api.workos.com`, `https://api.workos.com/user_management/<clientId>`,
+   *   or a custom auth domain — so pass the precise value(s) your tokens
+   *   actually carry.
+   */
+  @JvmOverloads
   fun authenticateWithSessionCookie(
     sessionData: String?,
-    cookiePassword: String
-  ): AuthenticateSessionResult = loadSealedSession(sessionData, cookiePassword).authenticate()
+    cookiePassword: String,
+    issuers: List<String>? = null
+  ): AuthenticateSessionResult = loadSealedSession(sessionData, cookiePassword, issuers).authenticate()
 
   /** Convenience: refresh a sealed cookie in one call. */
   @JvmOverloads
@@ -397,7 +440,8 @@ internal object Jwks {
 
   fun isValidJwt(
     workos: WorkOS,
-    accessToken: String
+    accessToken: String,
+    issuers: List<String>? = null
   ): Boolean {
     val clientId = workos.clientId ?: error("Missing client ID. Did you provide it when initializing WorkOS?")
     val processor =
@@ -409,8 +453,10 @@ internal object Jwks {
         }
       }
     return try {
-      processor.process(SignedJWT.parse(accessToken), null)
-      true
+      val claims = processor.process(SignedJWT.parse(accessToken), null)
+      if (issuers == null) return true
+      val iss = claims.issuer
+      iss != null && iss in issuers
     } catch (_: Exception) {
       false
     }
