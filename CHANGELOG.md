@@ -1,5 +1,23 @@
 # Changelog
 
+## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-10)
+
+
+### Features
+
+* Add optional issuers check to session authentication ([#433](https://github.com/workos/workos-kotlin/issues/433)) ([253da76](https://github.com/workos/workos-kotlin/commit/253da76028dfa8e610e985ee4aab4f2297308e4d))
+* **generated:** Pipes (batch 8ad8e447) ([#431](https://github.com/workos/workos-kotlin/issues/431)) ([41b0f3f](https://github.com/workos/workos-kotlin/commit/41b0f3ff2bdbb771a71316c13eb9c7684a3417b5))
+* **generated:** SSO (batch 9fe95ce5) ([#439](https://github.com/workos/workos-kotlin/issues/439)) ([e657a4f](https://github.com/workos/workos-kotlin/commit/e657a4fb11f474f57d63a9df8de570df6c5fef88))
+
+
+### Bug Fixes
+
+* **http:** Prevent dot segments from retargeting requests ([#435](https://github.com/workos/workos-kotlin/issues/435)) ([e9323b4](https://github.com/workos/workos-kotlin/commit/e9323b49cb71b15e365e6f3d1d3a62cf8903b895))
+* **http:** Redact sensitive query values in 404 errors ([#436](https://github.com/workos/workos-kotlin/issues/436)) ([67dbb81](https://github.com/workos/workos-kotlin/commit/67dbb81504d1ec3dc3387fd77efc5f7e95a4f84a))
+* **session:** Refresh sealed identity from response ([#434](https://github.com/workos/workos-kotlin/issues/434)) ([d9bdf49](https://github.com/workos/workos-kotlin/commit/d9bdf493633baf15120c6855c49716bb07654370))
+* **session:** Reject malformed seal encodings ([#437](https://github.com/workos/workos-kotlin/issues/437)) ([8c900bf](https://github.com/workos/workos-kotlin/commit/8c900bf77cd741836683ffd91783e98f666e17f4))
+* **session:** Validate Iron token password ID ([#440](https://github.com/workos/workos-kotlin/issues/440)) ([a272cb5](https://github.com/workos/workos-kotlin/commit/a272cb5bec30d62563eb0c8c39c727432bc1b2dc))
+
 ## [7.3.0](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.3.0) (2026-09-01)
 
 ### Bug Fixes
