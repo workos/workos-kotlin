@@ -16,5 +16,6 @@ enum class ResourceExportFailedDataResourceType(
   Organizations("organizations"),
   Events("events"),
   Sessions("sessions"),
-  AuditLogEvents("auditLogEvents")
+  AuditLogEvents("auditLogEvents"),
+  Connections("connections")
 }

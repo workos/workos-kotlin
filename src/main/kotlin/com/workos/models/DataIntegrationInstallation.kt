@@ -10,11 +10,11 @@ data class DataIntegrationInstallation(
   @JsonProperty("id")
   val id: String,
 
-  /** The User the API key was installed for. */
+  /** The User the API key was installed for. Null on an `organization`-owned integration, whose installations belong to the organization. */
   @JsonProperty("user_id")
-  val userId: String,
+  val userId: String?,
 
-  /** The Organization the installation is scoped to, or null when unscoped. */
+  /** The Organization the installation is scoped to (or owned by, on an `organization`-owned integration), or null when unscoped. */
   @JsonProperty("organization_id")
   val organizationId: String?,
 

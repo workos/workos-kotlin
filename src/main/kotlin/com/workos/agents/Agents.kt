@@ -722,6 +722,7 @@ class Agents(
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param organizationId Only return sessions of instances acting within this organization.
    * @param agentBlueprintId Only return sessions of instances minted from this blueprint.
    * @param agentInstanceId Only return sessions belonging to this agent instance.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -734,6 +735,7 @@ class Agents(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    organizationId: String? = null,
     agentBlueprintId: String? = null,
     agentInstanceId: String? = null,
     requestOptions: RequestOptions? = null
@@ -749,6 +751,7 @@ class Agents(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      addIfNotNull("organization_id", organizationId)
       addIfNotNull("agent_blueprint_id", agentBlueprintId)
       addIfNotNull("agent_instance_id", agentInstanceId)
     }
@@ -768,12 +771,13 @@ class Agents(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    organizationId: String? = null,
     agentBlueprintId: String? = null,
     agentInstanceId: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<AgentInstanceSession> =
     withContext(Dispatchers.IO) {
-      listSessions(before, after, limit, order, agentBlueprintId, agentInstanceId, requestOptions)
+      listSessions(before, after, limit, order, organizationId, agentBlueprintId, agentInstanceId, requestOptions)
     }
 
   /**
