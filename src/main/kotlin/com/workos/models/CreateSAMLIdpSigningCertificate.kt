@@ -2,5 +2,11 @@
 
 package com.workos.models
 
-/** Alias for [ValidateApiKey]. */
-typealias CreateSAMLIdpSigningCertificate = ValidateApiKey
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** CreateSAMLIdpSigningCertificate model. */
+data class CreateSAMLIdpSigningCertificate(
+  /** The PEM-encoded X.509 certificate. */
+  @JsonProperty("value")
+  val value: String
+)

@@ -4,12 +4,17 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.CreateDataIntegrationAuthMethods
+import com.workos.types.CreateDataIntegrationOwnership
 
 /** CreateDataIntegration model. */
 data class CreateDataIntegration(
   /** The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug. */
   @JsonProperty("provider")
   val provider: String,
+
+  /** Who owns the Data Integration. `user` (the default) creates the integration users connect their own accounts to; `organization` creates the root organizations connect to. Ownership is fixed at creation, and one integration of each ownership may exist per provider. Independent of `credentials.type`. */
+  @JsonProperty("ownership")
+  val ownership: CreateDataIntegrationOwnership? = null,
 
   /** An optional description of the Data Integration. */
   @JsonProperty("description")

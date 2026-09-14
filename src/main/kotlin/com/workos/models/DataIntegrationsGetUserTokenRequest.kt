@@ -3,18 +3,27 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationsGetUserTokenRequestConnectionOwner
 
 /** DataIntegrationsGetUserTokenRequest model. */
 data class DataIntegrationsGetUserTokenRequest(
-  /** A [User](https://workos.com/docs/reference/authkit/user) identifier. */
+  /** A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization. */
   @JsonProperty("user_id")
   val userId: String,
 
-  /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. */
+  /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
 
   /** A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider. */
   @JsonProperty("connected_account_id")
-  val connectedAccountId: String? = null
+  val connectedAccountId: String? = null,
+
+  /** Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`. */
+  @JsonProperty("connection_owner")
+  val connectionOwner: DataIntegrationsGetUserTokenRequestConnectionOwner? = null,
+
+  /** Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered. */
+  @JsonProperty("supports_multiple_connections")
+  val supportsMultipleConnections: Boolean? = null
 )

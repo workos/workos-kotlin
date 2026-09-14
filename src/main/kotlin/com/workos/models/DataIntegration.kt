@@ -4,6 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationAuthMethods
+import com.workos.types.DataIntegrationOwnership
 import com.workos.types.DataIntegrationState
 import java.time.OffsetDateTime
 
@@ -20,6 +21,10 @@ data class DataIntegration(
   /** The integration type derived from the provider. */
   @JsonProperty("integration_type")
   val integrationType: String,
+
+  /** Who owns the Data Integration: `user` when users connect their own accounts, `organization` when organizations connect. Fixed at creation. */
+  @JsonProperty("ownership")
+  val ownership: DataIntegrationOwnership,
 
   /** An optional description of the Data Integration. */
   @JsonProperty("description")

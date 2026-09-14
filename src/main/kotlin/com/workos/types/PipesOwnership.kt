@@ -5,17 +5,13 @@ package com.workos.types
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonValue
 
-/** Enumeration of valid ResourceExportFailedDataResourceType values returned or accepted by the API. */
-enum class ResourceExportFailedDataResourceType(
+/** Enumeration of valid PipesOwnership values returned or accepted by the API. */
+enum class PipesOwnership(
   /** The wire value sent to and received from the API. */
   @JsonValue val value: String
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
-  Users("users"),
-  Organizations("organizations"),
-  Events("events"),
-  Sessions("sessions"),
-  AuditLogEvents("auditLogEvents"),
-  Connections("connections")
+  User("user"),
+  Organization("organization")
 }

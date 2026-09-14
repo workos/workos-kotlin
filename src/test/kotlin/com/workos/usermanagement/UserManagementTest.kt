@@ -263,6 +263,46 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `listAuthkitOAuthResources returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/user_management/authkit_oauth_resources",
+      200,
+      "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
+    val result = api().listAuthkitOAuthResources()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `createAuthkitOAuthResource returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/user_management/authkit_oauth_resources",
+      200,
+      "{\"object\": \"authkit_oauth_resource\", \"id\": \"sample\", \"uri\": \"sample\", \"default\": false, \"created_at\": " +
+        "\"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().createAuthkitOAuthResource("sample-arg")
+    assertNotNull(result)
+    assertEquals("authkit_oauth_resource", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.uri)
+    assertEquals(false, result.default)
+    assertEquals("sample", result.createdAt)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/user_management/authkit_oauth_resources"))
+        .withRequestBody(matchingJsonPath("\$.uri"))
+    )
+  }
+
+  @Test
+  fun `deleteAuthkitOAuthResource completes without throwing`() {
+    stubResponse("DELETE", "/user_management/authkit_oauth_resources/sample-arg", 204)
+    api().deleteAuthkitOAuthResource("sample-arg")
+  }
+
+  @Test
   fun `listCorsOrigins returns a typed response`() {
     stubResponse("GET", "/user_management/cors_origins", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listCorsOrigins()

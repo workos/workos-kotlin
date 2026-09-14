@@ -1193,6 +1193,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `AccountSelectionRequiredError round-trips through Jackson`() {
+    val json = "{\"code\": \"account_selection_required\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, AccountSelectionRequiredError::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `AuthMethodMismatchError round-trips through Jackson`() {
     val json = "{\"code\": \"auth_method_mismatch\", \"message\": \"sample\"}"
     val parsed = mapper.readValue(json, AuthMethodMismatchError::class.java)
@@ -1239,6 +1249,18 @@ class GeneratedModelRoundTripTest {
   fun `RadarListEntryAlreadyPresentResponse round-trips through Jackson`() {
     val json = "{\"message\": \"sample\"}"
     val parsed = mapper.readValue(json, RadarListEntryAlreadyPresentResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `AuthkitOAuthResource round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"authkit_oauth_resource\", \"id\": \"sample\", \"uri\": \"sample\", \"default\": false, \"created_at\": " +
+        "\"sample\", \"updated_at\": \"sample\"}"
+    val parsed = mapper.readValue(json, AuthkitOAuthResource::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1480,7 +1502,7 @@ class GeneratedModelRoundTripTest {
 
   @Test
   fun `DataIntegrationInstallation round-trips through Jackson`() {
-    val json = "{\"id\": \"sample\", \"user_id\": \"sample\", \"organization_id\": null, \"api_key_last_4\": null}"
+    val json = "{\"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"api_key_last_4\": null}"
     val parsed = mapper.readValue(json, DataIntegrationInstallation::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)

@@ -25,8 +25,8 @@ class AdminPortal(
    * Generate a Portal Link scoped to an Organization.
    *
    * @param organization An [Organization](https://workos.com/docs/reference/organization) identifier.
-   * @param returnUrl The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
-   * @param successUrl The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Redirects](https://dashboard.workos.com/redirects) page will be used.
+   * @param returnUrl The URL to go to when an admin clicks on your logo in the Admin Portal. If not specified, the return URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
+   * @param successUrl The URL to redirect the admin to when they finish setup. If not specified, the success URL configured on the [Admin Portal](https://dashboard.workos.com/admin-portal) page will be used.
    * @param intent The intent of the Admin Portal.
    * @param itContactEmails The email addresses of the IT contacts to grant access to the Admin Portal for the given organization. Accepts up to 20 emails.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)

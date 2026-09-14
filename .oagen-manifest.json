@@ -15,6 +15,7 @@
     "src/main/kotlin/com/workos/featureflags/FeatureFlags.kt",
     "src/main/kotlin/com/workos/groups/Groups.kt",
     "src/main/kotlin/com/workos/models/AccessTokenAgentRegistrationCredentialIssuedDataDetail.kt",
+    "src/main/kotlin/com/workos/models/AccountSelectionRequiredError.kt",
     "src/main/kotlin/com/workos/models/ActionAuthenticationDenied.kt",
     "src/main/kotlin/com/workos/models/ActionAuthenticationDeniedData.kt",
     "src/main/kotlin/com/workos/models/ActionUserRegistrationDenied.kt",
@@ -179,6 +180,7 @@
     "src/main/kotlin/com/workos/models/AuthenticationSSOTimedOutData.kt",
     "src/main/kotlin/com/workos/models/AuthenticationSSOTimedOutDataError.kt",
     "src/main/kotlin/com/workos/models/AuthenticationSSOTimedOutDataSSO.kt",
+    "src/main/kotlin/com/workos/models/AuthkitOAuthResource.kt",
     "src/main/kotlin/com/workos/models/AuthorizationCheck.kt",
     "src/main/kotlin/com/workos/models/AuthorizationCodeSessionAuthenticateRequest.kt",
     "src/main/kotlin/com/workos/models/AuthorizationPermission.kt",
@@ -219,6 +221,7 @@
     "src/main/kotlin/com/workos/models/ConnectionSAMLCertificateRenewedDataConnection.kt",
     "src/main/kotlin/com/workos/models/CorsOriginResponse.kt",
     "src/main/kotlin/com/workos/models/CreateApplicationSecret.kt",
+    "src/main/kotlin/com/workos/models/CreateAuthkitOAuthResource.kt",
     "src/main/kotlin/com/workos/models/CreateAuthorizationPermission.kt",
     "src/main/kotlin/com/workos/models/CreateAuthorizationResource.kt",
     "src/main/kotlin/com/workos/models/CreateConnection.kt",
@@ -667,6 +670,7 @@
     "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
     "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsTokenAuthenticationMethod.kt",
     "src/main/kotlin/com/workos/types/CreateDataIntegrationAuthMethods.kt",
+    "src/main/kotlin/com/workos/types/CreateDataIntegrationOwnership.kt",
     "src/main/kotlin/com/workos/types/CreateUserInviteOptionsLocale.kt",
     "src/main/kotlin/com/workos/types/CreateUserPasswordHashType.kt",
     "src/main/kotlin/com/workos/types/CreateUserPasswordSaltPosition.kt",
@@ -679,11 +683,16 @@
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsInputType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsResponseError.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCustomProviderAuthenticateVia.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationOwnership.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationState.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsGetUserTokenRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountAuthMethod.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataOwnership.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsUpsertApiKeyRequestConnectionOwner.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsUpsertClientCredentialsRequestConnectionOwner.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsVendCredentialsRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DirectoryState.kt",
     "src/main/kotlin/com/workos/types/DirectoryType.kt",
     "src/main/kotlin/com/workos/types/DirectoryUserState.kt",
@@ -735,6 +744,7 @@
     "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
     "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsTokenAuthenticationMethod.kt",
     "src/main/kotlin/com/workos/types/PipeConnectedAccountState.kt",
+    "src/main/kotlin/com/workos/types/PipesOwnership.kt",
     "src/main/kotlin/com/workos/types/ProfileConnectionType.kt",
     "src/main/kotlin/com/workos/types/RadarListAction.kt",
     "src/main/kotlin/com/workos/types/RadarListType.kt",
@@ -1849,6 +1859,30 @@
     "POST /agents/blueprints/{agent_blueprint_id}/tokens/validate": {
       "sdkMethod": "validateBlueprintToken",
       "service": "agents"
+    },
+    "GET /data-integrations/{slug}/organization": {
+      "sdkMethod": "listDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "PUT /data-integrations/{slug}/organization": {
+      "sdkMethod": "updateDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "DELETE /data-integrations/{slug}/organization": {
+      "sdkMethod": "deleteDataIntegrationOrganization",
+      "service": "pipes"
+    },
+    "GET /user_management/authkit_oauth_resources": {
+      "sdkMethod": "listAuthkitOAuthResources",
+      "service": "userManagement"
+    },
+    "POST /user_management/authkit_oauth_resources": {
+      "sdkMethod": "createAuthkitOAuthResource",
+      "service": "userManagement"
+    },
+    "DELETE /user_management/authkit_oauth_resources/{id}": {
+      "sdkMethod": "deleteAuthkitOAuthResource",
+      "service": "userManagement"
     }
   }
 }
