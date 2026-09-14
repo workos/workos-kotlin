@@ -32,9 +32,9 @@ class PipesTest : TestBase() {
       "POST",
       "/data-integrations",
       200,
-      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"ownership\": " +
+        "\"user\", \"description\": null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", " +
+        "\"auth_methods\": [], \"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createDataIntegration("sample-arg")
@@ -56,9 +56,9 @@ class PipesTest : TestBase() {
       "GET",
       "/data-integrations/sample-arg",
       200,
-      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"ownership\": " +
+        "\"user\", \"description\": null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", " +
+        "\"auth_methods\": [], \"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getDataIntegration("sample-arg")
@@ -76,9 +76,9 @@ class PipesTest : TestBase() {
       "PUT",
       "/data-integrations/sample-arg",
       200,
-      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"description\": " +
-        "null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", \"auth_methods\": [], " +
-        "\"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"ownership\": " +
+        "\"user\", \"description\": null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", " +
+        "\"auth_methods\": [], \"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateDataIntegration("sample-arg")
@@ -162,6 +162,52 @@ class PipesTest : TestBase() {
       postRequestedFor(urlPathMatching("/data-integrations/sample-arg/credentials"))
         .withRequestBody(matchingJsonPath("\$.user_id"))
     )
+  }
+
+  @Test
+  fun `listDataIntegrationOrganization returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/data-integrations/sample-arg/organization",
+      200,
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"ownership\": " +
+        "\"user\", \"description\": null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", " +
+        "\"auth_methods\": [], \"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().listDataIntegrationOrganization("sample-arg")
+    assertNotNull(result)
+    assertEquals("data_integration", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.integrationType)
+    assertEquals(false, result.enabled)
+  }
+
+  @Test
+  fun `updateDataIntegrationOrganization returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/data-integrations/sample-arg/organization",
+      200,
+      "{\"object\": \"data_integration\", \"id\": \"sample\", \"slug\": \"sample\", \"integration_type\": \"sample\", \"ownership\": " +
+        "\"user\", \"description\": null, \"enabled\": false, \"state\": \"valid\", \"scopes\": null, \"redirect_uri\": \"sample\", " +
+        "\"auth_methods\": [], \"credentials\": null, \"installation\": null, \"config\": {}, \"custom_provider\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().updateDataIntegrationOrganization("sample-arg")
+    assertNotNull(result)
+    assertEquals("data_integration", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.slug)
+    assertEquals("sample", result.integrationType)
+    assertEquals(false, result.enabled)
+  }
+
+  @Test
+  fun `deleteDataIntegrationOrganization completes without throwing`() {
+    stubResponse("DELETE", "/data-integrations/sample-arg/organization", 204)
+    api().deleteDataIntegrationOrganization("sample-arg")
   }
 
   @Test

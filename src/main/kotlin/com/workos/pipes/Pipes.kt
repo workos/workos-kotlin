@@ -23,6 +23,7 @@ import com.workos.models.UpdateCustomProviderDefinition
 import com.workos.types.ConnectedAccountAuthMethod
 import com.workos.types.PaginationOrder
 import com.workos.types.PipeConnectedAccountState
+import com.workos.types.PipesOwnership
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
@@ -38,12 +39,13 @@ class Pipes(
   /**
    * List data integrations
    *
-   * Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations.
+   * Lists the environment's data integrations configured with `custom` or `organization` credentials, including custom providers and API key integrations. Both user-owned and organization-owned roots are returned, each as its own row with an `ownership`; filter with `ownership` to return only one kind.
    *
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
+   * @param ownership Only return Data Integrations with this ownership: `user` for the integrations users connect their own accounts to, or `organization` for the roots organizations connect to. Omit to return both.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -54,6 +56,7 @@ class Pipes(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    ownership: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): Page<DataIntegration> {
     val itemType = object : TypeReference<DataIntegration>() {}
@@ -67,6 +70,7 @@ class Pipes(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
+      ownership?.let { add("ownership" to it.value) }
     }
   }
 
@@ -84,18 +88,20 @@ class Pipes(
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
+    ownership: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): Page<DataIntegration> =
     withContext(Dispatchers.IO) {
-      listDataIntegrations(before, after, limit, order, requestOptions)
+      listDataIntegrations(before, after, limit, order, ownership, requestOptions)
     }
 
   /**
    * Create a data integration
    *
-   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition.
+   * Creates a data integration for a provider. Set `credentials.type` to `custom` to use your own OAuth app credentials or `organization` to have each organization supply its own. Set `auth_methods` to `["api_key"]` to create an API key integration; you may optionally supply an `api_key` block to install a first tenant in the same call. Set `auth_methods` to `["client_credentials"]` to create a client-credentials integration; client credentials are installed per-tenant afterwards. Set `ownership` to `organization` to create the integration organizations connect to instead of the default user-owned one; a provider may have one of each. For a built-in provider, pass its slug as `provider`. For a custom provider, pass a new slug plus a `custom_provider` definition, or the slug of an existing custom provider (without `custom_provider`) to add the other ownership.
    *
    * @param provider The provider to create a Data Integration for. For a built-in provider use its slug (e.g. `github`, `slack`). For a custom provider, this is the new provider slug and `custom_provider` must be supplied. A custom provider slug cannot shadow an existing global provider slug.
+   * @param ownership Who owns the Data Integration. `user` (the default) creates the integration users connect their own accounts to; `organization` creates the root organizations connect to. Ownership is fixed at creation, and one integration of each ownership may exist per provider. Independent of `credentials.type`.
    * @param description An optional description of the Data Integration.
    * @param enabled Whether the Data Integration is enabled. Defaults to `false`.
    * @param scopes The OAuth scopes to request for the Data Integration. Defaults to the provider's configured scopes when omitted.
@@ -111,6 +117,7 @@ class Pipes(
   @JvmOverloads
   fun createDataIntegration(
     provider: String,
+    ownership: PipesOwnership? = null,
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
@@ -124,6 +131,7 @@ class Pipes(
     val body =
       bodyOf(
         "provider" to provider,
+        "ownership" to ownership,
         "description" to description,
         "enabled" to enabled,
         "scopes" to scopes,
@@ -154,6 +162,7 @@ class Pipes(
   @JvmName("createDataIntegrationSuspend")
   suspend fun createDataIntegrationSuspend(
     provider: String,
+    ownership: PipesOwnership? = null,
     description: String? = null,
     enabled: Boolean? = null,
     scopes: List<String>? = null,
@@ -167,6 +176,7 @@ class Pipes(
     withContext(Dispatchers.IO) {
       createDataIntegration(
         provider,
+        ownership,
         description,
         enabled,
         scopes,
@@ -182,7 +192,7 @@ class Pipes(
   /**
    * Get a data integration
    *
-   * Retrieves a data integration by its slug.
+   * Retrieves the user-owned data integration by its slug.
    *
    * @param slug The slug identifier of the data integration.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -223,7 +233,7 @@ class Pipes(
   /**
    * Update a data integration
    *
-   * Updates the description, enabled state, or custom credentials of a data integration. For custom providers, `custom_provider` updates the OAuth definition.
+   * Updates the description, enabled state, or custom credentials of the user-owned data integration. For custom providers, `custom_provider` updates the OAuth definition.
    *
    * @param slug The slug identifier of the data integration.
    * @param description An optional description of the Data Integration.
@@ -292,7 +302,7 @@ class Pipes(
   /**
    * Delete a data integration
    *
-   * Deletes a data integration and all of its connected installations. For a custom provider, also deletes the custom provider definition.
+   * Deletes the user-owned data integration and all of its connected installations. For a custom provider, the provider definition is deleted once no organization-owned root references it either.
    *
    * @param slug The slug identifier of the data integration.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -330,12 +340,14 @@ class Pipes(
   /**
    * Upsert an API key for a connected account
    *
-   * Creates or updates an API-key-based installation for the specified integration and user. If an installation already exists, the stored API key is rotated to the new value.
+   * Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value.
    *
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param secret The API key secret to store for this integration.
-   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
+   * @param connectionOwner Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
@@ -346,13 +358,17 @@ class Pipes(
     userId: String,
     secret: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val body =
       bodyOf(
         "user_id" to userId,
         "secret" to secret,
-        "organization_id" to organizationId
+        "organization_id" to organizationId,
+        "connected_account_id" to connectedAccountId,
+        "connection_owner" to connectionOwner
       )
     val config =
       RequestConfig(
@@ -378,10 +394,12 @@ class Pipes(
     userId: String,
     secret: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      updateDataIntegrationApiKey(slug, userId, secret, organizationId, requestOptions)
+      updateDataIntegrationApiKey(slug, userId, secret, organizationId, connectedAccountId, connectionOwner, requestOptions)
     }
 
   /**
@@ -448,13 +466,15 @@ class Pipes(
   /**
    * Upsert client credentials for a connected account
    *
-   * Creates or updates a client-credentials-based installation for the specified integration and user. If an installation already exists, the stored client credentials are rotated to the new values.
+   * Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values.
    *
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param clientId The OAuth client ID to store for this integration.
    * @param clientSecret The OAuth client secret to store for this integration.
-   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
+   * @param connectionOwner Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
    * @param config Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -467,6 +487,8 @@ class Pipes(
     clientId: String,
     clientSecret: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
@@ -476,6 +498,8 @@ class Pipes(
         "client_id" to clientId,
         "client_secret" to clientSecret,
         "organization_id" to organizationId,
+        "connected_account_id" to connectedAccountId,
+        "connection_owner" to connectionOwner,
         "config" to config
       )
     val config =
@@ -503,11 +527,23 @@ class Pipes(
     clientId: String,
     clientSecret: String,
     organizationId: String? = null,
+    connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      updateDataIntegrationClientCredentials(slug, userId, clientId, clientSecret, organizationId, config, requestOptions)
+      updateDataIntegrationClientCredentials(
+        slug,
+        userId,
+        clientId,
+        clientSecret,
+        organizationId,
+        connectedAccountId,
+        connectionOwner,
+        config,
+        requestOptions
+      )
     }
 
   /**
@@ -516,9 +552,11 @@ class Pipes(
    * Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
    *
    * @param slug The identifier of the integration.
-   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
-   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
+   * @param connectionOwner Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationCredentialsResponse
@@ -529,13 +567,17 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationCredentialsResponse {
     val body =
       bodyOf(
         "user_id" to userId,
         "organization_id" to organizationId,
-        "connected_account_id" to connectedAccountId
+        "connected_account_id" to connectedAccountId,
+        "connection_owner" to connectionOwner,
+        "supports_multiple_connections" to supportsMultipleConnections
       )
     val config =
       RequestConfig(
@@ -561,11 +603,169 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationCredentialsResponse =
     withContext(Dispatchers.IO) {
-      createDataIntegrationCredential(slug, userId, organizationId, connectedAccountId, requestOptions)
+      createDataIntegrationCredential(
+        slug,
+        userId,
+        organizationId,
+        connectedAccountId,
+        connectionOwner,
+        supportsMultipleConnections,
+        requestOptions
+      )
     }
+
+  /**
+   * Get an organization-owned data integration
+   *
+   * Retrieves the organization-owned data integration for a provider by its slug. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegration
+   */
+  @JvmOverloads
+  fun listDataIntegrationOrganization(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/data-integrations/${encodePathSegment(slug)}/organization",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listDataIntegrationOrganization]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listDataIntegrationOrganization] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listDataIntegrationOrganizationSuspend")
+  suspend fun listDataIntegrationOrganizationSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration =
+    withContext(Dispatchers.IO) {
+      listDataIntegrationOrganization(slug, requestOptions)
+    }
+
+  /**
+   * Update an organization-owned data integration
+   *
+   * Updates the description, enabled state, or custom credentials of the organization-owned data integration for a provider. For custom providers, `custom_provider` updates the OAuth definition, which is shared with the user-owned root. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param description An optional description of the Data Integration.
+   * @param enabled Whether the Data Integration is enabled.
+   * @param scopes The OAuth scopes to request for the Data Integration. Pass `null` to reset to the provider's configured scopes.
+   * @param credentials New OAuth credentials for the Data Integration. When provided, rotates the stored client secret. Mutually exclusive with `api_key`.
+   * @param apiKey An API key to install or rotate for a tenant on an `api_key` integration. Upserts the tenant installation identified by `user_id` (and optional `organization_id`).
+   * @param customProvider Updates to a custom provider's OAuth definition. Only valid for custom-provider integrations.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegration
+   */
+  @JvmOverloads
+  fun updateDataIntegrationOrganization(
+    slug: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
+    customProvider: UpdateCustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration {
+    val body =
+      bodyOf(
+        "description" to description,
+        "enabled" to enabled,
+        "scopes" to scopes,
+        "credentials" to credentials,
+        "api_key" to apiKey,
+        "custom_provider" to customProvider
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/data-integrations/${encodePathSegment(slug)}/organization",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateDataIntegrationOrganization]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateDataIntegrationOrganization] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateDataIntegrationOrganizationSuspend")
+  suspend fun updateDataIntegrationOrganizationSuspend(
+    slug: String,
+    description: String? = null,
+    enabled: Boolean? = null,
+    scopes: List<String>? = null,
+    credentials: DataIntegrationCredentialsInput? = null,
+    apiKey: ApiKeyInstallation? = null,
+    customProvider: UpdateCustomProviderDefinition? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegration =
+    withContext(Dispatchers.IO) {
+      updateDataIntegrationOrganization(slug, description, enabled, scopes, credentials, apiKey, customProvider, requestOptions)
+    }
+
+  /**
+   * Delete an organization-owned data integration
+   *
+   * Deletes the organization-owned data integration for a provider and all of its connected installations. For a custom provider, the provider definition is deleted once no user-owned root references it either. The `/organization` suffix selects the environment-level organization-owned root for the provider; it does not name a particular organization.
+   *
+   * @param slug The slug identifier of the data integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteDataIntegrationOrganization(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/data-integrations/${encodePathSegment(slug)}/organization",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteDataIntegrationOrganization]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteDataIntegrationOrganization] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteDataIntegrationOrganizationSuspend")
+  suspend fun deleteDataIntegrationOrganizationSuspend(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteDataIntegrationOrganization(slug, requestOptions)
+  }
 
   /**
    * Get an access token for a connected account
@@ -573,9 +773,11 @@ class Pipes(
    * Fetches a valid OAuth access token for a user's connected account. WorkOS automatically handles token refresh, ensuring you always receive a valid, non-expired token.
    *
    * @param provider The identifier of the integration.
-   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
-   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization.
+   * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
+   * @param connectionOwner Which connection to vend from. `user` (the default) vends the user's own connection and requires `user_id`. `organization` vends the organization's shared connection and requires `organization_id`.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. If no `connected_account_id` is supplied and several connections match, the request returns `account_selection_required`. When omitted or `false`, only the compatibility connection is considered.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationAccessTokenResponse
@@ -586,13 +788,17 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse {
     val body =
       bodyOf(
         "user_id" to userId,
         "organization_id" to organizationId,
-        "connected_account_id" to connectedAccountId
+        "connected_account_id" to connectedAccountId,
+        "connection_owner" to connectionOwner,
+        "supports_multiple_connections" to supportsMultipleConnections
       )
     val config =
       RequestConfig(
@@ -618,10 +824,12 @@ class Pipes(
     userId: String,
     organizationId: String? = null,
     connectedAccountId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAccessTokenResponse =
     withContext(Dispatchers.IO) {
-      getAccessToken(provider, userId, organizationId, connectedAccountId, requestOptions)
+      getAccessToken(provider, userId, organizationId, connectedAccountId, connectionOwner, supportsMultipleConnections, requestOptions)
     }
 
   /**
@@ -632,6 +840,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the user has several for this provider.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -642,11 +851,13 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     params.addIfNotNull("connected_account_id", connectedAccountId)
     val config =
       RequestConfig(
@@ -671,11 +882,12 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      getUserConnectedAccount(userId, slug, organizationId, connectedAccountId, requestOptions)
+      getUserConnectedAccount(userId, slug, organizationId, supportsMultipleConnections, connectedAccountId, requestOptions)
     }
 
   /**
@@ -760,6 +972,7 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
@@ -775,6 +988,7 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
@@ -785,6 +999,7 @@ class Pipes(
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     params.addIfNotNull("connected_account_id", connectedAccountId)
     val body =
       bodyOf(
@@ -818,6 +1033,7 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
@@ -831,6 +1047,7 @@ class Pipes(
         userId,
         slug,
         organizationId,
+        supportsMultipleConnections,
         connectedAccountId,
         accessToken,
         refreshToken,
@@ -844,11 +1061,12 @@ class Pipes(
   /**
    * Delete a connected account
    *
-   * Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. This does not revoke access on the provider side.
+   * Disconnects WorkOS's account for the user, including removing any stored access and refresh tokens. The user will need to reauthorize if they want to reconnect. Access is not revoked on the provider side, except for the WorkOS OAuth provider, whose underlying AuthKit grant is revoked.
    *
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
@@ -857,11 +1075,13 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ) {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     params.addIfNotNull("connected_account_id", connectedAccountId)
     val config =
       RequestConfig(
@@ -886,10 +1106,11 @@ class Pipes(
     userId: String,
     slug: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
     requestOptions: RequestOptions? = null
   ) = withContext(Dispatchers.IO) {
-    deleteUserConnectedAccount(userId, slug, organizationId, connectedAccountId, requestOptions)
+    deleteUserConnectedAccount(userId, slug, organizationId, supportsMultipleConnections, connectedAccountId, requestOptions)
   }
 
   /**
@@ -899,6 +1120,7 @@ class Pipes(
    *
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier to list providers and connected accounts for.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to filter connections for a specific organization.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationsListResponse
@@ -907,10 +1129,12 @@ class Pipes(
   fun listUserDataProviders(
     userId: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationsListResponse {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     val config =
       RequestConfig(
         method = "GET",
@@ -933,9 +1157,10 @@ class Pipes(
   suspend fun listUserDataProvidersSuspend(
     userId: String,
     organizationId: String? = null,
+    supportsMultipleConnections: Boolean? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationsListResponse =
     withContext(Dispatchers.IO) {
-      listUserDataProviders(userId, organizationId, requestOptions)
+      listUserDataProviders(userId, organizationId, supportsMultipleConnections, requestOptions)
     }
 }

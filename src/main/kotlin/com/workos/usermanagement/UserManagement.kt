@@ -11,6 +11,7 @@ import com.workos.common.http.addIfNotNull
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.AuthenticateResponse
+import com.workos.models.AuthkitOAuthResource
 import com.workos.models.AuthorizedConnectApplicationListData
 import com.workos.models.CorsOriginResponse
 import com.workos.models.DeviceAuthorizationResponse
@@ -928,6 +929,149 @@ class UserManagement(
     requestOptions: RequestOptions? = null
   ) = withContext(Dispatchers.IO) {
     revokeSession(sessionId, requestOptions)
+  }
+
+  /**
+   * List MCP resource indicators
+   *
+   * Lists the MCP resource indicators configured for an environment.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @JvmOverloads
+  fun listAuthkitOAuthResources(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthkitOAuthResource> {
+    val itemType = object : TypeReference<AuthkitOAuthResource>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/user_management/authkit_oauth_resources",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listAuthkitOAuthResources]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listAuthkitOAuthResources] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listAuthkitOAuthResourcesSuspend")
+  suspend fun listAuthkitOAuthResourcesSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<AuthkitOAuthResource> =
+    withContext(Dispatchers.IO) {
+      listAuthkitOAuthResources(before, after, limit, order, requestOptions)
+    }
+
+  /**
+   * Create an MCP resource indicator
+   *
+   * Adds an MCP resource indicator (RFC 8707) to an environment, leaving any others in place.
+   *
+   * @param uri The resource URI. May be a wildcard pattern with a single `*` in the leftmost hostname label, where enabled for the environment.
+   * @param default Whether the resource being created becomes the environment default, clearing any previous default. Applies at creation only — this API has no update endpoint yet, so changing the default on an existing resource is done from the dashboard. A wildcard pattern cannot be the default.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AuthkitOAuthResource
+   */
+  @JvmOverloads
+  fun createAuthkitOAuthResource(
+    uri: String,
+    default: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthkitOAuthResource {
+    val body =
+      bodyOf(
+        "uri" to uri,
+        "default" to default
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/user_management/authkit_oauth_resources",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AuthkitOAuthResource::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createAuthkitOAuthResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createAuthkitOAuthResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createAuthkitOAuthResourceSuspend")
+  suspend fun createAuthkitOAuthResourceSuspend(
+    uri: String,
+    default: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): AuthkitOAuthResource =
+    withContext(Dispatchers.IO) {
+      createAuthkitOAuthResource(uri, default, requestOptions)
+    }
+
+  /**
+   * Delete an MCP resource indicator
+   *
+   * Removes an MCP resource indicator from an environment. Any application consents granted against it are removed too.
+   *
+   * @param id The ID of the MCP resource indicator to delete.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteAuthkitOAuthResource(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/user_management/authkit_oauth_resources/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteAuthkitOAuthResource]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteAuthkitOAuthResource] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteAuthkitOAuthResourceSuspend")
+  suspend fun deleteAuthkitOAuthResourceSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteAuthkitOAuthResource(id, requestOptions)
   }
 
   /**
