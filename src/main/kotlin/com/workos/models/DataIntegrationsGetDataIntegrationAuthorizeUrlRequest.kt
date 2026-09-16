@@ -3,16 +3,21 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner
 
 /** DataIntegrationsGetDataIntegrationAuthorizeUrlRequest model. */
 data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
-  /** The ID of the user to authorize. */
+  /** The ID of the user to authorize. When `connection_owner` is `organization`, this is the user authorizing on behalf of the organization; they must be an active member of the organization and do not become the owner of the resulting connected account. */
   @JsonProperty("user_id")
   val userId: String,
 
-  /** An organization ID to scope the authorization to a specific organization. */
+  /** An organization ID to scope the authorization to a specific organization. Required when `connection_owner` is `organization`. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
+
+  /** Who will own the connected account. `user` (the default) connects the user's own account. `organization` connects the organization's shared account and requires `organization_id`. */
+  @JsonProperty("connection_owner")
+  val connectionOwner: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner? = null,
 
   /** The URL to redirect the user to after authorization. */
   @JsonProperty("return_to")

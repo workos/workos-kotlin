@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** CreateAuthkitOAuthResource model. */
 data class CreateAuthkitOAuthResource(
-  /** The resource URI. May be a wildcard pattern with a single `*` in the leftmost hostname label, where enabled for the environment. */
+  /** The resource URI. May be a wildcard pattern with a single `*`, either in the leftmost hostname label or as the final path segment, where enabled for the environment. */
   @JsonProperty("uri")
   val uri: String,
 

@@ -4,6 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationsListResponseDataConnectedAccountAuthMethod
+import com.workos.types.DataIntegrationsListResponseDataConnectedAccountConnectionRole
 import com.workos.types.DataIntegrationsListResponseDataConnectedAccountState
 
 /** DataIntegrationsListResponseDataConnectedAccount model. */
@@ -11,6 +12,18 @@ data class DataIntegrationsListResponseDataConnectedAccount(
   /** The unique identifier of the connected account. */
   @JsonProperty("id")
   val id: String,
+
+  /** Whether this row is the compatibility connection visible to undeclared clients or a standard peer for plural-aware clients. The role does not indicate preference or creation order. */
+  @JsonProperty("connection_role")
+  val connectionRole: DataIntegrationsListResponseDataConnectedAccountConnectionRole,
+
+  /** A best-effort identifier for the provider account this connection points at. It is correlation metadata, not the connection identifier or a selector. */
+  @JsonProperty("account_identifier")
+  val accountIdentifier: String?,
+
+  /** A mutable, non-unique display name for the provider account connection. */
+  @JsonProperty("account_display_name")
+  val accountDisplayName: String?,
 
   /** The [User](https://workos.com/docs/reference/authkit/user) identifier associated with this connection. */
   @JsonProperty("user_id")

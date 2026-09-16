@@ -469,6 +469,13 @@
     "src/main/kotlin/com/workos/models/PermissionUpdated.kt",
     "src/main/kotlin/com/workos/models/PermissionUpdatedData.kt",
     "src/main/kotlin/com/workos/models/PipeConnectedAccount.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionAddFailed.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionAddFailedData.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionConnected.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionConnectionFailed.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionConnectionFailedData.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionDisconnected.kt",
+    "src/main/kotlin/com/workos/models/PipesAccountConnectionReauthorizationNeeded.kt",
     "src/main/kotlin/com/workos/models/PipesConnectedAccountConnected.kt",
     "src/main/kotlin/com/workos/models/PipesConnectedAccountConnectionFailed.kt",
     "src/main/kotlin/com/workos/models/PipesConnectedAccountConnectionFailedData.kt",
@@ -622,6 +629,7 @@
     "src/main/kotlin/com/workos/organizationdomains/OrganizationDomains.kt",
     "src/main/kotlin/com/workos/organizationmembership/OrganizationMembershipService.kt",
     "src/main/kotlin/com/workos/organizations/Organizations.kt",
+    "src/main/kotlin/com/workos/organizationsdataproviders/OrganizationsDataProviders.kt",
     "src/main/kotlin/com/workos/pipes/Pipes.kt",
     "src/main/kotlin/com/workos/pipesprovider/PipesProvider.kt",
     "src/main/kotlin/com/workos/platformteams/PlatformTeams.kt",
@@ -651,6 +659,7 @@
     "src/main/kotlin/com/workos/types/AuthorizationAssignment.kt",
     "src/main/kotlin/com/workos/types/ClaimViewResponseStatus.kt",
     "src/main/kotlin/com/workos/types/ConnectedAccountAuthMethod.kt",
+    "src/main/kotlin/com/workos/types/ConnectedAccountConnectionRole.kt",
     "src/main/kotlin/com/workos/types/ConnectedAccountInputState.kt",
     "src/main/kotlin/com/workos/types/ConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/ConnectionActivatedDataConnectionType.kt",
@@ -683,12 +692,16 @@
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsInputType.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCredentialsResponseError.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationCustomProviderAuthenticateVia.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationInstallationConnectionRole.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationOwnership.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationState.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsGetUserTokenRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataAuthMethods.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountAuthMethod.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountConnectionRole.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectedAccountState.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsListResponseDataOwnership.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsUpsertApiKeyRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsUpsertClientCredentialsRequestConnectionOwner.kt",
@@ -743,6 +756,8 @@
     "src/main/kotlin/com/workos/types/PaginationOrder.kt",
     "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
     "src/main/kotlin/com/workos/types/PatchConnectionOidcOptionsTokenAuthenticationMethod.kt",
+    "src/main/kotlin/com/workos/types/PipeConnectedAccountAuthMethod.kt",
+    "src/main/kotlin/com/workos/types/PipeConnectedAccountConnectionRole.kt",
     "src/main/kotlin/com/workos/types/PipeConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/PipesOwnership.kt",
     "src/main/kotlin/com/workos/types/ProfileConnectionType.kt",
@@ -821,6 +836,7 @@
     "src/test/kotlin/com/workos/organizationdomains/OrganizationDomainsTest.kt",
     "src/test/kotlin/com/workos/organizationmembership/OrganizationMembershipServiceTest.kt",
     "src/test/kotlin/com/workos/organizations/OrganizationsTest.kt",
+    "src/test/kotlin/com/workos/organizationsdataproviders/OrganizationsDataProvidersTest.kt",
     "src/test/kotlin/com/workos/pipes/PipesTest.kt",
     "src/test/kotlin/com/workos/pipesprovider/PipesProviderTest.kt",
     "src/test/kotlin/com/workos/platformteams/PlatformTeamsTest.kt",
@@ -1883,6 +1899,26 @@
     "DELETE /user_management/authkit_oauth_resources/{id}": {
       "sdkMethod": "deleteAuthkitOAuthResource",
       "service": "userManagement"
+    },
+    "GET /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "getConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "POST /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "createConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "PUT /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "updateConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "DELETE /organizations/{organization_id}/connected_accounts/{slug}": {
+      "sdkMethod": "deleteConnectedAccount",
+      "service": "organizationsDataProviders"
+    },
+    "GET /organizations/{organization_id}/data_providers": {
+      "sdkMethod": "list",
+      "service": "organizationsDataProviders"
     }
   }
 }

@@ -3,4 +3,4 @@
 package com.workos.models
 
 /** Alias for [PipesAccountConnectionAddFailedData]. */
-typealias PipesConnectedAccountConnectionFailedData = PipesAccountConnectionAddFailedData
+typealias PipesAccountConnectionConnectionFailedData = PipesAccountConnectionAddFailedData

@@ -408,8 +408,9 @@ class Pipes(
    * Generates an OAuth authorization URL to initiate the connection flow for a user. Redirect the user to the returned URL to begin the OAuth flow with the third-party provider.
    *
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
-   * @param userId The ID of the user to authorize.
-   * @param organizationId An organization ID to scope the authorization to a specific organization.
+   * @param userId The ID of the user to authorize. When `connection_owner` is `organization`, this is the user authorizing on behalf of the organization; they must be an active member of the organization and do not become the owner of the resulting connected account.
+   * @param organizationId An organization ID to scope the authorization to a specific organization. Required when `connection_owner` is `organization`.
+   * @param connectionOwner Who will own the connected account. `user` (the default) connects the user's own account. `organization` connects the organization's shared account and requires `organization_id`.
    * @param returnTo The URL to redirect the user to after authorization.
    * @param config Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -421,6 +422,7 @@ class Pipes(
     slug: String,
     userId: String,
     organizationId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     returnTo: String? = null,
     config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
@@ -429,6 +431,7 @@ class Pipes(
       bodyOf(
         "user_id" to userId,
         "organization_id" to organizationId,
+        "connection_owner" to connectionOwner,
         "return_to" to returnTo,
         "config" to config
       )
@@ -455,12 +458,13 @@ class Pipes(
     slug: String,
     userId: String,
     organizationId: String? = null,
+    connectionOwner: PipesOwnership? = null,
     returnTo: String? = null,
     config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): DataIntegrationAuthorizeUrlResponse =
     withContext(Dispatchers.IO) {
-      authorizeDataIntegration(slug, userId, organizationId, returnTo, config, requestOptions)
+      authorizeDataIntegration(slug, userId, organizationId, connectionOwner, returnTo, config, requestOptions)
     }
 
   /**

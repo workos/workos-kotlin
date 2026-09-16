@@ -4,6 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationsListResponseDataAuthMethods
+import com.workos.types.DataIntegrationsListResponseDataConnectionOwner
 import com.workos.types.DataIntegrationsListResponseDataOwnership
 
 /** DataIntegrationsListResponseData model. */
@@ -36,8 +37,13 @@ data class DataIntegrationsListResponseData(
   @JsonProperty("scopes")
   val scopes: List<String>?,
 
-  /** Whether the provider is owned by a user or organization. */
+  /** Who owns connections made through this provider: `user` for connections owned by individual users, or `organization` for a connection shared by every member of the organization. A provider row can exist before any connected account does. */
+  @JsonProperty("connection_owner")
+  val connectionOwner: DataIntegrationsListResponseDataConnectionOwner,
+
+  /** Use `connection_owner` instead. Legacy spelling of the same value: `userland_user` corresponds to `connection_owner: "user"` and `organization` to `connection_owner: "organization"`. */
   @JsonProperty("ownership")
+  @Deprecated("Deprecated.")
   val ownership: DataIntegrationsListResponseDataOwnership,
 
   /** The timestamp when the provider was created. */

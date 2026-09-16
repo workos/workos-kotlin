@@ -223,7 +223,7 @@ class MultiFactorAuth(
    * Creates a Challenge for an Authentication Factor.
    *
    * @param id The unique ID of the Authentication Factor to be challenged.
-   * @param smsTemplate A custom template for the SMS message. Use the {{code}} placeholder to include the verification code.
+   * @param smsTemplate A custom template for the SMS message. Use the {{code}} placeholder to include the verification code. Must not contain URLs or domain names.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the AuthenticationChallenge
