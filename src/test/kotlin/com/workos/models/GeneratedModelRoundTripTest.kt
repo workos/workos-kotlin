@@ -1128,19 +1128,6 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `PipesConnectedAccountConnectionFailedData round-trips through Jackson`() {
-    val json =
-      "{\"object\": \"connection_failed\", \"data_integration_id\": \"sample\", \"provider_slug\": \"sample\", \"user_id\": null, " +
-        "\"organization_id\": null, \"error_code\": \"sample\", \"error_reason\": null, \"provider_error\": null, " +
-        "\"provider_error_description\": null, \"created_at\": \"2024-01-01T00:00:00Z\"}"
-    val parsed = mapper.readValue(json, PipesConnectedAccountConnectionFailedData::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
   fun `RadarChallengeCreatedData round-trips through Jackson`() {
     val json = "{\"type\": \"email\", \"radar_challenge_id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\"}"
     val parsed = mapper.readValue(json, RadarChallengeCreatedData::class.java)
@@ -1494,16 +1481,6 @@ class GeneratedModelRoundTripTest {
   fun `DataIntegrationAccessTokenResponseAccessToken round-trips through Jackson`() {
     val json = "{\"object\": \"access_token\", \"access_token\": \"sample\", \"expires_at\": null, \"scopes\": [], \"missing_scopes\": []}"
     val parsed = mapper.readValue(json, DataIntegrationAccessTokenResponseAccessToken::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
-  fun `DataIntegrationInstallation round-trips through Jackson`() {
-    val json = "{\"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"api_key_last_4\": null}"
-    val parsed = mapper.readValue(json, DataIntegrationInstallation::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

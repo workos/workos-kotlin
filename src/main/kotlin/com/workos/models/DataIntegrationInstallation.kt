@@ -3,12 +3,25 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationInstallationConnectionRole
 
 /** DataIntegrationInstallation model. */
 data class DataIntegrationInstallation(
   /** Unique identifier of the installation. */
   @JsonProperty("id")
   val id: String,
+
+  /** Whether this is the compatibility connection visible to undeclared clients or a standard connection for plural-aware clients. */
+  @JsonProperty("connection_role")
+  val connectionRole: DataIntegrationInstallationConnectionRole,
+
+  /** A best-effort provider account identifier used for correlation, not connection selection. */
+  @JsonProperty("account_identifier")
+  val accountIdentifier: String?,
+
+  /** A mutable, non-unique display name for this connection. */
+  @JsonProperty("account_display_name")
+  val accountDisplayName: String?,
 
   /** The User the API key was installed for. Null on an `organization`-owned integration, whose installations belong to the organization. */
   @JsonProperty("user_id")

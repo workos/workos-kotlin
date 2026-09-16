@@ -3,6 +3,8 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.PipeConnectedAccountAuthMethod
+import com.workos.types.PipeConnectedAccountConnectionRole
 import com.workos.types.PipeConnectedAccountState
 import java.time.OffsetDateTime
 
@@ -46,5 +48,25 @@ data class PipeConnectedAccount(
 
   /** The connected account object. */
   @JsonProperty("object")
-  val objectType: String = "connected_account"
+  val objectType: String = "connected_account",
+
+  /** Whether this is the compatibility connection visible to undeclared clients or a standard connection for plural-aware clients. Historical events may omit this field. */
+  @JsonProperty("connection_role")
+  val connectionRole: PipeConnectedAccountConnectionRole? = null,
+
+  /** A best-effort identifier for the provider account this connection points at. It is not the connection identifier or a selector. Historical events may omit this field. */
+  @JsonProperty("account_identifier")
+  val accountIdentifier: String? = null,
+
+  /** A mutable, non-unique display name for the provider account connection. Historical events may omit this field. */
+  @JsonProperty("account_display_name")
+  val accountDisplayName: String? = null,
+
+  /** How the connection authenticates. Historical events may omit this field. */
+  @JsonProperty("auth_method")
+  val authMethod: PipeConnectedAccountAuthMethod? = null,
+
+  /** The last four characters of the API key, or null for other authentication methods. Historical events may omit this field. */
+  @JsonProperty("api_key_last_4")
+  val apiKeyLast4: String? = null
 )

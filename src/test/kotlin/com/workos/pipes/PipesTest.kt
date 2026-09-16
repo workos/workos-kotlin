@@ -102,8 +102,9 @@ class PipesTest : TestBase() {
       "PUT",
       "/data-integrations/sample-arg/api-key",
       200,
-      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
-        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
     val result = api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -136,8 +137,9 @@ class PipesTest : TestBase() {
       "PUT",
       "/data-integrations/sample-arg/client-credentials",
       200,
-      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
-        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
     val result = api().updateDataIntegrationClientCredentials("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
@@ -227,8 +229,9 @@ class PipesTest : TestBase() {
       "GET",
       "/user_management/users/sample-arg/connected_accounts/sample-arg",
       200,
-      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
-        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
     val result = api().getUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -244,8 +247,9 @@ class PipesTest : TestBase() {
       "POST",
       "/user_management/users/sample-arg/connected_accounts/sample-arg",
       200,
-      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
-        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
     val result = api().createUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
@@ -261,8 +265,9 @@ class PipesTest : TestBase() {
       "PUT",
       "/user_management/users/sample-arg/connected_accounts/sample-arg",
       200,
-      "{\"object\": \"connected_account\", \"id\": \"sample\", \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
-        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
     val result = api().updateUserConnectedAccount("sample-arg", "sample-arg")
     assertNotNull(result)
