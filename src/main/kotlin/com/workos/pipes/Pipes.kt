@@ -837,6 +837,315 @@ class Pipes(
     }
 
   /**
+   * Get an organization connected account
+   *
+   * Retrieves an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
+   *
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select a specific connection when the organization has several for this provider.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun getOrganizationConnectedAccount(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val params = mutableListOf<Pair<String, String>>()
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
+    params.addIfNotNull("connected_account_id", connectedAccountId)
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/organizations/${encodePathSegment(organizationId)}/connected_accounts/${encodePathSegment(slug)}",
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getOrganizationConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getOrganizationConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getOrganizationConnectedAccountSuspend")
+  suspend fun getOrganizationConnectedAccountSuspend(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      getOrganizationConnectedAccount(organizationId, slug, supportsMultipleConnections, connectedAccountId, requestOptions)
+    }
+
+  /**
+   * Import an organization connected account
+   *
+   * Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+   *
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param accessToken The OAuth access token for the connected account.
+   * @param refreshToken The OAuth refresh token for the connected account.
+   * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+   * @param scopes The OAuth scopes granted for this connection.
+   * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun createOrganizationConnectedAccount(
+    organizationId: String,
+    slug: String,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: PipeConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val body =
+      bodyOf(
+        "access_token" to accessToken,
+        "refresh_token" to refreshToken,
+        "expires_at" to expiresAt,
+        "scopes" to scopes,
+        "state" to state
+      )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/organizations/${encodePathSegment(organizationId)}/connected_accounts/${encodePathSegment(slug)}",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createOrganizationConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createOrganizationConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createOrganizationConnectedAccountSuspend")
+  suspend fun createOrganizationConnectedAccountSuspend(
+    organizationId: String,
+    slug: String,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: PipeConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      createOrganizationConnectedAccount(organizationId, slug, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
+    }
+
+  /**
+   * Update an organization connected account
+   *
+   * Updates an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+   *
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+   * @param accessToken The OAuth access token for the connected account.
+   * @param refreshToken The OAuth refresh token for the connected account.
+   * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
+   * @param scopes The OAuth scopes granted for this connection.
+   * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateOrganizationConnectedAccount(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: PipeConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val params = mutableListOf<Pair<String, String>>()
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
+    params.addIfNotNull("connected_account_id", connectedAccountId)
+    val body =
+      bodyOf(
+        "access_token" to accessToken,
+        "refresh_token" to refreshToken,
+        "expires_at" to expiresAt,
+        "scopes" to scopes,
+        "state" to state
+      )
+    val config =
+      RequestConfig(
+        method = "PUT",
+        path = "/organizations/${encodePathSegment(organizationId)}/connected_accounts/${encodePathSegment(slug)}",
+        queryParams = params,
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateOrganizationConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateOrganizationConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateOrganizationConnectedAccountSuspend")
+  suspend fun updateOrganizationConnectedAccountSuspend(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    accessToken: String? = null,
+    refreshToken: String? = null,
+    expiresAt: OffsetDateTime? = null,
+    scopes: List<String>? = null,
+    state: PipeConnectedAccountState? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      updateOrganizationConnectedAccount(
+        organizationId,
+        slug,
+        supportsMultipleConnections,
+        connectedAccountId,
+        accessToken,
+        refreshToken,
+        expiresAt,
+        scopes,
+        state,
+        requestOptions
+      )
+    }
+
+  /**
+   * Delete an organization connected account
+   *
+   * Disconnects the organization's account for the provider, including removing any stored access and refresh tokens. A member will need to reauthorize if the organization wants to reconnect. This does not revoke access on the provider side.
+   *
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
+   * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to delete.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteOrganizationConnectedAccount(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    requestOptions: RequestOptions? = null
+  ) {
+    val params = mutableListOf<Pair<String, String>>()
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
+    params.addIfNotNull("connected_account_id", connectedAccountId)
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/organizations/${encodePathSegment(organizationId)}/connected_accounts/${encodePathSegment(slug)}",
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteOrganizationConnectedAccount]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteOrganizationConnectedAccount] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteOrganizationConnectedAccountSuspend")
+  suspend fun deleteOrganizationConnectedAccountSuspend(
+    organizationId: String,
+    slug: String,
+    supportsMultipleConnections: Boolean? = null,
+    connectedAccountId: String? = null,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteOrganizationConnectedAccount(organizationId, slug, supportsMultipleConnections, connectedAccountId, requestOptions)
+  }
+
+  /**
+   * List providers for an organization
+   *
+   * Retrieves the organization-owned providers configured for your environment and the organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) information for each. Providers owned by individual users are not included.
+   *
+   * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier to list providers and connected accounts for.
+   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DataIntegrationsListResponse
+   */
+  @JvmOverloads
+  fun listOrganizationDataProviders(
+    organizationId: String,
+    supportsMultipleConnections: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationsListResponse {
+    val params = mutableListOf<Pair<String, String>>()
+    supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/organizations/${encodePathSegment(organizationId)}/data_providers",
+        queryParams = params,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DataIntegrationsListResponse::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [listOrganizationDataProviders]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listOrganizationDataProviders] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("listOrganizationDataProvidersSuspend")
+  suspend fun listOrganizationDataProvidersSuspend(
+    organizationId: String,
+    supportsMultipleConnections: Boolean? = null,
+    requestOptions: RequestOptions? = null
+  ): DataIntegrationsListResponse =
+    withContext(Dispatchers.IO) {
+      listOrganizationDataProviders(organizationId, supportsMultipleConnections, requestOptions)
+    }
+
+  /**
    * Get a connected account
    *
    * Retrieves a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) for a specific provider.
