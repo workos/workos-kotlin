@@ -5,19 +5,19 @@ package com.workos.models
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.common.json.ObjectMapperFactory
 import com.workos.types.ConnectedAccountInputState
+import com.workos.types.CreateConnectionOidcOptionsIdTokenSignatureAlgorithm
+import com.workos.types.CreateConnectionOidcOptionsTokenAuthenticationMethod
 import com.workos.types.CreateDataIntegrationAuthMethods
-import com.workos.types.CreateUserInviteOptionsLocale
-import com.workos.types.CreateUserPasswordHashType
-import com.workos.types.CreateWebhookEndpointEvents
+import com.workos.types.CreateDataIntegrationOwnership
 import com.workos.types.CustomProviderDefinitionAuthenticateVia
 import com.workos.types.DataIntegrationCredentialsInputType
-import com.workos.types.GenerateLinkIntent
+import com.workos.types.InviteItContactIntents
 import com.workos.types.OrganizationDomainDataState
 import com.workos.types.PaginationOrder
-import com.workos.types.ResendUserInviteOptionsLocale
+import com.workos.types.PatchConnectionOidcOptionsIdTokenSignatureAlgorithm
+import com.workos.types.PatchConnectionOidcOptionsTokenAuthenticationMethod
+import com.workos.types.UpdateAuditLogsRetentionRetentionPeriod
 import com.workos.types.UpdateCustomProviderDefinitionAuthenticateVia
-import com.workos.types.UpdateUserPasswordHashType
-import com.workos.types.UpdateWebhookEndpointStatus
 import com.workos.types.VaultByokKeyProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -38,6 +38,48 @@ class GeneratedForwardCompatTest {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", VaultByokKeyProvider::class.java)
     assertEquals(VaultByokKeyProvider.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown UpdateAuditLogsRetentionRetentionPeriod wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateAuditLogsRetentionRetentionPeriod::class.java)
+    assertEquals(UpdateAuditLogsRetentionRetentionPeriod.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown CreateConnectionOidcOptionsTokenAuthenticationMethod wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateConnectionOidcOptionsTokenAuthenticationMethod::class.java)
+    assertEquals(CreateConnectionOidcOptionsTokenAuthenticationMethod.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown CreateConnectionOidcOptionsIdTokenSignatureAlgorithm wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateConnectionOidcOptionsIdTokenSignatureAlgorithm::class.java)
+    assertEquals(CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown PatchConnectionOidcOptionsTokenAuthenticationMethod wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", PatchConnectionOidcOptionsTokenAuthenticationMethod::class.java)
+    assertEquals(PatchConnectionOidcOptionsTokenAuthenticationMethod.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown PatchConnectionOidcOptionsIdTokenSignatureAlgorithm wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", PatchConnectionOidcOptionsIdTokenSignatureAlgorithm::class.java)
+    assertEquals(PatchConnectionOidcOptionsIdTokenSignatureAlgorithm.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown InviteItContactIntents wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", InviteItContactIntents::class.java)
+    assertEquals(InviteItContactIntents.Unknown, parsed)
   }
 
   @Test
@@ -62,6 +104,13 @@ class GeneratedForwardCompatTest {
   }
 
   @Test
+  fun `unknown CreateDataIntegrationOwnership wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateDataIntegrationOwnership::class.java)
+    assertEquals(CreateDataIntegrationOwnership.Unknown, parsed)
+  }
+
+  @Test
   fun `unknown CreateDataIntegrationAuthMethods wire values deserialize to Unknown`() {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateDataIntegrationAuthMethods::class.java)
@@ -80,55 +129,6 @@ class GeneratedForwardCompatTest {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", ConnectedAccountInputState::class.java)
     assertEquals(ConnectedAccountInputState.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown GenerateLinkIntent wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", GenerateLinkIntent::class.java)
-    assertEquals(GenerateLinkIntent.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown CreateUserInviteOptionsLocale wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateUserInviteOptionsLocale::class.java)
-    assertEquals(CreateUserInviteOptionsLocale.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown ResendUserInviteOptionsLocale wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", ResendUserInviteOptionsLocale::class.java)
-    assertEquals(ResendUserInviteOptionsLocale.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown CreateUserPasswordHashType wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateUserPasswordHashType::class.java)
-    assertEquals(CreateUserPasswordHashType.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown UpdateUserPasswordHashType wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateUserPasswordHashType::class.java)
-    assertEquals(UpdateUserPasswordHashType.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown CreateWebhookEndpointEvents wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateWebhookEndpointEvents::class.java)
-    assertEquals(CreateWebhookEndpointEvents.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown UpdateWebhookEndpointStatus wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateWebhookEndpointStatus::class.java)
-    assertEquals(UpdateWebhookEndpointStatus.Unknown, parsed)
   }
 
   @Test

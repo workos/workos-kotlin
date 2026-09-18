@@ -224,6 +224,74 @@ class PipesTest : TestBase() {
   }
 
   @Test
+  fun `getOrganizationConnectedAccount returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/organizations/sample-arg/connected_accounts/sample-arg",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().getOrganizationConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
+  fun `createOrganizationConnectedAccount returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/organizations/sample-arg/connected_accounts/sample-arg",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().createOrganizationConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
+  fun `updateOrganizationConnectedAccount returns a typed response`() {
+    stubResponse(
+      "PUT",
+      "/organizations/sample-arg/connected_accounts/sample-arg",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().updateOrganizationConnectedAccount("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+  }
+
+  @Test
+  fun `deleteOrganizationConnectedAccount completes without throwing`() {
+    stubResponse("DELETE", "/organizations/sample-arg/connected_accounts/sample-arg", 204)
+    api().deleteOrganizationConnectedAccount("sample-arg", "sample-arg")
+  }
+
+  @Test
+  fun `listOrganizationDataProviders returns a typed response`() {
+    stubResponse("GET", "/organizations/sample-arg/data_providers", 200, "{\"object\": \"list\", \"data\": []}")
+    val result = api().listOrganizationDataProviders("sample-arg")
+    assertNotNull(result)
+    assertEquals("list", result.objectType)
+  }
+
+  @Test
   fun `getUserConnectedAccount returns a typed response`() {
     stubResponse(
       "GET",
