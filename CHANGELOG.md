@@ -2,15 +2,9 @@
 
 ## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-18)
 
-
 ### Features
 
 * Add optional issuers check to session authentication ([#433](https://github.com/workos/workos-kotlin/issues/433)) ([253da76](https://github.com/workos/workos-kotlin/commit/253da76028dfa8e610e985ee4aab4f2297308e4d))
-* **agents:** Add parameter `AgentsSessions.list.organization_id` ([#441](https://github.com/workos/workos-kotlin/issues/441)) ([b4c8c02](https://github.com/workos/workos-kotlin/commit/b4c8c02418a615676e1ef6bf228fdf0533e0797e))
-* **generated:** Pipes (batch 8ad8e447) ([#431](https://github.com/workos/workos-kotlin/issues/431)) ([41b0f3f](https://github.com/workos/workos-kotlin/commit/41b0f3ff2bdbb771a71316c13eb9c7684a3417b5))
-* **generated:** SSO (batch 9fe95ce5) ([#439](https://github.com/workos/workos-kotlin/issues/439)) ([e657a4f](https://github.com/workos/workos-kotlin/commit/e657a4fb11f474f57d63a9df8de570df6c5fef88))
-* **pipes:** Update Pipes API surface ([#441](https://github.com/workos/workos-kotlin/issues/441)) ([b4c8c02](https://github.com/workos/workos-kotlin/commit/b4c8c02418a615676e1ef6bf228fdf0533e0797e))
-* **user_management:** Add user management API surface ([#441](https://github.com/workos/workos-kotlin/issues/441)) ([b4c8c02](https://github.com/workos/workos-kotlin/commit/b4c8c02418a615676e1ef6bf228fdf0533e0797e))
 
 
 ### Bug Fixes
@@ -18,13 +12,183 @@
 * **deps:** update minor and patch updates ([#443](https://github.com/workos/workos-kotlin/issues/443)) ([919891d](https://github.com/workos/workos-kotlin/commit/919891d865207acd4fc38cdacfe6f59e40fe0197))
 * **http:** Prevent dot segments from retargeting requests ([#435](https://github.com/workos/workos-kotlin/issues/435)) ([e9323b4](https://github.com/workos/workos-kotlin/commit/e9323b49cb71b15e365e6f3d1d3a62cf8903b895))
 * **http:** Redact sensitive query values in 404 errors ([#436](https://github.com/workos/workos-kotlin/issues/436)) ([67dbb81](https://github.com/workos/workos-kotlin/commit/67dbb81504d1ec3dc3387fd77efc5f7e95a4f84a))
-* **multi_factor_auth:** Change errors for endpoint `POST /auth/factors/{id}/challenge` ([#444](https://github.com/workos/workos-kotlin/issues/444)) ([1359dcd](https://github.com/workos/workos-kotlin/commit/1359dcdaaa4e1aed28bab066be727d9f5e6fadd9))
-* **multi_factor_auth:** Change errors for endpoint `POST /auth/factors/{id}/challenge` ([#445](https://github.com/workos/workos-kotlin/issues/445)) ([6878834](https://github.com/workos/workos-kotlin/commit/687883420a0013fb245d22581a9807ce17749a76))
-* **pipes:** Move organization connected-account operations onto Pipes ([#445](https://github.com/workos/workos-kotlin/issues/445)) ([6878834](https://github.com/workos/workos-kotlin/commit/687883420a0013fb245d22581a9807ce17749a76))
-* **pipes:** Update Pipes API surface ([#441](https://github.com/workos/workos-kotlin/issues/441)) ([b4c8c02](https://github.com/workos/workos-kotlin/commit/b4c8c02418a615676e1ef6bf228fdf0533e0797e))
 * **session:** Refresh sealed identity from response ([#434](https://github.com/workos/workos-kotlin/issues/434)) ([d9bdf49](https://github.com/workos/workos-kotlin/commit/d9bdf493633baf15120c6855c49716bb07654370))
 * **session:** Reject malformed seal encodings ([#437](https://github.com/workos/workos-kotlin/issues/437)) ([8c900bf](https://github.com/workos/workos-kotlin/commit/8c900bf77cd741836683ffd91783e98f666e17f4))
 * **session:** Validate Iron token password ID ([#440](https://github.com/workos/workos-kotlin/issues/440)) ([a272cb5](https://github.com/workos/workos-kotlin/commit/a272cb5bec30d62563eb0c8c39c727432bc1b2dc))
+
+* [#431](https://github.com/workos/workos-kotlin/pull/431) fix(generated): regenerate from spec
+
+  **Features**
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `connected_account_id` to `DataIntegrationsVendCredentialsRequest`
+    * Added `connected_account_id` to `DataIntegrationsGetUserTokenRequest`
+    * Added parameter `UserManagementDataProviders.getUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `GET /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added parameter `UserManagementDataProviders.updateUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `PUT /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added parameter `UserManagementDataProviders.deleteUserDataInstallation.connected_account_id`
+    * Changed errors for endpoint `DELETE /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Added `connected_accounts` to `DataIntegrationsListResponseData`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/api-key`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/client-credentials`
+    * Changed errors for endpoint `POST /data-integrations/{slug}/credentials`
+    * Changed errors for endpoint `POST /data-integrations/{provider}/token`
+
+* [#439](https://github.com/workos/workos-kotlin/pull/439) fix(generated): regenerate from spec
+
+    **Fixes**
+    * **[sso](https://workos.com/docs/reference/sso)**:
+      * remove incorrect parameter from getProfileAndToken.
+
+* [#441](https://github.com/workos/workos-kotlin/pull/441) feat(generated): regenerate from spec (4 changes)
+
+  **Features**
+  * **[admin_portal](https://workos.com/docs/reference/admin-portal)**:
+    * Changed the format of `PortalLinkResponse.link`
+  * **[agents](https://workos.com/docs/reference/agents)**:
+    * Added parameter `AgentsSessions.list.organization_id`
+    * Changed the format of `ClaimViewResponse.user_code`
+    * Changed the format of `AgentAdminValidateCredentialRequest.credential`
+  * **[api_keys](https://workos.com/docs/reference/authkit/api-keys)**:
+    * Changed the format of `ValidateApiKey.value`
+    * Changed the format of `OrganizationApiKeyWithValue.value`
+    * Changed the format of `UserApiKeyWithValue.value`
+  * **[multi_factor_auth](https://workos.com/docs/reference/authkit/mfa)**:
+    * Changed the format of `AuthenticationChallenge.code`
+    * Changed the format of `AuthenticationFactorEnrolledTotp.secret`
+    * Changed the format of `AuthenticationFactorEnrolledTotp.qr_code`
+    * Changed the format of `AuthenticationFactorEnrolledTotp.uri`
+    * Changed the format of `AuthenticationChallengesVerifyRequest.code`
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `supports_multiple_connections` to `DataIntegrationsVendCredentialsRequest`
+    * Added `supports_multiple_connections` to `DataIntegrationsGetUserTokenRequest`
+    * Added parameter `UserManagementDataProviders.getUserDataInstallation.supports_multiple_connections`
+    * Added parameter `UserManagementDataProviders.updateUserDataInstallation.supports_multiple_connections`
+    * Added parameter `UserManagementDataProviders.deleteUserDataInstallation.supports_multiple_connections`
+    * Added parameter `UserManagementDataProviders.getUserDataIntegrations.supports_multiple_connections`
+    * Added enum `PipesOwnership`
+    * Added `user` to `CreateDataIntegrationOwnership`
+    * Added `user` to `DataIntegrationOwnership`
+    * Added endpoint `GET /data-integrations/{slug}/organization`
+    * Added endpoint `PUT /data-integrations/{slug}/organization`
+    * Added endpoint `DELETE /data-integrations/{slug}/organization`
+    * Added parameter `Pipes.listDataIntegrations.ownership`
+    * Changed errors for endpoint `GET /data-integrations`
+    * Changed errors for endpoint `PUT /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed errors for endpoint `DELETE /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed the format of `DataIntegrationCredentialsResponseCredential.value`
+    * Added `connection_owner` to `DataIntegrationsUpsertApiKeyRequest`
+    * Added `connection_owner` to `DataIntegrationsUpsertClientCredentialsRequest`
+    * Added enum `DataIntegrationsUpsertApiKeyRequestConnectionOwner`
+    * Added enum `DataIntegrationsUpsertClientCredentialsRequestConnectionOwner`
+    * Added model `AccountSelectionRequiredError`
+    * Added `connected_account_id` to `DataIntegrationsUpsertApiKeyRequest`
+    * Added `connected_account_id` to `DataIntegrationsUpsertClientCredentialsRequest`
+    * Added `ownership` to `CreateDataIntegration`
+    * Added `ownership` to `DataIntegration`
+    * Added `connection_owner` to `DataIntegrationsVendCredentialsRequest`
+    * Added `connection_owner` to `DataIntegrationsGetUserTokenRequest`
+    * Added enum `CreateDataIntegrationOwnership`
+    * Added enum `DataIntegrationOwnership`
+    * Added enum `DataIntegrationsVendCredentialsRequestConnectionOwner`
+    * Added enum `DataIntegrationsGetUserTokenRequestConnectionOwner`
+    * Changed errors for endpoint `POST /data-integrations/{slug}/credentials`
+    * Changed errors for endpoint `POST /data-integrations/{provider}/token`
+  * **[sso](https://workos.com/docs/reference/sso)**:
+    * Changed the format of `CreateConnectionKeyPair.key`
+    * Changed the format of `TokenQuery.code`
+    * Changed the format of `SSOLogoutAuthorizeResponse.logout_url`
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Added model `CreateAuthkitOAuthResource`
+    * Added model `AuthkitOAuthResource`
+    * Added service `UserManagementAuthkitOAuthResources`
+    * Changed the format of `DeviceAuthorizationResponse.verification_uri_complete`
+    * Changed the format of `VerifyEmailAddress.code`
+    * Changed the format of `ConfirmEmailChange.code`
+    * Changed the format of `MagicAuth.code`
+    * Changed the format of `UserInvite.accept_invitation_url`
+    * Changed the format of `EmailVerification.code`
+    * Changed the format of `PasswordReset.password_reset_url`
+    * Changed the format of `AuthenticateResponse.authkit_authorization_code`
+    * Changed the format of `DeviceAuthorizationResponse.device_code`
+    * Changed the format of `DeviceAuthorizationResponse.user_code`
+    * Changed the format of `AuthorizationCodeSessionAuthenticateRequest.code`
+    * Changed the format of `AuthorizationCodeSessionAuthenticateRequest.code_verifier`
+    * Changed the format of `MagicAuthCodeSessionAuthenticateRequest.code`
+    * Changed the format of `EmailVerificationCodeSessionAuthenticateRequest.code`
+    * Changed the format of `MfaTotpSessionAuthenticateRequest.code`
+    * Changed the format of `RadarEmailChallengeCodeSessionAuthenticateRequest.code`
+    * Changed the format of `RadarSmsChallengeCodeSessionAuthenticateRequest.code`
+    * Changed the format of `DeviceCodeSessionAuthenticateRequest.device_code`
+    * Changed the format of `Invitation.accept_invitation_url`
+    * Changed the format of `MagicAuthSendMagicAuthCodeAndReturnResponse.code`
+  * **[radar](https://workos.com/docs/reference/radar)**:
+    * Changed the format of `RadarChallenge.code`
+  * **[vault](https://workos.com/docs/reference/vault)**:
+    * Changed the format of `CreateObjectRequest.value`
+    * Changed the format of `VaultObject.value`
+    * Changed the format of `UpdateObjectRequest.value`
+
+  **Fixes**
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Removed `userland_user` from `CreateDataIntegrationOwnership`
+    * Removed `userland_user` from `DataIntegrationOwnership`
+    * Changed errors for endpoint `POST /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/api-key`
+    * Changed errors for endpoint `PUT /data-integrations/{slug}/client-credentials`
+    * Changed errors for endpoint `POST /data-integrations/{slug}/credentials`
+    * Changed errors for endpoint `POST /data-integrations/{provider}/token`
+    * Changed errors for endpoint `GET /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed errors for endpoint `PUT /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed errors for endpoint `DELETE /user_management/users/{user_id}/connected_accounts/{slug}`
+    * Changed the type of `DataIntegrationInstallation.user_id`
+
+* [#444](https://github.com/workos/workos-kotlin/pull/444) fix(generated): regenerate from spec (1 change)
+
+  **Features**
+  * **[multi_factor_auth](https://workos.com/docs/reference/authkit/mfa)**:
+    * Changed errors for endpoint `POST /auth/factors/{id}/challenge`
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `connection_owner` to `DataIntegrationsListResponseData`
+    * Added enum `DataIntegrationsListResponseDataConnectionOwner`
+    * Added `connection_role` to `DataIntegrationsListResponseDataConnectedAccount`
+    * Added `account_identifier` to `DataIntegrationsListResponseDataConnectedAccount`
+    * Added `account_display_name` to `DataIntegrationsListResponseDataConnectedAccount`
+    * Added enum `DataIntegrationsListResponseDataConnectedAccountConnectionRole`
+    * Added `connection_role` to `DataIntegrationInstallation`
+    * Added `account_identifier` to `DataIntegrationInstallation`
+    * Added `account_display_name` to `DataIntegrationInstallation`
+    * Added enum `DataIntegrationInstallationConnectionRole`
+    * Added `connection_owner` to `DataIntegrationsGetDataIntegrationAuthorizeUrlRequest`
+    * Added enum `DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner`
+    * Added the organization connected-account operations on `Pipes`: `client.pipes.getOrganizationConnectedAccount`, `createOrganizationConnectedAccount`, `updateOrganizationConnectedAccount`, `deleteOrganizationConnectedAccount`, `listOrganizationDataProviders`
+  * **[connect](https://workos.com/docs/reference/workos-connect/standalone)**:
+    * Added `connection_role` to `ConnectedAccount`
+    * Added `account_identifier` to `ConnectedAccount`
+    * Added `account_display_name` to `ConnectedAccount`
+    * Added enum `ConnectedAccountConnectionRole`
+  * **[webhooks](https://workos.com/docs/reference/webhooks)**:
+    * Added `pipes.account_connection.add_failed` to `CreateWebhookEndpointEvents`
+    * Added `pipes.account_connection.connected` to `CreateWebhookEndpointEvents`
+    * Added `pipes.account_connection.connection_failed` to `CreateWebhookEndpointEvents`
+    * Added `pipes.account_connection.disconnected` to `CreateWebhookEndpointEvents`
+    * Added `pipes.account_connection.reauthorization_needed` to `CreateWebhookEndpointEvents`
+    * Added `pipes.account_connection.add_failed` to `UpdateWebhookEndpointEvents`
+    * Added `pipes.account_connection.connected` to `UpdateWebhookEndpointEvents`
+    * Added `pipes.account_connection.connection_failed` to `UpdateWebhookEndpointEvents`
+    * Added `pipes.account_connection.disconnected` to `UpdateWebhookEndpointEvents`
+    * Added `pipes.account_connection.reauthorization_needed` to `UpdateWebhookEndpointEvents`
+
+  **Fixes**
+  * **[multi_factor_auth](https://workos.com/docs/reference/authkit/mfa)**:
+    * Changed errors for endpoint `POST /auth/factors/{id}/challenge`
+
+* [#445](https://github.com/workos/workos-kotlin/pull/445) fix(generated): regenerate from spec (1 change)
+
+  **Fixes**
+  * **[multi_factor_auth](https://workos.com/docs/reference/authkit/mfa)**:
+    * Changed errors for endpoint `POST /auth/factors/{id}/challenge`
 
 ## [7.3.0](https://github.com/workos/workos-kotlin/compare/v7.2.0...v7.3.0) (2026-09-01)
 
