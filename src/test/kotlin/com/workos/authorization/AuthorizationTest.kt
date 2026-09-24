@@ -181,8 +181,8 @@ class AuthorizationTest : TestBase() {
       200,
       "{\"object\": \"role_assignment\", \"id\": \"sample\", \"organization_membership_id\": \"sample\", \"role\": {\"slug\": " +
         "\"sample\"}, \"resource\": {\"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\"}, \"source\": " +
-        "{\"type\": \"direct\", \"group_role_assignment_id\": null}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+        "{\"type\": \"direct\", \"group_role_assignment_id\": null, \"group\": null}, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
     assertNotNull(result)
@@ -440,11 +440,11 @@ class AuthorizationTest : TestBase() {
     )
     val result =
       api().createResource(
-        parentResource = ParentResource.ById("sample-arg"),
         "sample-arg",
         "sample-arg",
         "sample-arg",
-        "sample-arg"
+        "sample-arg",
+        parentResource = ParentResource.ById("sample-arg")
       )
     assertNotNull(result)
     assertEquals("authorization_resource", result.objectType)

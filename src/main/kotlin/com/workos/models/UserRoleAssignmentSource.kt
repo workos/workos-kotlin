@@ -13,5 +13,9 @@ data class UserRoleAssignmentSource(
 
   /** The ID of the group role assignment the role was derived from, or null if direct. */
   @JsonProperty("group_role_assignment_id")
-  val groupRoleAssignmentId: String?
+  val groupRoleAssignmentId: String?,
+
+  /** The group the role was derived from, or null if direct. */
+  @JsonProperty("group")
+  val group: UserRoleAssignmentSourceGroup?
 )

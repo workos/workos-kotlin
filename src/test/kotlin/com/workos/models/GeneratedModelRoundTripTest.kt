@@ -1466,18 +1466,6 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `DataIntegrationCredentialsResponseCredential round-trips through Jackson`() {
-    val json =
-      "{\"object\": \"credential\", \"auth_method\": \"oauth\", \"value\": \"sample\", \"expires_at\": null, \"scopes\": [], " +
-        "\"missing_scopes\": []}"
-    val parsed = mapper.readValue(json, DataIntegrationCredentialsResponseCredential::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
   fun `DataIntegrationAccessTokenResponseAccessToken round-trips through Jackson`() {
     val json = "{\"object\": \"access_token\", \"access_token\": \"sample\", \"expires_at\": null, \"scopes\": [], \"missing_scopes\": []}"
     val parsed = mapper.readValue(json, DataIntegrationAccessTokenResponseAccessToken::class.java)
@@ -1786,6 +1774,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `UserRoleAssignmentSourceGroup round-trips through Jackson`() {
+    val json = "{\"id\": \"sample\", \"name\": \"sample\"}"
+    val parsed = mapper.readValue(json, UserRoleAssignmentSourceGroup::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `DirectoryMetadataUser round-trips through Jackson`() {
     val json = "{\"active\": 0, \"inactive\": 0}"
     val parsed = mapper.readValue(json, DirectoryMetadataUser::class.java)
@@ -1799,6 +1797,18 @@ class GeneratedModelRoundTripTest {
   fun `ConnectApplicationRedirectUri round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\", \"default\": false}"
     val parsed = mapper.readValue(json, ConnectApplicationRedirectUri::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `DataIntegrationCredentialsResponseCredential round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"credential\", \"auth_method\": \"oauth\", \"value\": \"sample\", \"expires_at\": null, \"scopes\": [], " +
+        "\"missing_scopes\": []}"
+    val parsed = mapper.readValue(json, DataIntegrationCredentialsResponseCredential::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
