@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.5.0](https://github.com/workos/workos-kotlin/compare/v7.4.0...v7.5.0) (2026-09-24)
+
+
+### Features
+
+* **generated:** Authorization (batch c64ce1e7) ([#446](https://github.com/workos/workos-kotlin/issues/446)) ([28b69fb](https://github.com/workos/workos-kotlin/commit/28b69fb7d3c8e1651984524ad09316e6a70049d1))
+
 ## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-18)
 
 ### Features
