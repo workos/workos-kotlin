@@ -1,5 +1,14 @@
 # Changelog
 
+## [7.5.0](https://github.com/workos/workos-kotlin/compare/v7.4.0...v7.5.0) (2026-09-24)
+
+* [#446](https://github.com/workos/workos-kotlin/pull/446) feat(generated): regenerate from spec
+
+  **Features**
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Added model `UserRoleAssignmentSourceGroup`
+    * Added `group` to `UserRoleAssignmentSource`
+
 ## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-18)
 
 ### Features
