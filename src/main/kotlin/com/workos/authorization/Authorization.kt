@@ -599,11 +599,11 @@ class Authorization(
   fun listResourcesForMembership(
     organizationMembershipId: String,
     permissionSlug: String,
+    parentResource: ParentResource,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    parentResource: ParentResource,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> {
     val itemType = object : TypeReference<AuthorizationResource>() {}
@@ -640,15 +640,15 @@ class Authorization(
   suspend fun listResourcesForMembershipSuspend(
     organizationMembershipId: String,
     permissionSlug: String,
+    parentResource: ParentResource,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    parentResource: ParentResource,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
-      listResourcesForMembership(organizationMembershipId, permissionSlug, before, after, limit, order, parentResource, requestOptions)
+      listResourcesForMembership(organizationMembershipId, permissionSlug, parentResource, before, after, limit, order, requestOptions)
     }
 
   /**
@@ -661,21 +661,21 @@ class Authorization(
   fun listResourcesForMembership(
     organizationMembershipId: String,
     permissionSlug: String,
+    id: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    id: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     listResourcesForMembership(
       organizationMembershipId = organizationMembershipId,
       permissionSlug = permissionSlug,
+      parentResource = ParentResource.ById(id = id),
       before = before,
       after = after,
       limit = limit,
       order = order,
-      parentResource = ParentResource.ById(id = id),
       requestOptions = requestOptions
     )
 
@@ -691,15 +691,15 @@ class Authorization(
   suspend fun listResourcesForMembershipSuspend(
     organizationMembershipId: String,
     permissionSlug: String,
+    id: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    id: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
-      listResourcesForMembership(organizationMembershipId, permissionSlug, before, after, limit, order, id, requestOptions)
+      listResourcesForMembership(organizationMembershipId, permissionSlug, id, before, after, limit, order, requestOptions)
     }
 
   /**
@@ -712,22 +712,22 @@ class Authorization(
   fun listResourcesForMembershipByExternalId(
     organizationMembershipId: String,
     permissionSlug: String,
+    typeSlug: String,
+    externalId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    typeSlug: String,
-    externalId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     listResourcesForMembership(
       organizationMembershipId = organizationMembershipId,
       permissionSlug = permissionSlug,
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = externalId),
       before = before,
       after = after,
       limit = limit,
       order = order,
-      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = externalId),
       requestOptions = requestOptions
     )
 
@@ -743,24 +743,24 @@ class Authorization(
   suspend fun listResourcesForMembershipByExternalIdSuspend(
     organizationMembershipId: String,
     permissionSlug: String,
+    typeSlug: String,
+    externalId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    typeSlug: String,
-    externalId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
       listResourcesForMembershipByExternalId(
         organizationMembershipId,
         permissionSlug,
+        typeSlug,
+        externalId,
         before,
         after,
         limit,
         order,
-        typeSlug,
-        externalId,
         requestOptions
       )
     }
@@ -2219,6 +2219,7 @@ class Authorization(
    * need to construct `Parent.ById` explicitly.
    */
   fun listResources(
+    resourceId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -2226,7 +2227,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    resourceId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     listResources(
@@ -2251,6 +2251,7 @@ class Authorization(
    */
   @JvmName("listResourcesSuspend")
   suspend fun listResourcesSuspend(
+    resourceId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -2258,11 +2259,10 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    resourceId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
-      listResources(before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, resourceId, requestOptions)
+      listResources(resourceId, before, after, limit, order, organizationId, resourceTypeSlug, resourceExternalId, requestOptions)
     }
 
   /**
@@ -2273,6 +2273,8 @@ class Authorization(
    * need to construct `Parent.ByExternalId` explicitly.
    */
   fun listResourcesByExternalId(
+    parentResourceTypeSlug: String,
+    externalId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -2280,8 +2282,6 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    parentResourceTypeSlug: String,
-    externalId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     listResources(
@@ -2306,6 +2306,8 @@ class Authorization(
    */
   @JvmName("listResourcesByExternalIdSuspend")
   suspend fun listResourcesByExternalIdSuspend(
+    parentResourceTypeSlug: String,
+    externalId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
@@ -2313,12 +2315,12 @@ class Authorization(
     organizationId: String? = null,
     resourceTypeSlug: String? = null,
     resourceExternalId: String? = null,
-    parentResourceTypeSlug: String,
-    externalId: String,
     requestOptions: RequestOptions? = null
   ): Page<AuthorizationResource> =
     withContext(Dispatchers.IO) {
       listResourcesByExternalId(
+        parentResourceTypeSlug,
+        externalId,
         before,
         after,
         limit,
@@ -2326,8 +2328,6 @@ class Authorization(
         organizationId,
         resourceTypeSlug,
         resourceExternalId,
-        parentResourceTypeSlug,
-        externalId,
         requestOptions
       )
     }
@@ -2348,11 +2348,11 @@ class Authorization(
    */
   @JvmOverloads
   fun createResource(
-    parentResource: ParentResource? = null,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    parentResource: ParentResource? = null,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource {
@@ -2393,16 +2393,16 @@ class Authorization(
    */
   @JvmName("createResourceSuspend")
   suspend fun createResourceSuspend(
-    parentResource: ParentResource? = null,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    parentResource: ParentResource? = null,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     withContext(Dispatchers.IO) {
-      createResource(parentResource, externalId, name, resourceTypeSlug, organizationId, description, requestOptions)
+      createResource(externalId, name, resourceTypeSlug, organizationId, parentResource, description, requestOptions)
     }
 
   /**
@@ -2413,20 +2413,20 @@ class Authorization(
    * need to construct `ParentResource.ById` explicitly.
    */
   fun createResource(
-    id: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    id: String,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     createResource(
-      parentResource = ParentResource.ById(id = id),
       externalId = externalId,
       name = name,
       resourceTypeSlug = resourceTypeSlug,
       organizationId = organizationId,
+      parentResource = ParentResource.ById(id = id),
       description = description,
       requestOptions = requestOptions
     )
@@ -2441,16 +2441,16 @@ class Authorization(
    */
   @JvmName("createResourceSuspend")
   suspend fun createResourceSuspend(
-    id: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    id: String,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     withContext(Dispatchers.IO) {
-      createResource(id, externalId, name, resourceTypeSlug, organizationId, description, requestOptions)
+      createResource(externalId, name, resourceTypeSlug, organizationId, id, description, requestOptions)
     }
 
   /**
@@ -2461,21 +2461,21 @@ class Authorization(
    * need to construct `ParentResource.ByExternalId` explicitly.
    */
   fun createResourceByExternalId(
-    typeSlug: String,
-    parentResourceExternalId: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    typeSlug: String,
+    parentResourceExternalId: String,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     createResource(
-      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = parentResourceExternalId),
       externalId = externalId,
       name = name,
       resourceTypeSlug = resourceTypeSlug,
       organizationId = organizationId,
+      parentResource = ParentResource.ByExternalId(typeSlug = typeSlug, externalId = parentResourceExternalId),
       description = description,
       requestOptions = requestOptions
     )
@@ -2490,23 +2490,23 @@ class Authorization(
    */
   @JvmName("createResourceByExternalIdSuspend")
   suspend fun createResourceByExternalIdSuspend(
-    typeSlug: String,
-    parentResourceExternalId: String,
     externalId: String,
     name: String,
     resourceTypeSlug: String,
     organizationId: String,
+    typeSlug: String,
+    parentResourceExternalId: String,
     description: String? = null,
     requestOptions: RequestOptions? = null
   ): AuthorizationResource =
     withContext(Dispatchers.IO) {
       createResourceByExternalId(
-        typeSlug,
-        parentResourceExternalId,
         externalId,
         name,
         resourceTypeSlug,
         organizationId,
+        typeSlug,
+        parentResourceExternalId,
         description,
         requestOptions
       )

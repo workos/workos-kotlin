@@ -583,6 +583,7 @@
     "src/main/kotlin/com/workos/models/UserRoleAssignment.kt",
     "src/main/kotlin/com/workos/models/UserRoleAssignmentResource.kt",
     "src/main/kotlin/com/workos/models/UserRoleAssignmentSource.kt",
+    "src/main/kotlin/com/workos/models/UserRoleAssignmentSourceGroup.kt",
     "src/main/kotlin/com/workos/models/UserSessionsImpersonator.kt",
     "src/main/kotlin/com/workos/models/UserSessionsListItem.kt",
     "src/main/kotlin/com/workos/models/UserUpdated.kt",
