@@ -289,6 +289,8 @@
     "src/main/kotlin/com/workos/models/DirectoryGroup.kt",
     "src/main/kotlin/com/workos/models/DirectoryMetadata.kt",
     "src/main/kotlin/com/workos/models/DirectoryMetadataUser.kt",
+    "src/main/kotlin/com/workos/models/DirectorySyncRateLimitError.kt",
+    "src/main/kotlin/com/workos/models/DirectorySyncResponse.kt",
     "src/main/kotlin/com/workos/models/DirectoryUser.kt",
     "src/main/kotlin/com/workos/models/DirectoryUserEmail.kt",
     "src/main/kotlin/com/workos/models/DirectoryUserWithGroups.kt",
@@ -1918,6 +1920,10 @@
     "GET /audit_logs/exports/{auditLogExportId}": {
       "sdkMethod": "getExport",
       "service": "auditLogs"
+    },
+    "POST /directories/{id}/sync": {
+      "sdkMethod": "sync",
+      "service": "directorySync"
     }
   }
 }
