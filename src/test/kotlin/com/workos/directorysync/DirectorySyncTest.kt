@@ -48,6 +48,14 @@ class DirectorySyncTest : TestBase() {
   }
 
   @Test
+  fun `sync returns a typed response`() {
+    stubResponse("POST", "/directories/sample-arg/sync", 200, "{\"status\": \"queued\"}")
+    val result = api().sync("sample-arg")
+    assertNotNull(result)
+    assertEquals("queued", result.status)
+  }
+
+  @Test
   fun `listGroups returns a typed response`() {
     stubResponse("GET", "/directory_groups", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
     val result = api().listGroups()

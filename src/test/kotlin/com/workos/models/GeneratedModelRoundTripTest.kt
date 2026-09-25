@@ -467,6 +467,26 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `DirectorySyncResponse round-trips through Jackson`() {
+    val json = "{\"status\": \"queued\"}"
+    val parsed = mapper.readValue(json, DirectorySyncResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `DirectorySyncRateLimitError round-trips through Jackson`() {
+    val json = "{\"code\": \"directory_sync_rate_limited\", \"message\": \"sample\", \"retry_after_seconds\": 0}"
+    val parsed = mapper.readValue(json, DirectorySyncRateLimitError::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `Group round-trips through Jackson`() {
     val json =
       "{\"object\": \"group\", \"id\": \"sample\", \"organization_id\": \"sample\", \"name\": \"sample\", \"description\": null, " +
