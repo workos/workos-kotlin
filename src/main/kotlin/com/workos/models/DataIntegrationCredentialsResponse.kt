@@ -13,7 +13,7 @@ data class DataIntegrationCredentialsResponse(
 
   /** The credential object containing the vended secret. */
   @JsonProperty("credential")
-  val credential: DataIntegrationCredentialsResponseCredential? = null,
+  val credential: DataIntegrationVendedCredential? = null,
 
   /** The reason credentials are unavailable. Additional values may be added in the future; handle unknown values gracefully. */
   @JsonProperty("error")

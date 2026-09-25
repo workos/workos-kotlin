@@ -19,10 +19,6 @@ data class DataIntegrationsUpsertApiKeyRequest(
   @JsonProperty("organization_id")
   val organizationId: String? = null,
 
-  /** A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection. */
-  @JsonProperty("connected_account_id")
-  val connectedAccountId: String? = null,
-
   /** Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization. */
   @JsonProperty("connection_owner")
   val connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = null

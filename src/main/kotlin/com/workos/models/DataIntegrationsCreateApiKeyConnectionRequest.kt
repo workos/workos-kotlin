@@ -3,21 +3,17 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.DataIntegrationsUpsertClientCredentialsRequestConnectionOwner
+import com.workos.types.DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner
 
-/** DataIntegrationsUpsertClientCredentialsRequest model. */
-data class DataIntegrationsUpsertClientCredentialsRequest(
+/** DataIntegrationsCreateApiKeyConnectionRequest model. */
+data class DataIntegrationsCreateApiKeyConnectionRequest(
   /** A [User](https://workos.com/docs/reference/authkit/user) identifier. */
   @JsonProperty("user_id")
   val userId: String,
 
-  /** The OAuth client ID to store for this integration. */
-  @JsonProperty("client_id")
-  val clientId: String,
-
-  /** The OAuth client secret to store for this integration. */
-  @JsonProperty("client_secret")
-  val clientSecret: String,
+  /** The API key secret to store for this integration. */
+  @JsonProperty("secret")
+  val secret: String,
 
   /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`. */
   @JsonProperty("organization_id")
@@ -25,9 +21,9 @@ data class DataIntegrationsUpsertClientCredentialsRequest(
 
   /** Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization. */
   @JsonProperty("connection_owner")
-  val connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = null,
+  val connectionOwner: DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner? = null,
 
-  /** Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors. */
-  @JsonProperty("config")
-  val config: Map<String, String>? = null
+  /** Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`. */
+  @JsonProperty("connection_intent")
+  val connectionIntent: String = "add"
 )

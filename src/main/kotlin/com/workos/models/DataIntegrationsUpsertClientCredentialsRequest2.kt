@@ -3,10 +3,10 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.DataIntegrationsUpsertClientCredentialsRequestConnectionOwner
+import com.workos.types.DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner
 
-/** DataIntegrationsUpsertClientCredentialsRequest model. */
-data class DataIntegrationsUpsertClientCredentialsRequest(
+/** DataIntegrationsUpsertClientCredentialsRequest2 model. */
+data class DataIntegrationsUpsertClientCredentialsRequest2(
   /** A [User](https://workos.com/docs/reference/authkit/user) identifier. */
   @JsonProperty("user_id")
   val userId: String,
@@ -19,13 +19,17 @@ data class DataIntegrationsUpsertClientCredentialsRequest(
   @JsonProperty("client_secret")
   val clientSecret: String,
 
+  /** The exact connected account to reauthorize. The reauthorize intent may be omitted for compatibility. */
+  @JsonProperty("connected_account_id")
+  val connectedAccountId: String,
+
   /** An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,
 
   /** Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization. */
   @JsonProperty("connection_owner")
-  val connectionOwner: DataIntegrationsUpsertClientCredentialsRequestConnectionOwner? = null,
+  val connectionOwner: DataIntegrationsUpsertClientCredentialsRequest2ConnectionOwner? = null,
 
   /** Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors. */
   @JsonProperty("config")
