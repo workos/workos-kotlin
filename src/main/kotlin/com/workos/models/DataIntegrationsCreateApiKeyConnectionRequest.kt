@@ -3,10 +3,10 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.DataIntegrationsUpsertApiKeyRequestConnectionOwner
+import com.workos.types.DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner
 
-/** DataIntegrationsUpsertApiKeyRequest model. */
-data class DataIntegrationsUpsertApiKeyRequest(
+/** DataIntegrationsCreateApiKeyConnectionRequest model. */
+data class DataIntegrationsCreateApiKeyConnectionRequest(
   /** A [User](https://workos.com/docs/reference/authkit/user) identifier. */
   @JsonProperty("user_id")
   val userId: String,
@@ -21,5 +21,9 @@ data class DataIntegrationsUpsertApiKeyRequest(
 
   /** Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization. */
   @JsonProperty("connection_owner")
-  val connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = null
+  val connectionOwner: DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner? = null,
+
+  /** Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`. */
+  @JsonProperty("connection_intent")
+  val connectionIntent: String = "add"
 )
