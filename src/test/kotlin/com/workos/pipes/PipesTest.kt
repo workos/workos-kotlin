@@ -97,6 +97,30 @@ class PipesTest : TestBase() {
   }
 
   @Test
+  fun `createDataIntegrationApiKey returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/data-integrations/sample-arg/api-key",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().createDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg", "add")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/api-key"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.secret"))
+        .withRequestBody(matchingJsonPath("\$.connection_intent"))
+    )
+  }
+
+  @Test
   fun `updateDataIntegrationApiKey returns a typed response`() {
     stubResponse(
       "PUT",
@@ -106,17 +130,12 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
+    val result = api().updateDataIntegrationApiKey("sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
-    wireMockRule.verify(
-      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/api-key"))
-        .withRequestBody(matchingJsonPath("\$.user_id"))
-        .withRequestBody(matchingJsonPath("\$.secret"))
-    )
   }
 
   @Test
@@ -132,6 +151,31 @@ class PipesTest : TestBase() {
   }
 
   @Test
+  fun `createDataIntegrationClientCredential returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/data-integrations/sample-arg/client-credentials",
+      200,
+      "{\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", \"account_identifier\": null, " +
+        "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
+        "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
+    )
+    val result = api().createDataIntegrationClientCredential("sample-arg", "sample-arg", "sample-arg", "sample-arg", "add")
+    assertNotNull(result)
+    assertEquals("connected_account", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.createdAt)
+    assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/client-credentials"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.client_id"))
+        .withRequestBody(matchingJsonPath("\$.client_secret"))
+        .withRequestBody(matchingJsonPath("\$.connection_intent"))
+    )
+  }
+
+  @Test
   fun `updateDataIntegrationClientCredentials returns a typed response`() {
     stubResponse(
       "PUT",
@@ -141,18 +185,12 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().updateDataIntegrationClientCredentials("sample-arg", "sample-arg", "sample-arg", "sample-arg")
+    val result = api().updateDataIntegrationClientCredentials("sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
-    wireMockRule.verify(
-      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/client-credentials"))
-        .withRequestBody(matchingJsonPath("\$.user_id"))
-        .withRequestBody(matchingJsonPath("\$.client_id"))
-        .withRequestBody(matchingJsonPath("\$.client_secret"))
-    )
   }
 
   @Test
@@ -251,12 +289,16 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().createOrganizationConnectedAccount("sample-arg", "sample-arg")
+    val result = api().createOrganizationConnectedAccount("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/organizations/sample-arg/connected_accounts/sample-arg"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+    )
   }
 
   @Test
@@ -269,12 +311,16 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().updateOrganizationConnectedAccount("sample-arg", "sample-arg")
+    val result = api().updateOrganizationConnectedAccount("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/organizations/sample-arg/connected_accounts/sample-arg"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+    )
   }
 
   @Test

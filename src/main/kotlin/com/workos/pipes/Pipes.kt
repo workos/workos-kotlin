@@ -338,27 +338,27 @@ class Pipes(
   }
 
   /**
-   * Upsert an API key for a connected account
+   * Create another API key connected account
    *
-   * Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value.
+   * Creates another API key-based connected account for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. Requires `connection_intent: add` and does not accept `connected_account_id`; use PUT to create or rotate the compatibility connection or to update an exact connection. Creating an additional connection is not yet available: until it is, this endpoint succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
    *
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param secret The API key secret to store for this integration.
+   * @param connectionIntent Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
-   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
    * @param connectionOwner Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
    */
   @JvmOverloads
-  fun updateDataIntegrationApiKey(
+  fun createDataIntegrationApiKey(
     slug: String,
     userId: String,
     secret: String,
+    connectionIntent: String,
     organizationId: String? = null,
-    connectedAccountId: String? = null,
     connectionOwner: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
@@ -366,10 +366,58 @@ class Pipes(
       bodyOf(
         "user_id" to userId,
         "secret" to secret,
+        "connection_intent" to connectionIntent,
         "organization_id" to organizationId,
-        "connected_account_id" to connectedAccountId,
         "connection_owner" to connectionOwner
       )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/data-integrations/${encodePathSegment(slug)}/api-key",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createDataIntegrationApiKey]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDataIntegrationApiKey] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDataIntegrationApiKeySuspend")
+  suspend fun createDataIntegrationApiKeySuspend(
+    slug: String,
+    userId: String,
+    secret: String,
+    connectionIntent: String,
+    organizationId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      createDataIntegrationApiKey(slug, userId, secret, connectionIntent, organizationId, connectionOwner, requestOptions)
+    }
+
+  /**
+   * Upsert an API key for a connected account
+   *
+   * Creates or updates an API-key-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored API key is rotated to the new value. To create another connection, use POST.
+   *
+   * @param slug The identifier of the integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateDataIntegrationApiKey(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
@@ -391,15 +439,10 @@ class Pipes(
   @JvmName("updateDataIntegrationApiKeySuspend")
   suspend fun updateDataIntegrationApiKeySuspend(
     slug: String,
-    userId: String,
-    secret: String,
-    organizationId: String? = null,
-    connectedAccountId: String? = null,
-    connectionOwner: PipesOwnership? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      updateDataIntegrationApiKey(slug, userId, secret, organizationId, connectedAccountId, connectionOwner, requestOptions)
+      updateDataIntegrationApiKey(slug, requestOptions)
     }
 
   /**
@@ -468,16 +511,16 @@ class Pipes(
     }
 
   /**
-   * Upsert client credentials for a connected account
+   * Create another client credentials connected account
    *
-   * Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values.
+   * Creates another client credentials-based connected account for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. Requires `connection_intent: add` and does not accept `connected_account_id`; use PUT to create or rotate the compatibility connection or to update an exact connection. Creating an additional connection is not yet available: until it is, this endpoint succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
    *
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param clientId The OAuth client ID to store for this integration.
    * @param clientSecret The OAuth client secret to store for this integration.
+   * @param connectionIntent Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`.
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter to scope the connection to a specific organization. Required when `connection_owner` is `organization`.
-   * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to rotate a specific existing connection.
    * @param connectionOwner Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization.
    * @param config Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
@@ -485,13 +528,13 @@ class Pipes(
    * @return the ConnectedAccount
    */
   @JvmOverloads
-  fun updateDataIntegrationClientCredentials(
+  fun createDataIntegrationClientCredential(
     slug: String,
     userId: String,
     clientId: String,
     clientSecret: String,
+    connectionIntent: String,
     organizationId: String? = null,
-    connectedAccountId: String? = null,
     connectionOwner: PipesOwnership? = null,
     config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
@@ -501,11 +544,71 @@ class Pipes(
         "user_id" to userId,
         "client_id" to clientId,
         "client_secret" to clientSecret,
+        "connection_intent" to connectionIntent,
         "organization_id" to organizationId,
-        "connected_account_id" to connectedAccountId,
         "connection_owner" to connectionOwner,
         "config" to config
       )
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/data-integrations/${encodePathSegment(slug)}/client-credentials",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, ConnectedAccount::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [createDataIntegrationClientCredential]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [createDataIntegrationClientCredential] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createDataIntegrationClientCredentialSuspend")
+  suspend fun createDataIntegrationClientCredentialSuspend(
+    slug: String,
+    userId: String,
+    clientId: String,
+    clientSecret: String,
+    connectionIntent: String,
+    organizationId: String? = null,
+    connectionOwner: PipesOwnership? = null,
+    config: Map<String, String>? = null,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount =
+    withContext(Dispatchers.IO) {
+      createDataIntegrationClientCredential(
+        slug,
+        userId,
+        clientId,
+        clientSecret,
+        connectionIntent,
+        organizationId,
+        connectionOwner,
+        config,
+        requestOptions
+      )
+    }
+
+  /**
+   * Upsert client credentials for a connected account
+   *
+   * Creates or updates a client-credentials-based installation for the specified integration, owned by the user or, when `connection_owner` is `organization`, shared by the organization. If an installation already exists, the stored client credentials are rotated to the new values. To create another connection, use POST.
+   *
+   * @param slug The identifier of the integration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the ConnectedAccount
+   */
+  @JvmOverloads
+  fun updateDataIntegrationClientCredentials(
+    slug: String,
+    requestOptions: RequestOptions? = null
+  ): ConnectedAccount {
+    val body = linkedMapOf<String, Any?>()
     val config =
       RequestConfig(
         method = "PUT",
@@ -527,33 +630,16 @@ class Pipes(
   @JvmName("updateDataIntegrationClientCredentialsSuspend")
   suspend fun updateDataIntegrationClientCredentialsSuspend(
     slug: String,
-    userId: String,
-    clientId: String,
-    clientSecret: String,
-    organizationId: String? = null,
-    connectedAccountId: String? = null,
-    connectionOwner: PipesOwnership? = null,
-    config: Map<String, String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      updateDataIntegrationClientCredentials(
-        slug,
-        userId,
-        clientId,
-        clientSecret,
-        organizationId,
-        connectedAccountId,
-        connectionOwner,
-        config,
-        requestOptions
-      )
+      updateDataIntegrationClientCredentials(slug, requestOptions)
     }
 
   /**
    * Vend credentials for a connected account
    *
-   * Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret.
+   * Returns credentials for a user's connected account. Branches on the installation's `auth_method`: OAuth installations return an access token (refreshed if needed); API-key installations return the stored secret. Every active credential includes `config`: provider-declared, non-secret values from the installation snapshot, with current provider defaults for unset fields. Editing integration or organization configuration does not change the snapshot; reconnect or explicitly rebind the connection to adopt those edits. Defaults remain live, so a changed default can appear in `config` before a cached token is refreshed or re-minted. Credentials that never refresh require a reconnect or rebind when a default changes their routing.
    *
    * @param slug The identifier of the integration.
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier. When `connection_owner` is `organization`, this is the user the credentials are vended on behalf of; they must be an active member of the organization.
@@ -893,15 +979,17 @@ class Pipes(
   /**
    * Import an organization connected account
    *
-   * Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Use this to migrate existing connections or set up connections without going through the OAuth flow.
+   * Imports an organization-owned [connected account](https://workos.com/docs/reference/pipes/connected-account) by providing OAuth tokens directly. Omit `connection_intent` to create only the compatibility connection, or set it to `add` to explicitly create another connection. This creation-only endpoint does not accept `connected_account_id` or reauthorization intent.
    *
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
+   * @param userId The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
    * @param scopes The OAuth scopes granted for this connection.
    * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param connectionIntent Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
@@ -910,20 +998,24 @@ class Pipes(
   fun createOrganizationConnectedAccount(
     organizationId: String,
     slug: String,
+    userId: String,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
     state: PipeConnectedAccountState? = null,
+    connectionIntent: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val body =
       bodyOf(
+        "user_id" to userId,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
         "scopes" to scopes,
-        "state" to state
+        "state" to state,
+        "connection_intent" to connectionIntent
       )
     val config =
       RequestConfig(
@@ -947,15 +1039,28 @@ class Pipes(
   suspend fun createOrganizationConnectedAccountSuspend(
     organizationId: String,
     slug: String,
+    userId: String,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
     state: PipeConnectedAccountState? = null,
+    connectionIntent: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      createOrganizationConnectedAccount(organizationId, slug, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
+      createOrganizationConnectedAccount(
+        organizationId,
+        slug,
+        userId,
+        accessToken,
+        refreshToken,
+        expiresAt,
+        scopes,
+        state,
+        connectionIntent,
+        requestOptions
+      )
     }
 
   /**
@@ -965,8 +1070,10 @@ class Pipes(
    *
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
-   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param supportsMultipleConnections Accepted for compatibility; does not change update targeting. Omit intent and selector to update the compatibility connection, or supply `connected_account_id` to update an exact connection.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+   * @param connectionIntent Set to `reauthorize` with `connected_account_id` to update one exact connection. The intent may be omitted when supplying an ID. Omit both for permanent compatibility behavior.
+   * @param userId The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
@@ -980,8 +1087,10 @@ class Pipes(
   fun updateOrganizationConnectedAccount(
     organizationId: String,
     slug: String,
+    userId: String,
     supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
+    connectionIntent: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -992,8 +1101,10 @@ class Pipes(
     val params = mutableListOf<Pair<String, String>>()
     supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     params.addIfNotNull("connected_account_id", connectedAccountId)
+    connectionIntent?.let { params += "connection_intent" to it.toString() }
     val body =
       bodyOf(
+        "user_id" to userId,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
@@ -1023,8 +1134,10 @@ class Pipes(
   suspend fun updateOrganizationConnectedAccountSuspend(
     organizationId: String,
     slug: String,
+    userId: String,
     supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
+    connectionIntent: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -1036,8 +1149,10 @@ class Pipes(
       updateOrganizationConnectedAccount(
         organizationId,
         slug,
+        userId,
         supportsMultipleConnections,
         connectedAccountId,
+        connectionIntent,
         accessToken,
         refreshToken,
         expiresAt,
@@ -1216,6 +1331,7 @@ class Pipes(
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
    * @param scopes The OAuth scopes granted for this connection.
    * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param connectionIntent Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectedAccount
@@ -1230,6 +1346,7 @@ class Pipes(
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
     state: PipeConnectedAccountState? = null,
+    connectionIntent: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
@@ -1240,7 +1357,8 @@ class Pipes(
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
         "scopes" to scopes,
-        "state" to state
+        "state" to state,
+        "connection_intent" to connectionIntent
       )
     val config =
       RequestConfig(
@@ -1271,10 +1389,22 @@ class Pipes(
     expiresAt: OffsetDateTime? = null,
     scopes: List<String>? = null,
     state: PipeConnectedAccountState? = null,
+    connectionIntent: String? = null,
     requestOptions: RequestOptions? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
-      createUserConnectedAccount(userId, slug, organizationId, accessToken, refreshToken, expiresAt, scopes, state, requestOptions)
+      createUserConnectedAccount(
+        userId,
+        slug,
+        organizationId,
+        accessToken,
+        refreshToken,
+        expiresAt,
+        scopes,
+        state,
+        connectionIntent,
+        requestOptions
+      )
     }
 
   /**
@@ -1285,8 +1415,9 @@ class Pipes(
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
-   * @param supportsMultipleConnections Set to `true` to use the plural connection contract. When omitted or `false`, only the compatibility connection is considered.
+   * @param supportsMultipleConnections Accepted for compatibility; does not change update targeting. Omit intent and selector to update the compatibility connection, or supply `connected_account_id` to update an exact connection.
    * @param connectedAccountId A [connected account](https://workos.com/docs/reference/pipes/connected-account) identifier. Use this to select the connection to update.
+   * @param connectionIntent Set to `reauthorize` with `connected_account_id` to update one exact connection. The intent may be omitted when supplying an ID. Omit both for permanent compatibility behavior.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
@@ -1303,6 +1434,7 @@ class Pipes(
     organizationId: String? = null,
     supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
+    connectionIntent: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -1314,6 +1446,7 @@ class Pipes(
     params.addIfNotNull("organization_id", organizationId)
     supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
     params.addIfNotNull("connected_account_id", connectedAccountId)
+    connectionIntent?.let { params += "connection_intent" to it.toString() }
     val body =
       bodyOf(
         "access_token" to accessToken,
@@ -1348,6 +1481,7 @@ class Pipes(
     organizationId: String? = null,
     supportsMultipleConnections: Boolean? = null,
     connectedAccountId: String? = null,
+    connectionIntent: String? = null,
     accessToken: String? = null,
     refreshToken: String? = null,
     expiresAt: OffsetDateTime? = null,
@@ -1362,6 +1496,7 @@ class Pipes(
         organizationId,
         supportsMultipleConnections,
         connectedAccountId,
+        connectionIntent,
         accessToken,
         refreshToken,
         expiresAt,
