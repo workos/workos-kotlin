@@ -23,6 +23,10 @@ data class TokenQuery(
   @JsonProperty("code")
   val code: String? = null,
 
+  /** The PKCE code verifier matching the `code_challenge` sent with the authorization request. Required when the authorization request included a `code_challenge`. Must be sent in the request body. */
+  @JsonProperty("code_verifier")
+  val codeVerifier: String? = null,
+
   /** The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body. */
   @JsonProperty("subject_token")
   val subjectToken: String? = null,

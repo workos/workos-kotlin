@@ -149,6 +149,7 @@ import java.time.OffsetDateTime
   JsonSubTypes.Type(value = VaultDataUpdated::class, name = "vault.data.updated"),
   JsonSubTypes.Type(value = VaultDekDecrypted::class, name = "vault.dek.decrypted"),
   JsonSubTypes.Type(value = VaultDekRead::class, name = "vault.dek.read"),
+  JsonSubTypes.Type(value = VaultDekRekeyed::class, name = "vault.dek.rekeyed"),
   JsonSubTypes.Type(value = VaultKekCreated::class, name = "vault.kek.created"),
   JsonSubTypes.Type(value = VaultKekDeleted::class, name = "vault.kek.deleted"),
   JsonSubTypes.Type(value = VaultMetadataRead::class, name = "vault.metadata.read"),

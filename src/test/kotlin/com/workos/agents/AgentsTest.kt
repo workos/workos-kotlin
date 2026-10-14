@@ -34,9 +34,9 @@ class AgentsTest : TestBase() {
       "/agents/blueprints",
       200,
       "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
-        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
-        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"invocable_as\": {\"instance_types\": []}, " +
+        "\"session_settings\": {\"max_age_seconds\": 0, \"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().createBlueprint("sample-arg")
     assertNotNull(result)
@@ -56,9 +56,9 @@ class AgentsTest : TestBase() {
       "/agents/blueprints/sample-arg",
       200,
       "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
-        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
-        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"invocable_as\": {\"instance_types\": []}, " +
+        "\"session_settings\": {\"max_age_seconds\": 0, \"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getBlueprint("sample-arg")
     assertNotNull(result)
@@ -74,9 +74,9 @@ class AgentsTest : TestBase() {
       "/agents/blueprints/sample-arg",
       200,
       "{\"object\": \"agent_blueprint\", \"id\": \"sample\", \"name\": \"sample\", \"description\": null, \"permissions\": [], " +
-        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"session_settings\": {\"max_age_seconds\": 0, " +
-        "\"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+        "\"invocable_by\": {\"role_slugs\": [], \"organization_ids\": []}, \"invocable_as\": {\"instance_types\": []}, " +
+        "\"session_settings\": {\"max_age_seconds\": 0, \"access_token_ttl_seconds\": 0, \"refresh_token_ttl_seconds\": 0}, " +
+        "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().updateBlueprint("sample-arg")
     assertNotNull(result)

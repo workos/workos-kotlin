@@ -138,9 +138,9 @@ class OrganizationMembershipService(
    */
   @JvmOverloads
   fun create(
-    createUserRole: CreateUserRole? = null,
     userId: String,
     organizationId: String,
+    createUserRole: CreateUserRole? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership {
     val body =
@@ -174,13 +174,13 @@ class OrganizationMembershipService(
    */
   @JvmName("createSuspend")
   suspend fun createSuspend(
-    createUserRole: CreateUserRole? = null,
     userId: String,
     organizationId: String,
+    createUserRole: CreateUserRole? = null,
     requestOptions: RequestOptions? = null
   ): OrganizationMembership =
     withContext(Dispatchers.IO) {
-      create(createUserRole, userId, organizationId, requestOptions)
+      create(userId, organizationId, createUserRole, requestOptions)
     }
 
   /**

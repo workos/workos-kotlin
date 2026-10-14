@@ -852,6 +852,7 @@ class SSO(
    * Get an access token along with the user [Profile](https://workos.com/docs/reference/sso/profile) using the code passed to your [Redirect URI](https://workos.com/docs/reference/sso/get-authorization-url/redirect-uri).
    *
    * @param code The authorization code received from the authorization callback. Required when `grant_type` is `authorization_code`.
+   * @param codeVerifier The PKCE code verifier matching the `code_challenge` sent with the authorization request. Required when the authorization request included a `code_challenge`. Must be sent in the request body.
    * @param subjectToken The OIDC ID token to exchange. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
    * @param subjectTokenType The type of the subject token. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
    * @param organizationId The ID of the organization whose connection the subject token is validated against. Required when `grant_type` is `urn:ietf:params:oauth:grant-type:token-exchange`. Must be sent in the request body.
@@ -862,6 +863,7 @@ class SSO(
   @JvmOverloads
   fun getProfileAndToken(
     code: String? = null,
+    codeVerifier: String? = null,
     subjectToken: String? = null,
     subjectTokenType: String? = null,
     organizationId: String? = null,
@@ -870,6 +872,7 @@ class SSO(
     val body =
       bodyOf(
         "code" to code,
+        "code_verifier" to codeVerifier,
         "subject_token" to subjectToken,
         "subject_token_type" to subjectTokenType,
         "organization_id" to organizationId,
@@ -898,12 +901,13 @@ class SSO(
   @JvmName("getProfileAndTokenSuspend")
   suspend fun getProfileAndTokenSuspend(
     code: String? = null,
+    codeVerifier: String? = null,
     subjectToken: String? = null,
     subjectTokenType: String? = null,
     organizationId: String? = null,
     requestOptions: RequestOptions? = null
   ): SSOTokenResponse =
     withContext(Dispatchers.IO) {
-      getProfileAndToken(code, subjectToken, subjectTokenType, organizationId, requestOptions)
+      getProfileAndToken(code, codeVerifier, subjectToken, subjectTokenType, organizationId, requestOptions)
     }
 }
