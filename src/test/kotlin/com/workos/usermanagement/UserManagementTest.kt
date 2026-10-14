@@ -426,7 +426,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().create(createUserPassword = CreateUserPassword.Plaintext("sample-arg"), "sample-arg")
+    val result = api().create("sample-arg", createUserPassword = CreateUserPassword.Plaintext("sample-arg"))
     assertNotNull(result)
     assertEquals("user", result.objectType)
     assertEquals("sample", result.id)
