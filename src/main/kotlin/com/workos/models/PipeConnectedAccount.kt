@@ -68,5 +68,13 @@ data class PipeConnectedAccount(
 
   /** The last four characters of the API key, or null for other authentication methods. Historical events may omit this field. */
   @JsonProperty("api_key_last_4")
-  val apiKeyLast4: String? = null
+  val apiKeyLast4: String? = null,
+
+  /** The ID of the User whose authorization established the connected account, or null when it is developer-managed, its establisher is unknown, or the establishing member left the organization. Historical events may omit this field. */
+  @JsonProperty("established_by_user_id")
+  val establishedByUserId: String? = null,
+
+  /** Why WorkOS put the connected account in its current state, or null when there is no WorkOS-recorded reason. `establishing_member_membership_ended` means the member who established an organization-owned connection is no longer an active member. Additional values may be added. Historical events may omit this field. */
+  @JsonProperty("state_reason")
+  val stateReason: String? = null
 )
