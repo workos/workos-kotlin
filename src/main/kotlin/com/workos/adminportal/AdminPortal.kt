@@ -95,7 +95,7 @@ class AdminPortal(
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    */
   @JvmOverloads
-  fun createRevokeLink(
+  fun revokeLink(
     organization: String,
     externalUserId: String,
     requestOptions: RequestOptions? = null
@@ -116,19 +116,19 @@ class AdminPortal(
   }
 
   /**
-   * Coroutine-aware variant of [createRevokeLink]. Use this from
+   * Coroutine-aware variant of [revokeLink]. Use this from
    * a `suspend` function or coroutine scope.
    *
-   * Delegates to the blocking [createRevokeLink] under
+   * Delegates to the blocking [revokeLink] under
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
-  @JvmName("createRevokeLinkSuspend")
-  suspend fun createRevokeLinkSuspend(
+  @JvmName("revokeLinkSuspend")
+  suspend fun revokeLinkSuspend(
     organization: String,
     externalUserId: String,
     requestOptions: RequestOptions? = null
   ) = withContext(Dispatchers.IO) {
-    createRevokeLink(organization, externalUserId, requestOptions)
+    revokeLink(organization, externalUserId, requestOptions)
   }
 }
