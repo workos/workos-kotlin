@@ -4,11 +4,11 @@ package com.workos.models
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.workos.common.json.ObjectMapperFactory
-import com.workos.types.ConnectedAccountInputState
 import com.workos.types.CreateConnectionOidcOptionsIdTokenSignatureAlgorithm
 import com.workos.types.CreateConnectionOidcOptionsTokenAuthenticationMethod
 import com.workos.types.CreateDataIntegrationAuthMethods
 import com.workos.types.CreateDataIntegrationOwnership
+import com.workos.types.CreateOrganizationConnectedAccountState
 import com.workos.types.CustomProviderDefinitionAuthenticateVia
 import com.workos.types.DataIntegrationCredentialsInputType
 import com.workos.types.InviteItContactIntents
@@ -125,10 +125,10 @@ class GeneratedForwardCompatTest {
   }
 
   @Test
-  fun `unknown ConnectedAccountInputState wire values deserialize to Unknown`() {
+  fun `unknown CreateOrganizationConnectedAccountState wire values deserialize to Unknown`() {
     // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", ConnectedAccountInputState::class.java)
-    assertEquals(ConnectedAccountInputState.Unknown, parsed)
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateOrganizationConnectedAccountState::class.java)
+    assertEquals(CreateOrganizationConnectedAccountState.Unknown, parsed)
   }
 
   @Test

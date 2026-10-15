@@ -74,7 +74,15 @@ data class DataIntegrationsListResponseDataConnectedAccount(
   @JsonProperty("client_secret_last_4")
   val clientSecretLast4: String? = null,
 
-  /** The connection-level configuration values stored for this connection — the fields the provider declares at `installation` scope, excluding any it declares as secret. Only present when `auth_method` is `client_credentials`. */
+  /** The connection-level configuration values stored for this connection — the fields the provider declares at `installation` scope, excluding secret and undeclared fields. Returned for every authentication method; empty when no stored values can be disclosed. */
   @JsonProperty("config")
-  val config: Map<String, String>? = null
+  val config: Map<String, String>? = null,
+
+  /** The [User](https://workos.com/docs/reference/authkit/user) whose authorization established this connection. `null` when the connection is developer-managed or its establisher is unknown, and when the establishing member lost access to the organization — in which case `state_reason` is `establishing_member_membership_ended`. */
+  @JsonProperty("established_by_user_id")
+  val establishedByUserId: String? = null,
+
+  /** Why WorkOS put the connection in its current `state`, or `null` when there is no WorkOS-recorded reason: */
+  @JsonProperty("state_reason")
+  val stateReason: String? = null
 )

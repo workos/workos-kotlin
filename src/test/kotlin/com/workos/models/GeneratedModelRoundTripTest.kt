@@ -110,6 +110,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `RevokeLink round-trips through Jackson`() {
+    val json = "{\"organization\": \"sample\", \"external_user_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, RevokeLink::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `CreateRedirectUri round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\"}"
     val parsed = mapper.readValue(json, CreateRedirectUri::class.java)
@@ -460,6 +470,26 @@ class GeneratedModelRoundTripTest {
       "{\"object\": \"cors_origin\", \"id\": \"sample\", \"origin\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     val parsed = mapper.readValue(json, CorsOriginResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `DirectorySyncResponse round-trips through Jackson`() {
+    val json = "{\"status\": \"queued\"}"
+    val parsed = mapper.readValue(json, DirectorySyncResponse::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `DirectorySyncRateLimitError round-trips through Jackson`() {
+    val json = "{\"code\": \"directory_sync_rate_limited\", \"message\": \"sample\", \"retry_after_seconds\": 0}"
+    val parsed = mapper.readValue(json, DirectorySyncRateLimitError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1180,9 +1210,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AccountSelectionRequiredError round-trips through Jackson`() {
-    val json = "{\"code\": \"account_selection_required\", \"message\": \"sample\"}"
-    val parsed = mapper.readValue(json, AccountSelectionRequiredError::class.java)
+  fun `AuthMethodMismatchError round-trips through Jackson`() {
+    val json = "{\"code\": \"auth_method_mismatch\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, AuthMethodMismatchError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1190,9 +1220,9 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
-  fun `AuthMethodMismatchError round-trips through Jackson`() {
-    val json = "{\"code\": \"auth_method_mismatch\", \"message\": \"sample\"}"
-    val parsed = mapper.readValue(json, AuthMethodMismatchError::class.java)
+  fun `AccountSelectionRequiredError round-trips through Jackson`() {
+    val json = "{\"code\": \"account_selection_required\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, AccountSelectionRequiredError::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1459,6 +1489,16 @@ class GeneratedModelRoundTripTest {
   fun `UserApiKeyOwner round-trips through Jackson`() {
     val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
     val parsed = mapper.readValue(json, UserApiKeyOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `ConnectedAccountWriteResponseWarning round-trips through Jackson`() {
+    val json = "{\"code\": \"duplicate_account_display_name\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, ConnectedAccountWriteResponseWarning::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1797,18 +1837,6 @@ class GeneratedModelRoundTripTest {
   fun `ConnectApplicationRedirectUri round-trips through Jackson`() {
     val json = "{\"uri\": \"sample\", \"default\": false}"
     val parsed = mapper.readValue(json, ConnectApplicationRedirectUri::class.java)
-    val reserialized = mapper.writeValueAsString(parsed)
-    val tree1 = mapper.readTree(json)
-    val tree2 = mapper.readTree(reserialized)
-    assertEquals(tree1, tree2)
-  }
-
-  @Test
-  fun `DataIntegrationCredentialsResponseCredential round-trips through Jackson`() {
-    val json =
-      "{\"object\": \"credential\", \"auth_method\": \"oauth\", \"value\": \"sample\", \"expires_at\": null, \"scopes\": [], " +
-        "\"missing_scopes\": []}"
-    val parsed = mapper.readValue(json, DataIntegrationCredentialsResponseCredential::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

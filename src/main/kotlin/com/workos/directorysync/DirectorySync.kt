@@ -11,6 +11,7 @@ import com.workos.common.http.addIfNotNull
 import com.workos.common.http.encodePathSegment
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
+import com.workos.models.DirectorySyncResponse
 import com.workos.models.DirectoryUserWithGroups
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
@@ -169,6 +170,49 @@ class DirectorySync(
   ) = withContext(Dispatchers.IO) {
     delete(id, requestOptions)
   }
+
+  /**
+   * Sync a Directory
+   *
+   * Request an asynchronous sync from the directory provider. Currently supports Google Workspace directories in linked or validating state. Manual requests share a five-minute per-directory cooldown across the API, Dashboard, Admin Portal, and MCP. Acceptance means the request was queued, not that the sync has started or completed. A running sync prevents another request from being queued.
+   *
+   * @param id Unique identifier for the Directory.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DirectorySyncResponse
+   */
+  @JvmOverloads
+  fun create(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectorySyncResponse {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/directories/${encodePathSegment(id)}/sync",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DirectorySyncResponse::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [create]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [create] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("createSuspend")
+  suspend fun createSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectorySyncResponse =
+    withContext(Dispatchers.IO) {
+      create(id, requestOptions)
+    }
 
   /**
    * List Directory Groups

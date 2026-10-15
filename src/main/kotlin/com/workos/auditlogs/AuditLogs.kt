@@ -329,8 +329,6 @@ class AuditLogs(
    *
    * To achieve idempotency, you can add `Idempotency-Key` request header to a Create Event request with a unique string as the value. Each subsequent request matching this unique string will return the same response. We suggest using [v4 UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) for idempotency keys to avoid collisions.
    *
-   * Idempotency keys expire after 24 hours. The API will generate a new response if you submit a request with an expired key.
-   *
    * @param organizationId The unique ID of the Organization.
    * @param event The audit log event to create.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)

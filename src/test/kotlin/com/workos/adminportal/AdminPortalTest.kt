@@ -31,6 +31,17 @@ class AdminPortalTest : TestBase() {
   }
 
   @Test
+  fun `createRevokeLink completes without throwing`() {
+    stubResponse("POST", "/portal/revoke_link", 200)
+    api().createRevokeLink("sample-arg", "sample-arg")
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/portal/revoke_link"))
+        .withRequestBody(matchingJsonPath("\$.organization"))
+        .withRequestBody(matchingJsonPath("\$.external_user_id"))
+    )
+  }
+
+  @Test
   fun `generateLink translates 401 to UnauthorizedException`() {
     stubResponse("POST", "/portal/generate_link", 401)
     assertThrows(UnauthorizedException::class.java) {

@@ -8,6 +8,14 @@ import java.time.OffsetDateTime
 
 /** ConnectedAccountInput model. */
 data class ConnectedAccountInput(
+  /** A mutable, non-unique connection label; null clears it. Not an account identifier. */
+  @JsonProperty("account_display_name")
+  val accountDisplayName: String? = null,
+
+  /** A developer-attested account identifier; null clears it. */
+  @JsonProperty("account_identifier")
+  val accountIdentifier: String? = null,
+
   /** The OAuth access token for the connected account. */
   @JsonProperty("access_token")
   val accessToken: String? = null,

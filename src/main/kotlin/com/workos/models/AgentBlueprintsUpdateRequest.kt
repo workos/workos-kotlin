@@ -22,6 +22,10 @@ data class AgentBlueprintsUpdateRequest(
   @JsonProperty("invocable_by")
   val invocableBy: AgentBlueprintsUpdateRequestInvocableBy? = null,
 
+  /** How sessions may be minted from this blueprint. Omitted lists are left unchanged. */
+  @JsonProperty("invocable_as")
+  val invocableAs: AgentBlueprintsUpdateRequestInvocableAs? = null,
+
   /** Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged. */
   @JsonProperty("session_settings")
   val sessionSettings: AgentBlueprintsUpdateRequestSessionSetting? = null

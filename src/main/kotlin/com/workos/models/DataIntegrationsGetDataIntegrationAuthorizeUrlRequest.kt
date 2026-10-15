@@ -11,6 +11,10 @@ data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
   @JsonProperty("user_id")
   val userId: String,
 
+  /** A mutable, non-unique label. Omit to preserve an existing label; null clears it. Labels are never account identifiers. */
+  @JsonProperty("account_display_name")
+  val accountDisplayName: String? = null,
+
   /** An organization ID to scope the authorization to a specific organization. Required when `connection_owner` is `organization`. */
   @JsonProperty("organization_id")
   val organizationId: String? = null,

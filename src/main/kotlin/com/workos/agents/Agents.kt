@@ -14,8 +14,10 @@ import com.workos.common.http.encodePathSegment
 import com.workos.common.http.patchBodyOf
 import com.workos.models.AgentAdminLinkClaimAttemptToExternalUserRequestUser
 import com.workos.models.AgentBlueprint
+import com.workos.models.AgentBlueprintsCreateRequestInvocableAs
 import com.workos.models.AgentBlueprintsCreateRequestInvocableBy
 import com.workos.models.AgentBlueprintsCreateRequestSessionSetting
+import com.workos.models.AgentBlueprintsUpdateRequestInvocableAs
 import com.workos.models.AgentBlueprintsUpdateRequestInvocableBy
 import com.workos.models.AgentBlueprintsUpdateRequestSessionSetting
 import com.workos.models.AgentCredentialValidation
@@ -103,6 +105,7 @@ class Agents(
    * @param description Human-readable description of the agent blueprint.
    * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
    * @param invocableBy Who may mint sessions from this blueprint.
+   * @param invocableAs How sessions may be minted from this blueprint.
    * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -114,6 +117,7 @@ class Agents(
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint {
@@ -123,6 +127,7 @@ class Agents(
         "description" to description,
         "permissions" to permissions,
         "invocable_by" to invocableBy,
+        "invocable_as" to invocableAs,
         "session_settings" to sessionSettings
       )
     val config =
@@ -149,11 +154,12 @@ class Agents(
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
+    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint =
     withContext(Dispatchers.IO) {
-      createBlueprint(name, description, permissions, invocableBy, sessionSettings, requestOptions)
+      createBlueprint(name, description, permissions, invocableBy, invocableAs, sessionSettings, requestOptions)
     }
 
   /**
@@ -207,6 +213,7 @@ class Agents(
    * @param description Human-readable description of the agent blueprint. Pass `null` to clear it.
    * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
    * @param invocableBy Who may mint sessions from this blueprint. Omitted lists are left unchanged.
+   * @param invocableAs How sessions may be minted from this blueprint. Omitted lists are left unchanged.
    * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -219,6 +226,7 @@ class Agents(
     description: PatchField<String?> = PatchField.Absent,
     permissions: PatchField<List<String>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
+    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint {
@@ -228,6 +236,7 @@ class Agents(
         "description" to description,
         "permissions" to permissions,
         "invocable_by" to invocableBy,
+        "invocable_as" to invocableAs,
         "session_settings" to sessionSettings
       )
     val config =
@@ -255,11 +264,12 @@ class Agents(
     description: PatchField<String?> = PatchField.Absent,
     permissions: PatchField<List<String>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
+    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
     requestOptions: RequestOptions? = null
   ): AgentBlueprint =
     withContext(Dispatchers.IO) {
-      updateBlueprint(agentBlueprintId, name, description, permissions, invocableBy, sessionSettings, requestOptions)
+      updateBlueprint(agentBlueprintId, name, description, permissions, invocableBy, invocableAs, sessionSettings, requestOptions)
     }
 
   /**

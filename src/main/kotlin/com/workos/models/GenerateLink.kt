@@ -19,6 +19,10 @@ data class GenerateLink(
   @JsonProperty("success_url")
   val successUrl: String? = null,
 
+  /** The ID of the user in your application the link is generated for. The link and any Admin Portal sessions started from it can later be revoked by this ID, for example when that user is deprovisioned from your application. */
+  @JsonProperty("external_user_id")
+  val externalUserId: String? = null,
+
   /** The intent of the Admin Portal. */
   @JsonProperty("intent")
   val intent: GenerateLinkIntent? = null,

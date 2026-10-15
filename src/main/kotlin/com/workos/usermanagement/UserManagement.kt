@@ -1425,7 +1425,7 @@ class UserManagement(
    *
    * Create a new user in the current environment.
    *
-   * @param email The email address of the user.
+   * @param email The email address of the user. WorkOS trims whitespace and converts the address to lowercase before storing it.
    * @param firstName The first name of the user.
    * @param lastName The last name of the user.
    * @param name The user's full name.
@@ -1441,8 +1441,8 @@ class UserManagement(
    */
   @JvmOverloads
   fun create(
-    createUserPassword: CreateUserPassword? = null,
     email: String,
+    createUserPassword: CreateUserPassword? = null,
     firstName: String? = null,
     lastName: String? = null,
     name: String? = null,
@@ -1497,8 +1497,8 @@ class UserManagement(
    */
   @JvmName("createSuspend")
   suspend fun createSuspend(
-    createUserPassword: CreateUserPassword? = null,
     email: String,
+    createUserPassword: CreateUserPassword? = null,
     firstName: String? = null,
     lastName: String? = null,
     name: String? = null,
@@ -1512,8 +1512,8 @@ class UserManagement(
   ): UserCreateResponse =
     withContext(Dispatchers.IO) {
       create(
-        createUserPassword,
         email,
+        createUserPassword,
         firstName,
         lastName,
         name,

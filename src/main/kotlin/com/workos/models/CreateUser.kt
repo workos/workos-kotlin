@@ -8,7 +8,7 @@ import com.workos.types.CreateUserPasswordSaltPosition
 
 /** CreateUser model. */
 data class CreateUser(
-  /** The email address of the user. */
+  /** The email address of the user. WorkOS trims whitespace and converts the address to lowercase before storing it. */
   @JsonProperty("email")
   val email: String,
 

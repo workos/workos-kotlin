@@ -27,6 +27,10 @@ data class AgentBlueprint(
   @JsonProperty("invocable_by")
   val invocableBy: AgentBlueprintInvocableBy,
 
+  /** How sessions may be minted from this blueprint. */
+  @JsonProperty("invocable_as")
+  val invocableAs: AgentBlueprintInvocableAs,
+
   /** Token and session lifetimes for sessions minted from this blueprint. */
   @JsonProperty("session_settings")
   val sessionSettings: AgentBlueprintSessionSetting,
