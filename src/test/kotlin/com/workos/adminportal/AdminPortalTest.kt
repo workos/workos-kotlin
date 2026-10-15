@@ -31,9 +31,9 @@ class AdminPortalTest : TestBase() {
   }
 
   @Test
-  fun `createRevokeLink completes without throwing`() {
+  fun `revokeLink completes without throwing`() {
     stubResponse("POST", "/portal/revoke_link", 200)
-    api().createRevokeLink("sample-arg", "sample-arg")
+    api().revokeLink("sample-arg", "sample-arg")
     wireMockRule.verify(
       postRequestedFor(urlPathMatching("/portal/revoke_link"))
         .withRequestBody(matchingJsonPath("\$.organization"))
