@@ -2,7 +2,7 @@
 package com.workos.common.http
 
 /**
- * Client-wide retry behaviour. Per-request overrides live on [RequestOptions].
+ * Client-wide retry behavior. Per-request overrides live on [RequestOptions].
  */
 data class RetryConfig(
   /** Maximum number of retry attempts after the initial request. */
