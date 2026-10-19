@@ -1,5 +1,30 @@
 # Changelog
 
+## [7.5.0](https://github.com/workos/workos-kotlin/compare/v7.4.0...v7.5.0) (2026-10-19)
+
+
+### Features
+
+* **admin_portal:** SDK surface change: `AdminPortal.createRevokeLink` was renamed to `AdminPortal.revokeLink` ([#453](https://github.com/workos/workos-kotlin/issues/453)) ([426fbad](https://github.com/workos/workos-kotlin/commit/426fbadd6bed58fd9fc54134287ac2bfa5abe510))
+* **admin_portal:** Update admin portal API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **audit_logs:** Update audit log API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **authorization:** Update authorization API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **feature_flags:** Update feature flag API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **generated:** AdminPortal, Agents, ApiKeys, AuditLogs, Authorization, ClientApi, Connect, DirectorySync, Events, FeatureFlags, Groups, MultiFactorAuth, OrganizationDomains, OrganizationMembership, Organizations, Pipes, PipesProvider, PlatformTeams, Radar, SSO, UserManagement, Vault, Webhooks, Widgets (batch aeefef11) ([#455](https://github.com/workos/workos-kotlin/issues/455)) ([b2fd67f](https://github.com/workos/workos-kotlin/commit/b2fd67f17be877e609ecce8bad6dd16c8e552f67))
+* **generated:** Authorization (batch c64ce1e7) ([#446](https://github.com/workos/workos-kotlin/issues/446)) ([28b69fb](https://github.com/workos/workos-kotlin/commit/28b69fb7d3c8e1651984524ad09316e6a70049d1))
+* **organizations:** Update organization API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **pipes:** Change Pipes API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **pipes:** Update Pipes API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **radar:** Update radar API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **user_management:** Update user management API surface ([#450](https://github.com/workos/workos-kotlin/issues/450)) ([2648807](https://github.com/workos/workos-kotlin/commit/2648807414af6f5e0aabfc41f375763fd674ffaf))
+* **user_management:** Update user management API surface ([#453](https://github.com/workos/workos-kotlin/issues/453)) ([426fbad](https://github.com/workos/workos-kotlin/commit/426fbadd6bed58fd9fc54134287ac2bfa5abe510))
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#452](https://github.com/workos/workos-kotlin/issues/452)) ([133a17c](https://github.com/workos/workos-kotlin/commit/133a17c2f267523e08f2a2414094222e59fdcea0))
+* **user_management:** Change errors for endpoint `POST /user_management/authenticate` ([#453](https://github.com/workos/workos-kotlin/issues/453)) ([426fbad](https://github.com/workos/workos-kotlin/commit/426fbadd6bed58fd9fc54134287ac2bfa5abe510))
+
 ## [7.4.0](https://github.com/workos/workos-kotlin/compare/v7.3.0...v7.4.0) (2026-09-18)
 
 ### Features
