@@ -1027,6 +1027,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `FlagUpdatedContextPreviousAttributeDataOwner round-trips through Jackson`() {
+    val json = "{\"email\": \"sample\", \"first_name\": null, \"last_name\": null}"
+    val parsed = mapper.readValue(json, FlagUpdatedContextPreviousAttributeDataOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `GroupMemberAddedData round-trips through Jackson`() {
     val json = "{\"group_id\": \"sample\", \"organization_membership_id\": \"sample\"}"
     val parsed = mapper.readValue(json, GroupMemberAddedData::class.java)

@@ -18,6 +18,10 @@ data class FlagUpdatedContextPreviousAttributeData(
   @JsonProperty("tags")
   val tags: List<String>? = null,
 
+  /** The previous owner of the flag, or `null` if it had none. */
+  @JsonProperty("owner")
+  val owner: FlagUpdatedContextPreviousAttributeDataOwner? = null,
+
   /** Whether the flag was previously enabled. */
   @JsonProperty("enabled")
   val enabled: Boolean? = null,

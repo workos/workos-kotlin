@@ -381,6 +381,7 @@
     "src/main/kotlin/com/workos/models/FlagUpdatedContextActor.kt",
     "src/main/kotlin/com/workos/models/FlagUpdatedContextPreviousAttribute.kt",
     "src/main/kotlin/com/workos/models/FlagUpdatedContextPreviousAttributeData.kt",
+    "src/main/kotlin/com/workos/models/FlagUpdatedContextPreviousAttributeDataOwner.kt",
     "src/main/kotlin/com/workos/models/FlagUpdatedData.kt",
     "src/main/kotlin/com/workos/models/FlagUpdatedDataOwner.kt",
     "src/main/kotlin/com/workos/models/GenerateLink.kt",
@@ -928,6 +929,10 @@
     },
     "GET /agents/registrations/{id}": {
       "sdkMethod": "getRegistration",
+      "service": "agents"
+    },
+    "POST /agents/registrations/{id}/revoke": {
+      "sdkMethod": "revokeRegistration",
       "service": "agents"
     },
     "GET /agents/instances": {

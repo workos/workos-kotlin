@@ -34,7 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * API accessor for Agents.
+ * Manage agent blueprints.
  *
  * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
  */
@@ -579,6 +579,49 @@ class Agents(
   ): AgentRegistration =
     withContext(Dispatchers.IO) {
       getRegistration(id, requestOptions)
+    }
+
+  /**
+   * Revoke an agent registration
+   *
+   * Revoke an agent registration by ID. Revocation is permanent: the registration, its identity assertions, and every access token or API key issued from it stop working, and the agent must register again. Revoking an already revoked registration succeeds and returns the original `revoked_at`. The registration is scoped to the environment of the API key used to authenticate the request.
+   *
+   * @param id The unique ID of the agent registration.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the AgentRegistration
+   */
+  @JvmOverloads
+  fun revokeRegistration(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): AgentRegistration {
+    val body = linkedMapOf<String, Any?>()
+    val config =
+      RequestConfig(
+        method = "POST",
+        path = "/agents/registrations/${encodePathSegment(id)}/revoke",
+        body = body,
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, AgentRegistration::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [revokeRegistration]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [revokeRegistration] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("revokeRegistrationSuspend")
+  suspend fun revokeRegistrationSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): AgentRegistration =
+    withContext(Dispatchers.IO) {
+      revokeRegistration(id, requestOptions)
     }
 
   /**

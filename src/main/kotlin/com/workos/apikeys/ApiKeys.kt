@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 
 /**
- * API accessor for ApiKeys.
+ * Manage organization-scoped API keys.
  *
  * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
  */
