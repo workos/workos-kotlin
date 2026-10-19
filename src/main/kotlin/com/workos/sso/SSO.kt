@@ -91,7 +91,7 @@ sealed class PatchProtocolOptions {
 }
 
 /**
- * API accessor for SSO.
+ * Manage SSO connections.
  *
  * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
  */

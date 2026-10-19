@@ -25,6 +25,10 @@ data class AgentRegistration(
   @JsonProperty("status")
   val status: AgentRegistrationStatus,
 
+  /** The timestamp when the registration was revoked, or `null` if it has not been revoked. */
+  @JsonProperty("revoked_at")
+  val revokedAt: OffsetDateTime?,
+
   /** The kind of agent registration. */
   @JsonProperty("kind")
   val kind: AgentRegistrationKind,

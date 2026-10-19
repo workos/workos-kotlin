@@ -164,10 +164,27 @@ class AgentsTest : TestBase() {
       200,
       "{\"id\": \"sample\", \"agent_identity\": {\"id\": \"sample\", \"userland_user_id\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"organization_id\": \"sample\", \"status\": " +
-        "\"unverified\", \"kind\": \"anonymous\", \"claim\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
-        "\"2024-01-01T00:00:00Z\"}"
+        "\"unverified\", \"revoked_at\": null, \"kind\": \"anonymous\", \"claim\": null, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
     val result = api().getRegistration("sample-arg")
+    assertNotNull(result)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.organizationId)
+  }
+
+  @Test
+  fun `revokeRegistration returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/agents/registrations/sample-arg/revoke",
+      200,
+      "{\"id\": \"sample\", \"agent_identity\": {\"id\": \"sample\", \"userland_user_id\": null, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}, \"organization_id\": \"sample\", \"status\": " +
+        "\"unverified\", \"revoked_at\": null, \"kind\": \"anonymous\", \"claim\": null, \"created_at\": \"2024-01-01T00:00:00Z\", " +
+        "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().revokeRegistration("sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.id)
     assertEquals("sample", result.organizationId)
