@@ -39,10 +39,11 @@ import com.workos.models.UserSessionsListItem
 import com.workos.models.VerifyEmailResponse
 import com.workos.models.Waitlist
 import com.workos.models.WaitlistEntry
-import com.workos.types.CreateUserInviteOptionsLocale
+import com.workos.models.WaitlistListResponse
 import com.workos.types.CreateUserPasswordHashType
 import com.workos.types.CreateUserPasswordSaltPosition
 import com.workos.types.PaginationOrder
+import com.workos.types.SendEmailChangeLocale
 import com.workos.types.WaitlistUserState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -1222,6 +1223,7 @@ class UserManagement(
    * Creates a one-time token that can be used to reset a user's password.
    *
    * @param email The email address of the user requesting a password reset.
+   * @param locale The locale to use when rendering the password reset email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the PasswordReset
@@ -1229,11 +1231,13 @@ class UserManagement(
   @JvmOverloads
   fun resetPassword(
     email: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): PasswordReset {
     val body =
       bodyOf(
-        "email" to email
+        "email" to email,
+        "locale" to locale
       )
     val config =
       RequestConfig(
@@ -1256,10 +1260,11 @@ class UserManagement(
   @JvmName("resetPasswordSuspend")
   suspend fun resetPasswordSuspend(
     email: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): PasswordReset =
     withContext(Dispatchers.IO) {
-      resetPassword(email, requestOptions)
+      resetPassword(email, locale, requestOptions)
     }
 
   /**
@@ -1792,6 +1797,7 @@ class UserManagement(
    *
    * @param id The unique ID of the user.
    * @param newEmail The new email address to change to.
+   * @param locale The locale to use when rendering the email change email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the EmailChange
@@ -1800,11 +1806,13 @@ class UserManagement(
   fun sendEmailChange(
     id: String,
     newEmail: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): EmailChange {
     val body =
       bodyOf(
-        "new_email" to newEmail
+        "new_email" to newEmail,
+        "locale" to locale
       )
     val config =
       RequestConfig(
@@ -1828,10 +1836,11 @@ class UserManagement(
   suspend fun sendEmailChangeSuspend(
     id: String,
     newEmail: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): EmailChange =
     withContext(Dispatchers.IO) {
-      sendEmailChange(id, newEmail, requestOptions)
+      sendEmailChange(id, newEmail, locale, requestOptions)
     }
 
   /**
@@ -1889,6 +1898,7 @@ class UserManagement(
    * Sends an email that contains a one-time code used to verify a user's email address.
    *
    * @param id The ID of the user.
+   * @param locale The locale to use when rendering the verification email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the SendVerificationEmailResponse
@@ -1896,9 +1906,13 @@ class UserManagement(
   @JvmOverloads
   fun sendVerificationEmail(
     id: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse {
-    val body = linkedMapOf<String, Any?>()
+    val body =
+      bodyOf(
+        "locale" to locale
+      )
     val config =
       RequestConfig(
         method = "POST",
@@ -1920,10 +1934,11 @@ class UserManagement(
   @JvmName("sendVerificationEmailSuspend")
   suspend fun sendVerificationEmailSuspend(
     id: String,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): SendVerificationEmailResponse =
     withContext(Dispatchers.IO) {
-      sendVerificationEmail(id, requestOptions)
+      sendVerificationEmail(id, locale, requestOptions)
     }
 
   /**
@@ -2099,7 +2114,7 @@ class UserManagement(
    * @param roleSlug The [role](https://workos.com/docs/authkit/roles) that the recipient will receive when they join the organization in the invitation.
    * @param expiresInDays How many days the invitations will be valid for. Must be between 1 and 30 days. Defaults to 7 days if not specified.
    * @param inviterUserId The ID of the [user](https://workos.com/docs/reference/authkit/user) who invites the recipient. The invitation email will mention the name of this user.
-   * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   * @param locale The locale to use when rendering the invitation email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
@@ -2111,7 +2126,7 @@ class UserManagement(
     roleSlug: String? = null,
     expiresInDays: Long? = null,
     inviterUserId: String? = null,
-    locale: CreateUserInviteOptionsLocale? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
     val body =
@@ -2148,7 +2163,7 @@ class UserManagement(
     roleSlug: String? = null,
     expiresInDays: Long? = null,
     inviterUserId: String? = null,
-    locale: CreateUserInviteOptionsLocale? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite =
     withContext(Dispatchers.IO) {
@@ -2286,7 +2301,7 @@ class UserManagement(
    * Resends an invitation email to the recipient. The invitation must be in a pending state.
    *
    * @param id The unique ID of the invitation.
-   * @param locale The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization).
+   * @param locale The locale to use when rendering the invitation email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the UserInvite
@@ -2294,7 +2309,7 @@ class UserManagement(
   @JvmOverloads
   fun resendInvitation(
     id: String,
-    locale: CreateUserInviteOptionsLocale? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite {
     val body =
@@ -2322,7 +2337,7 @@ class UserManagement(
   @JvmName("resendInvitationSuspend")
   suspend fun resendInvitationSuspend(
     id: String,
-    locale: CreateUserInviteOptionsLocale? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): UserInvite =
     withContext(Dispatchers.IO) {
@@ -2463,6 +2478,7 @@ class UserManagement(
    * @param userAgent The user agent string from the user's request.
    * @param radarAuthAttemptId The ID of an existing Radar authentication attempt to associate with this request.
    * @param signalsId An optional Radar signals ID to correlate client-side signals with this request.
+   * @param locale The locale to use when rendering the Magic Auth email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization).
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the MagicAuthSendMagicAuthCodeAndReturnResponse
@@ -2475,6 +2491,7 @@ class UserManagement(
     userAgent: String? = null,
     radarAuthAttemptId: String? = null,
     signalsId: String? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): MagicAuthSendMagicAuthCodeAndReturnResponse {
     val body =
@@ -2484,7 +2501,8 @@ class UserManagement(
         "ip_address" to ipAddress,
         "user_agent" to userAgent,
         "radar_auth_attempt_id" to radarAuthAttemptId,
-        "signals_id" to signalsId
+        "signals_id" to signalsId,
+        "locale" to locale
       )
     val config =
       RequestConfig(
@@ -2512,10 +2530,11 @@ class UserManagement(
     userAgent: String? = null,
     radarAuthAttemptId: String? = null,
     signalsId: String? = null,
+    locale: SendEmailChangeLocale? = null,
     requestOptions: RequestOptions? = null
   ): MagicAuthSendMagicAuthCodeAndReturnResponse =
     withContext(Dispatchers.IO) {
-      createMagicAuth(email, invitationToken, ipAddress, userAgent, radarAuthAttemptId, signalsId, requestOptions)
+      createMagicAuth(email, invitationToken, ipAddress, userAgent, radarAuthAttemptId, signalsId, locale, requestOptions)
     }
 
   /**
@@ -2932,20 +2951,17 @@ class UserManagement(
    *
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return a [com.workos.common.http.Page] of results
+   * @return the WaitlistListResponse
    */
   @JvmOverloads
-  fun listWaitlists(requestOptions: RequestOptions? = null): Page<Waitlist> {
-    val itemType = object : TypeReference<Waitlist>() {}
-    return workos.baseClient.requestPage(
-      method = "GET",
-      path = "/user_management/waitlists",
-      itemType = itemType,
-      requestOptions = requestOptions,
-      before = null,
-      after = null
-    ) {
-    }
+  fun listWaitlists(requestOptions: RequestOptions? = null): WaitlistListResponse {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/user_management/waitlists",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, WaitlistListResponse::class.java)
   }
 
   /**
@@ -2957,7 +2973,7 @@ class UserManagement(
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
   @JvmName("listWaitlistsSuspend")
-  suspend fun listWaitlistsSuspend(requestOptions: RequestOptions? = null): Page<Waitlist> =
+  suspend fun listWaitlistsSuspend(requestOptions: RequestOptions? = null): WaitlistListResponse =
     withContext(Dispatchers.IO) {
       listWaitlists(requestOptions)
     }

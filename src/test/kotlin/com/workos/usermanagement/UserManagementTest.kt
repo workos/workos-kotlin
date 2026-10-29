@@ -907,9 +907,15 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `listWaitlists returns a typed response`() {
-    stubResponse("GET", "/user_management/waitlists", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    stubResponse(
+      "GET",
+      "/user_management/waitlists",
+      200,
+      "{\"object\": \"list\", \"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
     val result = api().listWaitlists()
     assertNotNull(result)
+    assertEquals("list", result.objectType)
   }
 
   @Test
