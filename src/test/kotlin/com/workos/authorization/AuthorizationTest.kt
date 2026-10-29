@@ -74,6 +74,12 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  fun `patchGroupRoleAssignments completes without throwing`() {
+    stubResponse("PATCH", "/authorization/groups/sample-arg/role_assignments", 200)
+    api().patchGroupRoleAssignments("sample-arg")
+  }
+
+  @Test
   fun `deleteGroupRoleAssignments completes without throwing`() {
     stubResponse("DELETE", "/authorization/groups/sample-arg/role_assignments", 204)
     api().deleteGroupRoleAssignments("sample-arg", "sample-arg")

@@ -2,5 +2,16 @@
 
 package com.workos.models
 
-/** Alias for [CreateItContact]. */
-typealias CreatePasswordResetToken = CreateItContact
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.CreatePasswordResetTokenLocale
+
+/** CreatePasswordResetToken model. */
+data class CreatePasswordResetToken(
+  /** The email address of the user requesting a password reset. */
+  @JsonProperty("email")
+  val email: String,
+
+  /** The locale to use when rendering the password reset email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization). */
+  @JsonProperty("locale")
+  val locale: CreatePasswordResetTokenLocale? = null
+)

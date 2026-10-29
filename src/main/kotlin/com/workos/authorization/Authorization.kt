@@ -298,6 +298,56 @@ class Authorization(
     }
 
   /**
+   * Update role assignments for a group
+   *
+   * Add and remove role assignments for a group in a single atomic operation. Additions that already exist and removals that match no assignment are skipped. An assignment in both lists is rejected. `add` and `remove` must contain between 1 and 100 entries combined.
+   *
+   * @param groupId The ID of the group.
+   * @param add Role assignments to add to the group. Assignments that already exist are skipped.
+   * @param remove Role assignments to remove from the group. Entries that match no assignment are skipped.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun patchGroupRoleAssignments(
+    groupId: String,
+    add: PatchField<List<ReplaceGroupRoleAssignmentEntry>> = PatchField.Absent,
+    remove: PatchField<List<ReplaceGroupRoleAssignmentEntry>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body =
+      patchBodyOf(
+        "add" to add,
+        "remove" to remove
+      )
+    val config =
+      RequestConfig(
+        method = "PATCH",
+        path = "/authorization/groups/${encodePathSegment(groupId)}/role_assignments",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [patchGroupRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [patchGroupRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("patchGroupRoleAssignmentsSuspend")
+  suspend fun patchGroupRoleAssignmentsSuspend(
+    groupId: String,
+    add: PatchField<List<ReplaceGroupRoleAssignmentEntry>> = PatchField.Absent,
+    remove: PatchField<List<ReplaceGroupRoleAssignmentEntry>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    patchGroupRoleAssignments(groupId, add, remove, requestOptions)
+  }
+
+  /**
    * Remove group role assignments by criteria
    *
    * Remove role assignments from a group that match the provided criteria. Returns 404 when no matching active assignment is found.

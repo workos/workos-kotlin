@@ -332,6 +332,7 @@ class Connect(
    * @param description A description for the application.
    * @param scopes The OAuth scopes granted to the application.
    * @param redirectUris Updated redirect URIs for the application. OAuth applications only.
+   * @param corsOrigins Updated origins allowed to call the OAuth token endpoint for this application from a browser. Replaces the existing list. OAuth applications only.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ConnectApplication
@@ -343,6 +344,7 @@ class Connect(
     description: String? = null,
     scopes: List<String>? = null,
     redirectUris: List<RedirectUriInput>? = null,
+    corsOrigins: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication {
     val body =
@@ -350,7 +352,8 @@ class Connect(
         "name" to name,
         "description" to description,
         "scopes" to scopes,
-        "redirect_uris" to redirectUris
+        "redirect_uris" to redirectUris,
+        "cors_origins" to corsOrigins
       )
     val config =
       RequestConfig(
@@ -377,10 +380,11 @@ class Connect(
     description: String? = null,
     scopes: List<String>? = null,
     redirectUris: List<RedirectUriInput>? = null,
+    corsOrigins: List<String>? = null,
     requestOptions: RequestOptions? = null
   ): ConnectApplication =
     withContext(Dispatchers.IO) {
-      updateApplication(id, name, description, scopes, redirectUris, requestOptions)
+      updateApplication(id, name, description, scopes, redirectUris, corsOrigins, requestOptions)
     }
 
   /**

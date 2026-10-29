@@ -2,5 +2,5 @@
 
 package com.workos.types
 
-/** Alias for [CreateUserInviteOptionsLocale]. */
-typealias ResendUserInviteOptionsLocale = CreateUserInviteOptionsLocale
+/** Alias for [SendEmailChangeLocale]. */
+typealias ResendUserInviteOptionsLocale = SendEmailChangeLocale

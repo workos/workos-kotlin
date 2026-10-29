@@ -19,5 +19,6 @@ enum class ResourceExportFailedDataResourceType(
   AuditLogEvents("auditLogEvents"),
   Connections("connections"),
   DirectoryUsers("directoryUsers"),
-  SCIMLogs("scimLogs")
+  SCIMLogs("scimLogs"),
+  RadarDetections("radarDetections")
 }

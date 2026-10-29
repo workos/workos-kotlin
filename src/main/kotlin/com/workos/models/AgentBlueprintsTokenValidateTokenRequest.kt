@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** AgentBlueprintsTokenValidateTokenRequest model. */
+/** The agent access token to validate. */
 data class AgentBlueprintsTokenValidateTokenRequest(
   /** The agent access token (a JWT) to validate. */
   @JsonProperty("agent_access_token")

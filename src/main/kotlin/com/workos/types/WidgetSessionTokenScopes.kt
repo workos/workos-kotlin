@@ -13,6 +13,8 @@ enum class WidgetSessionTokenScopes(
   @JsonEnumDefaultValue
   Unknown("unknown"),
   WidgetsUsersTableManage("widgets:users-table:manage"),
+  WidgetsUserApiKeysManageSelf("widgets:user-api-keys:manage-self"),
+  WidgetsUserApiKeysManageAll("widgets:user-api-keys:manage-all"),
   WidgetsDomainVerificationManage("widgets:domain-verification:manage"),
   WidgetsSSOManage("widgets:sso:manage"),
   WidgetsApiKeysManage("widgets:api-keys:manage"),

@@ -20,5 +20,9 @@ data class UpdateOAuthApplication(
 
   /** Updated redirect URIs for the application. OAuth applications only. */
   @JsonProperty("redirect_uris")
-  val redirectUris: List<RedirectUriInput>? = null
+  val redirectUris: List<RedirectUriInput>? = null,
+
+  /** Updated origins allowed to call the OAuth token endpoint for this application from a browser. Replaces the existing list. OAuth applications only. */
+  @JsonProperty("cors_origins")
+  val corsOrigins: List<String>? = null
 )

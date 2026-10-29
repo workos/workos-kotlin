@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** AgentBlueprintsUpdateRequest model. */
+/** Fields to update on the agent blueprint. Omitted fields are left unchanged; provided lists replace the existing configuration. */
 data class AgentBlueprintsUpdateRequest(
   /** Human-readable name of the agent blueprint. */
   @JsonProperty("name")

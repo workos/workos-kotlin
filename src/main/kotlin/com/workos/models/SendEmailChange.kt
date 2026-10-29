@@ -3,10 +3,15 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.SendEmailChangeLocale
 
 /** SendEmailChange model. */
 data class SendEmailChange(
   /** The new email address to change to. */
   @JsonProperty("new_email")
-  val newEmail: String
+  val newEmail: String,
+
+  /** The locale to use when rendering the email change email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization). */
+  @JsonProperty("locale")
+  val locale: SendEmailChangeLocale? = null
 )

@@ -8,7 +8,6 @@ import com.workos.types.CreateConnectionOidcOptionsIdTokenSignatureAlgorithm
 import com.workos.types.CreateConnectionOidcOptionsTokenAuthenticationMethod
 import com.workos.types.CreateDataIntegrationAuthMethods
 import com.workos.types.CreateDataIntegrationOwnership
-import com.workos.types.CreateOrganizationConnectedAccountState
 import com.workos.types.CustomProviderDefinitionAuthenticateVia
 import com.workos.types.DataIntegrationCredentialsInputType
 import com.workos.types.InviteItContactIntents
@@ -17,6 +16,7 @@ import com.workos.types.PaginationOrder
 import com.workos.types.PatchConnectionOidcOptionsIdTokenSignatureAlgorithm
 import com.workos.types.PatchConnectionOidcOptionsTokenAuthenticationMethod
 import com.workos.types.UpdateAuditLogsRetentionRetentionPeriod
+import com.workos.types.UpdateAuditLogsRetentionWithRetentionPeriodRetentionPeriod
 import com.workos.types.UpdateCustomProviderDefinitionAuthenticateVia
 import com.workos.types.VaultByokKeyProvider
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -45,6 +45,13 @@ class GeneratedForwardCompatTest {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateAuditLogsRetentionRetentionPeriod::class.java)
     assertEquals(UpdateAuditLogsRetentionRetentionPeriod.Unknown, parsed)
+  }
+
+  @Test
+  fun `unknown UpdateAuditLogsRetentionWithRetentionPeriodRetentionPeriod wire values deserialize to Unknown`() {
+    // Simulates a future server release that introduces a new enum variant.
+    val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateAuditLogsRetentionWithRetentionPeriodRetentionPeriod::class.java)
+    assertEquals(UpdateAuditLogsRetentionWithRetentionPeriodRetentionPeriod.Unknown, parsed)
   }
 
   @Test
@@ -122,13 +129,6 @@ class GeneratedForwardCompatTest {
     // Simulates a future server release that introduces a new enum variant.
     val parsed = mapper.readValue("\"__oagen_new_variant__\"", UpdateCustomProviderDefinitionAuthenticateVia::class.java)
     assertEquals(UpdateCustomProviderDefinitionAuthenticateVia.Unknown, parsed)
-  }
-
-  @Test
-  fun `unknown CreateOrganizationConnectedAccountState wire values deserialize to Unknown`() {
-    // Simulates a future server release that introduces a new enum variant.
-    val parsed = mapper.readValue("\"__oagen_new_variant__\"", CreateOrganizationConnectedAccountState::class.java)
-    assertEquals(CreateOrganizationConnectedAccountState.Unknown, parsed)
   }
 
   @Test
