@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.CreateMagicCodeAndReturnLocale
 
 /** CreateMagicCodeAndReturn model. */
 data class CreateMagicCodeAndReturn(
@@ -28,5 +29,9 @@ data class CreateMagicCodeAndReturn(
 
   /** An optional Radar signals ID to correlate client-side signals with this request. */
   @JsonProperty("signals_id")
-  val signalsId: String? = null
+  val signalsId: String? = null,
+
+  /** The locale to use when rendering the Magic Auth email. Defaults to the environment's default locale. See [supported locales](https://workos.com/docs/authkit/hosted-ui#localization). */
+  @JsonProperty("locale")
+  val locale: CreateMagicCodeAndReturnLocale? = null
 )

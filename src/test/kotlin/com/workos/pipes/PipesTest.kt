@@ -51,6 +51,25 @@ class PipesTest : TestBase() {
   }
 
   @Test
+  fun `createFinish returns a typed response`() {
+    stubResponse(
+      "POST",
+      "/data-integrations/finish",
+      200,
+      "{\"connected_account\": {\"object\": \"connected_account\", \"id\": \"sample\", \"connection_role\": \"compatibility\", " +
+        "\"account_identifier\": null, \"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], " +
+        "\"state\": \"connected\", \"created_at\": \"sample\", \"updated_at\": \"sample\"}}"
+    )
+    val result = api().createFinish("sample-arg", "sample-arg")
+    assertNotNull(result)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/finish"))
+        .withRequestBody(matchingJsonPath("\$.connect_code"))
+        .withRequestBody(matchingJsonPath("\$.code_verifier"))
+    )
+  }
+
+  @Test
   fun `getDataIntegration returns a typed response`() {
     stubResponse(
       "GET",
@@ -130,20 +149,29 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().updateDataIntegrationApiKey("sample-arg")
+    val result = api().updateDataIntegrationApiKey("sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/api-key"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.secret"))
+    )
   }
 
   @Test
   fun `authorizeDataIntegration returns a typed response`() {
     stubResponse("POST", "/data-integrations/sample-arg/authorize", 200, "{\"url\": \"sample\"}")
-    val result = api().authorizeDataIntegration("sample-arg")
+    val result = api().authorizeDataIntegration("sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("sample", result.url)
+    wireMockRule.verify(
+      postRequestedFor(urlPathMatching("/data-integrations/sample-arg/authorize"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+    )
   }
 
   @Test
@@ -181,12 +209,18 @@ class PipesTest : TestBase() {
         "\"account_display_name\": null, \"user_id\": null, \"organization_id\": null, \"scopes\": [], \"state\": \"connected\", " +
         "\"created_at\": \"sample\", \"updated_at\": \"sample\"}"
     )
-    val result = api().updateDataIntegrationClientCredentials("sample-arg")
+    val result = api().updateDataIntegrationClientCredentials("sample-arg", "sample-arg", "sample-arg", "sample-arg")
     assertNotNull(result)
     assertEquals("connected_account", result.objectType)
     assertEquals("sample", result.id)
     assertEquals("sample", result.createdAt)
     assertEquals("sample", result.updatedAt)
+    wireMockRule.verify(
+      putRequestedFor(urlPathMatching("/data-integrations/sample-arg/client-credentials"))
+        .withRequestBody(matchingJsonPath("\$.user_id"))
+        .withRequestBody(matchingJsonPath("\$.client_id"))
+        .withRequestBody(matchingJsonPath("\$.client_secret"))
+    )
   }
 
   @Test
