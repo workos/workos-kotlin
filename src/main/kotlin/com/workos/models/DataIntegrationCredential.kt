@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationCredentialType
 
-/** DataIntegrationCredential model. */
+/** The integration-level OAuth app credentials. `null` for `api_key` and `client_credentials` integrations, which hold no integration-level credentials (secrets are installed per-tenant). */
 data class DataIntegrationCredential(
   /** The credentials type. `custom` uses your own OAuth app credentials; `organization` has each organization supply its own credentials (so `client_id`/`redacted_client_secret` are null on the integration itself). */
   @JsonProperty("type")

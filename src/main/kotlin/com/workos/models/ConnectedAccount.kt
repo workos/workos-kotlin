@@ -79,5 +79,9 @@ data class ConnectedAccount(
 
   /** Why WorkOS put the connection in its current `state`, or `null` when there is no WorkOS-recorded reason: */
   @JsonProperty("state_reason")
-  val stateReason: String? = null
+  val stateReason: String? = null,
+
+  /** Non-blocking warnings about an explicitly supplied label. Only writes return it, and only when another connection already uses the label; reads omit it. */
+  @JsonProperty("warnings")
+  val warnings: List<ConnectedAccountWarning>? = null
 )

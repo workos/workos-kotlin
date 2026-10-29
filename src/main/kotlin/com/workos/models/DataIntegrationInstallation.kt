@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationInstallationConnectionRole
 
-/** DataIntegrationInstallation model. */
+/** The tenant installation created when an API key was supplied at creation time; `null` otherwise. Not populated on list/get responses. */
 data class DataIntegrationInstallation(
   /** Unique identifier of the installation. */
   @JsonProperty("id")

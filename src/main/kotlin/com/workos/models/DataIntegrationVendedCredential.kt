@@ -31,11 +31,11 @@ data class DataIntegrationVendedCredential(
   @JsonProperty("missing_scopes")
   val missingScopes: List<String>? = null,
 
+  /** Non-sensitive fields captured from the provider token response (e.g. Salesforce `instance_url`), as configured for the provider. Captured on OAuth code exchange and refresh, and on each `client_credentials` mint. A field a later OAuth refresh omits keeps its stored value. Present for `oauth` and `client_credentials` credentials; absent for `api_key`. */
+  @JsonProperty("metadata")
+  val metadata: Map<String, Any>? = null,
+
   /** Provider-declared, non-secret config from the installation snapshot, with current defaults for unset fields. Includes both integration- and installation-scope fields; omits undeclared fields and fields marked secret. Use these values to address a per-tenant host, such as Snowflake's `account` or Zendesk's `subdomain`. Empty when no values are disclosable. Changes to integration or organization pins require reconnecting or explicitly rebinding the connection. Defaults are live and can differ from a cached token's audience until refresh or re-mint. */
   @JsonProperty("config")
-  val config: Map<String, String>? = null,
-
-  /** Non-sensitive fields captured from the provider token response (e.g. Salesforce `instance_url`), as configured for the provider. Only present for `client_credentials` credentials. */
-  @JsonProperty("metadata")
-  val metadata: Map<String, Any>? = null
+  val config: Map<String, String>? = null
 )
