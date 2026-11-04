@@ -2,6 +2,7 @@
 
 package com.workos.models
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
@@ -11,9 +12,10 @@ data class AuditLogEvent(
   @JsonProperty("action")
   val action: String,
 
-  /** ISO-8601 value of when the action occurred. */
+  /** ISO-8601 value of when the action occurred. When omitted, defaults to the time WorkOS accepts the event. */
   @JsonProperty("occurred_at")
-  val occurredAt: OffsetDateTime,
+  @get:JsonInclude(JsonInclude.Include.NON_NULL)
+  val occurredAt: OffsetDateTime? = null,
 
   /** The entity that performed the action. */
   @JsonProperty("actor")
