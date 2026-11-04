@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** AgentRegistrationClaim model. */
+/** The claim associated with this registration, or `null` if the registration has no claim. */
 data class AgentRegistrationClaim(
   /** Unique identifier of the claim. */
   @JsonProperty("id")

@@ -120,6 +120,12 @@ class GroupsTest : TestBase() {
   }
 
   @Test
+  fun `updateOrganizationMemberships completes without throwing`() {
+    stubResponse("PATCH", "/organizations/sample-arg/groups/sample-arg/organization-memberships", 200)
+    api().updateOrganizationMemberships("sample-arg", "sample-arg")
+  }
+
+  @Test
   fun `deleteOrganizationMembership completes without throwing`() {
     stubResponse("DELETE", "/organizations/sample-arg/groups/sample-arg/organization-memberships/sample-arg", 204)
     api().deleteOrganizationMembership("sample-arg", "sample-arg", "sample-arg")

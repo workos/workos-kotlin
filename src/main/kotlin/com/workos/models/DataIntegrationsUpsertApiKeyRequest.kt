@@ -29,5 +29,13 @@ data class DataIntegrationsUpsertApiKeyRequest(
 
   /** Whose connection to create or rotate. `user` (the default) addresses the connection owned by `user_id`. `organization` addresses the connection shared by every member of `organization_id`; `user_id` then identifies the member performing the request and must be an active member of the organization. */
   @JsonProperty("connection_owner")
-  val connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = null
+  val connectionOwner: DataIntegrationsUpsertApiKeyRequestConnectionOwner? = null,
+
+  /** Send `reauthorize` with `connected_account_id` to reauthorize one exact connection. Omit it to use the compatibility connection; creating another connection lives on the POST route. */
+  @JsonProperty("connection_intent")
+  val connectionIntent: String? = null,
+
+  /** The exact connected account to reauthorize. Required with `connection_intent: reauthorize`; it may also be sent on its own to reauthorize that connection. */
+  @JsonProperty("connected_account_id")
+  val connectedAccountId: String? = null
 )

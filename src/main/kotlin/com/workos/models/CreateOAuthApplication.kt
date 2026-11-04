@@ -30,6 +30,10 @@ data class CreateOAuthApplication(
   @JsonProperty("redirect_uris")
   val redirectUris: List<RedirectUriInput>? = null,
 
+  /** Origins allowed to call the OAuth token endpoint for this application from a browser. */
+  @JsonProperty("cors_origins")
+  val corsOrigins: List<String>? = null,
+
   /** Whether the application uses PKCE (Proof Key for Code Exchange). */
   @JsonProperty("uses_pkce")
   val usesPkce: Boolean? = null,

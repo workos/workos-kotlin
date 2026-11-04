@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** AgentBlueprintsCreateRequest model. */
+/** Configuration for the new agent blueprint. */
 data class AgentBlueprintsCreateRequest(
   /** Human-readable name of the agent blueprint. */
   @JsonProperty("name")

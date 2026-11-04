@@ -46,7 +46,7 @@ class OrganizationMembershipServiceTest : TestBase() {
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
     )
-    val result = api().create("sample-arg", "sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
+    val result = api().create(userId = "sample-arg", organizationId = "sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
     assertNotNull(result)
     assertEquals("organization_membership", result.objectType)
     assertEquals("sample", result.id)
@@ -97,7 +97,7 @@ class OrganizationMembershipServiceTest : TestBase() {
         "\"external_id\": null, \"last_sign_in_at\": null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}}"
     )
-    val result = api().update("sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
+    val result = api().update(id = "sample-arg", createUserRole = CreateUserRole.Single("sample-arg"))
     assertNotNull(result)
     assertEquals("organization_membership", result.objectType)
     assertEquals("sample", result.id)

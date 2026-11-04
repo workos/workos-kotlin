@@ -396,6 +396,59 @@ class Groups(
     }
 
   /**
+   * Update Group members
+   *
+   * Adds and removes organization memberships for a group in a single atomic operation. Organization memberships not listed in `add` or `remove` are left unchanged. Adding a member that is already in the group or removing a member that isn't in the group has no effect. A membership listed in both `add` and `remove` is rejected. `add` and `remove` must contain between 1 and 100 entries combined.
+   *
+   * @param organizationId Unique identifier of the Organization.
+   * @param groupId Unique identifier of the Group.
+   * @param add The IDs of the organization memberships to add to the group. Adding a membership that's already in the group has no effect.
+   * @param remove The IDs of the organization memberships to remove from the group. Removing a membership that isn't in the group has no effect.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun updateOrganizationMemberships(
+    organizationId: String,
+    groupId: String,
+    add: PatchField<List<String>> = PatchField.Absent,
+    remove: PatchField<List<String>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body =
+      patchBodyOf(
+        "add" to add,
+        "remove" to remove
+      )
+    val config =
+      RequestConfig(
+        method = "PATCH",
+        path = "/organizations/${encodePathSegment(organizationId)}/groups/${encodePathSegment(groupId)}/organization-memberships",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateOrganizationMemberships]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateOrganizationMemberships] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateOrganizationMembershipsSuspend")
+  suspend fun updateOrganizationMembershipsSuspend(
+    organizationId: String,
+    groupId: String,
+    add: PatchField<List<String>> = PatchField.Absent,
+    remove: PatchField<List<String>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    updateOrganizationMemberships(organizationId, groupId, add, remove, requestOptions)
+  }
+
+  /**
    * Remove a member from a Group
    *
    * Remove an organization membership from a group.

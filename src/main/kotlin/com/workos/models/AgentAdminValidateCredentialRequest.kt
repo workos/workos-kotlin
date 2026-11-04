@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.AgentAdminValidateCredentialRequestType
 
-/** AgentAdminValidateCredentialRequest model. */
+/** The agent credential to validate. Either an `api_key` or an `access_token`, discriminated by `type`. */
 data class AgentAdminValidateCredentialRequest(
   /** The kind of credential being validated — an agent API key or an agent access token. */
   @JsonProperty("type")

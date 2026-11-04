@@ -74,6 +74,12 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  fun `patchGroupRoleAssignments completes without throwing`() {
+    stubResponse("PATCH", "/authorization/groups/sample-arg/role_assignments", 200)
+    api().patchGroupRoleAssignments("sample-arg")
+  }
+
+  @Test
   fun `deleteGroupRoleAssignments completes without throwing`() {
     stubResponse("DELETE", "/authorization/groups/sample-arg/role_assignments", 204)
     api().deleteGroupRoleAssignments("sample-arg", "sample-arg")
@@ -109,7 +115,12 @@ class AuthorizationTest : TestBase() {
   @Test
   fun `check returns a typed response`() {
     stubResponse("POST", "/authorization/organization_memberships/sample-arg/check", 200, "{\"authorized\": false}")
-    val result = api().check("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
+    val result =
+      api().check(
+        organizationMembershipId = "sample-arg",
+        resourceTarget = ResourceTarget.ById("sample-arg"),
+        permissionSlug = "sample-arg"
+      )
     assertNotNull(result)
     assertEquals(false, result.authorized)
     wireMockRule.verify(
@@ -129,7 +140,12 @@ class AuthorizationTest : TestBase() {
       200,
       "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
     )
-    val result = api().listResourcesForMembership("sample-arg", "sample-arg", parentResource = ParentResource.ById("sample-arg"))
+    val result =
+      api().listResourcesForMembership(
+        organizationMembershipId = "sample-arg",
+        permissionSlug = "sample-arg",
+        parentResource = ParentResource.ById("sample-arg")
+      )
     assertNotNull(result)
     wireMockRule.verify(
       getRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/resources"))
@@ -184,7 +200,12 @@ class AuthorizationTest : TestBase() {
         "{\"type\": \"direct\", \"group_role_assignment_id\": null, \"group\": null}, \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().assignRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
+    val result =
+      api().assignRole(
+        organizationMembershipId = "sample-arg",
+        resourceTarget = ResourceTarget.ById("sample-arg"),
+        roleSlug = "sample-arg"
+      )
     assertNotNull(result)
     assertEquals("role_assignment", result.objectType)
     assertEquals("sample", result.id)
@@ -201,7 +222,7 @@ class AuthorizationTest : TestBase() {
   @Test
   fun `removeRole completes without throwing`() {
     stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments", 204)
-    api().removeRole("sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), "sample-arg")
+    api().removeRole(organizationMembershipId = "sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), roleSlug = "sample-arg")
     wireMockRule.verify(
       deleteRequestedFor(urlPathMatching("/authorization/organization_memberships/sample-arg/role_assignments"))
         .withRequestBody(matchingJsonPath("\$.role_slug"))
@@ -368,9 +389,9 @@ class AuthorizationTest : TestBase() {
     )
     val result =
       api().updateResourceByExternalId(
-        "sample-arg",
-        "sample-arg",
-        "sample-arg",
+        organizationId = "sample-arg",
+        resourceTypeSlug = "sample-arg",
+        externalId = "sample-arg",
         parentResource = ParentResource.ById("sample-arg")
       )
     assertNotNull(result)
@@ -440,10 +461,10 @@ class AuthorizationTest : TestBase() {
     )
     val result =
       api().createResource(
-        "sample-arg",
-        "sample-arg",
-        "sample-arg",
-        "sample-arg",
+        externalId = "sample-arg",
+        name = "sample-arg",
+        resourceTypeSlug = "sample-arg",
+        organizationId = "sample-arg",
         parentResource = ParentResource.ById("sample-arg")
       )
     assertNotNull(result)
@@ -493,7 +514,7 @@ class AuthorizationTest : TestBase() {
         "\"parent_resource_id\": null, \"id\": \"sample\", \"external_id\": \"sample\", \"resource_type_slug\": \"sample\", " +
         "\"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().updateResource("sample-arg", parentResource = ParentResource.ById("sample-arg"))
+    val result = api().updateResource(resourceId = "sample-arg", parentResource = ParentResource.ById("sample-arg"))
     assertNotNull(result)
     assertEquals("authorization_resource", result.objectType)
     assertEquals("sample", result.name)

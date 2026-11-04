@@ -26,7 +26,7 @@ data class EmailCompletionSessionAuthenticateRequest(
   @JsonProperty("grant_type")
   val grantType: String = "urn:workos:oauth:grant-type:email-completion",
 
-  /** The IP address of the user's request. */
+  /** The IP address of the user's request. Required when Radar is in Decision mode. */
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
 

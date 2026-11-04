@@ -863,11 +863,11 @@ class SSO(
   @JvmOverloads
   fun getProfileAndToken(
     code: String? = null,
-    codeVerifier: String? = null,
     subjectToken: String? = null,
     subjectTokenType: String? = null,
     organizationId: String? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    codeVerifier: String? = null
   ): SSOTokenResponse {
     val body =
       bodyOf(
@@ -901,13 +901,13 @@ class SSO(
   @JvmName("getProfileAndTokenSuspend")
   suspend fun getProfileAndTokenSuspend(
     code: String? = null,
-    codeVerifier: String? = null,
     subjectToken: String? = null,
     subjectTokenType: String? = null,
     organizationId: String? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    codeVerifier: String? = null
   ): SSOTokenResponse =
     withContext(Dispatchers.IO) {
-      getProfileAndToken(code, codeVerifier, subjectToken, subjectTokenType, organizationId, requestOptions)
+      getProfileAndToken(code, subjectToken, subjectTokenType, organizationId, requestOptions, codeVerifier)
     }
 }
