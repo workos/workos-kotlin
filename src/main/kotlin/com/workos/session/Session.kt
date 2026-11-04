@@ -9,6 +9,7 @@ import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.source.JWKSourceBuilder
 import com.nimbusds.jose.proc.JWSVerificationKeySelector
 import com.nimbusds.jose.proc.SecurityContext
+import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import com.nimbusds.jwt.proc.DefaultJWTProcessor
 import com.workos.WorkOS
@@ -454,11 +455,22 @@ internal object Jwks {
       }
     return try {
       val claims = processor.process(SignedJWT.parse(accessToken), null)
+      if (!isUserAccessToken(claims)) return false
       if (issuers == null) return true
       val iss = claims.issuer
       iss != null && iss in issuers
     } catch (_: Exception) {
       false
     }
+  }
+
+  // Other token types signed by the same environment key (agent and widget
+  // tokens) must not authenticate a session cookie.
+  private fun isUserAccessToken(claims: JWTClaimsSet): Boolean {
+    val subProfile = claims.getClaim("sub_profile")
+    return claims.getClaim("sid") is String &&
+      claims.getClaim("auth_time") is Number &&
+      (subProfile == null || subProfile == "user") &&
+      claims.getClaim("sub_type") == null
   }
 }
