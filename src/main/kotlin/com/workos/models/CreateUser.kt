@@ -36,7 +36,7 @@ data class CreateUser(
   @JsonProperty("external_id")
   val externalId: String? = null,
 
-  /** The IP address of the user's request. */
+  /** The IP address of the user's request. Required when Radar is in Decision mode. */
   @JsonProperty("ip_address")
   val ipAddress: String? = null,
 
