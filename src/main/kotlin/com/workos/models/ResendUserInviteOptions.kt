@@ -2,12 +2,5 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.workos.types.ResendUserInviteOptionsLocale
-
-/** ResendUserInviteOptions model. */
-data class ResendUserInviteOptions(
-  /** The locale to use when rendering the invitation email. See [supported locales](https://workos.com/docs/authkit/hosted-ui/localization). */
-  @JsonProperty("locale")
-  val locale: ResendUserInviteOptionsLocale? = null
-)
+/** Alias for [SendVerificationEmail]. */
+typealias ResendUserInviteOptions = SendVerificationEmail

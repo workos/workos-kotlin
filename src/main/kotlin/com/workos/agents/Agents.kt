@@ -117,9 +117,9 @@ class Agents(
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
-    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null
   ): AgentBlueprint {
     val body =
       bodyOf(
@@ -154,12 +154,12 @@ class Agents(
     description: String? = null,
     permissions: List<String>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
-    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    invocableAs: AgentBlueprintsCreateRequestInvocableAs? = null
   ): AgentBlueprint =
     withContext(Dispatchers.IO) {
-      createBlueprint(name, description, permissions, invocableBy, invocableAs, sessionSettings, requestOptions)
+      createBlueprint(name, description, permissions, invocableBy, sessionSettings, requestOptions, invocableAs)
     }
 
   /**
@@ -226,9 +226,9 @@ class Agents(
     description: PatchField<String?> = PatchField.Absent,
     permissions: PatchField<List<String>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
-    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent
   ): AgentBlueprint {
     val body =
       patchBodyOf(
@@ -264,12 +264,12 @@ class Agents(
     description: PatchField<String?> = PatchField.Absent,
     permissions: PatchField<List<String>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
-    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    invocableAs: PatchField<AgentBlueprintsUpdateRequestInvocableAs> = PatchField.Absent
   ): AgentBlueprint =
     withContext(Dispatchers.IO) {
-      updateBlueprint(agentBlueprintId, name, description, permissions, invocableBy, invocableAs, sessionSettings, requestOptions)
+      updateBlueprint(agentBlueprintId, name, description, permissions, invocableBy, sessionSettings, requestOptions, invocableAs)
     }
 
   /**

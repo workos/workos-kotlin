@@ -47,6 +47,10 @@ data class ConnectApplication(
   @JsonProperty("redirect_uris")
   val redirectUris: List<ConnectApplicationRedirectUri>? = null,
 
+  /** The CORS origins allowed to call the OAuth token endpoint for this application from a browser. */
+  @JsonProperty("cors_origins")
+  val corsOrigins: List<String>? = null,
+
   /** Whether the application uses PKCE for authorization. */
   @JsonProperty("uses_pkce")
   val usesPkce: Boolean? = null,

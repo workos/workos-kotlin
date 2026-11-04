@@ -4,7 +4,7 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** FlagOwner model. */
+/** The owner of the Feature Flag. */
 data class FlagOwner(
   /** The email address of the flag owner. */
   @JsonProperty("email")

@@ -39,7 +39,7 @@ data class DataIntegrationsCreateClientCredentialsConnectionRequest(
   @JsonProperty("config")
   val config: Map<String, String>? = null,
 
-  /** Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration and otherwise returns 404 `multiple_connections_unavailable`. */
+  /** Must be `add`: this endpoint only creates another connection. The first connection for an owner shape fills the compatibility slot; later connections are standard. */
   @JsonProperty("connection_intent")
   val connectionIntent: String = "add"
 )

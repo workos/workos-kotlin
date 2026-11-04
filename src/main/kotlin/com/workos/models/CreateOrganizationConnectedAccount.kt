@@ -40,7 +40,7 @@ data class CreateOrganizationConnectedAccount(
   @JsonProperty("state")
   val state: CreateOrganizationConnectedAccountState? = null,
 
-  /** Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. Creating an additional connection is not yet available: until it is, `add` succeeds only when the owner has no connection for this integration, which creates the compatibility connection, and otherwise returns 404 `multiple_connections_unavailable`. */
+  /** Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. */
   @JsonProperty("connection_intent")
   val connectionIntent: String? = null
 )

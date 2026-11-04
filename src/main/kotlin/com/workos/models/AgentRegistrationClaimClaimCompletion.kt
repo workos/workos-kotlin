@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-/** AgentRegistrationClaimClaimCompletion model. */
+/** The completion record for the claim, or `null` if the claim has not been completed. */
 data class AgentRegistrationClaimClaimCompletion(
   /** Unique identifier of the claim completion. */
   @JsonProperty("id")

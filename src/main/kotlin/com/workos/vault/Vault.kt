@@ -220,7 +220,7 @@ class Vault(
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
       addIfNotNull("search", search)
-      updatedAfter?.let { add("updatedAfter" to it.toString()) }
+      updatedAfter?.let { add("updatedAfter" to it.toInstant().toString()) }
     }
   }
 

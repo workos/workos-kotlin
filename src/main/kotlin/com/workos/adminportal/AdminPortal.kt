@@ -39,10 +39,10 @@ class AdminPortal(
     organization: String,
     returnUrl: String? = null,
     successUrl: String? = null,
-    externalUserId: String? = null,
     intent: GenerateLinkIntent? = null,
     itContactEmails: List<String>? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    externalUserId: String? = null
   ): PortalLinkResponse {
     val body =
       bodyOf(
@@ -76,13 +76,13 @@ class AdminPortal(
     organization: String,
     returnUrl: String? = null,
     successUrl: String? = null,
-    externalUserId: String? = null,
     intent: GenerateLinkIntent? = null,
     itContactEmails: List<String>? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    externalUserId: String? = null
   ): PortalLinkResponse =
     withContext(Dispatchers.IO) {
-      generateLink(organization, returnUrl, successUrl, externalUserId, intent, itContactEmails, requestOptions)
+      generateLink(organization, returnUrl, successUrl, intent, itContactEmails, requestOptions, externalUserId)
     }
 
   /**

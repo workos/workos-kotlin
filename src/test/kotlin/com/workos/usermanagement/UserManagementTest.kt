@@ -426,7 +426,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().create("sample-arg", createUserPassword = CreateUserPassword.Plaintext("sample-arg"))
+    val result = api().create(email = "sample-arg", createUserPassword = CreateUserPassword.Plaintext("sample-arg"))
     assertNotNull(result)
     assertEquals("user", result.objectType)
     assertEquals("sample", result.id)
@@ -488,7 +488,7 @@ class UserManagementTest : TestBase() {
         "\"sample\", \"email_verified\": false, \"external_id\": null, \"last_sign_in_at\": null, \"created_at\": " +
         "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().update("sample-arg", createUserPassword = CreateUserPassword.Plaintext("sample-arg"))
+    val result = api().update(id = "sample-arg", createUserPassword = CreateUserPassword.Plaintext("sample-arg"))
     assertNotNull(result)
     assertEquals("user", result.objectType)
     assertEquals("sample", result.id)
@@ -907,9 +907,15 @@ class UserManagementTest : TestBase() {
 
   @Test
   fun `listWaitlists returns a typed response`() {
-    stubResponse("GET", "/user_management/waitlists", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    stubResponse(
+      "GET",
+      "/user_management/waitlists",
+      200,
+      "{\"object\": \"list\", \"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}"
+    )
     val result = api().listWaitlists()
     assertNotNull(result)
+    assertEquals("list", result.objectType)
   }
 
   @Test

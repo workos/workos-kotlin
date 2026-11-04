@@ -37,5 +37,13 @@ data class DataIntegrationsUpsertClientCredentialsRequest(
 
   /** Provider-specific configuration values collected for this installation, keyed by the provider's config field descriptors. */
   @JsonProperty("config")
-  val config: Map<String, String>? = null
+  val config: Map<String, String>? = null,
+
+  /** Send `reauthorize` with `connected_account_id` to reauthorize one exact connection. Omit it to use the compatibility connection; creating another connection lives on the POST route. */
+  @JsonProperty("connection_intent")
+  val connectionIntent: String? = null,
+
+  /** The exact connected account to reauthorize. Required with `connection_intent: reauthorize`; it may also be sent on its own to reauthorize that connection. */
+  @JsonProperty("connected_account_id")
+  val connectedAccountId: String? = null
 )

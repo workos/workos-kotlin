@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.AgentBlueprintsTokenMintTokenRequestType
 
-/** AgentBlueprintsTokenMintTokenRequest model. */
+/** How to mint the agent session, discriminated by `type`. `intent` is optional on every variant. */
 data class AgentBlueprintsTokenMintTokenRequest(
   /** How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`. */
   @JsonProperty("type")

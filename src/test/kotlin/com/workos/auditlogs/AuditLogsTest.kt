@@ -36,7 +36,7 @@ class AuditLogsTest : TestBase() {
     stubResponse("PUT", "/organizations/sample-arg/audit_logs_retention", 200, "{\"retention_period_in_days\": null}")
     val result =
       api().updateAuditLogsRetention(
-        "sample-arg",
+        id = "sample-arg",
         retention =
           Retention.Period(
             UpdateAuditLogsRetentionRetentionPeriod.values().first {
@@ -95,7 +95,12 @@ class AuditLogsTest : TestBase() {
       "{\"object\": \"audit_log_export\", \"id\": \"sample\", \"state\": \"pending\", \"created_at\": \"2024-01-01T00:00:00Z\", " +
         "\"updated_at\": \"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().createExport("sample-arg", OffsetDateTime.now(), OffsetDateTime.now())
+    val result =
+      api().createExport(
+        "sample-arg",
+        OffsetDateTime.parse("2024-01-01T00:00:00Z"),
+        OffsetDateTime.parse("2024-01-01T00:00:00Z")
+      )
     assertNotNull(result)
     assertEquals("audit_log_export", result.objectType)
     assertEquals("sample", result.id)
