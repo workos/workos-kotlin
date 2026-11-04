@@ -3,6 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.workos.types.DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent
 import com.workos.types.DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner
 
 /** DataIntegrationsGetDataIntegrationAuthorizeUrlRequest model. */
@@ -23,11 +24,27 @@ data class DataIntegrationsGetDataIntegrationAuthorizeUrlRequest(
   @JsonProperty("connection_owner")
   val connectionOwner: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionOwner? = null,
 
-  /** The URL to redirect the user to after authorization. */
+  /** The URL to redirect the user to after authorization. Required with `code_challenge`, and must then exactly match a redirect URI registered on one of the environment's applications. Loopback URLs match on any port; wildcard redirect URIs are not honored, and a `return_to` with a query string or fragment never matches. */
   @JsonProperty("return_to")
   val returnTo: String? = null,
 
+  /** A PKCE-style code challenge: the base64url-encoded SHA-256 of a `code_verifier` your app keeps. When set, the connection isn't saved when the user finishes authorizing. Instead, the user is redirected to `return_to` with a `connect_code` and `state`, and your app must call [Finish connection](https://workos.com/docs/reference/pipes/connected-account/finish-connection) with the `connect_code` and `code_verifier` within 90 seconds to save it. */
+  @JsonProperty("code_challenge")
+  val codeChallenge: String? = null,
+
+  /** The method used to derive `code_challenge`. Only `S256` is supported, and it is the default. Requires `code_challenge`. */
+  @JsonProperty("code_challenge_method")
+  val codeChallengeMethod: String? = null,
+
   /** Connect-time config values for the provider-declared `installation`-scope fields (e.g. a Zendesk `subdomain`), keyed by the config field. Only fields the provider declares may be supplied, and required fields must be provided unless already pinned on the integration. */
   @JsonProperty("config")
-  val config: Map<String, String>? = null
+  val config: Map<String, String>? = null,
+
+  /** Which connection the request targets. Omit it to use the compatibility connection. Send `add` to create another connection: the first connection for an owner shape fills the compatibility slot, and later connections are standard. Send `reauthorize` with `connected_account_id` to reauthorize one exact connection. */
+  @JsonProperty("connection_intent")
+  val connectionIntent: DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent? = null,
+
+  /** The exact connected account to reauthorize. Required with `connection_intent: reauthorize` and not accepted otherwise. */
+  @JsonProperty("connected_account_id")
+  val connectedAccountId: String? = null
 )

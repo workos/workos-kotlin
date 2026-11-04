@@ -5,7 +5,7 @@ package com.workos.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.workos.types.DataIntegrationCustomProviderAuthenticateVia
 
-/** DataIntegrationCustomProvider model. */
+/** The OAuth definition when this is a custom provider; `null` for built-in providers. */
 data class DataIntegrationCustomProvider(
   /** A descriptive name for the custom provider. */
   @JsonProperty("name")

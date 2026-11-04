@@ -7,7 +7,7 @@ import com.workos.types.DataIntegrationsListResponseDataConnectedAccountAuthMeth
 import com.workos.types.DataIntegrationsListResponseDataConnectedAccountConnectionRole
 import com.workos.types.DataIntegrationsListResponseDataConnectedAccountState
 
-/** DataIntegrationsListResponseDataConnectedAccount model. */
+/** The user's compatibility [connected account](https://workos.com/docs/reference/pipes/connected-account) for this provider, or `null` when the compatibility slot is empty. This legacy field never selects a standard connection. */
 data class DataIntegrationsListResponseDataConnectedAccount(
   /** The unique identifier of the connected account. */
   @JsonProperty("id")
@@ -84,5 +84,9 @@ data class DataIntegrationsListResponseDataConnectedAccount(
 
   /** Why WorkOS put the connection in its current `state`, or `null` when there is no WorkOS-recorded reason: */
   @JsonProperty("state_reason")
-  val stateReason: String? = null
+  val stateReason: String? = null,
+
+  /** Non-blocking warnings about an explicitly supplied label. Only writes return it, and only when another connection already uses the label; reads omit it. */
+  @JsonProperty("warnings")
+  val warnings: List<DataIntegrationsListResponseDataConnectedAccountWarning>? = null
 )
