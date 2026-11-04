@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.6.0](https://github.com/workos/workos-kotlin/compare/v7.5.0...v7.6.0) (2026-11-04)
+
+
+### Features
+
+* **events:** Change events API surface ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+* **feature_flags:** Add feature flag API surface ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+* **pipes:** Change Pipes API surface ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+* **user_management:** Change user management API surface ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+* **webhooks:** Add webhook API surface ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+
+
+### Bug Fixes
+
+* **events:** Updated model `EventSchema` ([#458](https://github.com/workos/workos-kotlin/issues/458)) ([7174f44](https://github.com/workos/workos-kotlin/commit/7174f44a23d2e508026fab67518104d63515de97))
+
 ## [7.5.0](https://github.com/workos/workos-kotlin/compare/v7.4.0...v7.5.0) (2026-10-19)
 
 ### Bug Fixes
