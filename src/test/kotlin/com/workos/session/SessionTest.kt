@@ -156,6 +156,27 @@ class SessionTest : TestBase() {
   }
 
   @Test
+  fun `authenticate rejects tokens without user access token claims`() {
+    listOf(
+      mapOf("sub_profile" to "ai_agent"),
+      mapOf("sub_type" to "authkit"),
+      mapOf("auth_time" to null),
+      mapOf("auth_time" to "1700000000"),
+      mapOf("sid" to null),
+      mapOf("sid" to 123)
+    ).forEach { claims ->
+      val result = authenticateWithClaims(claims)
+      val failure = result as? AuthenticateSessionResult.Failure ?: error("expected failure for $claims")
+      assertEquals(AuthenticateSessionFailureReason.INVALID_JWT, failure.reason)
+    }
+  }
+
+  @Test
+  fun `authenticate accepts a user sub_profile`() {
+    assertTrue(authenticateWithClaims(mapOf("sub_profile" to "user")) is AuthenticateSessionResult.Success)
+  }
+
+  @Test
   fun `authenticate ignores the issuer when none is configured`() {
     val result = authenticateWithIssuers(issuers = null, iss = "https://issuer.example")
     assertTrue(result is AuthenticateSessionResult.Success)
@@ -347,6 +368,16 @@ class SessionTest : TestBase() {
     }
   }
 
+  private fun authenticateWithClaims(claims: Map<String, Any?>): AuthenticateSessionResult {
+    val workos = workOSForTest()
+    val rsaKey = RSAKeyGenerator(2048).keyID("k1").keyUse(KeyUse.SIGNATURE).generate()
+    stubJwks(clientIdOf(workos), jwksJson(rsaKey))
+    val accessToken = signJwt(rsaKey, sessionId = "sess_claims", orgId = null, extraClaims = claims)
+    val cookieJson = mapper.writeValueAsString(mapOf("accessToken" to accessToken, "refreshToken" to "r"))
+    val sealed = Iron.seal(cookieJson, cookiePassword)
+    return workos.session.authenticateWithSessionCookie(sealed, cookiePassword)
+  }
+
   private fun authenticateWithIssuers(
     issuers: List<String>?,
     iss: String?
@@ -379,7 +410,8 @@ class SessionTest : TestBase() {
     key: RSAKey,
     sessionId: String,
     orgId: String?,
-    issuer: String? = "https://api.workos.com/"
+    issuer: String? = "https://api.workos.com/",
+    extraClaims: Map<String, Any?> = emptyMap()
   ): String {
     val claimsBuilder =
       JWTClaimsSet
@@ -388,7 +420,8 @@ class SessionTest : TestBase() {
         .jwtID(UUID.randomUUID().toString())
         .issueTime(Date())
         .expirationTime(Date(System.currentTimeMillis() + 60_000))
-        .claim("sid", sessionId)
+    val claims = mapOf<String, Any?>("sid" to sessionId, "auth_time" to System.currentTimeMillis() / 1000) + extraClaims
+    claims.forEach { (name, value) -> if (value != null) claimsBuilder.claim(name, value) }
     if (orgId != null) claimsBuilder.claim("org_id", orgId)
     if (issuer != null) claimsBuilder.issuer(issuer)
     val jwt =
