@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.6.1](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.6.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **session:** Reject non-user access tokens in session cookies ([#460](https://github.com/workos/workos-kotlin/issues/460)) ([ff014b7](https://github.com/workos/workos-kotlin/commit/ff014b7ad9ca11b73f751c2c2253d267564f8d8e))
+
 ## [7.6.0](https://github.com/workos/workos-kotlin/compare/v7.5.0...v7.6.0) (2026-11-04)
 
 * [#458](https://github.com/workos/workos-kotlin/pull/458) feat(generated)!: regenerate from spec (6 changes)
