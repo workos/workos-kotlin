@@ -22,7 +22,7 @@ import java.net.SocketAddress
 import java.net.URI
 import java.util.concurrent.atomic.AtomicInteger
 
-/** Conformance cases WIF-GCP-01 and WIF-GCP-02, against a local mock of the metadata server. */
+/** Conformance cases WIF-GCP-01 to WIF-GCP-03, against a local mock of the metadata server. */
 class WIFGcpMetadataTest {
   private fun provider(audience: String = "https://api.workos.com") = gcpMetadata(audience, metadata.baseUrl())
 
@@ -81,7 +81,7 @@ class WIFGcpMetadataTest {
   }
 
   @Test
-  fun `the request never goes through a proxy`() {
+  fun `WIF-GCP-03 the request never goes through a proxy`() {
     metadata.stubFor(get(urlPathEqualTo(IDENTITY_PATH)).willReturn(aResponse().withStatus(200).withBody("gcp-jwt")))
     // The JVM's default proxy selector is what -Dhttp.proxyHost and the system
     // proxy settings turn into. This one sends every request to a server that
