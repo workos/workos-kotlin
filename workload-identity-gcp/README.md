@@ -31,4 +31,6 @@ val workos = WorkloadIdentity.client(credentials)
 
 It works wherever the metadata server is reachable: Compute Engine, GKE, Cloud Run, Cloud Functions and App Engine. From Java, the factory is `GcpMetadata.gcpMetadata(audience)`.
 
+The request to the metadata server never goes through a proxy, whatever the JVM's proxy settings are. That server exists only inside the workload's own VM or container, so a proxy cannot reach it.
+
 See [Workload identity](../README.md#workload-identity) in the SDK's README for every setting and for error handling.

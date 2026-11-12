@@ -15,6 +15,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Proxy
+import java.net.ProxySelector
+import java.net.SocketAddress
+import java.net.URI
+import java.util.concurrent.atomic.AtomicInteger
 
 /** Conformance cases WIF-GCP-01 and WIF-GCP-02, against a local mock of the metadata server. */
 class WIFGcpMetadataTest {
@@ -70,6 +76,42 @@ class WIFGcpMetadataTest {
 
     assertThrows(IOException::class.java) { provider().getToken() }
 
+    assertEquals(1, metadata.findAll(anyRequestedFor(anyUrl())).size)
+    assertEquals(0, elsewhere.findAll(anyRequestedFor(anyUrl())).size)
+  }
+
+  @Test
+  fun `the request never goes through a proxy`() {
+    metadata.stubFor(get(urlPathEqualTo(IDENTITY_PATH)).willReturn(aResponse().withStatus(200).withBody("gcp-jwt")))
+    // The JVM's default proxy selector is what -Dhttp.proxyHost and the system
+    // proxy settings turn into. This one sends every request to a server that
+    // must never be contacted.
+    val asked = AtomicInteger()
+    val original = ProxySelector.getDefault()
+    ProxySelector.setDefault(
+      object : ProxySelector() {
+        override fun select(uri: URI): List<Proxy> {
+          asked.incrementAndGet()
+          return listOf(Proxy(Proxy.Type.HTTP, InetSocketAddress("localhost", elsewhere.port)))
+        }
+
+        override fun connectFailed(
+          uri: URI,
+          address: SocketAddress,
+          failure: IOException
+        ) = Unit
+      }
+    )
+
+    val token =
+      try {
+        provider().getToken()
+      } finally {
+        ProxySelector.setDefault(original)
+      }
+
+    assertEquals("gcp-jwt", token)
+    assertEquals(0, asked.get())
     assertEquals(1, metadata.findAll(anyRequestedFor(anyUrl())).size)
     assertEquals(0, elsewhere.findAll(anyRequestedFor(anyUrl())).size)
   }

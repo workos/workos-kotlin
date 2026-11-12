@@ -40,6 +40,10 @@ private val TIMEOUT: Duration = Duration.ofSeconds(10)
  * The provider makes one request per call, with a 10-second timeout and no
  * redirects. It does not cache and does not retry; the SDK calls it again
  * when an exchange attempt fails.
+ *
+ * The request never goes through a proxy, whatever the JVM's proxy settings
+ * are (`http.proxyHost`, `java.net.useSystemProxies`, or a default
+ * `ProxySelector`).
  */
 fun gcpMetadata(audience: String): IdentityTokenProvider = gcpMetadata(audience, METADATA_BASE_URL)
 
@@ -50,11 +54,16 @@ internal fun gcpMetadata(
   baseUrl: String
 ): IdentityTokenProvider {
   require(audience.isNotBlank()) { "audience is required" }
+  // The metadata server is an address inside the workload's own VM or
+  // container. A proxy is another machine: it cannot reach that server, and it
+  // could answer with its own identity. Without `proxy(...)` the client would
+  // ask the JVM's default ProxySelector, so it is told to use none.
   val http =
     HttpClient
       .newBuilder()
       .followRedirects(HttpClient.Redirect.NEVER)
       .connectTimeout(TIMEOUT)
+      .proxy(HttpClient.Builder.NO_PROXY)
       .build()
   val request =
     HttpRequest
