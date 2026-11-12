@@ -1,3 +1,6 @@
 {
-  ".": "7.6.0"
+  ".": "7.6.0",
+  "workload-identity-github-actions": "0.0.0",
+  "workload-identity-gcp": "0.0.0",
+  "workload-identity-aws": "0.0.0"
 }

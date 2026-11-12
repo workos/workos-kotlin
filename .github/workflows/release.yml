@@ -8,15 +8,28 @@ defaults:
   run:
     shell: bash
 
+# release-please creates one GitHub release per package, and each release
+# fires this workflow once. The tag says which package it is: the SDK is
+# tagged vX.Y.Z, and a workload identity provider is tagged
+# <artifact>-vX.Y.Z. Exactly one job below runs per release, and it publishes
+# only its own Gradle project (note the project path before each task name).
+# An unqualified `publishAndReleaseToMavenCentral` would upload all four
+# artifacts on every release, at whatever version each build file holds.
+#
+# The providers require the SDK through a version range. When an SDK release
+# and a provider release are both pending, merge the SDK's release PR first,
+# so the SDK version the provider needs is already on Maven Central. Each
+# provider job checks that before it publishes and fails if it is not there.
 jobs:
   test:
     name: Publish to Maven
+    if: startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Run Tests
         run: |
-          ./gradlew test --info
+          ./gradlew :test --info
 
       - name: Decode signing key
         env:
@@ -37,4 +50,118 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
-        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
+        run: ./gradlew :publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
+
+  publish-workload-identity-github-actions:
+    name: Publish workos-workload-identity-github-actions to Maven
+    if: startsWith(github.event.release.tag_name, 'workos-workload-identity-github-actions-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      # This job cannot wait for the SDK's publish job, which is a different
+      # workflow run. If the SDK version this provider requires is not on
+      # Maven Central yet, stop here; re-run the job once it is.
+      - name: Check that the required SDK version is on Maven Central
+        run: |
+          ./script/check-sdk-published workload-identity-github-actions
+
+      - name: Run Tests
+        run: |
+          ./gradlew :workload-identity-github-actions:test --info
+
+      - name: Decode signing key
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+        run: |
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
+
+      - name: Publish
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew :workload-identity-github-actions:publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
+
+  publish-workload-identity-gcp:
+    name: Publish workos-workload-identity-gcp to Maven
+    if: startsWith(github.event.release.tag_name, 'workos-workload-identity-gcp-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      # This job cannot wait for the SDK's publish job, which is a different
+      # workflow run. If the SDK version this provider requires is not on
+      # Maven Central yet, stop here; re-run the job once it is.
+      - name: Check that the required SDK version is on Maven Central
+        run: |
+          ./script/check-sdk-published workload-identity-gcp
+
+      - name: Run Tests
+        run: |
+          ./gradlew :workload-identity-gcp:test --info
+
+      - name: Decode signing key
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+        run: |
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
+
+      - name: Publish
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew :workload-identity-gcp:publishAndReleaseToMavenCentral --no-configuration-cache -Prelease
+
+  publish-workload-identity-aws:
+    name: Publish workos-workload-identity-aws to Maven
+    if: startsWith(github.event.release.tag_name, 'workos-workload-identity-aws-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      # This job cannot wait for the SDK's publish job, which is a different
+      # workflow run. If the SDK version this provider requires is not on
+      # Maven Central yet, stop here; re-run the job once it is.
+      - name: Check that the required SDK version is on Maven Central
+        run: |
+          ./script/check-sdk-published workload-identity-aws
+
+      - name: Run Tests
+        run: |
+          ./gradlew :workload-identity-aws:test --info
+
+      - name: Decode signing key
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+        run: |
+          DECODED="$(echo "$MAVEN_SIGNING_KEY" | base64 --decode)"
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$DECODED"
+          {
+            echo "ORG_GRADLE_PROJECT_signingInMemoryKey<<__EOF__"
+            echo "$DECODED"
+            echo "__EOF__"
+          } >> "$GITHUB_ENV"
+
+      - name: Publish
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_USER_NAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew :workload-identity-aws:publishAndReleaseToMavenCentral --no-configuration-cache -Prelease

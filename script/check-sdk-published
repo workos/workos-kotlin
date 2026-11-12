@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Usage: script/check-sdk-published <provider module directory>
+#
+# Fails unless Maven Central already has an SDK release inside the version
+# range that the provider module declares for com.workos:workos.
+#
+# A provider's publish job runs this first. The SDK and each provider are
+# released by separate workflow runs, so one publish job cannot wait for
+# another; without this check, a provider released before the SDK version it
+# needs would ship a POM that nobody can resolve.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+module="${1:?usage: script/check-sdk-published <provider module directory>}"
+build_file="$module/build.gradle.kts"
+metadata_url="https://repo1.maven.org/maven2/com/workos/workos/maven-metadata.xml"
+
+[ -f "$build_file" ] || { echo "No build file at $build_file" >&2; exit 1; }
+
+# The declaration looks like: api("com.workos:workos:[7.7.0,8.0.0)")
+range="$(grep -oE 'com\.workos:workos:\[[0-9]+\.[0-9]+\.[0-9]+,[0-9]+\.[0-9]+\.[0-9]+\)' "$build_file" | head -n 1 || true)"
+if [ -z "$range" ]; then
+  echo "No com.workos:workos version range of the form [X.Y.Z,X.Y.Z) in $build_file" >&2
+  exit 1
+fi
+range="${range#com.workos:workos:}"
+lower="${range#[}"
+lower="${lower%%,*}"
+upper="${range##*,}"
+upper="${upper%)}"
+
+versions="$(curl -fsSL --retry 3 "$metadata_url" | { grep -oE '<version>[0-9]+\.[0-9]+\.[0-9]+</version>' || true; } | sed -E 's#</?version>##g')"
+
+# True when version $1 is greater than or equal to version $2.
+at_least() {
+  [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -n 1)" = "$2" ]
+}
+
+for version in $versions; do
+  if at_least "$version" "$lower" && ! at_least "$version" "$upper"; then
+    echo "com.workos:workos $version is on Maven Central and satisfies $range."
+    exit 0
+  fi
+done
+
+echo "Maven Central has no com.workos:workos release in $range, which $module requires." >&2
+echo "Publish the SDK release first, wait for it to appear on Maven Central, then re-run this job." >&2
+exit 1
