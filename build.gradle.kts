@@ -155,6 +155,10 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEa
 
 tasks.withType<Test>().configureEach {
   useJUnitPlatform()
+  // The workload identity conformance tests (WIF-19, WIF-20) assert that a
+  // client built with credentials never sends the environment's API key. A
+  // JVM cannot set its own environment, so the test JVM is started with one.
+  environment("WORKOS_API_KEY", "sk_test_env")
 }
 
 mavenPublishing {

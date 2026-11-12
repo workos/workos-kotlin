@@ -105,6 +105,136 @@ Java-friendly overloads that take the discriminating fields directly
 (`workos.getAuthorization().checkByExternalId(...)`) so you do not have to
 construct the variant class explicitly.
 
+## Workload identity
+
+A workload that already has an identity from its platform (a GitHub Actions
+job, a Google Cloud service account, an AWS role) can call WorkOS without a
+stored API key. The SDK exchanges the platform's identity token for a
+short-lived WorkOS access token, keeps it in memory, and refreshes it before
+it expires.
+
+Add the provider for your platform next to the SDK. Each provider is its own
+artifact with its own version:
+
+```kotlin
+dependencies {
+  implementation("com.workos:workos:VERSION")
+  implementation("com.workos:workos-workload-identity-github-actions:VERSION")
+  // or "com.workos:workos-workload-identity-gcp:VERSION"
+  // or "com.workos:workos-workload-identity-aws:VERSION"
+}
+```
+
+Build the credentials, then build the client from them with
+`WorkloadIdentity.client` instead of the `WorkOS` constructor:
+
+```kotlin
+import com.workos.workloadidentity.WorkloadIdentity
+import com.workos.workloadidentity.WorkloadIdentityCredentials
+import com.workos.workloadidentity.githubactions.githubActions
+
+val credentials = WorkloadIdentityCredentials(
+  identityTokenProvider = githubActions("https://api.workos.com"),
+  clientId = "client_123",
+  tokenUrl = "https://auth.example.com/oauth2/token",
+  environmentId = "environment_123",
+)
+val workos = WorkloadIdentity.client(credentials)
+
+workos.organizations.list()
+```
+
+| Setting                 | Required | Default                  | Description                                    |
+| ----------------------- | -------- | ------------------------ | ---------------------------------------------- |
+| `identityTokenProvider` | yes      | none                     | Returns the workload's identity token (a JWT). |
+| `clientId`              | yes      | `WORKOS_CLIENT_ID`       | The M2M application's client ID.               |
+| `tokenUrl`              | yes      | `WORKOS_WIF_TOKEN_URL`   | The token exchange endpoint.                   |
+| `environmentId`         | yes      | `WORKOS_ENVIRONMENT_ID`  | The WorkOS environment ID.                     |
+| `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
+| `scope`                 | no       | `WORKOS_WIF_SCOPE`       | The scope to request. Left out when empty.     |
+
+A value you pass always wins over the environment variable. A missing
+required setting is an error when the credentials are constructed.
+
+### Providers
+
+Each factory takes the audience the identity token is issued for. The
+conventional audience is `https://api.workos.com`.
+
+```kotlin
+// GitHub Actions. The workflow or job needs `permissions: id-token: write`.
+import com.workos.workloadidentity.githubactions.githubActions
+
+val provider = githubActions("https://api.workos.com")
+```
+
+```kotlin
+// Google Cloud: Compute Engine, GKE, Cloud Run, Cloud Functions, App Engine.
+import com.workos.workloadidentity.gcp.gcpMetadata
+
+val provider = gcpMetadata("https://api.workos.com")
+```
+
+```kotlin
+// AWS. The role needs `sts:GetWebIdentityToken`. The region is optional when
+// the AWS SDK can find one (`AWS_REGION`, the shared config file).
+import com.workos.workloadidentity.aws.awsSts
+
+val provider = awsSts("https://api.workos.com", region = "us-east-1")
+```
+
+For any other platform, read the token from a file or an environment
+variable, or pass a lambda. The provider is called again for every exchange,
+so a token that the platform rotates is picked up:
+
+```kotlin
+import com.workos.workloadidentity.IdentityTokenProvider
+import com.workos.workloadidentity.tokenEnv
+import com.workos.workloadidentity.tokenFile
+
+val fromFile = tokenFile("/var/run/secrets/tokens/workos")
+val fromEnvironment = tokenEnv("MY_PLATFORM_JWT")
+val custom = IdentityTokenProvider { fetchJwtFromMyPlatform() }
+```
+
+### Java usage
+
+```java
+import com.workos.WorkOS;
+import com.workos.workloadidentity.WorkloadIdentity;
+import com.workos.workloadidentity.WorkloadIdentityCredentials;
+import com.workos.workloadidentity.githubactions.GitHubActions;
+
+WorkloadIdentityCredentials credentials = WorkloadIdentityCredentials.builder()
+    .identityTokenProvider(GitHubActions.githubActions("https://api.workos.com"))
+    .clientId("client_123")
+    .tokenUrl("https://auth.example.com/oauth2/token")
+    .environmentId("environment_123")
+    .build();
+WorkOS workos = WorkloadIdentity.client(credentials);
+```
+
+The other factories are `GcpMetadata.gcpMetadata(audience)`,
+`AwsSts.awsSts(audience, region)`, `IdentityTokenProviders.tokenFile(path)`
+and `IdentityTokenProviders.tokenEnv(name)`. A Java lambda works as an
+`IdentityTokenProvider` too.
+
+### What to expect
+
+- The client never sends an API key. `WorkloadIdentity.client` takes none,
+  and `WORKOS_API_KEY` is not read. If the credentials fail, the request
+  fails; nothing falls back to a key.
+- Methods that send the API key as a `client_secret` (the SSO and User
+  Management code exchanges) cannot be used on this client.
+- A 401 from the API makes the SDK fetch a new access token and retry the
+  request once.
+- A failure to get an access token is a
+  `com.workos.common.exceptions.WorkloadIdentityException`. Its `code` is the
+  OAuth error code from the token endpoint (for example `invalid_grant`) or
+  one of `exchange_failed`, `invalid_response`, `provider_failed` and
+  `invalid_configuration`; `hint` says what to check. Neither token ever
+  appears in an error.
+
 ## Service accessors
 
 Once constructed, every WorkOS API surface is available as a property on the `WorkOS` instance.
@@ -189,6 +319,10 @@ Every API error deserializes into a typed subclass of
 | 5xx         | `com.workos.common.exceptions.GenericServerException`       |
 | other       | `com.workos.common.exceptions.WorkOSGenericException`       |
 | transport   | `com.workos.common.exceptions.TransportException`           |
+
+A client built with [workload identity](#workload-identity) can also throw
+`com.workos.common.exceptions.WorkloadIdentityException`, which is a
+`WorkOSException` too.
 
 `TransportException` (status `0`) is thrown when the SDK cannot reach the
 API at all — IOExceptions, timeouts, DNS or TLS failures.

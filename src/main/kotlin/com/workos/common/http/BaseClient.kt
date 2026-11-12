@@ -39,6 +39,7 @@ private val FORM_MEDIA_TYPE = "application/x-www-form-urlencoded".toMediaType()
  *  - retry policy (exponential backoff with jitter, honoring `Retry-After`)
  *  - automatic idempotency keys for retried POSTs that lacked one
  *  - per-request option honoring (headers, base URL, timeout, maxRetries, idempotencyKey, apiKey)
+ *  - one credential-recovery allowance per logical request, shared by every retry attempt
  *  - response deserialization and error translation into [WorkOSException] subclasses
  */
 open class BaseClient(
@@ -176,11 +177,18 @@ open class BaseClient(
     // on every attempt.
     val effectiveClient = applyPerRequestTimeout(config.requestOptions)
 
+    // One credential-recovery allowance per logical request. Every attempt
+    // below is a new OkHttp call, so a credentials interceptor runs once per
+    // attempt and cannot own the allowance itself; it reads and sets this
+    // object, which rides on each attempt as a request tag.
+    val authorizationOverride = config.accessToken ?: config.requestOptions?.apiKey
+    val credentialRecovery = CredentialRecovery(authorizationOverridden = !authorizationOverride.isNullOrBlank())
+
     var attempt = 0
     val requestStartedAt = System.nanoTime()
     val timeoutBudgetMs = config.requestOptions?.timeoutMillis
     while (true) {
-      val request = buildRequest(config, effectiveIdempotencyKey)
+      val request = buildRequest(config, effectiveIdempotencyKey, credentialRecovery)
       val outcome: AttemptOutcome
       val response: Response?
       try {
@@ -223,7 +231,8 @@ open class BaseClient(
 
   private fun buildRequest(
     config: RequestConfig,
-    idempotencyKey: String?
+    idempotencyKey: String?,
+    credentialRecovery: CredentialRecovery
   ): Request {
     val effectiveBase = config.requestOptions?.baseUrl ?: apiBaseUrl
     val url =
@@ -267,13 +276,18 @@ open class BaseClient(
         .Builder()
         .url(urlBuilder.build())
         .method(method, okBody)
+        .tag(CredentialRecovery::class.java, credentialRecovery)
 
     // Authorization: bearer override (per-op token) > per-request apiKey > client apiKey
     val effectiveApiKey =
       config.accessToken
         ?: config.requestOptions?.apiKey
         ?: apiKey
-    builder.header("Authorization", "Bearer $effectiveApiKey")
+    // A blank key means there is no static key to send: the client was built
+    // with credentials, whose interceptor sets Authorization on each attempt.
+    if (effectiveApiKey.isNotBlank()) {
+      builder.header("Authorization", "Bearer $effectiveApiKey")
+    }
     builder.header("User-Agent", userAgent)
     builder.header("Accept", "application/json")
     if (idempotencyKey != null) {
