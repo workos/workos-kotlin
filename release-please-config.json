@@ -18,6 +18,7 @@
       "release-type": "simple",
       "component": "workos-workload-identity-github-actions",
       "package-name": "workos-workload-identity-github-actions",
+      "initial-version": "0.1.0",
       "include-component-in-tag": true,
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
@@ -31,6 +32,7 @@
       "release-type": "simple",
       "component": "workos-workload-identity-gcp",
       "package-name": "workos-workload-identity-gcp",
+      "initial-version": "0.1.0",
       "include-component-in-tag": true,
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
@@ -44,6 +46,7 @@
       "release-type": "simple",
       "component": "workos-workload-identity-aws",
       "package-name": "workos-workload-identity-aws",
+      "initial-version": "0.1.0",
       "include-component-in-tag": true,
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
