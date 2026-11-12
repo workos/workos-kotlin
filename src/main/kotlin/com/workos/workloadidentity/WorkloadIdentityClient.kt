@@ -49,7 +49,9 @@ object WorkloadIdentity {
    * @param clientId optional WorkOS client ID, as on [WorkOS].
    * @param apiBaseUrl base URL for all API requests.
    * @param httpClient the OkHttp client to build on. Its settings and interceptors are kept;
-   *   the credentials are added to a copy, so the client passed in is not changed.
+   *   the credentials are added to a copy, so the client passed in is not changed. The token
+   *   exchange does not use it: if the token endpoint needs the same proxy or TLS settings,
+   *   also pass the client as the `httpClient` of [WorkloadIdentityCredentials].
    * @param retryConfig retry policy applied to transient HTTP failures.
    */
   @JvmStatic

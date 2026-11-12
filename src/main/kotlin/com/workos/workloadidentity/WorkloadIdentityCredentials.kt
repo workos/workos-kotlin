@@ -11,6 +11,9 @@ import com.workos.common.http.CredentialSnapshot
 import com.workos.common.http.Credentials
 import com.workos.common.http.RetryConfig
 import com.workos.common.http.RetryPolicy
+import okhttp3.Authenticator
+import okhttp3.CookieJar
+import okhttp3.EventListener
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -77,6 +80,11 @@ private val JSON = ObjectMapper()
  * demand when it nears expiry. Concurrent callers share one exchange. Two
  * instances never share a token, even with the same configuration.
  *
+ * The token exchange makes its own HTTP call and does not go through the API
+ * client. If the token endpoint is only reachable through a proxy or with a
+ * custom trust store, pass an `OkHttpClient` that has those settings as
+ * `httpClient`.
+ *
  * @throws WorkloadIdentityException with code `invalid_configuration` when a
  *   required setting is missing after the environment is consulted.
  */
@@ -87,6 +95,7 @@ class WorkloadIdentityCredentials internal constructor(
   environmentId: String?,
   resource: String?,
   scope: String?,
+  httpClient: OkHttpClient?,
   env: (String) -> String?,
   private val nanoTime: () -> Long,
   private val sleeper: (Long) -> Unit,
@@ -101,6 +110,12 @@ class WorkloadIdentityCredentials internal constructor(
    * @param environmentId the WorkOS environment ID. Defaults to `WORKOS_ENVIRONMENT_ID`.
    * @param resource the resource the access token is for. Defaults to `https://api.workos.com`.
    * @param scope the scope to request. Defaults to `WORKOS_WIF_SCOPE`; left out of the exchange when empty.
+   * @param httpClient an OkHttp client whose connection settings the token exchange uses: proxy and proxy
+   *   authenticator, TLS, DNS, connection pool, and connect, read and write timeouts. Pass it when the token
+   *   endpoint is only reachable with those settings; [WorkloadIdentity.client] does not pass its own client
+   *   on. Its interceptors, event listener, authenticator, cookie jar, cache and call timeout are not used,
+   *   redirects are never followed, and the client passed in is not changed. An identity token provider
+   *   that makes HTTP calls of its own does not use it.
    */
   @JvmOverloads
   constructor(
@@ -109,7 +124,8 @@ class WorkloadIdentityCredentials internal constructor(
     tokenUrl: String? = null,
     environmentId: String? = null,
     resource: String? = null,
-    scope: String? = null
+    scope: String? = null,
+    httpClient: OkHttpClient? = null
   ) : this(
     identityTokenProvider = identityTokenProvider,
     clientId = clientId,
@@ -117,6 +133,7 @@ class WorkloadIdentityCredentials internal constructor(
     environmentId = environmentId,
     resource = resource,
     scope = scope,
+    httpClient = httpClient,
     env = { System.getenv(it) },
     nanoTime = { System.nanoTime() },
     sleeper = { Thread.sleep(it) },
@@ -150,15 +167,27 @@ class WorkloadIdentityCredentials internal constructor(
         "tokenUrl is not a valid http or https URL (it comes from the tokenUrl setting or $ENV_TOKEN_URL)"
       )
 
-  // The exchange has its own client: no redirects, and none of the
-  // interceptors a caller may have installed on the API client. OkHttp's
-  // silent retry of a failed connection is off, because every retry must go
-  // through the exchange loop, which calls the provider again. The call
-  // timeout bounds a single attempt; the whole exchange is bounded in
-  // startExchange.
-  private val httpClient: OkHttpClient =
-    OkHttpClient
-      .Builder()
+  // The exchange has its own client. When the caller gives one, the exchange
+  // client is a copy of it, so the exchange goes through the same proxy
+  // (with its proxy authenticator), TLS setup, DNS and connection pool. The
+  // copy then drops every hook that could change or read the request:
+  // interceptors and the event listener (written for API calls, they may add
+  // the API's headers or read the request, and the body here holds the
+  // identity token), the authenticator (it would resend a 401 with other
+  // credentials), cookies and the cache. No redirects. OkHttp's silent retry
+  // of a failed connection is off, because every retry must go through the
+  // exchange loop, which calls the provider again. The call timeout bounds a
+  // single attempt and replaces the caller's; the whole exchange is bounded
+  // in startExchange.
+  private val exchangeClient: OkHttpClient =
+    (httpClient?.newBuilder() ?: OkHttpClient.Builder())
+      .apply {
+        interceptors().clear()
+        networkInterceptors().clear()
+      }.eventListener(EventListener.NONE)
+      .authenticator(Authenticator.NONE)
+      .cookieJar(CookieJar.NO_COOKIES)
+      .cache(null)
       .followRedirects(false)
       .followSslRedirects(false)
       .retryOnConnectionFailure(false)
@@ -371,7 +400,7 @@ class WorkloadIdentityCredentials internal constructor(
 
     val reply =
       try {
-        httpClient.newCall(request).execute().use { response ->
+        exchangeClient.newCall(request).execute().use { response ->
           TokenEndpointReply(response.code, response.header("Retry-After"), response.body.string())
         }
       } catch (e: IOException) {
@@ -494,6 +523,7 @@ class WorkloadIdentityCredentials internal constructor(
     private var environmentId: String? = null
     private var resource: String? = null
     private var scope: String? = null
+    private var httpClient: OkHttpClient? = null
 
     /** Set the provider that returns the workload's identity token (required). */
     fun identityTokenProvider(provider: IdentityTokenProvider): Builder = apply { identityTokenProvider = provider }
@@ -514,6 +544,13 @@ class WorkloadIdentityCredentials internal constructor(
     fun scope(scope: String): Builder = apply { this.scope = scope }
 
     /**
+     * Set the OkHttp client whose connection settings the token exchange uses: proxy and proxy authenticator,
+     * TLS, DNS, connection pool, and connect, read and write timeouts. Its interceptors, event listener,
+     * authenticator, cookie jar, cache and call timeout are not used.
+     */
+    fun httpClient(httpClient: OkHttpClient): Builder = apply { this.httpClient = httpClient }
+
+    /**
      * Build the credentials. Throws [WorkloadIdentityException] with code
      * `invalid_configuration` when a required setting is missing.
      */
@@ -524,7 +561,7 @@ class WorkloadIdentityCredentials internal constructor(
             WorkloadIdentityException.INVALID_CONFIGURATION,
             "identityTokenProvider is required"
           )
-      return WorkloadIdentityCredentials(provider, clientId, tokenUrl, environmentId, resource, scope)
+      return WorkloadIdentityCredentials(provider, clientId, tokenUrl, environmentId, resource, scope, httpClient)
     }
   }
 

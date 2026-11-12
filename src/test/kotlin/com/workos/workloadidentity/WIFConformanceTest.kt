@@ -31,6 +31,12 @@ import com.workos.common.http.Credentials
 import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.RetryConfig
+import okhttp3.Call
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.Dns
+import okhttp3.EventListener
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -47,6 +53,8 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.net.InetAddress
+import java.net.Proxy
 import java.net.URLDecoder
 import java.nio.file.Files
 import java.nio.file.Path
@@ -87,6 +95,7 @@ class WIFConformanceTest {
     environmentId: String? = ENVIRONMENT_ID,
     resource: String? = null,
     scope: String? = null,
+    httpClient: OkHttpClient? = null,
     env: (String) -> String? = { null },
     exchangeDeadlineMillis: Long = 30_000
   ): WorkloadIdentityCredentials =
@@ -97,6 +106,7 @@ class WIFConformanceTest {
       environmentId = environmentId,
       resource = resource,
       scope = scope,
+      httpClient = httpClient,
       env = env,
       nanoTime = { clock.get() },
       sleeper = { sleeps += it },
@@ -975,6 +985,154 @@ class WIFConformanceTest {
     assertEquals("organizations:read", form["scope"])
     val unset = assertThrows(WorkloadIdentityException::class.java) { WorkloadIdentityCredentials.builder().build() }
     assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, unset.code)
+  }
+
+  // ------------------------------------------------------ httpClient setting
+
+  @Test
+  fun `the exchange uses the connection settings of the httpClient setting`() {
+    stubTokens()
+    stubApi(apiOk())
+    // Only this client's DNS can resolve the token endpoint's host name, so
+    // the exchange succeeds only if it is made with this client's settings.
+    val host = "token-endpoint.invalid"
+    val lookups = CopyOnWriteArrayList<String>()
+    val dns =
+      object : Dns {
+        override fun lookup(hostname: String): List<InetAddress> {
+          lookups += hostname
+          return if (hostname == host) listOf(InetAddress.getLoopbackAddress()) else Dns.SYSTEM.lookup(hostname)
+        }
+      }
+    val credentials =
+      WorkloadIdentityCredentials
+        .builder()
+        .identityTokenProvider { "assertion-1" }
+        .clientId(CLIENT_ID)
+        .tokenUrl("http://$host:${api.port}$TOKEN_PATH")
+        .environmentId(ENVIRONMENT_ID)
+        .httpClient(
+          OkHttpClient
+            .Builder()
+            .dns(dns)
+            .proxy(Proxy.NO_PROXY)
+            .build()
+        ).build()
+
+    getThings(client(credentials))
+
+    assertEquals(listOf(host), lookups.toList())
+    assertEquals("assertion-1", exchangeForms().single()["assertion"])
+    assertEquals(1, apiAttemptsWith("access-1"))
+  }
+
+  @Test
+  fun `the exchange does not run the interceptors or event listener or authenticator or cookie jar of the httpClient setting`() {
+    stubTokenEndpoint(
+      aResponse().withStatus(401).withHeader("Content-Type", "application/json").withBody("""{"error": "invalid_client"}""")
+    )
+    stubApi(apiOk())
+    val ran = CopyOnWriteArrayList<String>()
+    val eventListener =
+      object : EventListener() {
+        override fun callStart(call: Call) {
+          ran += "event listener"
+        }
+      }
+    val cookieJar =
+      object : CookieJar {
+        override fun loadForRequest(url: HttpUrl): List<Cookie> {
+          ran += "cookie jar"
+          return listOf(
+            Cookie
+              .Builder()
+              .name("session")
+              .value("from-cookie-jar")
+              .domain(url.host)
+              .build()
+          )
+        }
+
+        override fun saveFromResponse(
+          url: HttpUrl,
+          cookies: List<Cookie>
+        ) {
+          ran += "cookie jar"
+        }
+      }
+    val httpClient =
+      OkHttpClient
+        .Builder()
+        .eventListener(eventListener)
+        .cookieJar(cookieJar)
+        .addInterceptor { chain ->
+          ran += "interceptor"
+          chain.proceed(
+            chain
+              .request()
+              .newBuilder()
+              .header("Authorization", "Bearer sk_from_interceptor")
+              .build()
+          )
+        }.addNetworkInterceptor { chain ->
+          ran += "network interceptor"
+          chain.proceed(chain.request())
+        }.authenticator { _, response ->
+          ran += "authenticator"
+          if (response.request.header("Authorization") != null) {
+            null
+          } else {
+            response.request
+              .newBuilder()
+              .header("Authorization", "Bearer sk_from_authenticator")
+              .build()
+          }
+        }.build()
+
+    val error =
+      assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(httpClient = httpClient))) }
+
+    assertEquals("invalid_client", error.code)
+    assertEquals(emptyList<String>(), ran.toList())
+    val exchange = exchanges().single()
+    assertFalse(exchange.containsHeader("Authorization"))
+    assertFalse(exchange.containsHeader("Cookie"))
+    assertEquals(0, apiAttempts().size)
+  }
+
+  @Test
+  fun `the exchange keeps its own redirect and retry rules with the httpClient setting`() {
+    // A default OkHttpClient follows redirects, and silently resends a request
+    // when the pooled connection it used fails. The exchange must do neither,
+    // whichever client it is given. The first exchange leaves a connection in
+    // the pool, so the reset hits a connection that has already served a call:
+    // the case OkHttp resends on every machine. The numeric address keeps the
+    // number of routes at one.
+    stubTokenEndpoint(
+      tokenSuccess("access-1"),
+      aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER),
+      aResponse().withStatus(307).withHeader("Location", "${elsewhere.baseUrl()}$TOKEN_PATH")
+    )
+    stubApi(apiOk())
+    elsewhere.stubFor(any(anyUrl()).willReturn(tokenSuccess("access-from-elsewhere")))
+    val providerCalls = AtomicInteger()
+    val workos =
+      client(
+        credentials(
+          provider = { "assertion-${providerCalls.incrementAndGet()}" },
+          tokenUrl = "http://127.0.0.1:${api.port}$TOKEN_PATH",
+          httpClient = OkHttpClient()
+        )
+      )
+    getThings(workos)
+    advanceClockTo(300)
+
+    val error = assertThrows(WorkloadIdentityException::class.java) { getThings(workos) }
+
+    assertEquals(WorkloadIdentityException.EXCHANGE_FAILED, error.code)
+    assertEquals(3, providerCalls.get())
+    assertEquals(0, elsewhere.findAll(anyRequestedFor(anyUrl())).size)
+    assertEquals(1, apiAttempts().size)
   }
 
   @Test

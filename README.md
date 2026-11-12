@@ -152,9 +152,32 @@ workos.organizations.list()
 | `environmentId`         | yes      | `WORKOS_ENVIRONMENT_ID`  | The WorkOS environment ID.                     |
 | `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
 | `scope`                 | no       | `WORKOS_WIF_SCOPE`       | The scope to request. Left out when empty.     |
+| `httpClient`            | no       | none                     | Proxy, TLS and DNS settings for the exchange.  |
 
 A value you pass always wins over the environment variable. A missing
 required setting is an error when the credentials are constructed.
+
+The token exchange makes its own HTTP call; it does not go through the API
+client. If your network needs a proxy or a custom trust store, pass the same
+`OkHttpClient` to the credentials and to the client:
+
+```kotlin
+val httpClient = OkHttpClient.Builder().proxy(proxy).build()
+
+val credentials = WorkloadIdentityCredentials(
+  identityTokenProvider = githubActions("https://api.workos.com"),
+  // clientId, tokenUrl and environmentId as above
+  httpClient = httpClient,
+)
+val workos = WorkloadIdentity.client(credentials, httpClient = httpClient)
+```
+
+The exchange uses the client's connection settings: proxy and proxy
+authenticator, TLS, DNS, connection pool, and connect, read and write
+timeouts. It does not run the client's interceptors, event listener or
+authenticator, does not use its cookie jar, cache or call timeout (each
+attempt has its own 30-second limit), and never follows a redirect. The
+platform providers make their own HTTP calls and do not use this client.
 
 ### Providers
 
