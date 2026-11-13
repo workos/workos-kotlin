@@ -12,6 +12,10 @@ enum class AgentAdminValidateCredentialRequestType(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
+
+  /** The kind of credential being validated — an agent API key or an agent access token. */
   ApiKey("api_key"),
+
+  /** The kind of credential being validated — an agent API key or an agent access token. */
   AccessToken("access_token")
 }

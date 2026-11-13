@@ -380,8 +380,8 @@ class AuditLogs(
    * Create an Audit Log Export. Exports are scoped to a single organization within a specified date range.
    *
    * @param organizationId The unique ID of the Organization.
-   * @param rangeStart ISO-8601 value for start of the export range.
-   * @param rangeEnd ISO-8601 value for end of the export range.
+   * @param rangeStart ISO-8601 value for start of the export range. The range must span no more than 31 days.
+   * @param rangeEnd ISO-8601 value for end of the export range. Must be no more than 31 days after the start.
    * @param actions List of actions to filter against.
    * @param actors **Deprecated.** Deprecated. Use `actor_names` instead.
    * @param actorNames List of actor names to filter against.

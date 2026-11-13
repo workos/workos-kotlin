@@ -12,5 +12,9 @@ data class AuthenticationMFAFailedDataError(
 
   /** A human-readable error message. */
   @JsonProperty("message")
-  val message: String
+  val message: String,
+
+  /** The ID of the Radar detection that blocked the authentication. Only set on `policy_denied` errors. */
+  @JsonProperty("radar_detection_id")
+  val radarDetectionId: String? = null
 )

@@ -43,7 +43,7 @@ data class DataIntegrationsListResponseData(
 
   /** Use `connection_owner` instead. Legacy spelling of the same value: `userland_user` corresponds to `connection_owner: "user"` and `organization` to `connection_owner: "organization"`. */
   @JsonProperty("ownership")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated. Use `connection_owner` instead.")
   val ownership: DataIntegrationsListResponseDataOwnership,
 
   /** The timestamp when the provider was created. */

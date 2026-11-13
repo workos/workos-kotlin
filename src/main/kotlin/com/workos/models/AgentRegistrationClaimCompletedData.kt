@@ -36,5 +36,9 @@ data class AgentRegistrationClaimCompletedData(
 
   /** Distinguishes the agent registration claim object. */
   @JsonProperty("object")
-  val objectType: String = "agent_registration_claim"
+  val objectType: String = "agent_registration_claim",
+
+  /** The ID of the organization the registration belongs to. */
+  @JsonProperty("organization_id")
+  val organizationId: String? = null
 )

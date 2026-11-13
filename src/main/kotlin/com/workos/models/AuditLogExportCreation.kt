@@ -11,11 +11,11 @@ data class AuditLogExportCreation(
   @JsonProperty("organization_id")
   val organizationId: String,
 
-  /** ISO-8601 value for start of the export range. */
+  /** ISO-8601 value for start of the export range. The range must span no more than 31 days. */
   @JsonProperty("range_start")
   val rangeStart: OffsetDateTime,
 
-  /** ISO-8601 value for end of the export range. */
+  /** ISO-8601 value for end of the export range. Must be no more than 31 days after the start. */
   @JsonProperty("range_end")
   val rangeEnd: OffsetDateTime,
 

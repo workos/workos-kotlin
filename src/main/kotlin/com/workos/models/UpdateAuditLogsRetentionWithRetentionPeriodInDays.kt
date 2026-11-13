@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class UpdateAuditLogsRetentionWithRetentionPeriodInDays(
   /** The number of days Audit Log events will be retained. Valid values are `30` through `330` in 30-day increments and `365` through `3650` in 365-day increments. Deprecated: use `retention_period` instead. Mutually exclusive with `retention_period`. */
   @JsonProperty("retention_period_in_days")
-  @Deprecated(
-    "The number of days Audit Log events will be retained. Valid values are `30` through `330` in 30-day increments and `365` through `3650` in 365-day increments. Deprecated: use `retention_period` instead. Mutually exclusive with `retention_period`."
-  )
+  @Deprecated("Deprecated. use `retention_period` instead.")
   val retentionPeriodInDays: Long
 )

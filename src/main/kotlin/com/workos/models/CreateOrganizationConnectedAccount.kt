@@ -20,6 +20,10 @@ data class CreateOrganizationConnectedAccount(
   @JsonProperty("account_identifier")
   val accountIdentifier: String? = null,
 
+  /** Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections. */
+  @JsonProperty("config")
+  val config: Map<String, String>? = null,
+
   /** The OAuth access token for the connected account. */
   @JsonProperty("access_token")
   val accessToken: String? = null,
@@ -39,6 +43,10 @@ data class CreateOrganizationConnectedAccount(
   /** Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided. */
   @JsonProperty("state")
   val state: CreateOrganizationConnectedAccountState? = null,
+
+  /** Provider token-response metadata to preserve during import, such as Salesforce instance_url. Only allowlisted, non-sensitive scalar fields from this provider are accepted, including nested fields. Provider refresh responses can update these values. Not accepted on update. */
+  @JsonProperty("metadata")
+  val metadata: Map<String, Any>? = null,
 
   /** Set to `add` to create another connected account. Omit this field for permanent compatibility behavior. */
   @JsonProperty("connection_intent")

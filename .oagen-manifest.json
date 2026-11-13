@@ -692,7 +692,7 @@
     "src/main/kotlin/com/workos/models/SSODeviceAuthorizationRequest.kt",
     "src/main/kotlin/com/workos/models/SSOLogoutAuthorizeRequest.kt",
     "src/main/kotlin/com/workos/models/SSOLogoutAuthorizeResponse.kt",
-    "src/main/kotlin/com/workos/models/SSORequiredOAuthErrorBodyWithConnectionIdsListEmailPendingAuthenticationToken.kt",
+    "src/main/kotlin/com/workos/models/SSORequiredOAuthErrorBodyWithConnectionIdsListEmail.kt",
     "src/main/kotlin/com/workos/models/SSOTokenResponse.kt",
     "src/main/kotlin/com/workos/models/SSOTokenResponseOAuthToken.kt",
     "src/main/kotlin/com/workos/models/SendEmailChange.kt",
@@ -899,6 +899,7 @@
     "src/main/kotlin/com/workos/types/DataIntegrationInstallationConnectionRole.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationOwnership.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationState.kt",
+    "src/main/kotlin/com/workos/types/DataIntegrationVendedCredentialAuthMethod.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsCreateApiKeyConnectionRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsCreateClientCredentialsConnectionRequestConnectionOwner.kt",
     "src/main/kotlin/com/workos/types/DataIntegrationsGetDataIntegrationAuthorizeUrlRequestConnectionIntent.kt",
@@ -978,6 +979,7 @@
     "src/main/kotlin/com/workos/types/PipeConnectedAccountConnectionRole.kt",
     "src/main/kotlin/com/workos/types/PipeConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/PipesOwnership.kt",
+    "src/main/kotlin/com/workos/types/PipesProviderOwnership.kt",
     "src/main/kotlin/com/workos/types/ProfileConnectionType.kt",
     "src/main/kotlin/com/workos/types/RadarListAction.kt",
     "src/main/kotlin/com/workos/types/RadarListType.kt",
@@ -1524,19 +1526,19 @@
       "sdkMethod": "create",
       "service": "directorySync"
     },
-    "GET /directory_groups": {
+    "GET /directories/{directoryId}/groups": {
       "sdkMethod": "listGroups",
       "service": "directorySync"
     },
-    "GET /directory_groups/{id}": {
+    "GET /directories/{directoryId}/groups/{groupId}": {
       "sdkMethod": "getGroup",
       "service": "directorySync"
     },
-    "GET /directory_users": {
+    "GET /directories/{directoryId}/users": {
       "sdkMethod": "listUsers",
       "service": "directorySync"
     },
-    "GET /directory_users/{id}": {
+    "GET /directories/{directoryId}/users/{userId}": {
       "sdkMethod": "getUser",
       "service": "directorySync"
     },
@@ -2173,6 +2175,22 @@
     "GET /audit_logs/exports/{auditLogExportId}": {
       "sdkMethod": "getExport",
       "service": "auditLogs"
+    },
+    "GET /directory_groups": {
+      "sdkMethod": "listGroups",
+      "service": "directorySync"
+    },
+    "GET /directory_groups/{id}": {
+      "sdkMethod": "getGroup",
+      "service": "directorySync"
+    },
+    "GET /directory_users": {
+      "sdkMethod": "listUsers",
+      "service": "directorySync"
+    },
+    "GET /directory_users/{id}": {
+      "sdkMethod": "getUser",
+      "service": "directorySync"
     }
   }
 }

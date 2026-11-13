@@ -9,6 +9,7 @@ import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
 import com.workos.models.DataIntegrationConfigurationListResponse
 import com.workos.models.DataIntegrationConfigurationResponse
+import com.workos.types.PipesOwnership
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -26,6 +27,7 @@ class PipesProvider(
    * Returns a list of all providers available to the specified organization, along with any configured custom OAuth scopes, enabled state, and organization-managed credentials where applicable.
    *
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier to list provider configurations for.
+   * @param ownership Select the provider configuration for `user` connections or `organization` shared connections. Defaults to `user`; never falls back to the other ownership.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DataIntegrationConfigurationListResponse
@@ -33,12 +35,16 @@ class PipesProvider(
   @JvmOverloads
   fun listOrganizationDataIntegrationConfigurations(
     organizationId: String,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    ownership: PipesOwnership? = null
   ): DataIntegrationConfigurationListResponse {
+    val params = mutableListOf<Pair<String, String>>()
+    ownership?.let { params += "ownership" to it.value }
     val config =
       RequestConfig(
         method = "GET",
         path = "/organizations/${encodePathSegment(organizationId)}/data_integration_configurations",
+        queryParams = params,
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DataIntegrationConfigurationListResponse::class.java)
@@ -55,10 +61,11 @@ class PipesProvider(
   @JvmName("listOrganizationDataIntegrationConfigurationsSuspend")
   suspend fun listOrganizationDataIntegrationConfigurationsSuspend(
     organizationId: String,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    ownership: PipesOwnership? = null
   ): DataIntegrationConfigurationListResponse =
     withContext(Dispatchers.IO) {
-      listOrganizationDataIntegrationConfigurations(organizationId, requestOptions)
+      listOrganizationDataIntegrationConfigurations(organizationId, requestOptions, ownership)
     }
 
   /**
@@ -68,6 +75,7 @@ class PipesProvider(
    *
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier to configure the provider for.
    * @param slug The slug identifier of the provider to configure (e.g., `github`, `slack`, `notion`).
+   * @param ownership Select the provider configuration for `user` connections or `organization` shared connections. Defaults to `user`; never falls back to the other ownership.
    * @param enabled Whether the provider is enabled for the organization.
    * @param scopes The OAuth scopes to request for the organization. Pass `null` to inherit the provider scopes.
    * @param clientId The OAuth client ID of the organization's own application. Must be provided together with `client_secret`, and only for providers whose credentials are supplied by the organization.
@@ -86,8 +94,11 @@ class PipesProvider(
     clientId: String? = null,
     clientSecret: String? = null,
     config: Map<String, String>? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    ownership: PipesOwnership? = null
   ): DataIntegrationConfigurationResponse {
+    val params = mutableListOf<Pair<String, String>>()
+    ownership?.let { params += "ownership" to it.value }
     val body =
       bodyOf(
         "enabled" to enabled,
@@ -100,6 +111,7 @@ class PipesProvider(
       RequestConfig(
         method = "PUT",
         path = "/organizations/${encodePathSegment(organizationId)}/data_integration_configurations/${encodePathSegment(slug)}",
+        queryParams = params,
         body = body,
         requestOptions = requestOptions
       )
@@ -123,9 +135,20 @@ class PipesProvider(
     clientId: String? = null,
     clientSecret: String? = null,
     config: Map<String, String>? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    ownership: PipesOwnership? = null
   ): DataIntegrationConfigurationResponse =
     withContext(Dispatchers.IO) {
-      updateOrganizationDataIntegrationConfiguration(organizationId, slug, enabled, scopes, clientId, clientSecret, config, requestOptions)
+      updateOrganizationDataIntegrationConfiguration(
+        organizationId,
+        slug,
+        enabled,
+        scopes,
+        clientId,
+        clientSecret,
+        config,
+        requestOptions,
+        ownership
+      )
     }
 }

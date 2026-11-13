@@ -37,5 +37,9 @@ data class AuthenticationRadarRiskDetectedData(
 
   /** The email address of the user. */
   @JsonProperty("email")
-  val email: String
+  val email: String,
+
+  /** The ID of the Radar detection that challenged the authentication. */
+  @JsonProperty("radar_detection_id")
+  val radarDetectionId: String? = null
 )
