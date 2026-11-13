@@ -874,6 +874,7 @@
     "src/main/kotlin/com/workos/types/ConnectionStatus.kt",
     "src/main/kotlin/com/workos/types/ConnectionType.kt",
     "src/main/kotlin/com/workos/types/ConnectionsConnectionType.kt",
+    "src/main/kotlin/com/workos/types/ConnectionsState.kt",
     "src/main/kotlin/com/workos/types/CreateConnectedAccountState.kt",
     "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsIdTokenSignatureAlgorithm.kt",
     "src/main/kotlin/com/workos/types/CreateConnectionOidcOptionsTokenAuthenticationMethod.kt",
