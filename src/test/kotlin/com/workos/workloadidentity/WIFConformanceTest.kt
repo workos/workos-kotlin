@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -245,11 +246,11 @@ class WIFConformanceTest {
 
     // A new instance with a scope sends it.
     api.resetRequests()
-    getThings(client(credentials(scope = "organizations:write")))
+    getThings(client(credentials(scope = "orgs:write")))
 
     assertEquals(1, exchangeCount())
     val scoped = form(exchanges().single())
-    assertEquals("organizations:write", scoped["scope"])
+    assertEquals("orgs:write", scoped["scope"])
     assertFalse(scoped.containsKey("client_secret"))
     assertFalse(exchanges().single().containsHeader("Authorization"))
   }
@@ -264,6 +265,29 @@ class WIFConformanceTest {
     val attempt = apiAttempts().single()
     assertEquals("Bearer access-1", attempt.getHeader("Authorization"))
     assertEquals(ENVIRONMENT_ID, attempt.getHeader("x-url-environment-id"))
+  }
+
+  @Test
+  fun `WIF-02 without an environment ID the API request carries the access token and no environment header`() {
+    stubTokens()
+    stubApi(apiOk())
+
+    // No environment ID is passed and WORKOS_ENVIRONMENT_ID is unset. Constructing the credentials is not an error.
+    val unset = credentials(environmentId = null, env = { null })
+    assertNull(unset.environmentId)
+    getThings(client(unset))
+
+    val attempt = apiAttempts().single()
+    assertEquals("Bearer access-1", attempt.getHeader("Authorization"))
+    assertFalse(attempt.containsHeader("x-url-environment-id"))
+
+    // An empty string counts as not set, whether it is passed or comes from the environment.
+    api.resetRequests()
+    val empty = credentials(environmentId = "", env = { name -> if (name == "WORKOS_ENVIRONMENT_ID") "" else null })
+    assertNull(empty.environmentId)
+    getThings(client(empty))
+
+    assertFalse(apiAttempts().single().containsHeader("x-url-environment-id"))
   }
 
   @Test

@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-/** Header that carries the environment ID on every API request made with workload identity credentials. */
+/** Header that carries the environment ID on API requests made with workload identity credentials, when one is set. */
 private const val ENVIRONMENT_HEADER = "x-url-environment-id"
 
 private const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
@@ -76,6 +76,13 @@ private val JSON = ObjectMapper()
  * value passed here always wins. The configuration cannot change after
  * construction; build a new instance to change it.
  *
+ * `environmentId` is optional. The server binds the application to exactly
+ * one environment and takes the environment from that binding, so the
+ * `x-url-environment-id` header selects nothing. Setting it is a safety
+ * check: the header is then sent on every API request, and a value that
+ * names a different environment gets `403 environment_mismatch`. When it is
+ * not set, the header is not sent. An empty string counts as not set.
+ *
  * The access token is cached in memory on this instance and refreshed on
  * demand when it nears expiry. Concurrent callers share one exchange. Two
  * instances never share a token, even with the same configuration.
@@ -107,7 +114,11 @@ class WorkloadIdentityCredentials internal constructor(
    * @param identityTokenProvider returns the workload's identity token. See [tokenFile], [tokenEnv], or pass a lambda.
    * @param clientId the M2M application's client ID. Defaults to `WORKOS_CLIENT_ID`.
    * @param tokenUrl the token exchange endpoint. Defaults to `WORKOS_WIF_TOKEN_URL`; there is no built-in default.
-   * @param environmentId the WorkOS environment ID. Defaults to `WORKOS_ENVIRONMENT_ID`.
+   * @param environmentId the WorkOS environment ID. Optional; defaults to `WORKOS_ENVIRONMENT_ID`. When set, it is
+   *   sent as the `x-url-environment-id` header on every API request. The server takes the environment from the
+   *   application, which is bound to exactly one, so the header selects nothing: setting it is a safety check, and
+   *   a value that names a different environment gets `403 environment_mismatch`. When it is not set, or is empty,
+   *   the header is not sent.
    * @param resource the resource the access token is for. Defaults to `https://api.workos.com`.
    * @param scope the scope to request. Defaults to `WORKOS_WIF_SCOPE`; left out of the exchange when empty.
    * @param httpClient an OkHttp client whose connection settings the token exchange uses: proxy and proxy
@@ -148,9 +159,13 @@ class WorkloadIdentityCredentials internal constructor(
   @JvmField
   val tokenUrl: String = required(tokenUrl, env, "tokenUrl", ENV_TOKEN_URL)
 
-  /** The WorkOS environment ID, sent as a header on every API request. */
+  /**
+   * The WorkOS environment ID, or `null` when none is set. When set, it is sent as the `x-url-environment-id`
+   * header on every API request.
+   */
   @JvmField
-  val environmentId: String = required(environmentId, env, "environmentId", ENV_ENVIRONMENT_ID)
+  val environmentId: String? =
+    environmentId?.takeIf { it.isNotBlank() } ?: env(ENV_ENVIRONMENT_ID)?.takeIf { it.isNotBlank() }
 
   /** The resource the access token is requested for. */
   @JvmField
@@ -213,10 +228,11 @@ class WorkloadIdentityCredentials internal constructor(
     val current = currentToken(timeoutMillis)
     return CredentialSnapshot(
       headers =
-        mapOf(
-          "Authorization" to "Bearer ${current.token}",
-          ENVIRONMENT_HEADER to environmentId
-        ),
+        buildMap {
+          put("Authorization", "Bearer ${current.token}")
+          // The environment header is sent only when an environment ID is set.
+          environmentId?.let { put(ENVIRONMENT_HEADER, it) }
+        },
       generation = current.generation,
       recoverable = true
     )
@@ -534,7 +550,11 @@ class WorkloadIdentityCredentials internal constructor(
     /** Set the token exchange endpoint. Defaults to `WORKOS_WIF_TOKEN_URL`. */
     fun tokenUrl(tokenUrl: String): Builder = apply { this.tokenUrl = tokenUrl }
 
-    /** Set the WorkOS environment ID. Defaults to `WORKOS_ENVIRONMENT_ID`. */
+    /**
+     * Set the WorkOS environment ID. Optional; defaults to `WORKOS_ENVIRONMENT_ID`. When set, it is sent as the
+     * `x-url-environment-id` header on every API request, as a safety check: a value that names a different
+     * environment from the one the application is bound to gets `403 environment_mismatch`.
+     */
     fun environmentId(environmentId: String): Builder = apply { this.environmentId = environmentId }
 
     /** Set the resource the access token is for. Defaults to `https://api.workos.com`. */

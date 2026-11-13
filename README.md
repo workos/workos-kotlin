@@ -149,13 +149,20 @@ workos.organizations.list()
 | `identityTokenProvider` | yes      | none                     | Returns the workload's identity token (a JWT). |
 | `clientId`              | yes      | `WORKOS_CLIENT_ID`       | The M2M application's client ID.               |
 | `tokenUrl`              | yes      | `WORKOS_WIF_TOKEN_URL`   | The token exchange endpoint.                   |
-| `environmentId`         | yes      | `WORKOS_ENVIRONMENT_ID`  | The WorkOS environment ID.                     |
+| `environmentId`         | no       | `WORKOS_ENVIRONMENT_ID`  | The WorkOS environment ID. A safety check.     |
 | `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
 | `scope`                 | no       | `WORKOS_WIF_SCOPE`       | The scope to request. Left out when empty.     |
 | `httpClient`            | no       | none                     | Proxy, TLS and DNS settings for the exchange.  |
 
 A value you pass always wins over the environment variable. A missing
 required setting is an error when the credentials are constructed.
+
+`environmentId` is optional. The server binds the application to exactly one
+environment and takes the environment from that binding, so the
+`x-url-environment-id` header selects nothing. Setting `environmentId` is a
+safety check: the SDK then sends the header on every API request, and a value
+that names a different environment gets `403 environment_mismatch`. When it
+is not set, the header is not sent. An empty string counts as not set.
 
 The token exchange makes its own HTTP call; it does not go through the API
 client. If your network needs a proxy or a custom trust store, pass the same
@@ -219,6 +226,15 @@ val fromFile = tokenFile("/var/run/secrets/tokens/workos")
 val fromEnvironment = tokenEnv("MY_PLATFORM_JWT")
 val custom = IdentityTokenProvider { fetchJwtFromMyPlatform() }
 ```
+
+The server accepts an identity token for one exchange. The SDK exchanges
+again about every four minutes. If the file or the variable still holds the
+same token at the next exchange, that exchange fails with `invalid_grant`. So
+use `tokenFile` and `tokenEnv` for a source that something rewrites before
+each exchange, or for a job shorter than five minutes. A JVM reads its
+environment once, when it starts, so `tokenEnv` returns the same token for the
+life of the process and fits only the short job. The platform providers
+(GitHub Actions, GCP, AWS) fetch a new token every time.
 
 ### Java usage
 
