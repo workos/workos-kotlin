@@ -1203,11 +1203,13 @@ class Pipes(
    * @param userId The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
    * @param accountDisplayName A mutable, non-unique connection label; null clears it. Not an account identifier.
    * @param accountIdentifier A developer-attested account identifier; null clears it.
+   * @param config Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
    * @param scopes The OAuth scopes granted for this connection.
    * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param metadata Provider token-response metadata to preserve during import, such as Salesforce instance_url. Only allowlisted, non-sensitive scalar fields from this provider are accepted, including nested fields. Provider refresh responses can update these values. Not accepted on update.
    * @param connectionIntent Set to `add` to create another connected account. Omit this field for permanent compatibility behavior.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -1225,6 +1227,8 @@ class Pipes(
     userId: String,
     accountDisplayName: String? = null,
     accountIdentifier: String? = null,
+    config: Map<String, String>? = null,
+    metadata: Map<String, Any>? = null,
     connectionIntent: String? = null
   ): ConnectedAccount {
     val body =
@@ -1232,11 +1236,13 @@ class Pipes(
         "user_id" to userId,
         "account_display_name" to accountDisplayName,
         "account_identifier" to accountIdentifier,
+        "config" to config,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
         "scopes" to scopes,
         "state" to state,
+        "metadata" to metadata,
         "connection_intent" to connectionIntent
       )
     val config =
@@ -1270,6 +1276,8 @@ class Pipes(
     userId: String,
     accountDisplayName: String? = null,
     accountIdentifier: String? = null,
+    config: Map<String, String>? = null,
+    metadata: Map<String, Any>? = null,
     connectionIntent: String? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
@@ -1285,6 +1293,8 @@ class Pipes(
         userId,
         accountDisplayName,
         accountIdentifier,
+        config,
+        metadata,
         connectionIntent
       )
     }
@@ -1292,7 +1302,7 @@ class Pipes(
   /**
    * Update an organization connected account
    *
-   * Updates an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+   * Updates an organization's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, state, or provider configuration for a specific provider.
    *
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
@@ -1302,6 +1312,7 @@ class Pipes(
    * @param userId The [User](https://workos.com/docs/reference/authkit/user) identifier of the organization member on whose behalf the connected account is being imported or updated. The user must be an active member of the organization.
    * @param accountDisplayName A mutable, non-unique connection label; null clears it. Not an account identifier.
    * @param accountIdentifier A developer-attested account identifier; null clears it.
+   * @param config Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
@@ -1325,7 +1336,8 @@ class Pipes(
     userId: String,
     connectionIntent: String? = null,
     accountDisplayName: String? = null,
-    accountIdentifier: String? = null
+    accountIdentifier: String? = null,
+    config: Map<String, String>? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     supportsMultipleConnections?.let { params += "supports_multiple_connections" to it.toString() }
@@ -1336,6 +1348,7 @@ class Pipes(
         "user_id" to userId,
         "account_display_name" to accountDisplayName,
         "account_identifier" to accountIdentifier,
+        "config" to config,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
@@ -1376,7 +1389,8 @@ class Pipes(
     userId: String,
     connectionIntent: String? = null,
     accountDisplayName: String? = null,
-    accountIdentifier: String? = null
+    accountIdentifier: String? = null,
+    config: Map<String, String>? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
       updateOrganizationConnectedAccount(
@@ -1393,7 +1407,8 @@ class Pipes(
         userId,
         connectionIntent,
         accountDisplayName,
-        accountIdentifier
+        accountIdentifier,
+        config
       )
     }
 
@@ -1563,11 +1578,13 @@ class Pipes(
    * @param organizationId An [Organization](https://workos.com/docs/reference/organization) identifier. Optional parameter if the connection is scoped to an organization.
    * @param accountDisplayName A mutable, non-unique connection label; null clears it. Not an account identifier.
    * @param accountIdentifier A developer-attested account identifier; null clears it.
+   * @param config Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
    * @param scopes The OAuth scopes granted for this connection.
    * @param state Explicitly set the state of the connected account. When omitted, the state is derived from the token combination provided.
+   * @param metadata Provider token-response metadata to preserve during import, such as Salesforce instance_url. Only allowlisted, non-sensitive scalar fields from this provider are accepted, including nested fields. Provider refresh responses can update these values. Not accepted on update.
    * @param connectionIntent Set to `add` to create another connected account. Omit this field for permanent compatibility behavior.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
@@ -1586,6 +1603,8 @@ class Pipes(
     requestOptions: RequestOptions? = null,
     accountDisplayName: String? = null,
     accountIdentifier: String? = null,
+    config: Map<String, String>? = null,
+    metadata: Map<String, Any>? = null,
     connectionIntent: String? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
@@ -1594,11 +1613,13 @@ class Pipes(
       bodyOf(
         "account_display_name" to accountDisplayName,
         "account_identifier" to accountIdentifier,
+        "config" to config,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
         "scopes" to scopes,
         "state" to state,
+        "metadata" to metadata,
         "connection_intent" to connectionIntent
       )
     val config =
@@ -1633,6 +1654,8 @@ class Pipes(
     requestOptions: RequestOptions? = null,
     accountDisplayName: String? = null,
     accountIdentifier: String? = null,
+    config: Map<String, String>? = null,
+    metadata: Map<String, Any>? = null,
     connectionIntent: String? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
@@ -1648,6 +1671,8 @@ class Pipes(
         requestOptions,
         accountDisplayName,
         accountIdentifier,
+        config,
+        metadata,
         connectionIntent
       )
     }
@@ -1655,7 +1680,7 @@ class Pipes(
   /**
    * Update a connected account
    *
-   * Updates a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, or state for a specific provider.
+   * Updates a user's [connected account](https://workos.com/docs/reference/pipes/connected-account) tokens, scopes, state, or provider configuration for a specific provider.
    *
    * @param userId A [User](https://workos.com/docs/reference/authkit/user) identifier.
    * @param slug The slug identifier of the provider (e.g., `github`, `slack`, `notion`).
@@ -1665,6 +1690,7 @@ class Pipes(
    * @param connectionIntent Set to `reauthorize` with `connected_account_id` to update one exact connection. The intent may be omitted when supplying an ID. Omit both for permanent compatibility behavior.
    * @param accountDisplayName A mutable, non-unique connection label; null clears it. Not an account identifier.
    * @param accountIdentifier A developer-attested account identifier; null clears it.
+   * @param config Installation-scoped provider configuration for this connection, such as Salesforce salesforce_host. Imports apply supplied values over installation-scoped integration pins and inherit other config from the credential source. Credential-bearing imports must satisfy required configuration even when config is omitted or {}. On update, a supplied object replaces installation-scoped values; omitted config preserves the stored snapshot. Stored integration-scoped values remain bound to the OAuth client and cannot be overridden or replaced with current integration pins. Replacements must satisfy required configuration; {} and empty-string values clear installation-scoped values only when the result is valid. Provider defaults count toward completeness but are resolved at read time, not stored. Only tokenless needs_reauthorization placeholders may remain incomplete; attaching their first tokens validates configuration even when config is omitted. Unrelated updates do not revalidate unchanged configuration. Clearing salesforce_host falls back to login.salesforce.com, which may not work for sandbox or My Domain-only connections.
    * @param accessToken The OAuth access token for the connected account.
    * @param refreshToken The OAuth refresh token for the connected account.
    * @param expiresAt The ISO-8601 timestamp when the access token expires. Required when `access_token` is provided for tokens that expire.
@@ -1689,7 +1715,8 @@ class Pipes(
     requestOptions: RequestOptions? = null,
     connectionIntent: String? = null,
     accountDisplayName: String? = null,
-    accountIdentifier: String? = null
+    accountIdentifier: String? = null,
+    config: Map<String, String>? = null
   ): ConnectedAccount {
     val params = mutableListOf<Pair<String, String>>()
     params.addIfNotNull("organization_id", organizationId)
@@ -1700,6 +1727,7 @@ class Pipes(
       bodyOf(
         "account_display_name" to accountDisplayName,
         "account_identifier" to accountIdentifier,
+        "config" to config,
         "access_token" to accessToken,
         "refresh_token" to refreshToken,
         "expires_at" to expiresAt,
@@ -1740,7 +1768,8 @@ class Pipes(
     requestOptions: RequestOptions? = null,
     connectionIntent: String? = null,
     accountDisplayName: String? = null,
-    accountIdentifier: String? = null
+    accountIdentifier: String? = null,
+    config: Map<String, String>? = null
   ): ConnectedAccount =
     withContext(Dispatchers.IO) {
       updateUserConnectedAccount(
@@ -1757,7 +1786,8 @@ class Pipes(
         requestOptions,
         connectionIntent,
         accountDisplayName,
-        accountIdentifier
+        accountIdentifier,
+        config
       )
     }
 
