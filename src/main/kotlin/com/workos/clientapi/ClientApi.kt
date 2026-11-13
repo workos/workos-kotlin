@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Client GraphQL API token management.
+ * Widgets API token management.
  *
  * Every operation on this class is available in two flavors: a blocking variant (`<methodName>`) and a coroutine-aware variant (`<methodName>Suspend`). The `Suspend` variants delegate to the blocking ones under `withContext(Dispatchers.IO)`, so they are safe to call from any coroutine dispatcher (including `Dispatchers.Main`).
  */
@@ -19,12 +19,12 @@ class ClientApi(
   internal val workos: WorkOS
 ) {
   /**
-   * Generate a Client API token
+   * Generate a Widgets API token
    *
-   * Generate a short-lived, session-bound token for the Client GraphQL API, scoped to an organization and user.
+   * Generate a short-lived, session-bound token for the Widgets API, scoped to an organization and user.
    *
-   * @param organizationId The ID of the organization to scope the Client API token to.
-   * @param userId The ID of the user to issue the Client API token for.
+   * @param organizationId The ID of the organization to scope the Widgets API token to.
+   * @param userId The ID of the user to issue the Widgets API token for.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the ClientApiTokenResponse

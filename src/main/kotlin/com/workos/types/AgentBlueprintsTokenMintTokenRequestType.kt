@@ -12,8 +12,16 @@ enum class AgentBlueprintsTokenMintTokenRequestType(
 ) {
   @JsonEnumDefaultValue
   Unknown("unknown"),
+
+  /** How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`. */
   UserDelegated("user_delegated"),
+
+  /** How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`. */
   Autonomous("autonomous"),
+
+  /** How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`. */
   AgentDelegated("agent_delegated"),
+
+  /** How the session is minted: `user_delegated`, `autonomous`, `agent_delegated`, or `refresh`. */
   Refresh("refresh")
 }

@@ -45,6 +45,6 @@ data class Organization(
 
   /** Whether the Organization allows profiles outside of its managed domains. */
   @JsonProperty("allow_profiles_outside_organization")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val allowProfilesOutsideOrganization: Boolean? = null
 )
