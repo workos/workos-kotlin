@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import java.util.Properties
 
 group = "com.workos"
-version = "7.6.0" // x-release-please-version
+version = "7.7.0" // x-release-please-version
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
