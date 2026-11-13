@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.7.0](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.7.0) (2026-11-13)
+
+
+### Features
+
+* **directory_sync:** Change directory sync API surface ([#462](https://github.com/workos/workos-kotlin/issues/462)) ([4945e60](https://github.com/workos/workos-kotlin/commit/4945e602ee022764e0216ecd5d9607d0b14f05e3))
+* **pipes:** Update Pipes API surface ([#462](https://github.com/workos/workos-kotlin/issues/462)) ([4945e60](https://github.com/workos/workos-kotlin/commit/4945e602ee022764e0216ecd5d9607d0b14f05e3))
+* **sso:** Update SSO API surface ([#463](https://github.com/workos/workos-kotlin/issues/463)) ([9a919c2](https://github.com/workos/workos-kotlin/commit/9a919c22a440558bc151f11c465f8d4b162f0e16))
+
+
+### Bug Fixes
+
+* **session:** Reject non-user access tokens in session cookies ([#460](https://github.com/workos/workos-kotlin/issues/460)) ([ff014b7](https://github.com/workos/workos-kotlin/commit/ff014b7ad9ca11b73f751c2c2253d267564f8d8e))
+
 ## [7.6.0](https://github.com/workos/workos-kotlin/compare/v7.5.0...v7.6.0) (2026-11-04)
 
 * [#458](https://github.com/workos/workos-kotlin/pull/458) feat(generated)!: regenerate from spec (6 changes)
