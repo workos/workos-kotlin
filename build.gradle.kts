@@ -159,6 +159,12 @@ tasks.withType<Test>().configureEach {
   // client built with credentials never sends the environment's API key. A
   // JVM cannot set its own environment, so the test JVM is started with one.
   environment("WORKOS_API_KEY", "sk_test_env")
+  // WIF-02 and WIF-22 assert that workload identity credentials read no
+  // environment variable, so the test JVM is started with these four set.
+  environment("WORKOS_CLIENT_ID", "client_env")
+  environment("WORKOS_WIF_TOKEN_URL", "https://ignored.example.test/oauth2/token")
+  environment("WORKOS_WIF_SCOPE", "scope_env")
+  environment("WORKOS_ENVIRONMENT_ID", "environment_env")
 }
 
 mavenPublishing {

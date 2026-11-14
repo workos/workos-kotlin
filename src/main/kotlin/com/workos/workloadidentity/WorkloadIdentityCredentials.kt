@@ -32,8 +32,6 @@ private const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 
 private const val DEFAULT_RESOURCE = "https://api.workos.com"
 
-private const val ENV_CLIENT_ID = "WORKOS_CLIENT_ID"
-
 /** Lifetime assumed when the token response has no usable `expires_in`. */
 private const val DEFAULT_LIFETIME_SECONDS = 300.0
 
@@ -65,10 +63,8 @@ private val JSON = ObjectMapper()
  * val workos = WorkloadIdentity.client(credentials)
  * ```
  *
- * `clientId` falls back to the environment variable `WORKOS_CLIENT_ID` when
- * it is left out, and a value passed here always wins. That is the only
- * environment variable the credentials read: every other setting is set in
- * code. The configuration cannot change after construction; build a new
+ * Every setting is set in code: the credentials read no environment
+ * variable. The configuration cannot change after construction; build a new
  * instance to change it.
  *
  * `environmentId` is optional and is set only in code: no environment
@@ -89,7 +85,7 @@ private val JSON = ObjectMapper()
  * `httpClient`.
  *
  * @throws WorkloadIdentityException with code `invalid_configuration` when a
- *   required setting is missing after the environment is consulted.
+ *   required setting is missing.
  */
 class WorkloadIdentityCredentials internal constructor(
   private val identityTokenProvider: IdentityTokenProvider,
@@ -99,7 +95,6 @@ class WorkloadIdentityCredentials internal constructor(
   resource: String?,
   scope: String?,
   httpClient: OkHttpClient?,
-  env: (String) -> String?,
   private val nanoTime: () -> Long,
   private val sleeper: (Long) -> Unit,
   private val exchangeDeadlineMillis: Long
@@ -108,7 +103,8 @@ class WorkloadIdentityCredentials internal constructor(
    * Create credentials.
    *
    * @param identityTokenProvider returns the workload's identity token. See [tokenFile], [tokenEnv], or pass a lambda.
-   * @param clientId the M2M application's client ID. Defaults to `WORKOS_CLIENT_ID`.
+   * @param clientId the M2M application's client ID. Required, and set only here: no environment variable is read
+   *   for it.
    * @param tokenUrl the token exchange endpoint. Required: there is no built-in default, and no environment
    *   variable is read for it.
    * @param environmentId the WorkOS environment ID. Optional, and set only here: no environment variable is read
@@ -143,7 +139,6 @@ class WorkloadIdentityCredentials internal constructor(
     resource = resource,
     scope = scope,
     httpClient = httpClient,
-    env = { System.getenv(it) },
     nanoTime = { System.nanoTime() },
     sleeper = { Thread.sleep(it) },
     exchangeDeadlineMillis = EXCHANGE_DEADLINE_MILLIS
@@ -151,13 +146,11 @@ class WorkloadIdentityCredentials internal constructor(
 
   /** The M2M application's client ID. */
   @JvmField
-  val clientId: String = required(clientId, env, "clientId", ENV_CLIENT_ID)
+  val clientId: String = required(clientId, "clientId")
 
   /** The token exchange endpoint. */
   @JvmField
-  val tokenUrl: String =
-    tokenUrl?.takeIf { it.isNotBlank() }
-      ?: throw WorkloadIdentityException(WorkloadIdentityException.INVALID_CONFIGURATION, "tokenUrl is required")
+  val tokenUrl: String = required(tokenUrl, "tokenUrl")
 
   /**
    * The WorkOS environment ID, or `null` when none is set. When set, it is sent as the `x-url-environment-id`
@@ -543,7 +536,7 @@ class WorkloadIdentityCredentials internal constructor(
     /** Set the provider that returns the workload's identity token (required). */
     fun identityTokenProvider(provider: IdentityTokenProvider): Builder = apply { identityTokenProvider = provider }
 
-    /** Set the M2M application's client ID. Defaults to `WORKOS_CLIENT_ID`. */
+    /** Set the M2M application's client ID (required). No environment variable is read for it. */
     fun clientId(clientId: String): Builder = apply { this.clientId = clientId }
 
     /** Set the token exchange endpoint (required). There is no default, and no environment variable is read for it. */
@@ -629,18 +622,13 @@ private sealed class AttemptResult {
 
 private fun refreshThresholdNanos(lifetimeNanos: Long): Long = minOf(REFRESH_THRESHOLD_NANOS, (lifetimeNanos * REFRESH_FRACTION).toLong())
 
+/** A required setting comes only from the caller's code: left out, null or empty is an error. */
 private fun required(
-  explicit: String?,
-  env: (String) -> String?,
-  field: String,
-  variable: String
+  value: String?,
+  field: String
 ): String =
-  explicit?.takeIf { it.isNotBlank() }
-    ?: env(variable)?.takeIf { it.isNotBlank() }
-    ?: throw WorkloadIdentityException(
-      WorkloadIdentityException.INVALID_CONFIGURATION,
-      "$field is required (or set $variable)"
-    )
+  value?.takeIf { it.isNotBlank() }
+    ?: throw WorkloadIdentityException(WorkloadIdentityException.INVALID_CONFIGURATION, "$field is required")
 
 private fun sdkVersion(): String {
   val resource = WorkOS::class.java.getResourceAsStream("/version.properties") ?: return "dev"

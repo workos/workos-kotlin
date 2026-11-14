@@ -147,17 +147,15 @@ workos.organizations.list()
 | Setting                 | Required | Default                  | Description                                    |
 | ----------------------- | -------- | ------------------------ | ---------------------------------------------- |
 | `identityTokenProvider` | yes      | none                     | Returns the workload's identity token (a JWT). |
-| `clientId`              | yes      | `WORKOS_CLIENT_ID`       | The M2M application's client ID.               |
+| `clientId`              | yes      | none                     | The M2M application's client ID.               |
 | `tokenUrl`              | yes      | none                     | The token exchange endpoint.                   |
 | `environmentId`         | no       | none                     | The WorkOS environment ID. A safety check.     |
 | `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
 | `scope`                 | no       | none                     | The scope to request. Left out when empty.     |
 | `httpClient`            | no       | none                     | Proxy, TLS and DNS settings for the exchange.  |
 
-`WORKOS_CLIENT_ID` is the only environment variable the credentials read, and
-a `clientId` you pass always wins over it. Every other setting is set in
-code. A missing required setting is an error when the credentials are
-constructed.
+Every setting is set in code: the credentials read no environment variable.
+A missing required setting is an error when the credentials are constructed.
 
 `environmentId` is optional and is set only in code: no environment variable
 is read for it. The server binds the application to exactly one environment

@@ -97,7 +97,6 @@ class WIFConformanceTest {
     resource: String? = null,
     scope: String? = null,
     httpClient: OkHttpClient? = null,
-    env: (String) -> String? = { null },
     exchangeDeadlineMillis: Long = 30_000
   ): WorkloadIdentityCredentials =
     WorkloadIdentityCredentials(
@@ -108,7 +107,6 @@ class WIFConformanceTest {
       resource = resource,
       scope = scope,
       httpClient = httpClient,
-      env = env,
       nanoTime = { clock.get() },
       sleeper = { sleeps += it },
       exchangeDeadlineMillis = exchangeDeadlineMillis
@@ -132,6 +130,14 @@ class WIFConformanceTest {
 
   private fun advanceClockTo(seconds: Long) {
     clock.set(TimeUnit.SECONDS.toNanos(seconds))
+  }
+
+  /** A JVM cannot set its own environment, so the Gradle test task starts the test JVM with [name] set to [value]. */
+  private fun assertInEnvironment(
+    name: String,
+    value: String
+  ) {
+    assertEquals(value, System.getenv(name), "the test JVM must run with $name set")
   }
 
   // ------------------------------------------------------------------- stubs
@@ -274,8 +280,8 @@ class WIFConformanceTest {
 
     // WORKOS_ENVIRONMENT_ID is in the environment and no environment ID is passed. The SDK does not read the
     // variable, so constructing the credentials is not an error and no environment ID is set.
-    val environment: (String) -> String? = { name -> if (name == "WORKOS_ENVIRONMENT_ID") "environment_env" else null }
-    val unset = credentials(environmentId = null, env = environment)
+    assertInEnvironment("WORKOS_ENVIRONMENT_ID", "environment_env")
+    val unset = credentials(environmentId = null)
     assertNull(unset.environmentId)
     getThings(client(unset))
 
@@ -285,7 +291,7 @@ class WIFConformanceTest {
 
     // An empty string counts as not set, like leaving the environment ID out.
     api.resetRequests()
-    val empty = credentials(environmentId = "", env = environment)
+    val empty = credentials(environmentId = "")
     assertNull(empty.environmentId)
     getThings(client(empty))
 
@@ -710,18 +716,17 @@ class WIFConformanceTest {
   @Test
   fun `WIF-20 explicit credentials win over WORKOS_API_KEY and a failing configuration never falls back to it`() {
     assertEquals(ENV_API_KEY, System.getenv("WORKOS_API_KEY"), "the test JVM must run with WORKOS_API_KEY set")
-    val environment: (String) -> String? = { name -> if (name == "WORKOS_API_KEY") ENV_API_KEY else null }
 
     // (a) Valid credentials: the API sees the access token, never the environment key.
     stubTokens()
     stubApi(apiOk())
-    getThings(client(credentials(env = environment)))
+    getThings(client(credentials()))
     assertEquals("Bearer access-1", apiAttempts().single().getHeader("Authorization"))
     assertNeverSent(ENV_API_KEY)
 
     // (b) No token URL: constructing the credentials is an error.
     val missing =
-      assertThrows(WorkloadIdentityException::class.java) { credentials(tokenUrl = null, env = environment) }
+      assertThrows(WorkloadIdentityException::class.java) { credentials(tokenUrl = null) }
     assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, missing.code)
     assertEquals("tokenUrl is required", missing.description)
 
@@ -730,7 +735,7 @@ class WIFConformanceTest {
     stubTokenEndpoint(oauthError("invalid_client"))
     stubApi(apiOk())
     val refused =
-      assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(env = environment))) }
+      assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials())) }
     assertEquals("invalid_client", refused.code)
     assertEquals(0, apiAttempts().size)
     assertNeverSent(ENV_API_KEY)
@@ -803,39 +808,47 @@ class WIFConformanceTest {
   }
 
   @Test
-  fun `WIF-22 only the client ID defaults from the environment and an explicit value wins`() {
+  fun `WIF-22 no setting defaults from the environment and the client ID and token URL are required`() {
     stubTokens()
     stubApi(apiOk())
-    val environment =
-      mapOf(
-        "WORKOS_CLIENT_ID" to "client_env",
-        "WORKOS_WIF_TOKEN_URL" to "https://ignored.example.test/oauth2/token",
-        "WORKOS_WIF_SCOPE" to "scope_env"
-      )
+    // The environment holds all three. The SDK reads none of them.
+    assertInEnvironment("WORKOS_CLIENT_ID", "client_env")
+    assertInEnvironment("WORKOS_WIF_TOKEN_URL", "https://ignored.example.test/oauth2/token")
+    assertInEnvironment("WORKOS_WIF_SCOPE", "scope_env")
 
-    // (c) A provider and the mock's token URL are passed, and nothing else. The client ID comes from the
-    // environment. The SDK reads neither WORKOS_WIF_TOKEN_URL nor WORKOS_WIF_SCOPE: the POST goes to the mock and
-    // the form has no scope field.
-    val defaulted = credentials(clientId = null, environmentId = null, env = { environment[it] })
-    assertEquals(tokenUrl(), defaulted.tokenUrl)
-    assertNull(defaulted.scope)
-    getThings(client(defaulted))
-    val defaultedForm = exchangeForms().single()
-    assertEquals("client_env", defaultedForm["client_id"])
-    assertFalse(defaultedForm.containsKey("scope"))
-
-    // (d) Same environment, explicit client ID: the explicit value is sent.
-    api.resetRequests()
-    val explicit = credentials(clientId = "client_explicit", environmentId = null, env = { environment[it] })
+    // (c) A provider, the mock's token URL and a client ID are passed. The client ID passed is sent, the POST
+    // goes to the mock, and the form has no scope field.
+    val explicit = credentials(clientId = "client_explicit", environmentId = null)
+    assertEquals(tokenUrl(), explicit.tokenUrl)
+    assertNull(explicit.scope)
     getThings(client(explicit))
-    assertEquals("client_explicit", exchangeForms().single()["client_id"])
+    val form = exchangeForms().single()
+    assertEquals("client_explicit", form["client_id"])
+    assertFalse(form.containsKey("scope"))
+
+    // (d) Same environment, no client ID passed (left out, or empty): constructing the credentials is an error.
+    for (absent in listOf(null, "")) {
+      val missing =
+        assertThrows(WorkloadIdentityException::class.java) { credentials(clientId = absent, environmentId = null) }
+      assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, missing.code)
+      assertEquals("clientId is required", missing.description)
+    }
+    // The Java builder goes through the public constructor and fails the same way.
+    val fromBuilder =
+      assertThrows(WorkloadIdentityException::class.java) {
+        WorkloadIdentityCredentials
+          .builder()
+          .identityTokenProvider { "assertion-1" }
+          .tokenUrl(tokenUrl())
+          .build()
+      }
+    assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, fromBuilder.code)
+    assertEquals("clientId is required", fromBuilder.description)
 
     // (e) Same environment, no token URL passed (left out, or empty): constructing the credentials is an error.
     for (absent in listOf(null, "")) {
       val missing =
-        assertThrows(WorkloadIdentityException::class.java) {
-          credentials(clientId = null, tokenUrl = absent, environmentId = null, env = { environment[it] })
-        }
+        assertThrows(WorkloadIdentityException::class.java) { credentials(tokenUrl = absent, environmentId = null) }
       assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, missing.code)
       assertEquals("tokenUrl is required", missing.description)
     }
