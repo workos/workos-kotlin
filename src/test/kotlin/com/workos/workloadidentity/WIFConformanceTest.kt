@@ -719,11 +719,11 @@ class WIFConformanceTest {
     assertEquals("Bearer access-1", apiAttempts().single().getHeader("Authorization"))
     assertNeverSent(ENV_API_KEY)
 
-    // (b) No token URL, explicitly or in the environment: constructing the credentials is an error.
+    // (b) No token URL: constructing the credentials is an error.
     val missing =
       assertThrows(WorkloadIdentityException::class.java) { credentials(tokenUrl = null, env = environment) }
     assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, missing.code)
-    assertEquals("tokenUrl is required (or set WORKOS_WIF_TOKEN_URL)", missing.description)
+    assertEquals("tokenUrl is required", missing.description)
 
     // (c) An exchange that fails: the request fails, and nothing falls back to the environment key.
     api.resetAll()
@@ -803,38 +803,42 @@ class WIFConformanceTest {
   }
 
   @Test
-  fun `WIF-22 omitted fields default from the environment and explicit values win`() {
+  fun `WIF-22 only the client ID defaults from the environment and an explicit value wins`() {
     stubTokens()
     stubApi(apiOk())
     val environment =
       mapOf(
         "WORKOS_CLIENT_ID" to "client_env",
-        "WORKOS_WIF_TOKEN_URL" to tokenUrl(),
+        "WORKOS_WIF_TOKEN_URL" to "https://ignored.example.test/oauth2/token",
         "WORKOS_WIF_SCOPE" to "scope_env"
       )
 
-    // (c) Only a provider is passed; the client ID, the token URL and the scope come from the environment.
-    val defaulted =
-      credentials(clientId = null, tokenUrl = null, environmentId = null, env = { environment[it] })
+    // (c) A provider and the mock's token URL are passed, and nothing else. The client ID comes from the
+    // environment. The SDK reads neither WORKOS_WIF_TOKEN_URL nor WORKOS_WIF_SCOPE: the POST goes to the mock and
+    // the form has no scope field.
+    val defaulted = credentials(clientId = null, environmentId = null, env = { environment[it] })
+    assertEquals(tokenUrl(), defaulted.tokenUrl)
+    assertNull(defaulted.scope)
     getThings(client(defaulted))
     val defaultedForm = exchangeForms().single()
     assertEquals("client_env", defaultedForm["client_id"])
-    assertEquals("scope_env", defaultedForm["scope"])
+    assertFalse(defaultedForm.containsKey("scope"))
 
-    // (d) Same environment, explicit values: the explicit values are sent.
+    // (d) Same environment, explicit client ID: the explicit value is sent.
     api.resetRequests()
-    val explicit =
-      credentials(
-        clientId = "client_explicit",
-        tokenUrl = null,
-        environmentId = null,
-        scope = "scope_explicit",
-        env = { environment[it] }
-      )
+    val explicit = credentials(clientId = "client_explicit", environmentId = null, env = { environment[it] })
     getThings(client(explicit))
-    val explicitForm = exchangeForms().single()
-    assertEquals("client_explicit", explicitForm["client_id"])
-    assertEquals("scope_explicit", explicitForm["scope"])
+    assertEquals("client_explicit", exchangeForms().single()["client_id"])
+
+    // (e) Same environment, no token URL passed (left out, or empty): constructing the credentials is an error.
+    for (absent in listOf(null, "")) {
+      val missing =
+        assertThrows(WorkloadIdentityException::class.java) {
+          credentials(clientId = null, tokenUrl = absent, environmentId = null, env = { environment[it] })
+        }
+      assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, missing.code)
+      assertEquals("tokenUrl is required", missing.description)
+    }
   }
 
   // ------------------------------------------------------------- cancellation

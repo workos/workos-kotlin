@@ -34,10 +34,6 @@ private const val DEFAULT_RESOURCE = "https://api.workos.com"
 
 private const val ENV_CLIENT_ID = "WORKOS_CLIENT_ID"
 
-private const val ENV_TOKEN_URL = "WORKOS_WIF_TOKEN_URL"
-
-private const val ENV_SCOPE = "WORKOS_WIF_SCOPE"
-
 /** Lifetime assumed when the token response has no usable `expires_in`. */
 private const val DEFAULT_LIFETIME_SECONDS = 300.0
 
@@ -69,10 +65,11 @@ private val JSON = ObjectMapper()
  * val workos = WorkloadIdentity.client(credentials)
  * ```
  *
- * Three settings fall back to the environment when left out:
- * `WORKOS_CLIENT_ID`, `WORKOS_WIF_TOKEN_URL` and `WORKOS_WIF_SCOPE`. A value
- * passed here always wins. The configuration cannot change after
- * construction; build a new instance to change it.
+ * `clientId` falls back to the environment variable `WORKOS_CLIENT_ID` when
+ * it is left out, and a value passed here always wins. That is the only
+ * environment variable the credentials read: every other setting is set in
+ * code. The configuration cannot change after construction; build a new
+ * instance to change it.
  *
  * `environmentId` is optional and is set only in code: no environment
  * variable is read for it. The server binds the application to exactly one
@@ -112,14 +109,16 @@ class WorkloadIdentityCredentials internal constructor(
    *
    * @param identityTokenProvider returns the workload's identity token. See [tokenFile], [tokenEnv], or pass a lambda.
    * @param clientId the M2M application's client ID. Defaults to `WORKOS_CLIENT_ID`.
-   * @param tokenUrl the token exchange endpoint. Defaults to `WORKOS_WIF_TOKEN_URL`; there is no built-in default.
+   * @param tokenUrl the token exchange endpoint. Required: there is no built-in default, and no environment
+   *   variable is read for it.
    * @param environmentId the WorkOS environment ID. Optional, and set only here: no environment variable is read
    *   for it. When set, it is sent as the `x-url-environment-id` header on every API request. The server takes the
    *   environment from the application, which is bound to exactly one, so the header selects nothing: setting it
    *   is a safety check, and a value that names a different environment gets `403 environment_mismatch`. When it
    *   is not set, or is empty, the header is not sent.
    * @param resource the resource the access token is for. Defaults to `https://api.workos.com`.
-   * @param scope the scope to request. Defaults to `WORKOS_WIF_SCOPE`; left out of the exchange when empty.
+   * @param scope the scope to request. Optional, and set only here: no environment variable is read for it.
+   *   Left out of the exchange when it is not set or is empty.
    * @param httpClient an OkHttp client whose connection settings the token exchange uses: proxy and proxy
    *   authenticator, TLS, DNS, connection pool, and connect, read and write timeouts. Pass it when the token
    *   endpoint is only reachable with those settings; [WorkloadIdentity.client] does not pass its own client
@@ -156,7 +155,9 @@ class WorkloadIdentityCredentials internal constructor(
 
   /** The token exchange endpoint. */
   @JvmField
-  val tokenUrl: String = required(tokenUrl, env, "tokenUrl", ENV_TOKEN_URL)
+  val tokenUrl: String =
+    tokenUrl?.takeIf { it.isNotBlank() }
+      ?: throw WorkloadIdentityException(WorkloadIdentityException.INVALID_CONFIGURATION, "tokenUrl is required")
 
   /**
    * The WorkOS environment ID, or `null` when none is set. When set, it is sent as the `x-url-environment-id`
@@ -171,13 +172,13 @@ class WorkloadIdentityCredentials internal constructor(
 
   /** The scope requested in the exchange, or `null` when none is requested. */
   @JvmField
-  val scope: String? = (scope ?: env(ENV_SCOPE))?.takeIf { it.isNotBlank() }
+  val scope: String? = scope?.takeIf { it.isNotBlank() }
 
   private val exchangeUrl: HttpUrl =
     this.tokenUrl.toHttpUrlOrNull()
       ?: throw WorkloadIdentityException(
         WorkloadIdentityException.INVALID_CONFIGURATION,
-        "tokenUrl is not a valid http or https URL (it comes from the tokenUrl setting or $ENV_TOKEN_URL)"
+        "tokenUrl is not a valid http or https URL"
       )
 
   // The exchange has its own client. When the caller gives one, the exchange
@@ -545,7 +546,7 @@ class WorkloadIdentityCredentials internal constructor(
     /** Set the M2M application's client ID. Defaults to `WORKOS_CLIENT_ID`. */
     fun clientId(clientId: String): Builder = apply { this.clientId = clientId }
 
-    /** Set the token exchange endpoint. Defaults to `WORKOS_WIF_TOKEN_URL`. */
+    /** Set the token exchange endpoint (required). There is no default, and no environment variable is read for it. */
     fun tokenUrl(tokenUrl: String): Builder = apply { this.tokenUrl = tokenUrl }
 
     /**
@@ -558,7 +559,7 @@ class WorkloadIdentityCredentials internal constructor(
     /** Set the resource the access token is for. Defaults to `https://api.workos.com`. */
     fun resource(resource: String): Builder = apply { this.resource = resource }
 
-    /** Set the scope to request. Defaults to `WORKOS_WIF_SCOPE`. */
+    /** Set the scope to request. Optional; left out of the exchange when it is not set or is empty. */
     fun scope(scope: String): Builder = apply { this.scope = scope }
 
     /**
