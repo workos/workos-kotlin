@@ -30,8 +30,9 @@ fun interface IdentityTokenProvider {
 
 /**
  * An [IdentityTokenProvider] that reads the token from the file at [path] on
- * every call, so a token that the platform rotates on disk is picked up.
- * Surrounding whitespace is trimmed. A missing or empty file is an error.
+ * every call. The file is one that another process writes, such as a sidecar
+ * or an earlier CI step that fetches a new token, so a new token is picked
+ * up. Surrounding whitespace is trimmed. A missing or empty file is an error.
  */
 fun tokenFile(path: String): IdentityTokenProvider =
   IdentityTokenProvider {

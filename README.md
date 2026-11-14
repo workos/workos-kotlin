@@ -149,7 +149,7 @@ workos.organizations.list()
 | `identityTokenProvider` | yes      | none                     | Returns the workload's identity token (a JWT). |
 | `clientId`              | yes      | `WORKOS_CLIENT_ID`       | The M2M application's client ID.               |
 | `tokenUrl`              | yes      | `WORKOS_WIF_TOKEN_URL`   | The token exchange endpoint.                   |
-| `environmentId`         | no       | `WORKOS_ENVIRONMENT_ID`  | The WorkOS environment ID. A safety check.     |
+| `environmentId`         | no       | none                     | The WorkOS environment ID. A safety check.     |
 | `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
 | `scope`                 | no       | `WORKOS_WIF_SCOPE`       | The scope to request. Left out when empty.     |
 | `httpClient`            | no       | none                     | Proxy, TLS and DNS settings for the exchange.  |
@@ -157,12 +157,13 @@ workos.organizations.list()
 A value you pass always wins over the environment variable. A missing
 required setting is an error when the credentials are constructed.
 
-`environmentId` is optional. The server binds the application to exactly one
-environment and takes the environment from that binding, so the
-`x-url-environment-id` header selects nothing. Setting `environmentId` is a
-safety check: the SDK then sends the header on every API request, and a value
-that names a different environment gets `403 environment_mismatch`. When it
-is not set, the header is not sent. An empty string counts as not set.
+`environmentId` is optional and is set only in code: no environment variable
+is read for it. The server binds the application to exactly one environment
+and takes the environment from that binding, so the `x-url-environment-id`
+header selects nothing. Setting `environmentId` is a safety check: the SDK
+then sends the header on every API request, and a value that names a
+different environment gets `403 environment_mismatch`. When it is not set,
+the header is not sent. An empty string counts as not set.
 
 The token exchange makes its own HTTP call; it does not go through the API
 client. If your network needs a proxy or a custom trust store, pass the same
@@ -213,16 +214,18 @@ import com.workos.workloadidentity.aws.awsSts
 val provider = awsSts("https://api.workos.com", region = "us-east-1")
 ```
 
-For any other platform, read the token from a file or an environment
-variable, or pass a lambda. The provider is called again for every exchange,
-so a token that the platform rotates is picked up:
+You can also read the identity token from a file or an environment variable,
+or pass a lambda. The provider is called again for every exchange, so a new
+token is picked up:
 
 ```kotlin
 import com.workos.workloadidentity.IdentityTokenProvider
 import com.workos.workloadidentity.tokenEnv
 import com.workos.workloadidentity.tokenFile
 
-val fromFile = tokenFile("/var/run/secrets/tokens/workos")
+// A file that another process writes, such as a sidecar or an earlier CI
+// step that fetches a new token.
+val fromFile = tokenFile("/run/workos/identity-token")
 val fromEnvironment = tokenEnv("MY_PLATFORM_JWT")
 val custom = IdentityTokenProvider { fetchJwtFromMyPlatform() }
 ```
@@ -231,7 +234,7 @@ The server accepts an identity token for one exchange. The SDK exchanges
 again about every four minutes. If the file or the variable still holds the
 same token at the next exchange, that exchange fails with `invalid_grant`. So
 use `tokenFile` and `tokenEnv` for a source that something rewrites before
-each exchange, or for a job shorter than five minutes. A JVM reads its
+each exchange, or for a job shorter than four minutes. A JVM reads its
 environment once, when it starts, so `tokenEnv` returns the same token for the
 life of the process and fits only the short job. The platform providers
 (GitHub Actions, GCP, AWS) fetch a new token every time.

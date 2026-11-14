@@ -272,8 +272,10 @@ class WIFConformanceTest {
     stubTokens()
     stubApi(apiOk())
 
-    // No environment ID is passed and WORKOS_ENVIRONMENT_ID is unset. Constructing the credentials is not an error.
-    val unset = credentials(environmentId = null, env = { null })
+    // WORKOS_ENVIRONMENT_ID is in the environment and no environment ID is passed. The SDK does not read the
+    // variable, so constructing the credentials is not an error and no environment ID is set.
+    val environment: (String) -> String? = { name -> if (name == "WORKOS_ENVIRONMENT_ID") "environment_env" else null }
+    val unset = credentials(environmentId = null, env = environment)
     assertNull(unset.environmentId)
     getThings(client(unset))
 
@@ -281,9 +283,9 @@ class WIFConformanceTest {
     assertEquals("Bearer access-1", attempt.getHeader("Authorization"))
     assertFalse(attempt.containsHeader("x-url-environment-id"))
 
-    // An empty string counts as not set, whether it is passed or comes from the environment.
+    // An empty string counts as not set, like leaving the environment ID out.
     api.resetRequests()
-    val empty = credentials(environmentId = "", env = { name -> if (name == "WORKOS_ENVIRONMENT_ID") "" else null })
+    val empty = credentials(environmentId = "", env = environment)
     assertNull(empty.environmentId)
     getThings(client(empty))
 
@@ -808,18 +810,16 @@ class WIFConformanceTest {
       mapOf(
         "WORKOS_CLIENT_ID" to "client_env",
         "WORKOS_WIF_TOKEN_URL" to tokenUrl(),
-        "WORKOS_WIF_SCOPE" to "scope_env",
-        "WORKOS_ENVIRONMENT_ID" to "environment_env"
+        "WORKOS_WIF_SCOPE" to "scope_env"
       )
 
-    // (c) Only a provider is passed; everything else comes from the environment.
+    // (c) Only a provider is passed; the client ID, the token URL and the scope come from the environment.
     val defaulted =
       credentials(clientId = null, tokenUrl = null, environmentId = null, env = { environment[it] })
     getThings(client(defaulted))
     val defaultedForm = exchangeForms().single()
     assertEquals("client_env", defaultedForm["client_id"])
     assertEquals("scope_env", defaultedForm["scope"])
-    assertEquals("environment_env", apiAttempts().single().getHeader("x-url-environment-id"))
 
     // (d) Same environment, explicit values: the explicit values are sent.
     api.resetRequests()
@@ -827,7 +827,7 @@ class WIFConformanceTest {
       credentials(
         clientId = "client_explicit",
         tokenUrl = null,
-        environmentId = "environment_explicit",
+        environmentId = null,
         scope = "scope_explicit",
         env = { environment[it] }
       )
@@ -835,7 +835,6 @@ class WIFConformanceTest {
     val explicitForm = exchangeForms().single()
     assertEquals("client_explicit", explicitForm["client_id"])
     assertEquals("scope_explicit", explicitForm["scope"])
-    assertEquals("environment_explicit", apiAttempts().single().getHeader("x-url-environment-id"))
   }
 
   // ------------------------------------------------------------- cancellation
