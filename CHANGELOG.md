@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.7.1](https://github.com/workos/workos-kotlin/compare/v7.7.0...v7.7.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#465](https://github.com/workos/workos-kotlin/issues/465)) ([cab185a](https://github.com/workos/workos-kotlin/commit/cab185ac6af118926e79a8acffde520260b5e944))
+
 ## [7.7.0](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.7.0) (2026-11-13)
 
 ### Bug Fixes
