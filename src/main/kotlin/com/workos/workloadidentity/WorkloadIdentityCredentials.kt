@@ -48,6 +48,9 @@ private const val EXCHANGE_DEADLINE_MILLIS = 30_000L
 
 private val JSON = ObjectMapper()
 
+/** `https://` in any letter case, then a character that can start a host: not `/`, `\`, `?` or `#`. */
+private val ABSOLUTE_HTTPS_URL = Regex("^https://[^/\\\\?#]", RegexOption.IGNORE_CASE)
+
 /**
  * Credentials that exchange a workload's identity token for a short-lived
  * WorkOS access token, so no API key has to be stored with the workload.
@@ -67,6 +70,11 @@ private val JSON = ObjectMapper()
  * variable. The configuration cannot change after construction; build a new
  * instance to change it.
  *
+ * `tokenUrl` must be an absolute `https` URL. The exchange sends the
+ * workload's identity token and receives the access token, so an `http` URL
+ * is refused, also for `localhost` and loopback addresses, and no setting
+ * allows one.
+ *
  * `environmentId` is optional and is set only in code: no environment
  * variable is read for it. The server binds the application to exactly one
  * environment and takes the environment from that binding, so the
@@ -85,7 +93,8 @@ private val JSON = ObjectMapper()
  * `httpClient`.
  *
  * @throws WorkloadIdentityException with code `invalid_configuration` when a
- *   required setting is missing.
+ *   required setting is missing, or when `tokenUrl` is not an absolute `https`
+ *   URL.
  */
 class WorkloadIdentityCredentials internal constructor(
   private val identityTokenProvider: IdentityTokenProvider,
@@ -106,7 +115,9 @@ class WorkloadIdentityCredentials internal constructor(
    * @param clientId the M2M application's client ID. Required, and set only here: no environment variable is read
    *   for it.
    * @param tokenUrl the token exchange endpoint. Required: there is no built-in default, and no environment
-   *   variable is read for it.
+   *   variable is read for it. It must be an absolute `https` URL, such as
+   *   `https://auth.example.com/oauth2/token`: the exchange sends the workload's identity token and receives the
+   *   access token. An `http` URL is refused, also for `localhost` and loopback addresses.
    * @param environmentId the WorkOS environment ID. Optional, and set only here: no environment variable is read
    *   for it. When set, it is sent as the `x-url-environment-id` header on every API request. The server takes the
    *   environment from the application, which is bound to exactly one, so the header selects nothing: setting it
@@ -148,7 +159,7 @@ class WorkloadIdentityCredentials internal constructor(
   @JvmField
   val clientId: String = required(clientId, "clientId")
 
-  /** The token exchange endpoint. */
+  /** The token exchange endpoint, an absolute `https` URL. */
   @JvmField
   val tokenUrl: String = required(tokenUrl, "tokenUrl")
 
@@ -167,12 +178,7 @@ class WorkloadIdentityCredentials internal constructor(
   @JvmField
   val scope: String? = scope?.takeIf { it.isNotBlank() }
 
-  private val exchangeUrl: HttpUrl =
-    this.tokenUrl.toHttpUrlOrNull()
-      ?: throw WorkloadIdentityException(
-        WorkloadIdentityException.INVALID_CONFIGURATION,
-        "tokenUrl is not a valid http or https URL"
-      )
+  private val exchangeUrl: HttpUrl = httpsUrl(this.tokenUrl)
 
   // The exchange has its own client. When the caller gives one, the exchange
   // client is a copy of it, so the exchange goes through the same proxy
@@ -539,7 +545,10 @@ class WorkloadIdentityCredentials internal constructor(
     /** Set the M2M application's client ID (required). No environment variable is read for it. */
     fun clientId(clientId: String): Builder = apply { this.clientId = clientId }
 
-    /** Set the token exchange endpoint (required). There is no default, and no environment variable is read for it. */
+    /**
+     * Set the token exchange endpoint (required). There is no default, and no environment variable is read for it.
+     * It must be an absolute `https` URL; an `http` URL is refused, also for `localhost` and loopback addresses.
+     */
     fun tokenUrl(tokenUrl: String): Builder = apply { this.tokenUrl = tokenUrl }
 
     /**
@@ -564,7 +573,8 @@ class WorkloadIdentityCredentials internal constructor(
 
     /**
      * Build the credentials. Throws [WorkloadIdentityException] with code
-     * `invalid_configuration` when a required setting is missing.
+     * `invalid_configuration` when a required setting is missing, or when the
+     * token URL is not an absolute `https` URL.
      */
     fun build(): WorkloadIdentityCredentials {
       val provider =
@@ -629,6 +639,26 @@ private fun required(
 ): String =
   value?.takeIf { it.isNotBlank() }
     ?: throw WorkloadIdentityException(WorkloadIdentityException.INVALID_CONFIGURATION, "$field is required")
+
+/**
+ * The token URL as the URL the exchange is sent to. https only: the POST
+ * carries the workload's identity token and the response carries the access
+ * token. There is no exception for `localhost` or a loopback address, and
+ * nothing switches the rule off.
+ *
+ * OkHttp reads a URL the way a browser does and finds a host in
+ * `https:/host`, `https:host` and `https:///host`. None of those is an
+ * absolute URL, so the text itself must start with `https://` and a host.
+ */
+private fun httpsUrl(tokenUrl: String): HttpUrl =
+  tokenUrl
+    .takeIf { ABSOLUTE_HTTPS_URL.containsMatchIn(it) }
+    ?.toHttpUrlOrNull()
+    ?.takeIf { it.isHttps }
+    ?: throw WorkloadIdentityException(
+      WorkloadIdentityException.INVALID_CONFIGURATION,
+      "tokenUrl must be an absolute https URL"
+    )
 
 private fun sdkVersion(): String {
   val resource = WorkOS::class.java.getResourceAsStream("/version.properties") ?: return "dev"

@@ -14,6 +14,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2
 import com.github.tomakehurst.wiremock.http.Fault
@@ -59,12 +60,18 @@ import java.net.Proxy
 import java.net.URLDecoder
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.KeyStore
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 /**
  * The workload identity conformance cases, WIF-01 to WIF-24. Each case ID is
@@ -73,8 +80,11 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * Everything runs against local mocks: one WireMock server stands in for
  * both the token endpoint (`/oauth2/token`) and the WorkOS API (`/things`).
- * Time comes from an injected clock and backoff waits from an injected
- * sleeper, so no test sleeps to make time pass.
+ * The token endpoint is reached over https, because the credentials accept
+ * no other scheme; the credentials under test get a client that trusts the
+ * mock's certificate through their `httpClient` setting. Time comes from an
+ * injected clock and backoff waits from an injected sleeper, so no test
+ * sleeps to make time pass.
  */
 class WIFConformanceTest {
   private val clock = AtomicLong(0)
@@ -87,7 +97,21 @@ class WIFConformanceTest {
 
   // ---------------------------------------------------------------- fixtures
 
-  private fun tokenUrl(): String = "${api.baseUrl()}$TOKEN_PATH"
+  private fun tokenUrl(): String = "${api.runtimeInfo.httpsBaseUrl}$TOKEN_PATH"
+
+  /** The WorkOS API stays on http. `api.baseUrl()` would name the https port. */
+  private fun apiBaseUrl(): String = api.runtimeInfo.httpBaseUrl
+
+  /**
+   * A client builder that can reach the mocks over https, for the `httpClient` setting. The mock's certificate is
+   * signed by no authority and names no host, so the client trusts that one certificate and skips the host name
+   * check.
+   */
+  private fun trustingTheMock(): OkHttpClient.Builder =
+    OkHttpClient
+      .Builder()
+      .sslSocketFactory(mockSocketFactory, mockTrustManager)
+      .hostnameVerifier { _, _ -> true }
 
   private fun credentials(
     provider: IdentityTokenProvider = IdentityTokenProvider { "assertion-1" },
@@ -96,7 +120,7 @@ class WIFConformanceTest {
     environmentId: String? = ENVIRONMENT_ID,
     resource: String? = null,
     scope: String? = null,
-    httpClient: OkHttpClient? = null,
+    httpClient: OkHttpClient? = trustingTheMock().build(),
     exchangeDeadlineMillis: Long = 30_000
   ): WorkloadIdentityCredentials =
     WorkloadIdentityCredentials(
@@ -118,7 +142,7 @@ class WIFConformanceTest {
   ): WorkOS =
     WorkloadIdentity.client(
       credentials = credentials,
-      apiBaseUrl = api.baseUrl(),
+      apiBaseUrl = apiBaseUrl(),
       httpClient = OkHttpClient.Builder().callTimeout(10, TimeUnit.SECONDS).build(),
       retryConfig = retryConfig
     )
@@ -681,7 +705,7 @@ class WIFConformanceTest {
   @Test
   fun `WIF-18 the exchange request does not follow redirects`() {
     stubTokenEndpoint(
-      aResponse().withStatus(307).withHeader("Location", "${elsewhere.baseUrl()}$TOKEN_PATH")
+      aResponse().withStatus(307).withHeader("Location", "${elsewhere.runtimeInfo.httpsBaseUrl}$TOKEN_PATH")
     )
     stubApi(apiOk())
     elsewhere.stubFor(any(anyUrl()).willReturn(tokenSuccess("access-from-elsewhere")))
@@ -953,7 +977,7 @@ class WIFConformanceTest {
     val workos =
       WorkOS(
         apiKey = "sk_test_static",
-        apiBaseUrl = api.baseUrl(),
+        apiBaseUrl = apiBaseUrl(),
         httpClient = OkHttpClient.Builder().callTimeout(10, TimeUnit.SECONDS).build(),
         retryConfig = RetryConfig.DEFAULT
       )
@@ -1015,6 +1039,7 @@ class WIFConformanceTest {
         .environmentId(ENVIRONMENT_ID)
         .resource("https://resource.example.com")
         .scope("organizations:read")
+        .httpClient(trustingTheMock().build())
         .build()
 
     getThings(client(credentials))
@@ -1025,6 +1050,120 @@ class WIFConformanceTest {
     assertEquals("organizations:read", form["scope"])
     val unset = assertThrows(WorkloadIdentityException::class.java) { WorkloadIdentityCredentials.builder().build() }
     assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, unset.code)
+  }
+
+  // -------------------------------------------------------- token URL scheme
+
+  /**
+   * Constructs through the public constructor and through the Java builder, the second time with an `httpClient`.
+   * Neither has a setting that relaxes the rule.
+   */
+  private fun assertTokenUrlRejected(tokenUrl: String) {
+    val providerCalls = AtomicInteger()
+    val provider = IdentityTokenProvider { "assertion-${providerCalls.incrementAndGet()}" }
+    val constructions: List<() -> WorkloadIdentityCredentials> =
+      listOf(
+        { WorkloadIdentityCredentials(identityTokenProvider = provider, clientId = CLIENT_ID, tokenUrl = tokenUrl) },
+        {
+          WorkloadIdentityCredentials
+            .builder()
+            .identityTokenProvider(provider)
+            .clientId(CLIENT_ID)
+            .tokenUrl(tokenUrl)
+            .httpClient(trustingTheMock().build())
+            .build()
+        }
+      )
+    for (construct in constructions) {
+      val error = assertThrows(WorkloadIdentityException::class.java, { construct() }, "accepted <$tokenUrl>")
+      assertEquals(WorkloadIdentityException.INVALID_CONFIGURATION, error.code, "<$tokenUrl>")
+      assertEquals("tokenUrl must be an absolute https URL", error.description, "<$tokenUrl>")
+    }
+    assertEquals(0, providerCalls.get(), "<$tokenUrl>")
+  }
+
+  @Test
+  fun `an http token URL is rejected with no exception for localhost or a loopback address`() {
+    stubTokens()
+
+    listOf(
+      "http://example.com/oauth2/token",
+      "http://localhost:8080/oauth2/token",
+      "http://127.0.0.1/oauth2/token",
+      "http://[::1]/oauth2/token",
+      "HTTP://example.com/oauth2/token",
+      // The mock's own http port, where the token endpoint would answer.
+      "http://localhost:${api.port}$TOKEN_PATH",
+      "http://127.0.0.1:${api.port}$TOKEN_PATH"
+    ).forEach { assertTokenUrlRejected(it) }
+
+    // Rejected when the credentials are constructed: nothing was sent.
+    assertEquals(0, api.findAll(anyRequestedFor(anyUrl())).size)
+  }
+
+  @Test
+  fun `a token URL with no host or no scheme or another scheme is rejected`() {
+    listOf(
+      // No host.
+      "https://",
+      "https:///oauth2/token",
+      "https://:443/oauth2/token",
+      "https://?audience=workos",
+      // Not absolute. OkHttp reads a URL the way a browser does and would find a host in each of these.
+      "https:/example.com/oauth2/token",
+      "https:example.com/oauth2/token",
+      "https:\\\\example.com\\oauth2\\token",
+      " https://example.com/oauth2/token",
+      // No scheme.
+      "example.com/oauth2/token",
+      "localhost:8080/oauth2/token",
+      "//example.com/oauth2/token",
+      "/oauth2/token",
+      // Another scheme.
+      "ftp://example.com/oauth2/token",
+      "ws://example.com/oauth2/token",
+      "wss://example.com/oauth2/token",
+      "file:///oauth2/token"
+    ).forEach { assertTokenUrlRejected(it) }
+  }
+
+  @Test
+  fun `the https scheme of the token URL is accepted in any letter case and the exchange is sent over https`() {
+    stubTokens()
+    stubApi(apiOk())
+
+    for (scheme in listOf("HTTPS", "hTtPs")) {
+      api.resetRequests()
+      val tokenUrl = tokenUrl().replaceFirst("https", scheme)
+      val credentials =
+        WorkloadIdentityCredentials
+          .builder()
+          .identityTokenProvider { "assertion-1" }
+          .clientId(CLIENT_ID)
+          .tokenUrl(tokenUrl)
+          .httpClient(trustingTheMock().build())
+          .build()
+
+      getThings(client(credentials))
+
+      assertEquals(tokenUrl, credentials.tokenUrl)
+      assertEquals("https", exchanges().single().scheme)
+      assertEquals(1, apiAttempts().size)
+    }
+  }
+
+  @Test
+  fun `without the httpClient setting the exchange does not trust a certificate that the JVM does not trust`() {
+    stubTokens()
+    stubApi(apiOk())
+
+    val error =
+      assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(httpClient = null))) }
+
+    assertEquals(WorkloadIdentityException.EXCHANGE_FAILED, error.code)
+    assertInstanceOf(SSLHandshakeException::class.java, error.cause)
+    assertEquals(0, exchangeCount())
+    assertEquals(0, apiAttempts().size)
   }
 
   // ------------------------------------------------------ httpClient setting
@@ -1049,11 +1188,10 @@ class WIFConformanceTest {
         .builder()
         .identityTokenProvider { "assertion-1" }
         .clientId(CLIENT_ID)
-        .tokenUrl("http://$host:${api.port}$TOKEN_PATH")
+        .tokenUrl("https://$host:${api.httpsPort}$TOKEN_PATH")
         .environmentId(ENVIRONMENT_ID)
         .httpClient(
-          OkHttpClient
-            .Builder()
+          trustingTheMock()
             .dns(dns)
             .proxy(Proxy.NO_PROXY)
             .build()
@@ -1101,8 +1239,7 @@ class WIFConformanceTest {
         }
       }
     val httpClient =
-      OkHttpClient
-        .Builder()
+      trustingTheMock()
         .eventListener(eventListener)
         .cookieJar(cookieJar)
         .addInterceptor { chain ->
@@ -1142,7 +1279,7 @@ class WIFConformanceTest {
 
   @Test
   fun `the exchange keeps its own redirect and retry rules with the httpClient setting`() {
-    // A default OkHttpClient follows redirects, and silently resends a request
+    // An OkHttpClient follows redirects by default, and silently resends a request
     // when the pooled connection it used fails. The exchange must do neither,
     // whichever client it is given. The first exchange leaves a connection in
     // the pool, so the reset hits a connection that has already served a call:
@@ -1151,7 +1288,7 @@ class WIFConformanceTest {
     stubTokenEndpoint(
       tokenSuccess("access-1"),
       aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER),
-      aResponse().withStatus(307).withHeader("Location", "${elsewhere.baseUrl()}$TOKEN_PATH")
+      aResponse().withStatus(307).withHeader("Location", "${elsewhere.runtimeInfo.httpsBaseUrl}$TOKEN_PATH")
     )
     stubApi(apiOk())
     elsewhere.stubFor(any(anyUrl()).willReturn(tokenSuccess("access-from-elsewhere")))
@@ -1160,8 +1297,8 @@ class WIFConformanceTest {
       client(
         credentials(
           provider = { "assertion-${providerCalls.incrementAndGet()}" },
-          tokenUrl = "http://127.0.0.1:${api.port}$TOKEN_PATH",
-          httpClient = OkHttpClient()
+          tokenUrl = "https://127.0.0.1:${api.httpsPort}$TOKEN_PATH",
+          httpClient = trustingTheMock().build()
         )
       )
     getThings(workos)
@@ -1340,13 +1477,44 @@ class WIFConformanceTest {
 
     private val hold = HoldUntilReleased()
 
-    /** The token endpoint and the WorkOS API. */
+    /**
+     * Each mock listens on an http port and an https port. HTTP/2 is off, so every exchange is HTTP/1.1 over TLS,
+     * the protocol the connection-failure tests are written for.
+     */
+    private fun mockOptions(): WireMockConfiguration = wireMockConfig().dynamicPort().dynamicHttpsPort().http2TlsDisabled(true)
+
+    /** Trusts the certificate the mocks present over https, and no other. */
+    private val mockTrustManager: X509TrustManager =
+      run {
+        val served =
+          mockOptions()
+            .httpsSettings()
+            .keyStore()
+            .loadStore()
+        val trusted = KeyStore.getInstance(KeyStore.getDefaultType())
+        trusted.load(null, null)
+        served.aliases().toList().forEach { alias -> trusted.setCertificateEntry(alias, served.getCertificate(alias)) }
+        TrustManagerFactory
+          .getInstance(TrustManagerFactory.getDefaultAlgorithm())
+          .apply { init(trusted) }
+          .trustManagers
+          .filterIsInstance<X509TrustManager>()
+          .single()
+      }
+
+    private val mockSocketFactory: SSLSocketFactory =
+      SSLContext
+        .getInstance("TLS")
+        .apply { init(null, arrayOf(mockTrustManager), null) }
+        .socketFactory
+
+    /** The token endpoint (over https) and the WorkOS API (over http). */
     @RegisterExtension
     @JvmField
     val api: WireMockExtension =
       WireMockExtension
         .newInstance()
-        .options(wireMockConfig().dynamicPort().extensions(hold))
+        .options(mockOptions().extensions(hold))
         .build()
 
     /** A second server that must never be contacted: the target of the token endpoint's redirect. */
@@ -1355,7 +1523,7 @@ class WIFConformanceTest {
     val elsewhere: WireMockExtension =
       WireMockExtension
         .newInstance()
-        .options(wireMockConfig().dynamicPort())
+        .options(mockOptions())
         .build()
   }
 }

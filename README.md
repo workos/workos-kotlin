@@ -148,7 +148,7 @@ workos.organizations.list()
 | ----------------------- | -------- | ------------------------ | ---------------------------------------------- |
 | `identityTokenProvider` | yes      | none                     | Returns the workload's identity token (a JWT). |
 | `clientId`              | yes      | none                     | The M2M application's client ID.               |
-| `tokenUrl`              | yes      | none                     | The token exchange endpoint.                   |
+| `tokenUrl`              | yes      | none                     | The token exchange endpoint. Must be `https`.  |
 | `environmentId`         | no       | none                     | The WorkOS environment ID. A safety check.     |
 | `resource`              | no       | `https://api.workos.com` | The resource the access token is for.          |
 | `scope`                 | no       | none                     | The scope to request. Left out when empty.     |
@@ -156,6 +156,11 @@ workos.organizations.list()
 
 Every setting is set in code: the credentials read no environment variable.
 A missing required setting is an error when the credentials are constructed.
+
+`tokenUrl` must be an absolute `https` URL. The exchange sends the workload's
+identity token to it and gets the access token back, so an `http` URL is an
+error when the credentials are constructed, also for `localhost` and loopback
+addresses. No setting allows one.
 
 `environmentId` is optional and is set only in code: no environment variable
 is read for it. The server binds the application to exactly one environment
