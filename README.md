@@ -271,8 +271,10 @@ and `IdentityTokenProviders.tokenEnv(name)`. A Java lambda works as an
 - The client never sends an API key. `WorkloadIdentity.client` takes none,
   and `WORKOS_API_KEY` is not read. If the credentials fail, the request
   fails; nothing falls back to a key.
-- Methods that send the API key as a `client_secret` (the SSO and User
-  Management code exchanges) cannot be used on this client.
+- Calls that send the API key as the client secret cannot be made with this
+  client and still need one built with an API key: `sso.getProfileAndToken`,
+  every `userManagement.authenticateWith...` method except
+  `authenticateWithDeviceCode`, and session refresh.
 - A 401 from the API makes the SDK fetch a new access token and retry the
   request once.
 - A failure to get an access token is a
