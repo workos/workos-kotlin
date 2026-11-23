@@ -20,6 +20,13 @@ private const val MISSING_ENDPOINT =
   "GitHub Actions did not provide an OIDC token endpoint. " +
     "Add `permissions: id-token: write` to the workflow or job."
 
+private const val UNUSABLE_REQUEST_TOKEN =
+  "$REQUEST_TOKEN_VARIABLE contains a character that is not allowed in an HTTP header, such as a line break. " +
+    "GitHub Actions sets this variable; pass it to the program unchanged."
+
+/** The characters a request token may have: visible ASCII. */
+private val HEADER_SAFE = '!'..'~'
+
 private val TIMEOUT: Duration = Duration.ofSeconds(10)
 
 private const val VALUE_KEY = "\"value\""
@@ -66,6 +73,9 @@ internal fun githubActions(
     // Both variables are read on every call: a runner sets them per job.
     val url = env(REQUEST_URL_VARIABLE)?.takeIf { it.isNotEmpty() } ?: error(MISSING_ENDPOINT)
     val requestToken = env(REQUEST_TOKEN_VARIABLE)?.takeIf { it.isNotEmpty() } ?: error(MISSING_ENDPOINT)
+    // Checked here, because the HTTP client refuses such a value with an
+    // error that quotes it, and the request token must never be in an error.
+    if (requestToken.any { it !in HEADER_SAFE }) error(UNUSABLE_REQUEST_TOKEN)
 
     // The URL GitHub provides already has a query string; add to it.
     val separator = if (url.contains('?')) '&' else '?'

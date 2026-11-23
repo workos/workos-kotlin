@@ -85,6 +85,25 @@ class WIFGitHubActionsTest {
   }
 
   @Test
+  fun `a request token that cannot go in a header is refused before any request and is never quoted`() {
+    stubToken("""{"value": "gha-jwt"}""")
+
+    // A line break at the end is the likely case: a wrapper that read the token from a file or a command.
+    val endings = listOf("\n", "\r\ntoken", " token", "\ttoken", "\u0000", "\u007F", "é", "€")
+    for (ending in endings) {
+      val error =
+        assertThrows(IllegalStateException::class.java) {
+          githubActions("https://api.workos.com", environment(requestToken = "s3cr3t$ending")).getToken()
+        }
+      assertTrue(error.message.orEmpty().contains("ACTIONS_ID_TOKEN_REQUEST_TOKEN"), "unexpected message: ${error.message}")
+      assertFalse(error.toString().contains("s3cr3t"), "the error quotes the request token")
+      assertNull(error.cause)
+    }
+
+    assertEquals(0, runner.findAll(anyRequestedFor(anyUrl())).size)
+  }
+
+  @Test
   fun `a failing endpoint is an error that names the status and never the request token`() {
     runner.stubFor(any(anyUrl()).willReturn(aResponse().withStatus(404).withBody("""{"value": "not-a-token"}""")))
 
