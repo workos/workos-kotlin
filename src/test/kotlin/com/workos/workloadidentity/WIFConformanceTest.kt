@@ -69,6 +69,7 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLPeerUnverifiedException
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
@@ -82,7 +83,9 @@ import javax.net.ssl.X509TrustManager
  * both the token endpoint (`/oauth2/token`) and the WorkOS API (`/things`).
  * The token endpoint is reached over https, because the credentials accept
  * no other scheme; the credentials under test get a client that trusts the
- * mock's certificate through their `httpClient` setting. Time comes from an
+ * mock's certificate through their `httpClient` setting. That certificate
+ * names the hosts the tests reach the mock by, so the host name is checked
+ * as in any other client. Time comes from an
  * injected clock and backoff waits from an injected sleeper, so no test
  * sleeps to make time pass.
  */
@@ -103,15 +106,11 @@ class WIFConformanceTest {
   private fun apiBaseUrl(): String = api.runtimeInfo.httpBaseUrl
 
   /**
-   * A client builder that can reach the mocks over https, for the `httpClient` setting. The mock's certificate is
-   * signed by no authority and names no host, so the client trusts that one certificate and skips the host name
-   * check.
+   * A client builder that can reach the mocks over https, for the `httpClient` setting. The mocks' certificate is
+   * signed by no authority, so the client trusts that one certificate. The host name check is the default one: the
+   * certificate names every host the tests use.
    */
-  private fun trustingTheMock(): OkHttpClient.Builder =
-    OkHttpClient
-      .Builder()
-      .sslSocketFactory(mockSocketFactory, mockTrustManager)
-      .hostnameVerifier { _, _ -> true }
+  private fun trustingTheMock(): OkHttpClient.Builder = OkHttpClient.Builder().sslSocketFactory(mockSocketFactory, mockTrustManager)
 
   private fun credentials(
     provider: IdentityTokenProvider = IdentityTokenProvider { "assertion-1" },
@@ -1262,15 +1261,9 @@ class WIFConformanceTest {
     stubApi(apiOk())
     // Only this client's DNS can resolve the token endpoint's host name, so
     // the exchange succeeds only if it is made with this client's settings.
-    val host = "token-endpoint.invalid"
+    val host = CUSTOM_DNS_HOST
     val lookups = CopyOnWriteArrayList<String>()
-    val dns =
-      object : Dns {
-        override fun lookup(hostname: String): List<InetAddress> {
-          lookups += hostname
-          return if (hostname == host) listOf(InetAddress.getLoopbackAddress()) else Dns.SYSTEM.lookup(hostname)
-        }
-      }
+    val dns = resolvingToTheMock(host, lookups)
     val credentials =
       WorkloadIdentityCredentials
         .builder()
@@ -1291,6 +1284,42 @@ class WIFConformanceTest {
     assertEquals("assertion-1", exchangeForms().single()["assertion"])
     assertEquals(1, apiAttemptsWith("access-1"))
   }
+
+  @Test
+  fun `the client that trusts the certificate of the mock still checks the host name`() {
+    stubTokens()
+    stubApi(apiOk())
+    // The mock answers for this host name, but its certificate does not name it.
+    val host = "not-in-the-certificate.invalid"
+    val lookups = CopyOnWriteArrayList<String>()
+    val httpClient =
+      trustingTheMock()
+        .dns(resolvingToTheMock(host, lookups))
+        .proxy(Proxy.NO_PROXY)
+        .build()
+    val workos =
+      client(credentials(tokenUrl = "https://$host:${api.httpsPort}$TOKEN_PATH", httpClient = httpClient))
+
+    val error = assertThrows(WorkloadIdentityException::class.java) { getThings(workos) }
+
+    assertEquals(WorkloadIdentityException.EXCHANGE_FAILED, error.code)
+    assertInstanceOf(SSLPeerUnverifiedException::class.java, error.cause)
+    assertTrue(lookups.contains(host))
+    assertEquals(0, exchangeCount())
+    assertEquals(0, apiAttempts().size)
+  }
+
+  /** A DNS that resolves [host] to the loopback address, where the mocks listen, and records every name it is asked. */
+  private fun resolvingToTheMock(
+    host: String,
+    lookups: MutableList<String>
+  ): Dns =
+    object : Dns {
+      override fun lookup(hostname: String): List<InetAddress> {
+        lookups += hostname
+        return if (hostname == host) listOf(InetAddress.getLoopbackAddress()) else Dns.SYSTEM.lookup(hostname)
+      }
+    }
 
   @Test
   fun `the exchange does not run the interceptors or event listener or authenticator or cookie jar of the httpClient setting`() {
@@ -1563,13 +1592,69 @@ class WIFConformanceTest {
     /** Set on the test JVM by the Gradle test task. */
     private const val ENV_API_KEY = "sk_test_env"
 
+    /** A host name that only a DNS supplied by a test resolves. The mocks' certificate names it. */
+    private const val CUSTOM_DNS_HOST = "token-endpoint.invalid"
+
+    /** Protects a keystore that holds only the throwaway key below. */
+    private const val MOCK_KEYSTORE_PASSWORD = "mock-keystore"
+
     private val hold = HoldUntilReleased()
 
     /**
-     * Each mock listens on an http port and an https port. HTTP/2 is off, so every exchange is HTTP/1.1 over TLS,
-     * the protocol the connection-failure tests are written for.
+     * The key and certificate the mocks serve https with, made for this test run by the JDK's own `keytool` and
+     * deleted when the JVM exits. The certificate names every host the tests reach a mock by: `localhost`,
+     * `127.0.0.1` and [CUSTOM_DNS_HOST]. WireMock's built-in certificate names none of them, and a client could
+     * only accept it with the host name check switched off.
      */
-    private fun mockOptions(): WireMockConfiguration = wireMockConfig().dynamicPort().dynamicHttpsPort().http2TlsDisabled(true)
+    private val mockKeyStore: Path =
+      run {
+        val directory = Files.createTempDirectory("workos-wif-mock")
+        val keyStore = directory.resolve("mock.p12")
+        keyStore.toFile().deleteOnExit()
+        directory.toFile().deleteOnExit()
+        val keytool =
+          ProcessBuilder(
+            Path.of(System.getProperty("java.home"), "bin", "keytool").toString(),
+            "-genkeypair",
+            "-alias",
+            "mock",
+            "-keyalg",
+            "RSA",
+            "-keysize",
+            "2048",
+            "-validity",
+            "7",
+            "-dname",
+            "CN=workos-kotlin test mock",
+            "-ext",
+            "SAN=DNS:localhost,IP:127.0.0.1,DNS:$CUSTOM_DNS_HOST",
+            "-storetype",
+            "PKCS12",
+            "-keystore",
+            keyStore.toString(),
+            "-storepass",
+            MOCK_KEYSTORE_PASSWORD,
+            "-keypass",
+            MOCK_KEYSTORE_PASSWORD
+          ).redirectErrorStream(true).start()
+        val output = keytool.inputStream.bufferedReader().readText()
+        check(keytool.waitFor() == 0) { "keytool could not make the mocks' certificate: $output" }
+        keyStore
+      }
+
+    /**
+     * Each mock listens on an http port and an https port, and serves https with [mockKeyStore]. HTTP/2 is off, so
+     * every exchange is HTTP/1.1 over TLS, the protocol the connection-failure tests are written for.
+     */
+    private fun mockOptions(): WireMockConfiguration =
+      wireMockConfig()
+        .dynamicPort()
+        .dynamicHttpsPort()
+        .http2TlsDisabled(true)
+        .keystorePath(mockKeyStore.toString())
+        .keystoreType("PKCS12")
+        .keystorePassword(MOCK_KEYSTORE_PASSWORD)
+        .keyManagerPassword(MOCK_KEYSTORE_PASSWORD)
 
     /** Trusts the certificate the mocks present over https, and no other. */
     private val mockTrustManager: X509TrustManager =
