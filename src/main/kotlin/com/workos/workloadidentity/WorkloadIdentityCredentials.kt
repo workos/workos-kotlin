@@ -46,6 +46,9 @@ private const val REFRESH_FRACTION = 0.2
 /** Deadline for one whole exchange: every attempt, provider call and backoff wait. */
 private const val EXCHANGE_DEADLINE_MILLIS = 30_000L
 
+/** What replaces the identity token in an error text that the token endpoint sent back. */
+private const val REDACTED = "[redacted]"
+
 private val JSON = ObjectMapper()
 
 /** `https://` in any letter case, then a character that can start a host: not `/`, `\`, `?` or `#`. */
@@ -432,19 +435,21 @@ class WorkloadIdentityCredentials internal constructor(
     val body = reply.body
 
     // The status is checked before the body: a 429 or 5xx is retried even
-    // when its body is an OAuth error.
-    val oauthError = parseOAuthError(body)
+    // when its body is an OAuth error. The error is read with this attempt's
+    // identity token, which the server may have repeated in it.
+    val oauthError = parseOAuthError(body, assertion)
     if (RetryPolicy.isRetryableStatus(status)) {
       val failure =
         WorkloadIdentityException(
           oauthError?.code ?: WorkloadIdentityException.EXCHANGE_FAILED,
           oauthError?.description?.takeIf { it.isNotEmpty() } ?: "The token endpoint returned HTTP $status.",
-          status
+          status,
+          hintCode = oauthError?.hintCode ?: WorkloadIdentityException.EXCHANGE_FAILED
         )
       return AttemptResult.Retry(AttemptOutcome.Response(status, reply.retryAfter), failure)
     }
     if (oauthError != null) {
-      throw WorkloadIdentityException(oauthError.code, oauthError.description, status)
+      throw WorkloadIdentityException(oauthError.code, oauthError.description, status, hintCode = oauthError.hintCode)
     }
     if (status in 300..399) {
       throw WorkloadIdentityException(
@@ -470,7 +475,18 @@ class WorkloadIdentityCredentials internal constructor(
       cause = cause
     )
 
-  private fun parseOAuthError(body: String): OAuthError? {
+  /**
+   * The OAuth error in [body], or `null` when it holds none. A token endpoint
+   * may repeat the identity token it was sent in `error` or
+   * `error_description`, so every occurrence of [assertion], the token sent
+   * in this attempt, is replaced before either text is kept. The description
+   * is cut to its limit later, so a cut cannot leave the start of a token
+   * behind.
+   */
+  private fun parseOAuthError(
+    body: String,
+    assertion: String
+  ): OAuthError? {
     val tree = readJson(body) ?: return null
     val code =
       tree
@@ -484,7 +500,7 @@ class WorkloadIdentityCredentials internal constructor(
         .takeIf { it.isTextual }
         ?.asText()
         .orEmpty()
-    return OAuthError(code, description)
+    return OAuthError(code.without(assertion), description.without(assertion), hintCode = code)
   }
 
   private fun parseTokenResponse(body: String): TokenResponse {
@@ -613,10 +629,16 @@ private class TokenEndpointReply(
   val body: String
 )
 
+/** The token endpoint's `error` and `error_description`, with the identity token taken out of both. */
 private class OAuthError(
   val code: String,
-  val description: String
+  val description: String,
+  /** The `error` as the server sent it. The hint is chosen by it; it is never kept in an error. */
+  val hintCode: String
 )
+
+/** This text with every occurrence of [assertion] replaced by [REDACTED]. */
+private fun String.without(assertion: String): String = if (assertion.isEmpty()) this else replace(assertion, REDACTED)
 
 private sealed class AttemptResult {
   class Success(

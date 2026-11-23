@@ -677,17 +677,105 @@ class WIFConformanceTest {
       stubApi(apiStatus(401))
       errors += assertThrows(UnauthorizedException::class.java) { getThings(client(credentials(provider = { assertion }))) }
       assertEquals(2, apiAttemptsWith(accessToken))
+
+      // A token endpoint that repeats the assertion in the description of an error that is not retried.
+      api.resetAll()
+      stubTokenEndpoint(oauthError("invalid_grant", "JWT $assertion failed validation"))
+      stubApi(apiOk())
+      val refused =
+        assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = { assertion }))) }
+      assertEquals("invalid_grant", refused.code)
+      assertEquals("JWT [redacted] failed validation", refused.description)
+      assertEquals(1, exchangeCount())
+      errors += refused
+
+      // The same body on a 503, until the retries run out. The description of the last failure is kept.
+      api.resetAll()
+      stubTokenEndpoint(oauthError("invalid_grant", "JWT $assertion failed validation").withStatus(503))
+      stubApi(apiOk())
+      val exhausted =
+        assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = { assertion }))) }
+      assertEquals(RetryConfig.DEFAULT.maxRetries + 1, exchangeCount())
+      assertEquals("invalid_grant", exhausted.code)
+      assertEquals("JWT [redacted] failed validation", exhausted.description)
+      errors += exhausted
+
+      // A token endpoint that repeats the assertion in the error code itself.
+      api.resetAll()
+      stubTokenEndpoint(oauthError(assertion, "the code above is the token"))
+      stubApi(apiOk())
+      val echoedCode =
+        assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = { assertion }))) }
+      assertEquals("[redacted]", echoedCode.code)
+      errors += echoedCode
     } finally {
       System.setOut(originalOut)
       System.setErr(originalErr)
     }
 
-    assertEquals(4, errors.size)
+    assertEquals(7, errors.size)
     val texts = errors.flatMap { representations(it) } + captured.toString(Charsets.UTF_8)
     for (text in texts) {
       assertFalse(text.contains(assertion), "the assertion leaked into: $text")
       assertFalse(text.contains(accessToken), "the access token leaked into: $text")
     }
+  }
+
+  @Test
+  fun `WIF-17 the assertion is taken out of a description before the description is cut to its limit`() {
+    val assertion = "SECRET-ASSERTION-VALUE"
+    // Cut first, the 500 characters would end with the first five characters of the assertion.
+    val padding = "x".repeat(495)
+    stubTokenEndpoint(oauthError("invalid_grant", padding + assertion))
+    stubApi(apiOk())
+
+    val error =
+      assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = { assertion }))) }
+
+    assertEquals(padding + "[reda", error.description)
+    for (text in representations(error)) {
+      assertFalse(text.contains("SECRE"), "the start of the assertion leaked into: $text")
+    }
+  }
+
+  @Test
+  fun `WIF-17 the assertion taken out of an error is the one sent in that attempt`() {
+    // Every attempt sends a new assertion, and each response repeats the one it was sent.
+    val providerCalls = AtomicInteger()
+    val provider = IdentityTokenProvider { "SECRET-ASSERTION-${providerCalls.incrementAndGet()}" }
+    stubTokenEndpoint(
+      oauthError("temporarily_unavailable", "JWT SECRET-ASSERTION-1 was not read").withStatus(503),
+      oauthError("invalid_grant", "JWT SECRET-ASSERTION-2 failed validation")
+    )
+    stubApi(apiOk())
+
+    val error = assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = provider))) }
+
+    assertEquals(2, providerCalls.get())
+    assertEquals(listOf("SECRET-ASSERTION-1", "SECRET-ASSERTION-2"), exchangeForms().map { it["assertion"] })
+    assertEquals("invalid_grant", error.code)
+    assertEquals("JWT [redacted] failed validation", error.description)
+    for (text in representations(error)) {
+      assertFalse(text.contains("SECRET-ASSERTION"), "an assertion leaked into: $text")
+    }
+  }
+
+  @Test
+  fun `WIF-17 taking the assertion out of an error code does not change the hint`() {
+    // Contrived: the assertion is part of a code the SDK has a hint for. The code that is kept has it taken out, and
+    // the hint is still the one for the code the server sent.
+    stubTokenEndpoint(oauthError("invalid_grant"))
+    stubApi(apiOk())
+    val expected = assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials())) }
+    api.resetAll()
+    stubTokenEndpoint(oauthError("invalid_grant"))
+    stubApi(apiOk())
+
+    val error = assertThrows(WorkloadIdentityException::class.java) { getThings(client(credentials(provider = { "grant" }))) }
+
+    assertEquals("invalid_[redacted]", error.code)
+    assertEquals(expected.hint, error.hint)
+    assertTrue(error.message.orEmpty().startsWith("invalid_[redacted]: ${expected.hint}"), "unexpected message: ${error.message}")
   }
 
   /** Every way an error is likely to be printed: message, string form, fields and the full stack trace with causes. */

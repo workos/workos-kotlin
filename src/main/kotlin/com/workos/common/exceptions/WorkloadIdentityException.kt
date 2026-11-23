@@ -44,10 +44,11 @@ private fun cut(description: String): String = description.take(DESCRIPTION_LIMI
 
 private fun messageFor(
   code: String,
+  hint: String,
   description: String
 ): String {
   val shortened = cut(description)
-  return if (shortened.isEmpty()) "$code: ${hintFor(code)}" else "$code: ${hintFor(code)} $shortened"
+  return if (shortened.isEmpty()) "$code: $hint" else "$code: $hint $shortened"
 }
 
 /**
@@ -60,27 +61,35 @@ private fun messageFor(
  * [PROVIDER_FAILED] and [INVALID_CONFIGURATION] for failures the SDK detects
  * itself. The message is `<code>: <hint>`, followed by [description] when
  * there is one. Neither the identity token nor the access token ever appears
- * in the message or in any field.
+ * in the message or in any field: where the token endpoint repeats the
+ * identity token in its error, the SDK puts `[redacted]` in its place.
  */
 class WorkloadIdentityException internal constructor(
   code: String,
   description: String,
   status: Int = 0,
-  cause: Throwable? = null
+  cause: Throwable? = null,
+  // The code the hint is chosen by. It differs from `code` only when the
+  // token endpoint's `error` held the identity token: the token is taken out
+  // of `code`, and that must not change which hint applies. It is not kept.
+  hintCode: String = code
 ) : WorkOSException(
     status = status,
     requestId = null,
     code = code,
-    message = messageFor(code, description),
+    message = messageFor(code, hintFor(hintCode), description),
     errors = null,
     rawBody = null,
     cause = cause
   ) {
-  /** The token endpoint's `error_description`, cut to 500 characters, or the SDK's own detail. Empty when there is none. */
+  /**
+   * The token endpoint's `error_description`, with the identity token replaced by `[redacted]` if the endpoint
+   * repeated it, then cut to 500 characters; or the SDK's own detail. Empty when there is none.
+   */
   @JvmField val description: String = cut(description)
 
   /** One sentence on what to check. Never empty. */
-  @JvmField val hint: String = hintFor(code)
+  @JvmField val hint: String = hintFor(hintCode)
 
   /** Error codes the SDK raises for failures that have no OAuth error code. */
   companion object {
