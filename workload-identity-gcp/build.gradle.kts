@@ -39,7 +39,7 @@ dependencies {
   // Needed only for the IdentityTokenProvider interface. The lower bound is
   // the first SDK release that has it; raise the upper bound with every SDK
   // major.
-  api("com.workos:workos:[7.7.0,8.0.0)")
+  api("com.workos:workos:[7.8.0,8.0.0)")
 
   testImplementation("org.wiremock:wiremock:3.13.2")
 

@@ -18,7 +18,7 @@ metadata_url="https://repo1.maven.org/maven2/com/workos/workos/maven-metadata.xm
 
 [ -f "$build_file" ] || { echo "No build file at $build_file" >&2; exit 1; }
 
-# The declaration looks like: api("com.workos:workos:[7.7.0,8.0.0)")
+# The declaration looks like: api("com.workos:workos:[7.8.0,8.0.0)")
 range="$(grep -oE 'com\.workos:workos:\[[0-9]+\.[0-9]+\.[0-9]+,[0-9]+\.[0-9]+\.[0-9]+\)' "$build_file" | head -n 1 || true)"
 if [ -z "$range" ]; then
   echo "No com.workos:workos version range of the form [X.Y.Z,X.Y.Z) in $build_file" >&2
