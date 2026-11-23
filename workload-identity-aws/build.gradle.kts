@@ -35,6 +35,9 @@ configurations.configureEach {
   }
 }
 
+// One version for every AWS SDK artifact, so that they cannot drift apart.
+val awsSdkVersion = "2.57.13"
+
 dependencies {
   // Needed only for the IdentityTokenProvider interface. The lower bound is
   // the first SDK release that has it; raise the upper bound with every SDK
@@ -42,7 +45,11 @@ dependencies {
   api("com.workos:workos:[7.8.0,8.0.0)")
 
   // The only place the AWS SDK appears. It is never a dependency of the SDK.
-  implementation("software.amazon.awssdk:sts:2.57.13")
+  implementation("software.amazon.awssdk:sts:$awsSdkVersion")
+
+  // The HTTP client that the STS artifact already brings in and uses by
+  // default. It is named here because the provider sets its connect timeout.
+  implementation("software.amazon.awssdk:apache5-client:$awsSdkVersion")
 
   testImplementation(platform("org.junit:junit-bom:6.1.3"))
 

@@ -31,4 +31,8 @@ val workos = WorkloadIdentity.client(credentials)
 
 The role needs permission for `sts:GetWebIdentityToken`, and the account needs outbound web identity federation enabled. The region is optional when the AWS SDK can find one. This is the only WorkOS artifact that depends on the AWS SDK. From Java, the factory is `AwsSts.awsSts(audience, region)`.
 
+Each call to the provider makes one STS request, with 10 seconds to connect and 10 seconds for the whole request. The AWS SDK's own retries are switched off for the provider's STS client, because the WorkOS SDK calls the provider again when an exchange attempt fails.
+
+The provider owns its STS client and the connection pool that comes with it. A provider that lives as long as the application needs no care. Call `close()` on a provider that you replace or stop using.
+
 See [Workload identity](../README.md#workload-identity) in the SDK's README for every setting and for error handling.
