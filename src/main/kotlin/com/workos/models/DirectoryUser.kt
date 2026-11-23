@@ -34,7 +34,7 @@ data class DirectoryUser(
 
   /** The raw attributes received from the directory provider. */
   @JsonProperty("raw_attributes")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val rawAttributes: Map<String, Any>,
 
   /** An object containing the custom attribute mapping for the Directory Provider. */
@@ -67,17 +67,17 @@ data class DirectoryUser(
 
   /** A list of email addresses for the user. */
   @JsonProperty("emails")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val emails: List<DirectoryUserEmail>? = null,
 
   /** The job title of the user. */
   @JsonProperty("job_title")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val jobTitle: String? = null,
 
   /** The username of the user. */
   @JsonProperty("username")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val username: String? = null,
 
   /** The role. */

@@ -12,5 +12,9 @@ data class PolicyDeniedErrorBody(
 
   /** The error code identifying the type of error. */
   @JsonProperty("code")
-  val code: String = "policy_denied"
+  val code: String = "policy_denied",
+
+  /** The ID of the Radar detection that blocked the request. Only set when Radar blocked it. */
+  @JsonProperty("radar_detection_id")
+  val radarDetectionId: String? = null
 )

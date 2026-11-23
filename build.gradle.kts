@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import java.util.Properties
 
 group = "com.workos"
-version = "7.6.0" // x-release-please-version
+version = "7.7.0" // x-release-please-version
 
 if (!project.hasProperty("release")) {
   version = "$version-SNAPSHOT"
@@ -16,9 +16,9 @@ plugins {
 
   id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
-  id("org.jetbrains.dokka") version "2.2.0"
+  id("org.jetbrains.dokka") version "2.3.0"
 
-  id("org.jetbrains.dokka-javadoc") version "2.2.0"
+  id("org.jetbrains.dokka-javadoc") version "2.3.0"
 
   id("com.vanniktech.maven.publish") version "0.37.0"
 
@@ -37,11 +37,11 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.3")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.23.0")
 
-  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.3")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.23.0")
 
-  implementation("com.squareup.okhttp3:okhttp:5.5.0")
+  implementation("com.squareup.okhttp3:okhttp:5.5.1")
 
   // JWT verification + JWKS handling for session helpers (hand-maintained).
   implementation("com.nimbusds:nimbus-jose-jwt:10.10")

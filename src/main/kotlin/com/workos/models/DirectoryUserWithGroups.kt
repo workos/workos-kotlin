@@ -34,7 +34,7 @@ data class DirectoryUserWithGroups(
 
   /** The raw attributes received from the directory provider. */
   @JsonProperty("raw_attributes")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val rawAttributes: Map<String, Any>,
 
   /** An object containing the custom attribute mapping for the Directory Provider. */
@@ -49,11 +49,9 @@ data class DirectoryUserWithGroups(
   @JsonProperty("updated_at")
   val updatedAt: OffsetDateTime,
 
-  /** The directory groups the user belongs to. Deprecated: starting May 1, 2026, this field returns an empty array by default for newly created teams. Existing teams currently depending on this field should migrate to the new access pattern for better throughput performance — the field is unbounded by user, so users with many group memberships produce large, slow response payloads. Use the List Directory Groups endpoint with a `user` filter to fetch a user's group memberships. */
+  /** The directory groups the user belongs to. Deprecated: use `GET /directories/{directoryId}/groups?user={userId}` instead. */
   @JsonProperty("groups")
-  @Deprecated(
-    "The directory groups the user belongs to. Deprecated: starting May 1, 2026, this field returns an empty array by default for newly created teams. Existing teams currently depending on this field should migrate to the new access pattern for better throughput performance — the field is unbounded by user, so users with many group memberships produce large, slow response payloads. Use the List Directory Groups endpoint with a `user` filter to fetch a user's group memberships."
-  )
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/groups?user={userId}` instead.")
   val groups: List<DirectoryGroup>,
 
   /** Distinguishes the Directory User object. */
@@ -74,17 +72,17 @@ data class DirectoryUserWithGroups(
 
   /** A list of email addresses for the user. */
   @JsonProperty("emails")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val emails: List<DirectoryUserWithGroupsEmail>? = null,
 
   /** The job title of the user. */
   @JsonProperty("job_title")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val jobTitle: String? = null,
 
   /** The username of the user. */
   @JsonProperty("username")
-  @Deprecated("Deprecated.")
+  @Deprecated("This field is deprecated.")
   val username: String? = null,
 
   /** The role. */

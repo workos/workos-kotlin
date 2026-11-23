@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 /** ClientApiTokenResponse model. */
 data class ClientApiTokenResponse(
-  /** The Client API token. */
+  /** The Widgets API token. */
   @JsonProperty("token")
   val token: String
 )

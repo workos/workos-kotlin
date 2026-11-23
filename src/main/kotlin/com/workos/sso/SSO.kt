@@ -28,6 +28,7 @@ import com.workos.models.SAMLSpSigningCertificate
 import com.workos.models.SSOLogoutAuthorizeResponse
 import com.workos.models.SSOTokenResponse
 import com.workos.types.ConnectionsConnectionType
+import com.workos.types.ConnectionsState
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -111,6 +112,7 @@ class SSO(
    * @param domain Filter Connections by their associated domain.
    * @param organizationId Filter Connections by their associated organization.
    * @param search Searchable text to match against Connection names.
+   * @param state Filter Connections by their state.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
@@ -125,7 +127,8 @@ class SSO(
     domain: String? = null,
     organizationId: String? = null,
     search: String? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    state: ConnectionsState? = null
   ): Page<Connection> {
     val itemType = object : TypeReference<Connection>() {}
     return workos.baseClient.requestPage(
@@ -142,6 +145,7 @@ class SSO(
       addIfNotNull("domain", domain)
       addIfNotNull("organization_id", organizationId)
       addIfNotNull("search", search)
+      state?.let { add("state" to it.value) }
     }
   }
 
@@ -163,10 +167,11 @@ class SSO(
     domain: String? = null,
     organizationId: String? = null,
     search: String? = null,
-    requestOptions: RequestOptions? = null
+    requestOptions: RequestOptions? = null,
+    state: ConnectionsState? = null
   ): Page<Connection> =
     withContext(Dispatchers.IO) {
-      listConnections(before, after, limit, order, connectionType, domain, organizationId, search, requestOptions)
+      listConnections(before, after, limit, order, connectionType, domain, organizationId, search, requestOptions, state)
     }
 
   /**

@@ -2,5 +2,15 @@
 
 package com.workos.models
 
-/** Alias for [UpdateRole]. */
-typealias UpdateGroup = UpdateRole
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** UpdateGroup model. */
+data class UpdateGroup(
+  /** The name of the Group. */
+  @JsonProperty("name")
+  val name: String? = null,
+
+  /** An optional description of the Group. */
+  @JsonProperty("description")
+  val description: String? = null
+)

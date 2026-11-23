@@ -2,5 +2,15 @@
 
 package com.workos.models
 
-/** Alias for [AuthenticationMFAFailedDataError]. */
-typealias ErrorBodyWithCode = AuthenticationMFAFailedDataError
+import com.fasterxml.jackson.annotation.JsonProperty
+
+/** ErrorBodyWithCode model. */
+data class ErrorBodyWithCode(
+  /** The error code identifying the type of error. */
+  @JsonProperty("code")
+  val code: String,
+
+  /** A human-readable description of the error. */
+  @JsonProperty("message")
+  val message: String
+)

@@ -4,8 +4,8 @@ package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-/** SSORequiredOAuthErrorBodyWithConnectionIdsListEmailPendingAuthenticationToken model. */
-data class SSORequiredOAuthErrorBodyWithConnectionIdsListEmailPendingAuthenticationToken(
+/** SSORequiredOAuthErrorBodyWithConnectionIdsListEmail model. */
+data class SSORequiredOAuthErrorBodyWithConnectionIdsListEmail(
   /** A human-readable description of the error. */
   @JsonProperty("error_description")
   val errorDescription: String,

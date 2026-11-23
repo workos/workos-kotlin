@@ -1,5 +1,89 @@
 # Changelog
 
+## [7.7.0](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.7.0) (2026-11-13)
+
+### Bug Fixes
+
+* **session:** Reject non-user access tokens in session cookies ([#460](https://github.com/workos/workos-kotlin/issues/460)) ([ff014b7](https://github.com/workos/workos-kotlin/commit/ff014b7ad9ca11b73f751c2c2253d267564f8d8e))
+
+* [#462](https://github.com/workos/workos-kotlin/pull/462) feat(generated)!: regenerate from spec (2 changes)
+
+  **⚠️ Breaking**
+  * **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    * Added parameter `Directories.find.directoryId`
+    * Added parameter `Directories.find.groupId`
+    * Removed parameter `Directories.find.id`
+    * Changed path for endpoint `GET /directories/{directoryId}/groups/{groupId}`
+    * Changed server default for parameter `DirectoryGroups.list`
+    * Changed server default for parameter `DirectoryGroups.find`
+    * Changed server default for parameter `DirectoryUsers.list`
+    * Changed server default for parameter `DirectoryUsers.find`
+
+  **Features**
+  * **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    * Added endpoint `GET /directories/{id}`
+    * Added endpoint `GET /directories/{directoryId}/groups`
+    * Added endpoint `GET /directories/{directoryId}/users`
+    * Added endpoint `GET /directories/{directoryId}/users/{userId}`
+  * **[multi_factor_auth](https://workos.com/docs/reference/authkit/mfa)**:
+    * Added model `TooManyFailedVerificationAttemptsErrorBodyWithRetryAfter`
+    * Changed errors for endpoint `POST /auth/challenges/{id}/verify`
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `config` to `CreateOrganizationConnectedAccount`
+    * Added `metadata` to `CreateOrganizationConnectedAccount`
+    * Added `config` to `OrganizationConnectedAccount`
+    * Added `config` to `CreateConnectedAccount`
+    * Added `metadata` to `CreateConnectedAccount`
+    * Added `config` to `ConnectedAccountInput`
+    * Added `too_many_failed_verification_attempts` to `ErrorBodyCode`
+    * Added `ip_address_required` to `ErrorBodyCode`
+    * Added enum `PipesProviderOwnership`
+    * Added parameter `PipesProvider.listForOrganization.ownership`
+    * Changed errors for endpoint `GET /organizations/{organizationId}/data_integration_configurations`
+    * Added parameter `PipesProvider.configure.ownership`
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Added `radar_detection_id` to `PolicyDeniedErrorBody`
+  * **[webhooks](https://workos.com/docs/reference/webhooks)**:
+    * Added `feature_flags.flag.created` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag.updated` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag.deleted` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.created` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.updated` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag_target.created` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.deleted` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag_target.deleted` to `CreateWebhookEndpointEvents`
+    * Added `feature_flags.flag.created` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag.updated` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag.deleted` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.created` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.updated` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag_target.created` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag_rule.deleted` to `UpdateWebhookEndpointEvents`
+    * Added `feature_flags.flag_target.deleted` to `UpdateWebhookEndpointEvents`
+
+  **Fixes**
+  * **[directory_sync](https://workos.com/docs/reference/directory-sync)**:
+    * Changed response of `Directories.find` from `Directory` to `DirectoryGroup`
+    * Updated endpoint `GET /directory_groups`
+    * Updated endpoint `GET /directory_groups/{id}`
+    * Updated endpoint `GET /directory_users`
+    * Updated endpoint `GET /directory_users/{id}`
+  * **[events](https://workos.com/docs/reference/events)**:
+    * Updated model `EventSchema`
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Removed `policy_denied` from `ErrorBodyCode`
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Changed errors for endpoint `POST /user_management/users`
+    * Changed errors for endpoint `POST /user_management/magic_auth`
+    * Changed errors for endpoint `POST /user_management/authenticate`
+
+* [#463](https://github.com/workos/workos-kotlin/pull/463) feat(generated): regenerate from spec (1 change)
+
+  **Features**
+  * **[sso](https://workos.com/docs/reference/sso)**:
+    * Added enum `ConnectionsState`
+    * Added parameter `Connections.list.state`
+
 ## [7.6.0](https://github.com/workos/workos-kotlin/compare/v7.5.0...v7.6.0) (2026-11-04)
 
 * [#458](https://github.com/workos/workos-kotlin/pull/458) feat(generated)!: regenerate from spec (6 changes)

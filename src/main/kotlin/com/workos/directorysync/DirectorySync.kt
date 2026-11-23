@@ -12,7 +12,7 @@ import com.workos.common.http.encodePathSegment
 import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectorySyncResponse
-import com.workos.models.DirectoryUserWithGroups
+import com.workos.models.DirectoryUser
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -215,34 +215,34 @@ class DirectorySync(
     }
 
   /**
-   * List Directory Groups
+   * List Groups for a Directory
    *
-   * Get a list of all of existing directory groups matching the criteria specified.
+   * Get a list of the Directory Groups in a Directory, optionally filtered to the groups a Directory User belongs to.
    *
+   * @param directoryId Unique identifier of the Directory.
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
-   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-   * @param user Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+   * @param user Filter Directory Groups to those this Directory User belongs to.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
   fun listGroups(
+    directoryId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    directory: String? = null,
     user: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryGroup> {
     val itemType = object : TypeReference<DirectoryGroup>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/directory_groups",
+      path = "/directories/${encodePathSegment(directoryId)}/groups",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -250,7 +250,6 @@ class DirectorySync(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
-      addIfNotNull("directory", directory)
       addIfNotNull("user", user)
     }
   }
@@ -265,37 +264,39 @@ class DirectorySync(
    */
   @JvmName("listGroupsSuspend")
   suspend fun listGroupsSuspend(
+    directoryId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    directory: String? = null,
     user: String? = null,
     requestOptions: RequestOptions? = null
   ): Page<DirectoryGroup> =
     withContext(Dispatchers.IO) {
-      listGroups(before, after, limit, order, directory, user, requestOptions)
+      listGroups(directoryId, before, after, limit, order, user, requestOptions)
     }
 
   /**
-   * Get a Directory Group
+   * Get a Group for a Directory
    *
-   * Get the details of an existing Directory Group.
+   * Get the details of a Directory Group in a Directory.
    *
-   * @param id Unique identifier for the Directory Group.
+   * @param directoryId Unique identifier of the Directory.
+   * @param groupId Unique identifier for the Directory Group.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return the DirectoryGroup
    */
   @JvmOverloads
   fun getGroup(
-    id: String,
+    directoryId: String,
+    groupId: String,
     requestOptions: RequestOptions? = null
   ): DirectoryGroup {
     val config =
       RequestConfig(
         method = "GET",
-        path = "/directory_groups/${encodePathSegment(id)}",
+        path = "/directories/${encodePathSegment(directoryId)}/groups/${encodePathSegment(groupId)}",
         requestOptions = requestOptions
       )
     return workos.baseClient.request(config, DirectoryGroup::class.java)
@@ -311,46 +312,47 @@ class DirectorySync(
    */
   @JvmName("getGroupSuspend")
   suspend fun getGroupSuspend(
-    id: String,
+    directoryId: String,
+    groupId: String,
     requestOptions: RequestOptions? = null
   ): DirectoryGroup =
     withContext(Dispatchers.IO) {
-      getGroup(id, requestOptions)
+      getGroup(directoryId, groupId, requestOptions)
     }
 
   /**
-   * List Directory Users
+   * List Users for a Directory
    *
-   * Get a list of all of existing Directory Users matching the criteria specified.
+   * Get a list of the Directory Users in a Directory, optionally filtered to the members of a Directory Group.
    *
+   * @param directoryId Unique identifier of the Directory.
    * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
    * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
    * @param limit Upper limit on the number of objects to return, between `1` and `100`.
    * @param order the order to return records in. See [PaginationOrder].
-   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
-   * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
-   * @param idpId Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
-   * @param email Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+   * @param group Filter Directory Users to the members of this Directory Group.
+   * @param idpId Filter Directory Users by the identity provider's unique identifier (`idp_id`).
+   * @param email Filter Directory Users by their primary email address.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
   fun listUsers(
+    directoryId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    directory: String? = null,
     group: String? = null,
     idpId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
-  ): Page<DirectoryUserWithGroups> {
-    val itemType = object : TypeReference<DirectoryUserWithGroups>() {}
+  ): Page<DirectoryUser> {
+    val itemType = object : TypeReference<DirectoryUser>() {}
     return workos.baseClient.requestPage(
       method = "GET",
-      path = "/directory_users",
+      path = "/directories/${encodePathSegment(directoryId)}/users",
       itemType = itemType,
       requestOptions = requestOptions,
       before = before,
@@ -358,7 +360,6 @@ class DirectorySync(
     ) {
       limit?.let { add("limit" to it.toString()) }
       order?.let { add("order" to it.value) }
-      addIfNotNull("directory", directory)
       addIfNotNull("group", group)
       addIfNotNull("idp_id", idpId)
       addIfNotNull("email", email)
@@ -375,42 +376,44 @@ class DirectorySync(
    */
   @JvmName("listUsersSuspend")
   suspend fun listUsersSuspend(
+    directoryId: String,
     before: String? = null,
     after: String? = null,
     limit: Int? = null,
     order: PaginationOrder? = null,
-    directory: String? = null,
     group: String? = null,
     idpId: String? = null,
     email: String? = null,
     requestOptions: RequestOptions? = null
-  ): Page<DirectoryUserWithGroups> =
+  ): Page<DirectoryUser> =
     withContext(Dispatchers.IO) {
-      listUsers(before, after, limit, order, directory, group, idpId, email, requestOptions)
+      listUsers(directoryId, before, after, limit, order, group, idpId, email, requestOptions)
     }
 
   /**
-   * Get a Directory User
+   * Get a User for a Directory
    *
-   * Get the details of an existing Directory User.
+   * Get the details of a Directory User in a Directory.
    *
-   * @param id Unique identifier for the Directory User.
+   * @param directoryId Unique identifier of the Directory.
+   * @param userId Unique identifier for the Directory User.
    * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
    *
-   * @return the DirectoryUserWithGroups
+   * @return the DirectoryUser
    */
   @JvmOverloads
   fun getUser(
-    id: String,
+    directoryId: String,
+    userId: String,
     requestOptions: RequestOptions? = null
-  ): DirectoryUserWithGroups {
+  ): DirectoryUser {
     val config =
       RequestConfig(
         method = "GET",
-        path = "/directory_users/${encodePathSegment(id)}",
+        path = "/directories/${encodePathSegment(directoryId)}/users/${encodePathSegment(userId)}",
         requestOptions = requestOptions
       )
-    return workos.baseClient.request(config, DirectoryUserWithGroups::class.java)
+    return workos.baseClient.request(config, DirectoryUser::class.java)
   }
 
   /**
@@ -423,10 +426,11 @@ class DirectorySync(
    */
   @JvmName("getUserSuspend")
   suspend fun getUserSuspend(
-    id: String,
+    directoryId: String,
+    userId: String,
     requestOptions: RequestOptions? = null
-  ): DirectoryUserWithGroups =
+  ): DirectoryUser =
     withContext(Dispatchers.IO) {
-      getUser(id, requestOptions)
+      getUser(directoryId, userId, requestOptions)
     }
 }

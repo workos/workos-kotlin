@@ -3,7 +3,7 @@
 package com.workos.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.OffsetDateTime
+import com.workos.types.DataIntegrationVendedCredentialAuthMethod
 
 /** DataIntegrationVendedCredential model. */
 data class DataIntegrationVendedCredential(
@@ -13,21 +13,21 @@ data class DataIntegrationVendedCredential(
 
   /** The authentication method for this credential. Additional values may be added in the future; handle unknown values gracefully. */
   @JsonProperty("auth_method")
-  val authMethod: String? = null,
+  val authMethod: DataIntegrationVendedCredentialAuthMethod? = null,
 
-  /** The vended secret. An OAuth access token when `auth_method` is `oauth`, the API key when `api_key`, or the client-credentials access token when `client_credentials`. */
+  /** The value. */
   @JsonProperty("value")
   val value: String? = null,
 
-  /** The ISO-8601 formatted timestamp indicating when the credential expires, or `null` if it does not expire. Present for `oauth` and `client_credentials` credentials; absent for `api_key`. */
+  /** The expires at. */
   @JsonProperty("expires_at")
-  val expiresAt: OffsetDateTime? = null,
+  val expiresAt: String? = null,
 
-  /** The scopes granted to the access token. Present for `oauth` and `client_credentials` credentials; absent for `api_key`. */
+  /** The scopes. */
   @JsonProperty("scopes")
   val scopes: List<String>? = null,
 
-  /** If the integration has requested scopes that aren't present on the access token, they're listed here. Present for `oauth` and `client_credentials` credentials; absent for `api_key`. */
+  /** The missing scopes. */
   @JsonProperty("missing_scopes")
   val missingScopes: List<String>? = null,
 

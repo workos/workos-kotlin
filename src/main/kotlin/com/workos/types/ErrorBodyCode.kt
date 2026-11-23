@@ -146,7 +146,6 @@ enum class ErrorBodyCode(
   PermissionNotFound("permission_not_found"),
   PermissionSlugConflict("permission_slug_conflict"),
   PhoneNumberRequired("phone_number_required"),
-  PolicyDenied("policy_denied"),
   ProductionFeatureRequiresBilling("production_feature_requires_billing"),
   RadarChallenge("radar_challenge"),
   RadarSignUpChallenge("radar_sign_up_challenge"),

@@ -7,7 +7,7 @@ import com.workos.types.DataIntegrationCredentialsResponseError
 
 /** DataIntegrationCredentialsResponse model. */
 data class DataIntegrationCredentialsResponse(
-  /** Indicates credentials are available. */
+  /** The active. */
   @JsonProperty("active")
   val active: Boolean? = null,
 
