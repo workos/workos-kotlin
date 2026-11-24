@@ -13,6 +13,7 @@ import com.workos.models.Directory
 import com.workos.models.DirectoryGroup
 import com.workos.models.DirectorySyncResponse
 import com.workos.models.DirectoryUser
+import com.workos.models.DirectoryUserWithGroups
 import com.workos.types.PaginationOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -230,7 +231,7 @@ class DirectorySync(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listGroups(
+  fun listGroupsForDirectory(
     directoryId: String,
     before: String? = null,
     after: String? = null,
@@ -255,15 +256,15 @@ class DirectorySync(
   }
 
   /**
-   * Coroutine-aware variant of [listGroups]. Use this from
+   * Coroutine-aware variant of [listGroupsForDirectory]. Use this from
    * a `suspend` function or coroutine scope.
    *
-   * Delegates to the blocking [listGroups] under
+   * Delegates to the blocking [listGroupsForDirectory] under
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
-  @JvmName("listGroupsSuspend")
-  suspend fun listGroupsSuspend(
+  @JvmName("listGroupsForDirectorySuspend")
+  suspend fun listGroupsForDirectorySuspend(
     directoryId: String,
     before: String? = null,
     after: String? = null,
@@ -273,7 +274,7 @@ class DirectorySync(
     requestOptions: RequestOptions? = null
   ): Page<DirectoryGroup> =
     withContext(Dispatchers.IO) {
-      listGroups(directoryId, before, after, limit, order, user, requestOptions)
+      listGroupsForDirectory(directoryId, before, after, limit, order, user, requestOptions)
     }
 
   /**
@@ -288,7 +289,7 @@ class DirectorySync(
    * @return the DirectoryGroup
    */
   @JvmOverloads
-  fun getGroup(
+  fun getGroupForDirectory(
     directoryId: String,
     groupId: String,
     requestOptions: RequestOptions? = null
@@ -303,21 +304,21 @@ class DirectorySync(
   }
 
   /**
-   * Coroutine-aware variant of [getGroup]. Use this from
+   * Coroutine-aware variant of [getGroupForDirectory]. Use this from
    * a `suspend` function or coroutine scope.
    *
-   * Delegates to the blocking [getGroup] under
+   * Delegates to the blocking [getGroupForDirectory] under
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
-  @JvmName("getGroupSuspend")
-  suspend fun getGroupSuspend(
+  @JvmName("getGroupForDirectorySuspend")
+  suspend fun getGroupForDirectorySuspend(
     directoryId: String,
     groupId: String,
     requestOptions: RequestOptions? = null
   ): DirectoryGroup =
     withContext(Dispatchers.IO) {
-      getGroup(directoryId, groupId, requestOptions)
+      getGroupForDirectory(directoryId, groupId, requestOptions)
     }
 
   /**
@@ -338,7 +339,7 @@ class DirectorySync(
    * @return a [com.workos.common.http.Page] of results
    */
   @JvmOverloads
-  fun listUsers(
+  fun listUsersForDirectory(
     directoryId: String,
     before: String? = null,
     after: String? = null,
@@ -367,15 +368,15 @@ class DirectorySync(
   }
 
   /**
-   * Coroutine-aware variant of [listUsers]. Use this from
+   * Coroutine-aware variant of [listUsersForDirectory]. Use this from
    * a `suspend` function or coroutine scope.
    *
-   * Delegates to the blocking [listUsers] under
+   * Delegates to the blocking [listUsersForDirectory] under
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
-  @JvmName("listUsersSuspend")
-  suspend fun listUsersSuspend(
+  @JvmName("listUsersForDirectorySuspend")
+  suspend fun listUsersForDirectorySuspend(
     directoryId: String,
     before: String? = null,
     after: String? = null,
@@ -387,7 +388,7 @@ class DirectorySync(
     requestOptions: RequestOptions? = null
   ): Page<DirectoryUser> =
     withContext(Dispatchers.IO) {
-      listUsers(directoryId, before, after, limit, order, group, idpId, email, requestOptions)
+      listUsersForDirectory(directoryId, before, after, limit, order, group, idpId, email, requestOptions)
     }
 
   /**
@@ -402,7 +403,7 @@ class DirectorySync(
    * @return the DirectoryUser
    */
   @JvmOverloads
-  fun getUser(
+  fun getUserForDirectory(
     directoryId: String,
     userId: String,
     requestOptions: RequestOptions? = null
@@ -417,6 +418,230 @@ class DirectorySync(
   }
 
   /**
+   * Coroutine-aware variant of [getUserForDirectory]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getUserForDirectory] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getUserForDirectorySuspend")
+  suspend fun getUserForDirectorySuspend(
+    directoryId: String,
+    userId: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryUser =
+    withContext(Dispatchers.IO) {
+      getUserForDirectory(directoryId, userId, requestOptions)
+    }
+
+  /**
+   * List Directory Groups
+   *
+   * Get a list of all of existing directory groups matching the criteria specified. Deprecated: use `GET /directories/{directoryId}/groups` instead.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+   * @param user Unique identifier of the WorkOS Directory User. This value can be obtained from the WorkOS API.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/groups` instead.")
+  @JvmOverloads
+  fun listGroups(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    user: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryGroup> {
+    val itemType = object : TypeReference<DirectoryGroup>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/directory_groups",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("directory", directory)
+      addIfNotNull("user", user)
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listGroups]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listGroups] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/groups` instead.")
+  @JvmName("listGroupsSuspend")
+  suspend fun listGroupsSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    user: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryGroup> =
+    withContext(Dispatchers.IO) {
+      listGroups(before, after, limit, order, directory, user, requestOptions)
+    }
+
+  /**
+   * Get a Directory Group
+   *
+   * Get the details of an existing Directory Group. Deprecated: use `GET /directories/{directoryId}/groups/{groupId}` instead.
+   *
+   * @param id Unique identifier for the Directory Group.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DirectoryGroup
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/groups/{groupId}` instead.")
+  @JvmOverloads
+  fun getGroup(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryGroup {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/directory_groups/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DirectoryGroup::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getGroup]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getGroup] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/groups/{groupId}` instead.")
+  @JvmName("getGroupSuspend")
+  suspend fun getGroupSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryGroup =
+    withContext(Dispatchers.IO) {
+      getGroup(id, requestOptions)
+    }
+
+  /**
+   * List Directory Users
+   *
+   * Get a list of all of existing Directory Users matching the criteria specified. Deprecated: use `GET /directories/{directoryId}/users` instead.
+   *
+   * @param before An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `before="obj_123"` to fetch a new batch of objects before `"obj_123"`.
+   * @param after An object ID that defines your place in the list. When the ID is not present, you are at the end of the list. For example, if you make a list request and receive 100 objects, ending with `"obj_123"`, your subsequent call can include `after="obj_123"` to fetch a new batch of objects after `"obj_123"`.
+   * @param limit Upper limit on the number of objects to return, between `1` and `100`.
+   * @param order the order to return records in. See [PaginationOrder].
+   * @param directory Unique identifier of the WorkOS Directory. This value can be obtained from the WorkOS dashboard or from the WorkOS API.
+   * @param group Unique identifier of the WorkOS Directory Group. This value can be obtained from the WorkOS API.
+   * @param idpId Filter Directory Users by the identity provider's unique identifier (`idp_id`). Requires the `directory` parameter to also be provided.
+   * @param email Filter Directory Users by their primary email address. Requires the `directory` parameter to also be provided.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return a [com.workos.common.http.Page] of results
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/users` instead.")
+  @JvmOverloads
+  fun listUsers(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    group: String? = null,
+    idpId: String? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryUserWithGroups> {
+    val itemType = object : TypeReference<DirectoryUserWithGroups>() {}
+    return workos.baseClient.requestPage(
+      method = "GET",
+      path = "/directory_users",
+      itemType = itemType,
+      requestOptions = requestOptions,
+      before = before,
+      after = after
+    ) {
+      limit?.let { add("limit" to it.toString()) }
+      order?.let { add("order" to it.value) }
+      addIfNotNull("directory", directory)
+      addIfNotNull("group", group)
+      addIfNotNull("idp_id", idpId)
+      addIfNotNull("email", email)
+    }
+  }
+
+  /**
+   * Coroutine-aware variant of [listUsers]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [listUsers] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/users` instead.")
+  @JvmName("listUsersSuspend")
+  suspend fun listUsersSuspend(
+    before: String? = null,
+    after: String? = null,
+    limit: Int? = null,
+    order: PaginationOrder? = null,
+    directory: String? = null,
+    group: String? = null,
+    idpId: String? = null,
+    email: String? = null,
+    requestOptions: RequestOptions? = null
+  ): Page<DirectoryUserWithGroups> =
+    withContext(Dispatchers.IO) {
+      listUsers(before, after, limit, order, directory, group, idpId, email, requestOptions)
+    }
+
+  /**
+   * Get a Directory User
+   *
+   * Get the details of an existing Directory User. Deprecated: use `GET /directories/{directoryId}/users/{userId}` instead.
+   *
+   * @param id Unique identifier for the Directory User.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the DirectoryUserWithGroups
+   */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/users/{userId}` instead.")
+  @JvmOverloads
+  fun getUser(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): DirectoryUserWithGroups {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/directory_users/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, DirectoryUserWithGroups::class.java)
+  }
+
+  /**
    * Coroutine-aware variant of [getUser]. Use this from
    * a `suspend` function or coroutine scope.
    *
@@ -424,13 +649,13 @@ class DirectorySync(
    * `withContext(Dispatchers.IO)`, so this is safe to call from any
    * coroutine dispatcher (including `Dispatchers.Main`).
    */
+  @Deprecated("Deprecated. use `GET /directories/{directoryId}/users/{userId}` instead.")
   @JvmName("getUserSuspend")
   suspend fun getUserSuspend(
-    directoryId: String,
-    userId: String,
+    id: String,
     requestOptions: RequestOptions? = null
-  ): DirectoryUser =
+  ): DirectoryUserWithGroups =
     withContext(Dispatchers.IO) {
-      getUser(directoryId, userId, requestOptions)
+      getUser(id, requestOptions)
     }
 }

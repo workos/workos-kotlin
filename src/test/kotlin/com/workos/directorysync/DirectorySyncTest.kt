@@ -56,14 +56,14 @@ class DirectorySyncTest : TestBase() {
   }
 
   @Test
-  fun `listGroups returns a typed response`() {
+  fun `listGroupsForDirectory returns a typed response`() {
     stubResponse("GET", "/directories/sample-arg/groups", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().listGroups(directoryId = "sample-arg")
+    val result = api().listGroupsForDirectory("sample-arg")
     assertNotNull(result)
   }
 
   @Test
-  fun `getGroup returns a typed response`() {
+  fun `getGroupForDirectory returns a typed response`() {
     stubResponse(
       "GET",
       "/directories/sample-arg/groups/sample-arg",
@@ -72,7 +72,59 @@ class DirectorySyncTest : TestBase() {
         "\"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
         "\"2024-01-01T00:00:00Z\"}"
     )
-    val result = api().getGroup(directoryId = "sample-arg", groupId = "sample-arg")
+    val result = api().getGroupForDirectory("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("directory_group", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.idpId)
+    assertEquals("sample", result.directoryId)
+    assertEquals("sample", result.organizationId)
+  }
+
+  @Test
+  fun `listUsersForDirectory returns a typed response`() {
+    stubResponse("GET", "/directories/sample-arg/users", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listUsersForDirectory("sample-arg")
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getUserForDirectory returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/directories/sample-arg/users/sample-arg",
+      200,
+      "{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"idp_id\": " +
+        "\"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, \"created_at\": " +
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getUserForDirectory("sample-arg", "sample-arg")
+    assertNotNull(result)
+    assertEquals("directory_user", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.directoryId)
+    assertEquals("sample", result.organizationId)
+    assertEquals("sample", result.idpId)
+  }
+
+  @Test
+  fun `listGroups returns a typed response`() {
+    stubResponse("GET", "/directory_groups", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listGroups()
+    assertNotNull(result)
+  }
+
+  @Test
+  fun `getGroup returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/directory_groups/sample-arg",
+      200,
+      "{\"object\": \"directory_group\", \"id\": \"sample\", \"idp_id\": \"sample\", \"directory_id\": \"sample\", " +
+        "\"organization_id\": \"sample\", \"name\": \"sample\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": " +
+        "\"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getGroup("sample-arg")
     assertNotNull(result)
     assertEquals("directory_group", result.objectType)
     assertEquals("sample", result.id)
@@ -83,8 +135,8 @@ class DirectorySyncTest : TestBase() {
 
   @Test
   fun `listUsers returns a typed response`() {
-    stubResponse("GET", "/directories/sample-arg/users", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
-    val result = api().listUsers(directoryId = "sample-arg")
+    stubResponse("GET", "/directory_users", 200, "{\"data\": [], \"list_metadata\": {\"before\": null, \"after\": null}}")
+    val result = api().listUsers()
     assertNotNull(result)
   }
 
@@ -92,13 +144,13 @@ class DirectorySyncTest : TestBase() {
   fun `getUser returns a typed response`() {
     stubResponse(
       "GET",
-      "/directories/sample-arg/users/sample-arg",
+      "/directory_users/sample-arg",
       200,
       "{\"object\": \"directory_user\", \"id\": \"sample\", \"directory_id\": \"sample\", \"organization_id\": \"sample\", \"idp_id\": " +
         "\"sample\", \"email\": null, \"state\": \"active\", \"raw_attributes\": {}, \"custom_attributes\": {}, \"created_at\": " +
-        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+        "\"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\", \"groups\": []}"
     )
-    val result = api().getUser(directoryId = "sample-arg", userId = "sample-arg")
+    val result = api().getUser("sample-arg")
     assertNotNull(result)
     assertEquals("directory_user", result.objectType)
     assertEquals("sample", result.id)
