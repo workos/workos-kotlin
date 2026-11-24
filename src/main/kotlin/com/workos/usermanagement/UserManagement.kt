@@ -1177,6 +1177,44 @@ class UserManagement(
     }
 
   /**
+   * Delete a CORS origin
+   *
+   * Deletes a CORS origin from the API key's application.
+   *
+   * @param id The ID of the CORS origin to delete.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun deleteCorsOrigin(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) {
+    val config =
+      RequestConfig(
+        method = "DELETE",
+        path = "/user_management/cors_origins/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [deleteCorsOrigin]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [deleteCorsOrigin] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("deleteCorsOriginSuspend")
+  suspend fun deleteCorsOriginSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    deleteCorsOrigin(id, requestOptions)
+  }
+
+  /**
    * Get an email verification code
    *
    * Get the details of an existing email verification code that can be used to send an email to a user for verification.

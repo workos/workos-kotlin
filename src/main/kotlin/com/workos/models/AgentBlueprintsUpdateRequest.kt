@@ -14,9 +14,9 @@ data class AgentBlueprintsUpdateRequest(
   @JsonProperty("description")
   val description: String? = null,
 
-  /** Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment. */
+  /** Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once. */
   @JsonProperty("permissions")
-  val permissions: List<String>? = null,
+  val permissions: List<Any>? = null,
 
   /** Who may mint sessions from this blueprint. Omitted lists are left unchanged. */
   @JsonProperty("invocable_by")

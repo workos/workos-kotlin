@@ -18,8 +18,9 @@ data class AgentBlueprintCreatedData(
   @JsonProperty("description")
   val description: String?,
 
-  /** Permission slugs forming the ceiling on what sessions minted from this blueprint may do. */
+  /** Deprecated: use `scoped_permissions`. Slugs of every permission in the ceiling, across all instance types. */
   @JsonProperty("permissions")
+  @Deprecated("Deprecated. use `scoped_permissions`.")
   val permissions: List<String>,
 
   /** Who may mint sessions from this blueprint. */
@@ -44,5 +45,9 @@ data class AgentBlueprintCreatedData(
 
   /** Distinguishes the agent blueprint object. */
   @JsonProperty("object")
-  val objectType: String = "agent_blueprint"
+  val objectType: String = "agent_blueprint",
+
+  /** Permissions forming the ceiling on what sessions minted from this blueprint may do, with the instance types that receive each one. Absent from events emitted before this field was added. */
+  @JsonProperty("scoped_permissions")
+  val scopedPermissions: List<AgentBlueprintCreatedDataScopedPermission>? = null
 )

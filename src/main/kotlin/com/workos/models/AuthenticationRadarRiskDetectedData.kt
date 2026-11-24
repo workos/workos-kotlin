@@ -15,7 +15,7 @@ data class AuthenticationRadarRiskDetectedData(
   @JsonProperty("action")
   val action: AuthenticationRadarRiskDetectedDataAction,
 
-  /** The control action taken for the detected risk. */
+  /** The Radar control that detected the risk. */
   @JsonProperty("control")
   val control: String?,
 
@@ -39,7 +39,7 @@ data class AuthenticationRadarRiskDetectedData(
   @JsonProperty("email")
   val email: String,
 
-  /** The ID of the Radar detection that challenged the authentication. */
+  /** The ID of the Radar detection that challenged the authentication. Retrieve the detection with `GET /radar/detections/:id` to see why Radar acted. */
   @JsonProperty("radar_detection_id")
   val radarDetectionId: String? = null
 )

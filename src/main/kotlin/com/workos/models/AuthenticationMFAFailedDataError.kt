@@ -14,7 +14,7 @@ data class AuthenticationMFAFailedDataError(
   @JsonProperty("message")
   val message: String,
 
-  /** The ID of the Radar detection that blocked the authentication. Only set on `policy_denied` errors. */
+  /** The ID of the Radar detection that blocked the authentication. Retrieve the detection with `GET /radar/detections/:id` to see why Radar acted. Only set on `policy_denied` errors that a Radar detection caused. */
   @JsonProperty("radar_detection_id")
   val radarDetectionId: String? = null
 )

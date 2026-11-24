@@ -17,6 +17,7 @@ import com.workos.models.AuthorizationPermission
 import com.workos.models.AuthorizationResource
 import com.workos.models.GroupRoleAssignment
 import com.workos.models.GroupRoleAssignmentList
+import com.workos.models.PatchRoleAssignmentEntry
 import com.workos.models.Permission
 import com.workos.models.ReplaceGroupRoleAssignmentEntry
 import com.workos.models.Role
@@ -1036,7 +1037,7 @@ class Authorization(
   /**
    * Assign a role
    *
-   * Assign a role to an organization membership on a specific resource.
+   * Assign a role to an organization membership on a specific resource. If the role is already assigned to the membership on that resource, the existing role assignment is returned and no changes are made.
    *
    * @param organizationMembershipId The ID of the organization membership.
    * @param roleSlug The slug of the role to assign.
@@ -1170,6 +1171,56 @@ class Authorization(
     withContext(Dispatchers.IO) {
       assignRoleByExternalId(organizationMembershipId, resourceExternalId, resourceTypeSlug, roleSlug, requestOptions)
     }
+
+  /**
+   * Update role assignments for an organization membership
+   *
+   * Add and remove role assignments for an organization membership in a single atomic operation. Each entry identifies a role and a resource, either by `resource_id` or by `resource_type_slug` and `resource_external_id`; to change an organization-level role, target the organization resource. Additions that already exist and removals that match no assignment are skipped. An assignment in both lists is rejected, as is a removal of a role granted only through a group. `add` and `remove` must contain between 1 and 100 entries combined.
+   *
+   * @param organizationMembershipId The ID of the organization membership.
+   * @param add Role assignments to add to the organization membership. Assignments that already exist are skipped.
+   * @param remove Role assignments to remove from the organization membership. Entries that match no assignment are skipped. Roles granted through a group cannot be removed.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   */
+  @JvmOverloads
+  fun updateRoleAssignments(
+    organizationMembershipId: String,
+    add: PatchField<List<PatchRoleAssignmentEntry>> = PatchField.Absent,
+    remove: PatchField<List<PatchRoleAssignmentEntry>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) {
+    val body =
+      patchBodyOf(
+        "add" to add,
+        "remove" to remove
+      )
+    val config =
+      RequestConfig(
+        method = "PATCH",
+        path = "/authorization/organization_memberships/${encodePathSegment(organizationMembershipId)}/role_assignments",
+        body = body,
+        requestOptions = requestOptions
+      )
+    workos.baseClient.requestVoid(config)
+  }
+
+  /**
+   * Coroutine-aware variant of [updateRoleAssignments]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [updateRoleAssignments] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("updateRoleAssignmentsSuspend")
+  suspend fun updateRoleAssignmentsSuspend(
+    organizationMembershipId: String,
+    add: PatchField<List<PatchRoleAssignmentEntry>> = PatchField.Absent,
+    remove: PatchField<List<PatchRoleAssignmentEntry>> = PatchField.Absent,
+    requestOptions: RequestOptions? = null
+  ) = withContext(Dispatchers.IO) {
+    updateRoleAssignments(organizationMembershipId, add, remove, requestOptions)
+  }
 
   /**
    * Remove a role assignment

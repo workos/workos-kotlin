@@ -7,6 +7,7 @@ import com.workos.common.http.RequestConfig
 import com.workos.common.http.RequestOptions
 import com.workos.common.http.bodyOf
 import com.workos.common.http.encodePathSegment
+import com.workos.models.RadarDetection
 import com.workos.models.RadarListEntryAlreadyPresentResponse
 import com.workos.models.RadarStandaloneResponse
 import com.workos.types.RadarStandaloneAssessRequestAction
@@ -137,6 +138,47 @@ class Radar(
   ) = withContext(Dispatchers.IO) {
     updateAttempt(id, challengeStatus, attemptStatus, requestOptions)
   }
+
+  /**
+   * Get a Radar detection
+   *
+   * Get a Radar detection from the last 30 days, including the evidence for why Radar fired.
+   *
+   * @param id The unique ID of the Radar detection.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the RadarDetection
+   */
+  @JvmOverloads
+  fun getDetection(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): RadarDetection {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/radar/detections/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, RadarDetection::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getDetection]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getDetection] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getDetectionSuspend")
+  suspend fun getDetectionSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): RadarDetection =
+    withContext(Dispatchers.IO) {
+      getDetection(id, requestOptions)
+    }
 
   /**
    * Add an entry to a Radar list

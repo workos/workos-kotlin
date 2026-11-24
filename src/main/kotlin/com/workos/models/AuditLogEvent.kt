@@ -11,10 +11,6 @@ data class AuditLogEvent(
   @JsonProperty("action")
   val action: String,
 
-  /** ISO-8601 value of when the action occurred. */
-  @JsonProperty("occurred_at")
-  val occurredAt: OffsetDateTime,
-
   /** The entity that performed the action. */
   @JsonProperty("actor")
   val actor: AuditLogEventActor,
@@ -26,6 +22,10 @@ data class AuditLogEvent(
   /** Additional context about where and how the action occurred. */
   @JsonProperty("context")
   val context: AuditLogEventContext,
+
+  /** ISO-8601 timestamp of when the action occurred. When omitted, defaults to the time WorkOS receives the event. Explicit JSON null is rejected. */
+  @JsonProperty("occurred_at")
+  val occurredAt: OffsetDateTime? = null,
 
   /** Additional data associated with the event or entity. */
   @JsonProperty("metadata")

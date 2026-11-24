@@ -220,6 +220,12 @@ class AuthorizationTest : TestBase() {
   }
 
   @Test
+  fun `updateRoleAssignments completes without throwing`() {
+    stubResponse("PATCH", "/authorization/organization_memberships/sample-arg/role_assignments", 200)
+    api().updateRoleAssignments("sample-arg")
+  }
+
+  @Test
   fun `removeRole completes without throwing`() {
     stubResponse("DELETE", "/authorization/organization_memberships/sample-arg/role_assignments", 204)
     api().removeRole(organizationMembershipId = "sample-arg", resourceTarget = ResourceTarget.ById("sample-arg"), roleSlug = "sample-arg")

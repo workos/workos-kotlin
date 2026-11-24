@@ -52,6 +52,26 @@ class RadarTest : TestBase() {
   }
 
   @Test
+  fun `getDetection returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/radar/detections/sample-arg",
+      200,
+      "{\"object\": \"radar_detection\", \"id\": \"sample\", \"attempt_id\": \"sample\", \"control\": \"bot_detection\", \"verdict\": " +
+        "\"allow\", \"challenge_type\": null, \"evidence\": null, \"ip_address\": \"sample\", \"location\": {\"city\": null, " +
+        "\"country\": null}, \"user_agent\": \"sample\", \"email\": \"sample\", \"user_id\": null, \"action\": null, \"auth_method\": " +
+        "null, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getDetection("sample-arg")
+    assertNotNull(result)
+    assertEquals("radar_detection", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.attemptId)
+    assertEquals("sample", result.ipAddress)
+    assertEquals("sample", result.userAgent)
+  }
+
+  @Test
   fun `addListEntry returns a typed response`() {
     stubResponse("POST", "/radar/lists/sample-arg/sample-arg", 200, "{\"message\": \"sample\"}")
     val result = api().addListEntry("sample-arg", "sample-arg", "sample-arg")

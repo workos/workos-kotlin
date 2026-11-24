@@ -20,6 +20,7 @@ import com.workos.multifactorauth.MultiFactorAuth
 import com.workos.organizationdomains.OrganizationDomains
 import com.workos.organizationmembership.OrganizationMembershipService
 import com.workos.organizations.Organizations
+import com.workos.organizationsissuertrusts.OrganizationsIssuerTrusts
 import com.workos.pipes.Pipes
 import com.workos.pipesprovider.PipesProvider
 import com.workos.platformteams.PlatformTeams
@@ -290,5 +291,14 @@ open class WorkOS
           PlatformTeams::class
         ) {
           PlatformTeams(this)
+        }
+
+    /** Lazily-constructed [OrganizationsIssuerTrusts] accessor for this [WorkOS] client. */
+    val organizationsIssuerTrusts: OrganizationsIssuerTrusts
+      get() =
+        service(
+          OrganizationsIssuerTrusts::class
+        ) {
+          OrganizationsIssuerTrusts(this)
         }
   }
