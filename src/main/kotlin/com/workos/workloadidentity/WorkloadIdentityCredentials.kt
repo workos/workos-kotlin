@@ -1,0 +1,693 @@
+// @oagen-ignore-file
+package com.workos.workloadidentity
+
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.workos.WorkOS
+import com.workos.common.exceptions.WorkloadIdentityException
+import com.workos.common.http.AttemptOutcome
+import com.workos.common.http.CredentialSnapshot
+import com.workos.common.http.Credentials
+import com.workos.common.http.RetryConfig
+import com.workos.common.http.RetryPolicy
+import okhttp3.Authenticator
+import okhttp3.CookieJar
+import okhttp3.EventListener
+import okhttp3.FormBody
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.IOException
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+
+/** Header that carries the environment ID on API requests made with workload identity credentials, when one is set. */
+private const val ENVIRONMENT_HEADER = "x-url-environment-id"
+
+private const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
+
+private const val DEFAULT_RESOURCE = "https://api.workos.com"
+
+/** Lifetime assumed when the token response has no usable `expires_in`. */
+private const val DEFAULT_LIFETIME_SECONDS = 300.0
+
+/** Longest lifetime the cache accepts, so clock arithmetic cannot overflow. */
+private const val MAX_LIFETIME_SECONDS = 365.0 * 24 * 60 * 60
+
+/** A token is refreshed once less than this, or less than [REFRESH_FRACTION] of its lifetime, remains. */
+private val REFRESH_THRESHOLD_NANOS = TimeUnit.SECONDS.toNanos(60)
+
+private const val REFRESH_FRACTION = 0.2
+
+/** Deadline for one whole exchange: every attempt, provider call and backoff wait. */
+private const val EXCHANGE_DEADLINE_MILLIS = 30_000L
+
+/** What replaces the identity token in an error text that the token endpoint sent back. */
+private const val REDACTED = "[redacted]"
+
+private val JSON = ObjectMapper()
+
+/** `https://` in any letter case, then a character that can start a host: not `/`, `\`, `?` or `#`. */
+private val ABSOLUTE_HTTPS_URL = Regex("^https://[^/\\\\?#]", RegexOption.IGNORE_CASE)
+
+/**
+ * Credentials that exchange a workload's identity token for a short-lived
+ * WorkOS access token, so no API key has to be stored with the workload.
+ *
+ * ```kotlin
+ * val credentials =
+ *   WorkloadIdentityCredentials(
+ *     identityTokenProvider = tokenFile("/run/workos/identity-token"),
+ *     clientId = "client_123",
+ *     tokenUrl = "https://auth.example.com/oauth2/token",
+ *     environmentId = "environment_123"
+ *   )
+ * val workos = WorkloadIdentity.client(credentials)
+ * ```
+ *
+ * Every setting is set in code: the credentials read no environment
+ * variable. The configuration cannot change after construction; build a new
+ * instance to change it.
+ *
+ * `tokenUrl` must be an absolute `https` URL. The exchange sends the
+ * workload's identity token and receives the access token, so an `http` URL
+ * is refused, also for `localhost` and loopback addresses, and no setting
+ * allows one.
+ *
+ * `environmentId` is optional and is set only in code: no environment
+ * variable is read for it. The server binds the application to exactly one
+ * environment and takes the environment from that binding, so the
+ * `x-url-environment-id` header selects nothing. Setting it is a safety
+ * check: the header is then sent on every API request, and a value that
+ * names a different environment gets `403 environment_mismatch`. When it is
+ * not set, the header is not sent. An empty string counts as not set.
+ *
+ * The access token is cached in memory on this instance and refreshed on
+ * demand when it nears expiry. Concurrent callers share one exchange. Two
+ * instances never share a token, even with the same configuration.
+ *
+ * The token exchange makes its own HTTP call and does not go through the API
+ * client. If the token endpoint is only reachable through a proxy or with a
+ * custom trust store, pass an `OkHttpClient` that has those settings as
+ * `httpClient`.
+ *
+ * @throws WorkloadIdentityException with code `invalid_configuration` when a
+ *   required setting is missing, or when `tokenUrl` is not an absolute `https`
+ *   URL.
+ */
+class WorkloadIdentityCredentials internal constructor(
+  private val identityTokenProvider: IdentityTokenProvider,
+  clientId: String?,
+  tokenUrl: String?,
+  environmentId: String?,
+  resource: String?,
+  scope: String?,
+  httpClient: OkHttpClient?,
+  private val nanoTime: () -> Long,
+  private val sleeper: (Long) -> Unit,
+  private val exchangeDeadlineMillis: Long
+) : Credentials {
+  /**
+   * Create credentials.
+   *
+   * @param identityTokenProvider returns the workload's identity token. See [tokenFile], [tokenEnv], or pass a lambda.
+   * @param clientId the M2M application's client ID. Required, and set only here: no environment variable is read
+   *   for it.
+   * @param tokenUrl the token exchange endpoint. Required: there is no built-in default, and no environment
+   *   variable is read for it. It must be an absolute `https` URL, such as
+   *   `https://auth.example.com/oauth2/token`: the exchange sends the workload's identity token and receives the
+   *   access token. An `http` URL is refused, also for `localhost` and loopback addresses.
+   * @param environmentId the WorkOS environment ID. Optional, and set only here: no environment variable is read
+   *   for it. When set, it is sent as the `x-url-environment-id` header on every API request. The server takes the
+   *   environment from the application, which is bound to exactly one, so the header selects nothing: setting it
+   *   is a safety check, and a value that names a different environment gets `403 environment_mismatch`. When it
+   *   is not set, or is empty, the header is not sent.
+   * @param resource the resource the access token is for. Defaults to `https://api.workos.com`.
+   * @param scope the scope to request. Optional, and set only here: no environment variable is read for it.
+   *   Left out of the exchange when it is not set or is empty.
+   * @param httpClient an OkHttp client whose connection settings the token exchange uses: proxy and proxy
+   *   authenticator, TLS, DNS, connection pool, and connect, read and write timeouts. Pass it when the token
+   *   endpoint is only reachable with those settings; [WorkloadIdentity.client] does not pass its own client
+   *   on. Its interceptors, event listener, authenticator, cookie jar, cache and call timeout are not used,
+   *   redirects are never followed, and the client passed in is not changed. An identity token provider
+   *   that makes HTTP calls of its own does not use it.
+   */
+  @JvmOverloads
+  constructor(
+    identityTokenProvider: IdentityTokenProvider,
+    clientId: String? = null,
+    tokenUrl: String? = null,
+    environmentId: String? = null,
+    resource: String? = null,
+    scope: String? = null,
+    httpClient: OkHttpClient? = null
+  ) : this(
+    identityTokenProvider = identityTokenProvider,
+    clientId = clientId,
+    tokenUrl = tokenUrl,
+    environmentId = environmentId,
+    resource = resource,
+    scope = scope,
+    httpClient = httpClient,
+    nanoTime = { System.nanoTime() },
+    sleeper = { Thread.sleep(it) },
+    exchangeDeadlineMillis = EXCHANGE_DEADLINE_MILLIS
+  )
+
+  /** The M2M application's client ID. */
+  @JvmField
+  val clientId: String = required(clientId, "clientId")
+
+  /** The token exchange endpoint, an absolute `https` URL. */
+  @JvmField
+  val tokenUrl: String = required(tokenUrl, "tokenUrl")
+
+  /**
+   * The WorkOS environment ID, or `null` when none is set. When set, it is sent as the `x-url-environment-id`
+   * header on every API request.
+   */
+  @JvmField
+  val environmentId: String? = environmentId?.takeIf { it.isNotBlank() }
+
+  /** The resource the access token is requested for. */
+  @JvmField
+  val resource: String = resource?.takeIf { it.isNotBlank() } ?: DEFAULT_RESOURCE
+
+  /** The scope requested in the exchange, or `null` when none is requested. */
+  @JvmField
+  val scope: String? = scope?.takeIf { it.isNotBlank() }
+
+  private val exchangeUrl: HttpUrl = httpsUrl(this.tokenUrl)
+
+  // The exchange has its own client. When the caller gives one, the exchange
+  // client is a copy of it, so the exchange goes through the same proxy
+  // (with its proxy authenticator), TLS setup, DNS and connection pool. The
+  // copy then drops every hook that could change or read the request:
+  // interceptors and the event listener (written for API calls, they may add
+  // the API's headers or read the request, and the body here holds the
+  // identity token), the authenticator (it would resend a 401 with other
+  // credentials), cookies and the cache. No redirects. OkHttp's silent retry
+  // of a failed connection is off, because every retry must go through the
+  // exchange loop, which calls the provider again. The call timeout bounds a
+  // single attempt and replaces the caller's; the whole exchange is bounded
+  // in startExchange.
+  private val exchangeClient: OkHttpClient =
+    (httpClient?.newBuilder() ?: OkHttpClient.Builder())
+      .apply {
+        interceptors().clear()
+        networkInterceptors().clear()
+      }.eventListener(EventListener.NONE)
+      .authenticator(Authenticator.NONE)
+      .cookieJar(CookieJar.NO_COOKIES)
+      .cache(null)
+      .followRedirects(false)
+      .followSslRedirects(false)
+      .retryOnConnectionFailure(false)
+      .callTimeout(exchangeDeadlineMillis, TimeUnit.MILLISECONDS)
+      .build()
+
+  // The exchange belongs to this instance, not to one request, so it uses
+  // the SDK's default retry values and never a per-request override.
+  private val retryPolicy = RetryPolicy(RetryConfig.DEFAULT)
+
+  private val userAgent = "workos-kotlin/${sdkVersion()}"
+
+  // Everything below is guarded by `lock`. Nothing is shared between
+  // instances.
+  private val lock = Any()
+  private var token: String? = null
+  private var lifetimeNanos = 0L
+  private var expiresAtNanos = 0L
+  private var generation = 0L
+  private var inflight: CompletableFuture<CachedToken>? = null
+
+  override fun resolve(timeoutMillis: Long?): CredentialSnapshot {
+    val current = currentToken(timeoutMillis)
+    return CredentialSnapshot(
+      headers =
+        buildMap {
+          put("Authorization", "Bearer ${current.token}")
+          // The environment header is sent only when an environment ID is set.
+          environmentId?.let { put(ENVIRONMENT_HEADER, it) }
+        },
+      generation = current.generation,
+      recoverable = true
+    )
+  }
+
+  override fun invalidate(generation: Long) {
+    synchronized(lock) {
+      // Conditional on the generation: a late 401 for an old token must not
+      // discard a newer one that another request already fetched.
+      if (this.generation == generation) {
+        expiresAtNanos = nanoTime()
+      }
+    }
+  }
+
+  private fun currentToken(timeoutMillis: Long?): CachedToken {
+    val call: CompletableFuture<CachedToken>
+    synchronized(lock) {
+      val cached = token
+      if (cached != null && expiresAtNanos - nanoTime() >= refreshThresholdNanos(lifetimeNanos)) {
+        return CachedToken(cached, generation)
+      }
+      call = inflight ?: startExchange()
+    }
+    return await(call, timeoutMillis)
+  }
+
+  /**
+   * Wait for the shared exchange on the caller's own terms. A caller that
+   * times out or is interrupted stops waiting and leaves [call] untouched,
+   * so the exchange keeps running for everyone else.
+   */
+  private fun await(
+    call: CompletableFuture<CachedToken>,
+    timeoutMillis: Long?
+  ): CachedToken =
+    try {
+      if (timeoutMillis == null) call.get() else call.get(timeoutMillis, TimeUnit.MILLISECONDS)
+    } catch (e: ExecutionException) {
+      throw e.cause ?: e
+    }
+
+  /**
+   * Start the one exchange for this instance. Called with [lock] held.
+   *
+   * The exchange runs on its own daemon thread under its own deadline. It is
+   * not tied to the caller that happened to start it.
+   */
+  private fun startExchange(): CompletableFuture<CachedToken> {
+    val call = CompletableFuture<CachedToken>()
+    inflight = call
+
+    val work = CompletableFuture<TokenResponse>()
+    val worker =
+      Thread(
+        {
+          try {
+            work.complete(exchange())
+          } catch (e: Throwable) {
+            work.completeExceptionally(e)
+          }
+        },
+        "workos-workload-identity-exchange"
+      )
+    worker.isDaemon = true
+
+    work
+      .orTimeout(exchangeDeadlineMillis, TimeUnit.MILLISECONDS)
+      .whenComplete { response, error ->
+        if (error is TimeoutException) worker.interrupt()
+        settle(call, response, error)
+      }
+
+    try {
+      worker.start()
+    } catch (e: Throwable) {
+      work.completeExceptionally(e)
+    }
+    return call
+  }
+
+  /**
+   * Finish the exchange: update the cache, clear the in-flight state, then
+   * wake the waiters. The in-flight state is always cleared before the
+   * waiters are woken, so a caller that gets an error and calls again at
+   * once starts a new exchange instead of joining the finished one.
+   */
+  private fun settle(
+    call: CompletableFuture<CachedToken>,
+    response: TokenResponse?,
+    error: Throwable?
+  ) {
+    if (response == null) {
+      synchronized(lock) {
+        if (inflight === call) inflight = null
+      }
+      call.completeExceptionally(asWorkloadIdentityException(error))
+      return
+    }
+    val stored: CachedToken
+    synchronized(lock) {
+      token = response.accessToken
+      lifetimeNanos = response.lifetimeNanos
+      expiresAtNanos = nanoTime() + response.lifetimeNanos
+      generation += 1
+      stored = CachedToken(response.accessToken, generation)
+      if (inflight === call) inflight = null
+    }
+    call.complete(stored)
+  }
+
+  private fun asWorkloadIdentityException(error: Throwable?): WorkloadIdentityException =
+    when (error) {
+      is WorkloadIdentityException -> error
+      is TimeoutException ->
+        WorkloadIdentityException(
+          WorkloadIdentityException.EXCHANGE_FAILED,
+          "The exchange did not finish within $exchangeDeadlineMillis ms."
+        )
+      else ->
+        WorkloadIdentityException(
+          WorkloadIdentityException.EXCHANGE_FAILED,
+          "The exchange stopped unexpectedly.",
+          cause = error
+        )
+    }
+
+  /**
+   * Run the exchange, retrying transport failures, 429 and 5xx responses and
+   * provider failures with the SDK's own backoff. Every attempt calls the
+   * provider again and rebuilds the form.
+   */
+  private fun exchange(): TokenResponse {
+    val deadlineNanos = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(exchangeDeadlineMillis)
+    var attempt = 0
+    while (true) {
+      val retry =
+        when (val result = attemptExchange()) {
+          is AttemptResult.Success -> return result.response
+          is AttemptResult.Retry -> result
+        }
+      val delayMillis = retryPolicy.nextDelay(attempt, retry.outcome) ?: throw retry.failure
+      val remainingMillis = TimeUnit.NANOSECONDS.toMillis(deadlineNanos - System.nanoTime())
+      if (delayMillis >= remainingMillis) throw retry.failure
+      sleeper(delayMillis)
+      attempt += 1
+    }
+  }
+
+  /** One attempt. Returns what to do next; throws for failures that are final. */
+  private fun attemptExchange(): AttemptResult {
+    val assertion: String? =
+      try {
+        identityTokenProvider.getToken()
+      } catch (e: InterruptedException) {
+        throw e
+      } catch (e: Exception) {
+        return AttemptResult.Retry(AttemptOutcome.TransportFailure(e), providerFailed(e))
+      }
+    if (assertion.isNullOrBlank()) {
+      val empty = IllegalStateException("The identity token provider returned an empty token.")
+      return AttemptResult.Retry(AttemptOutcome.TransportFailure(empty), providerFailed(empty))
+    }
+
+    val form =
+      FormBody
+        .Builder()
+        .add("grant_type", GRANT_TYPE)
+        .add("assertion", assertion)
+        .add("client_id", clientId)
+        .add("resource", resource)
+    scope?.let { form.add("scope", it) }
+    val request =
+      Request
+        .Builder()
+        .url(exchangeUrl)
+        .post(form.build())
+        .header("Accept", "application/json")
+        .header("User-Agent", userAgent)
+        .build()
+
+    val reply =
+      try {
+        exchangeClient.newCall(request).execute().use { response ->
+          TokenEndpointReply(response.code, response.header("Retry-After"), response.body.string())
+        }
+      } catch (e: IOException) {
+        // An I/O failure names the host at most and never holds the form,
+        // so it is safe to keep as the cause.
+        val failure =
+          WorkloadIdentityException(
+            WorkloadIdentityException.EXCHANGE_FAILED,
+            "The request to the token endpoint failed: ${e.javaClass.simpleName}.",
+            cause = e
+          )
+        return AttemptResult.Retry(AttemptOutcome.TransportFailure(e), failure)
+      }
+    val status = reply.status
+    val body = reply.body
+
+    // The status is checked before the body: a 429 or 5xx is retried even
+    // when its body is an OAuth error. The error is read with this attempt's
+    // identity token, which the server may have repeated in it.
+    val oauthError = parseOAuthError(body, assertion)
+    if (RetryPolicy.isRetryableStatus(status)) {
+      val failure =
+        WorkloadIdentityException(
+          oauthError?.code ?: WorkloadIdentityException.EXCHANGE_FAILED,
+          oauthError?.description?.takeIf { it.isNotEmpty() } ?: "The token endpoint returned HTTP $status.",
+          status,
+          hintCode = oauthError?.hintCode ?: WorkloadIdentityException.EXCHANGE_FAILED
+        )
+      return AttemptResult.Retry(AttemptOutcome.Response(status, reply.retryAfter), failure)
+    }
+    if (oauthError != null) {
+      throw WorkloadIdentityException(oauthError.code, oauthError.description, status, hintCode = oauthError.hintCode)
+    }
+    if (status in 300..399) {
+      throw WorkloadIdentityException(
+        WorkloadIdentityException.EXCHANGE_FAILED,
+        "The token endpoint answered with a redirect (HTTP $status), which is not followed.",
+        status
+      )
+    }
+    if (status != 200) {
+      throw WorkloadIdentityException(
+        WorkloadIdentityException.INVALID_RESPONSE,
+        "The token endpoint returned HTTP $status.",
+        status
+      )
+    }
+    return AttemptResult.Success(parseTokenResponse(body))
+  }
+
+  private fun providerFailed(cause: Throwable): WorkloadIdentityException =
+    WorkloadIdentityException(
+      WorkloadIdentityException.PROVIDER_FAILED,
+      cause.message ?: cause.javaClass.simpleName,
+      cause = cause
+    )
+
+  /**
+   * The OAuth error in [body], or `null` when it holds none. A token endpoint
+   * may repeat the identity token it was sent in `error` or
+   * `error_description`, so every occurrence of [assertion], the token sent
+   * in this attempt, is replaced before either text is kept. The description
+   * is cut to its limit later, so a cut cannot leave the start of a token
+   * behind.
+   */
+  private fun parseOAuthError(
+    body: String,
+    assertion: String
+  ): OAuthError? {
+    val tree = readJson(body) ?: return null
+    val code =
+      tree
+        .path("error")
+        .takeIf { it.isTextual }
+        ?.asText()
+        ?.takeIf { it.isNotEmpty() } ?: return null
+    val description =
+      tree
+        .path("error_description")
+        .takeIf { it.isTextual }
+        ?.asText()
+        .orEmpty()
+    return OAuthError(code.without(assertion), description.without(assertion), hintCode = code)
+  }
+
+  private fun parseTokenResponse(body: String): TokenResponse {
+    val tree =
+      readJson(body)
+        ?: throw WorkloadIdentityException(
+          WorkloadIdentityException.INVALID_RESPONSE,
+          "The token endpoint returned HTTP 200 with a body that is not a JSON object.",
+          200
+        )
+    val accessToken = tree.path("access_token").takeIf { it.isTextual }?.asText()
+    if (accessToken.isNullOrEmpty()) {
+      throw WorkloadIdentityException(
+        WorkloadIdentityException.INVALID_RESPONSE,
+        "The token response has no access_token.",
+        200
+      )
+    }
+    val expiresIn = tree.path("expires_in")
+    val lifetimeSeconds =
+      if (expiresIn.isNumber && expiresIn.asDouble() > 0) expiresIn.asDouble() else DEFAULT_LIFETIME_SECONDS
+    val lifetimeNanos = (lifetimeSeconds.coerceAtMost(MAX_LIFETIME_SECONDS) * 1e9).toLong()
+    return TokenResponse(accessToken, lifetimeNanos)
+  }
+
+  private fun readJson(body: String): JsonNode? =
+    try {
+      JSON.readTree(body)?.takeIf { it.isObject }
+    } catch (_: JsonProcessingException) {
+      null
+    }
+
+  /**
+   * Fluent builder for [WorkloadIdentityCredentials], for Java callers who
+   * cannot use Kotlin named arguments.
+   *
+   * ```java
+   * WorkloadIdentityCredentials credentials = WorkloadIdentityCredentials.builder()
+   *     .identityTokenProvider(IdentityTokenProviders.tokenFile("/run/workos/identity-token"))
+   *     .clientId("client_123")
+   *     .tokenUrl("https://auth.example.com/oauth2/token")
+   *     .environmentId("environment_123")
+   *     .build();
+   * ```
+   */
+  class Builder {
+    private var identityTokenProvider: IdentityTokenProvider? = null
+    private var clientId: String? = null
+    private var tokenUrl: String? = null
+    private var environmentId: String? = null
+    private var resource: String? = null
+    private var scope: String? = null
+    private var httpClient: OkHttpClient? = null
+
+    /** Set the provider that returns the workload's identity token (required). */
+    fun identityTokenProvider(provider: IdentityTokenProvider): Builder = apply { identityTokenProvider = provider }
+
+    /** Set the M2M application's client ID (required). No environment variable is read for it. */
+    fun clientId(clientId: String): Builder = apply { this.clientId = clientId }
+
+    /**
+     * Set the token exchange endpoint (required). There is no default, and no environment variable is read for it.
+     * It must be an absolute `https` URL; an `http` URL is refused, also for `localhost` and loopback addresses.
+     */
+    fun tokenUrl(tokenUrl: String): Builder = apply { this.tokenUrl = tokenUrl }
+
+    /**
+     * Set the WorkOS environment ID. Optional, and set only here: no environment variable is read for it. When
+     * set, it is sent as the `x-url-environment-id` header on every API request, as a safety check: a value that
+     * names a different environment from the one the application is bound to gets `403 environment_mismatch`.
+     */
+    fun environmentId(environmentId: String): Builder = apply { this.environmentId = environmentId }
+
+    /** Set the resource the access token is for. Defaults to `https://api.workos.com`. */
+    fun resource(resource: String): Builder = apply { this.resource = resource }
+
+    /** Set the scope to request. Optional; left out of the exchange when it is not set or is empty. */
+    fun scope(scope: String): Builder = apply { this.scope = scope }
+
+    /**
+     * Set the OkHttp client whose connection settings the token exchange uses: proxy and proxy authenticator,
+     * TLS, DNS, connection pool, and connect, read and write timeouts. Its interceptors, event listener,
+     * authenticator, cookie jar, cache and call timeout are not used.
+     */
+    fun httpClient(httpClient: OkHttpClient): Builder = apply { this.httpClient = httpClient }
+
+    /**
+     * Build the credentials. Throws [WorkloadIdentityException] with code
+     * `invalid_configuration` when a required setting is missing, or when the
+     * token URL is not an absolute `https` URL.
+     */
+    fun build(): WorkloadIdentityCredentials {
+      val provider =
+        identityTokenProvider
+          ?: throw WorkloadIdentityException(
+            WorkloadIdentityException.INVALID_CONFIGURATION,
+            "identityTokenProvider is required"
+          )
+      return WorkloadIdentityCredentials(provider, clientId, tokenUrl, environmentId, resource, scope, httpClient)
+    }
+  }
+
+  /** Factory for obtaining a [Builder]. */
+  companion object {
+    /** Create a new [Builder]. */
+    @JvmStatic
+    fun builder(): Builder = Builder()
+  }
+}
+
+/** A cached access token with the generation that identifies it. */
+private class CachedToken(
+  val token: String,
+  val generation: Long
+)
+
+/** A successful token response, reduced to what the cache keeps. */
+private class TokenResponse(
+  val accessToken: String,
+  val lifetimeNanos: Long
+)
+
+private class TokenEndpointReply(
+  val status: Int,
+  val retryAfter: String?,
+  val body: String
+)
+
+/** The token endpoint's `error` and `error_description`, with the identity token taken out of both. */
+private class OAuthError(
+  val code: String,
+  val description: String,
+  /** The `error` as the server sent it. The hint is chosen by it; it is never kept in an error. */
+  val hintCode: String
+)
+
+/** This text with every occurrence of [assertion] replaced by [REDACTED]. */
+private fun String.without(assertion: String): String = if (assertion.isEmpty()) this else replace(assertion, REDACTED)
+
+private sealed class AttemptResult {
+  class Success(
+    val response: TokenResponse
+  ) : AttemptResult()
+
+  /** The attempt failed in a way worth retrying; [failure] is what to raise if no retries are left. */
+  class Retry(
+    val outcome: AttemptOutcome,
+    val failure: WorkloadIdentityException
+  ) : AttemptResult()
+}
+
+private fun refreshThresholdNanos(lifetimeNanos: Long): Long = minOf(REFRESH_THRESHOLD_NANOS, (lifetimeNanos * REFRESH_FRACTION).toLong())
+
+/** A required setting comes only from the caller's code: left out, null or empty is an error. */
+private fun required(
+  value: String?,
+  field: String
+): String =
+  value?.takeIf { it.isNotBlank() }
+    ?: throw WorkloadIdentityException(WorkloadIdentityException.INVALID_CONFIGURATION, "$field is required")
+
+/**
+ * The token URL as the URL the exchange is sent to. https only: the POST
+ * carries the workload's identity token and the response carries the access
+ * token. There is no exception for `localhost` or a loopback address, and
+ * nothing switches the rule off.
+ *
+ * OkHttp reads a URL the way a browser does and finds a host in
+ * `https:/host`, `https:host` and `https:///host`. None of those is an
+ * absolute URL, so the text itself must start with `https://` and a host.
+ */
+private fun httpsUrl(tokenUrl: String): HttpUrl =
+  tokenUrl
+    .takeIf { ABSOLUTE_HTTPS_URL.containsMatchIn(it) }
+    ?.toHttpUrlOrNull()
+    ?.takeIf { it.isHttps }
+    ?: throw WorkloadIdentityException(
+      WorkloadIdentityException.INVALID_CONFIGURATION,
+      "tokenUrl must be an absolute https URL"
+    )
+
+private fun sdkVersion(): String {
+  val resource = WorkOS::class.java.getResourceAsStream("/version.properties") ?: return "dev"
+  return resource.use { stream ->
+    java.util
+      .Properties()
+      .apply { load(stream) }
+      .getProperty("version", "dev")
+  }
+}

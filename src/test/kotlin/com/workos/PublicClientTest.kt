@@ -112,5 +112,9 @@ class PublicClientTest : TestBase() {
     assertTrue(!body.contains("client_secret")) {
       "client_secret must not be sent on public-client code exchange; got: $body"
     }
+    // A public client has no API key, so there is no bearer token to send.
+    assertTrue(!requests[0].containsHeader("Authorization")) {
+      "a public client must not send an Authorization header; got: ${requests[0].getHeader("Authorization")}"
+    }
   }
 }

@@ -10,9 +10,24 @@ echo "==> Formatting..."
 ./gradlew ktlintFormat
 
 echo "==> Running tests..."
+# Remove the provider modules' old results first, so the check at the end can
+# only pass on results this run produced.
+rm -rf workload-identity-*/build/test-results/test
 ./gradlew test
 
 echo "==> Generating Javadoc (Dokka)..."
 ./gradlew dokkaGeneratePublicationJavadoc
+
+# The task names above are unqualified, so Gradle runs each in every project
+# that has it: the SDK and the workload identity provider modules. A module
+# that drops out of settings.gradle.kts, or stops applying a plugin, would be
+# skipped without an error, so confirm each one ran its tests in this run.
+echo "==> Checking that every provider module was tested..."
+for module in workload-identity-github-actions workload-identity-gcp workload-identity-aws; do
+  if ! compgen -G "$module/build/test-results/test/TEST-*.xml" > /dev/null; then
+    echo "No test results for $module: it was not reached by ./gradlew test." >&2
+    exit 1
+  fi
+done
 
 echo "==> All checks passed."

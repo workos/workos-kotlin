@@ -13,6 +13,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import com.nimbusds.jwt.proc.DefaultJWTProcessor
 import com.workos.WorkOS
+import com.workos.clientSecret
 import com.workos.common.json.ObjectMapperFactory
 import com.workos.models.AuthenticateResponse
 import com.workos.models.AuthenticateResponseImpersonator
@@ -243,12 +244,21 @@ class SessionCookie
      * updated session, and update this helper's state so subsequent
      * [authenticate] calls see the new token. The issuer policy is not
      * applied here; it is enforced on [authenticate].
+     *
+     * The exchange sends the API key as the client secret, so it needs a
+     * client built with one.
+     *
+     * @throws IllegalStateException when the client authenticates with
+     *   workload identity credentials and has no API key. Nothing is sent.
      */
     @JvmOverloads
     fun refresh(
       organizationId: String? = null,
       newCookiePassword: String? = null
     ): RefreshSessionResult {
+      // Asked first, so a client that can never refresh fails the same way
+      // whatever the cookie holds, before any request is sent.
+      userManagement.workos.clientSecret("refresh")
       val data =
         sessionData
           ?: return RefreshSessionResult.Failure(RefreshSessionFailureReason.INVALID_SESSION_COOKIE)

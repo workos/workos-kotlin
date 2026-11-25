@@ -28,3 +28,23 @@ jobs:
       - name: Test
         run: |
           ./gradlew test --info
+
+  # The jobs above use unqualified task names, which already cover every
+  # Gradle project. Each workload identity provider is released by itself, so
+  # each is also built, linted and tested through its own project path, the
+  # way its publish job addresses it.
+  providers:
+    name: Build ${{ matrix.module }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - workload-identity-github-actions
+          - workload-identity-gcp
+          - workload-identity-aws
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Build and test
+        run: |
+          ./gradlew ":${{ matrix.module }}:build"

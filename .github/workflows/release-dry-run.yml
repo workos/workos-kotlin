@@ -33,13 +33,21 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.NEXUS_SIGNING_PASSWORD }}
         run: ./gradlew publishToMavenLocal --no-configuration-cache -Prelease
 
+      # The unqualified task above publishes every Gradle project: the SDK
+      # and the three workload identity providers. Each must have signed its
+      # own artifacts.
       - name: Verify signatures were produced
         run: |
           shopt -s globstar nullglob
-          asc_files=( ~/.m2/repository/**/*.asc )
-          if [ ${#asc_files[@]} -eq 0 ]; then
-            echo "No .asc signature files found — signing did not run."
-            exit 1
-          fi
-          echo "Found ${#asc_files[@]} signature file(s):"
-          printf '  %s\n' "${asc_files[@]}"
+          missing=0
+          for artifact in workos workos-workload-identity-github-actions workos-workload-identity-gcp workos-workload-identity-aws; do
+            asc_files=( ~/.m2/repository/com/workos/"$artifact"/**/*.asc )
+            if [ ${#asc_files[@]} -eq 0 ]; then
+              echo "No .asc signature files found for com.workos:$artifact — signing did not run for it."
+              missing=1
+              continue
+            fi
+            echo "Found ${#asc_files[@]} signature file(s) for com.workos:$artifact:"
+            printf '  %s\n' "${asc_files[@]}"
+          done
+          exit "$missing"
