@@ -2,19 +2,101 @@
 
 ## [7.8.0](https://github.com/workos/workos-kotlin/compare/v7.7.0...v7.8.0) (2026-11-25)
 
-
-### Features
-
-* **agents:** Change agents API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
-* **directory_sync:** Change directory sync API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
-* **sso:** Add SSO API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
-* **webhooks:** Add webhook API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
-
-
 ### Bug Fixes
 
 * **deps:** update minor and patch updates ([#465](https://github.com/workos/workos-kotlin/issues/465)) ([cab185a](https://github.com/workos/workos-kotlin/commit/cab185ac6af118926e79a8acffde520260b5e944))
-* **events:** Updated model `EventSchema` ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+
+* [#468](https://github.com/workos/workos-kotlin/pull/468) feat(generated)!: regenerate from spec (5 changes)
+
+  **Features**
+  * **[agents](https://workos.com/docs/reference/agents)**:
+    * Added model `AgentBlueprintScopedPermission`
+    * Added model `AgentBlueprintsCreateRequestPermission`
+    * Added model `AgentBlueprintsUpdateRequestPermission`
+    * Added `scoped_permissions` to `AgentBlueprint`
+    * Changed access for `AgentBlueprint.permissions`
+    * Changed access for `AgentBlueprintsCreateRequest.permissions`
+    * Changed access for `AgentBlueprintsUpdateRequest.permissions`
+    * Added enum `AgentBlueprintScopedPermissionInstanceTypes`
+    * Added enum `AgentBlueprintsCreateRequestPermissionInstanceTypes`
+    * Added enum `AgentBlueprintsUpdateRequestPermissionInstanceTypes`
+  * **[audit_logs](https://workos.com/docs/reference/audit-logs)**:
+    * Made `AuditLogEvent.occurred_at` optional
+  * **[authorization](https://workos.com/docs/reference/fga)**:
+    * Added model `PatchRoleAssignmentEntry`
+    * Added model `PatchRoleAssignments`
+    * Added model `RoleAssignmentUpdateOverlapErrorBody`
+    * Added endpoint `PATCH /authorization/organization_memberships/{organization_membership_id}/role_assignments`
+  * **[organization_membership](https://workos.com/docs/reference/authkit/organization-membership)**:
+    * Added model `EntityNotFoundErrorBodyWithIdsList`
+    * Added model `EntityNotFoundErrorBodyWithEntityId`
+  * **[organizations](https://workos.com/docs/reference/organization)**:
+    * Added model `IssuerTrustsCreateRequest`
+    * Added model `IssuerTrustsUpdateRequest`
+    * Added `invalid_issuer_metadata` to `ErrorBodyCode`
+    * Added `invalid_issuer_url` to `ErrorBodyCode`
+    * Added `issuer_already_trusted` to `ErrorBodyCode`
+    * Added `not_claude_issuer` to `ErrorBodyCode`
+    * Added `organization_already_has_trust` to `ErrorBodyCode`
+    * Added `organization_has_idp_managed_ema` to `ErrorBodyCode`
+    * Added `organization_without_verified_domain` to `ErrorBodyCode`
+    * Added endpoint `POST /organizations/{organization_id}/issuer_trusts`
+    * Added endpoint `PATCH /organizations/{organization_id}/issuer_trusts/{id}`
+    * Added endpoint `DELETE /organizations/{organization_id}/issuer_trusts/{id}`
+    * Added model `IssuerTrustList`
+    * Added model `IssuerTrustListListMetadata`
+    * Added service `OrganizationsIssuerTrusts`
+  * **[events](https://workos.com/docs/reference/events)**:
+    * Added model `IssuerTrust`
+  * **[pipes](https://workos.com/docs/reference/pipes)**:
+    * Added `radar_sms_challenge` to `ErrorBodyCode`
+    * Added `entities_not_found` to `ErrorBodyCode`
+    * Added `discovery_endpoint_tenant_not_allowed` to `ErrorBodyCode`
+    * Added `cannot_remove_group_sourced_role` to `ErrorBodyCode`
+    * Added `role_assignment_update_overlap` to `ErrorBodyCode`
+  * **[radar](https://workos.com/docs/reference/radar)**:
+    * Added model `RadarDetectionList`
+    * Added model `RadarDetectionAllowedBy`
+    * Added model `RadarDetectionEvidence`
+    * Added model `RadarDetection`
+    * Added model `RadarDetectionLocation`
+    * Added enum `RadarDetectionListType`
+    * Added enum `RadarDetectionListAction`
+    * Added enum `RadarDetectionControl`
+    * Added enum `RadarDetectionVerdict`
+    * Added enum `RadarDetectionChallengeType`
+    * Added enum `RadarDetectionAction`
+    * Added enum `RadarDetectionAuthMethod`
+    * Added endpoint `GET /radar/detections/{id}`
+    * Added model `RadarSmsChallengeErrorBody`
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Added endpoint `DELETE /user_management/cors_origins/{id}`
+  * **[webhooks](https://workos.com/docs/reference/webhooks)**:
+    * Added `connection.saml_certificate_replaced` to `CreateWebhookEndpointEvents`
+    * Added `connection.saml_certificate_replaced` to `UpdateWebhookEndpointEvents`
+    * Added `issuer_trust.created` to `CreateWebhookEndpointEvents`
+    * Added `issuer_trust.deleted` to `CreateWebhookEndpointEvents`
+    * Added `issuer_trust.updated` to `CreateWebhookEndpointEvents`
+    * Added `issuer_trust.created` to `UpdateWebhookEndpointEvents`
+    * Added `issuer_trust.deleted` to `UpdateWebhookEndpointEvents`
+    * Added `issuer_trust.updated` to `UpdateWebhookEndpointEvents`
+    * Added endpoint `GET /webhook_endpoints/{id}`
+    * Added `application.token_exchange_failed` to `CreateWebhookEndpointEvents`
+    * Added `application.token_exchange_succeeded` to `CreateWebhookEndpointEvents`
+    * Added `application.token_exchange_failed` to `UpdateWebhookEndpointEvents`
+    * Added `application.token_exchange_succeeded` to `UpdateWebhookEndpointEvents`
+
+  **Fixes**
+  * **[agents](https://workos.com/docs/reference/agents)**:
+    * Changed the type of `AgentBlueprintsCreateRequest.permissions`
+    * Changed the type of `AgentBlueprintsUpdateRequest.permissions`
+  * **[events](https://workos.com/docs/reference/events)**:
+    * Updated model `EventSchema`
+  * **[organization_membership](https://workos.com/docs/reference/authkit/organization-membership)**:
+    * Changed errors for endpoint `POST /user_management/organization_memberships`
+  * **[user_management](https://workos.com/docs/reference/authkit/user)**:
+    * Changed errors for endpoint `POST /user_management/authenticate`
+    * Changed errors for endpoint `POST /user_management/users`
 
 ## [7.7.0](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.7.0) (2026-11-13)
 
