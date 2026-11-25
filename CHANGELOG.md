@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.8.0](https://github.com/workos/workos-kotlin/compare/v7.7.0...v7.8.0) (2026-11-25)
+
+
+### Features
+
+* **agents:** Change agents API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+* **directory_sync:** Change directory sync API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+* **sso:** Add SSO API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+* **webhooks:** Add webhook API surface ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+
+
+### Bug Fixes
+
+* **deps:** update minor and patch updates ([#465](https://github.com/workos/workos-kotlin/issues/465)) ([cab185a](https://github.com/workos/workos-kotlin/commit/cab185ac6af118926e79a8acffde520260b5e944))
+* **events:** Updated model `EventSchema` ([#468](https://github.com/workos/workos-kotlin/issues/468)) ([f6073cc](https://github.com/workos/workos-kotlin/commit/f6073cc00665492ab99c81838d57951b0d315f74))
+
 ## [7.7.0](https://github.com/workos/workos-kotlin/compare/v7.6.0...v7.7.0) (2026-11-13)
 
 ### Bug Fixes
