@@ -2,15 +2,5 @@
 
 package com.workos.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-/** PatchGroupRoleAssignments model. */
-data class PatchGroupRoleAssignments(
-  /** Role assignments to add to the group. Assignments that already exist are skipped. */
-  @JsonProperty("add")
-  val add: List<ReplaceGroupRoleAssignmentEntry>? = null,
-
-  /** Role assignments to remove from the group. Entries that match no assignment are skipped. */
-  @JsonProperty("remove")
-  val remove: List<ReplaceGroupRoleAssignmentEntry>? = null
-)
+/** Alias for [PatchRoleAssignments]. */
+typealias PatchGroupRoleAssignments = PatchRoleAssignments

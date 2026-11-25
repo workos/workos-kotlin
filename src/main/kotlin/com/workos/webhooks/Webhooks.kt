@@ -132,6 +132,47 @@ class Webhooks(
     }
 
   /**
+   * Get a Webhook Endpoint
+   *
+   * Get the details of an existing webhook endpoint.
+   *
+   * @param id Unique identifier of the Webhook Endpoint.
+   * @param requestOptions per-request overrides (idempotency key, API key, headers, timeout)
+   *
+   * @return the WebhookEndpoint
+   */
+  @JvmOverloads
+  fun getEndpoint(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WebhookEndpoint {
+    val config =
+      RequestConfig(
+        method = "GET",
+        path = "/webhook_endpoints/${encodePathSegment(id)}",
+        requestOptions = requestOptions
+      )
+    return workos.baseClient.request(config, WebhookEndpoint::class.java)
+  }
+
+  /**
+   * Coroutine-aware variant of [getEndpoint]. Use this from
+   * a `suspend` function or coroutine scope.
+   *
+   * Delegates to the blocking [getEndpoint] under
+   * `withContext(Dispatchers.IO)`, so this is safe to call from any
+   * coroutine dispatcher (including `Dispatchers.Main`).
+   */
+  @JvmName("getEndpointSuspend")
+  suspend fun getEndpointSuspend(
+    id: String,
+    requestOptions: RequestOptions? = null
+  ): WebhookEndpoint =
+    withContext(Dispatchers.IO) {
+      getEndpoint(id, requestOptions)
+    }
+
+  /**
    * Update a Webhook Endpoint
    *
    * Update the properties of an existing webhook endpoint.

@@ -330,6 +330,12 @@ class UserManagementTest : TestBase() {
   }
 
   @Test
+  fun `deleteCorsOrigin completes without throwing`() {
+    stubResponse("DELETE", "/user_management/cors_origins/sample-arg", 204)
+    api().deleteCorsOrigin("sample-arg")
+  }
+
+  @Test
   fun `getEmailVerification returns a typed response`() {
     stubResponse(
       "GET",

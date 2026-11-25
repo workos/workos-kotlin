@@ -360,6 +360,26 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `EntityNotFoundErrorBodyWithIdsList round-trips through Jackson`() {
+    val json = "{\"code\": \"entities_not_found\", \"message\": \"sample\", \"ids\": []}"
+    val parsed = mapper.readValue(json, EntityNotFoundErrorBodyWithIdsList::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `EntityNotFoundErrorBodyWithEntityId round-trips through Jackson`() {
+    val json = "{\"code\": \"entity_not_found\", \"message\": \"sample\", \"entity_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, EntityNotFoundErrorBodyWithEntityId::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `EmailCompletionRequiredErrorBodyWithEmailCompletionToken round-trips through Jackson`() {
     val json = "{\"code\": \"email_completion_required\", \"message\": \"sample\", \"email_completion_token\": \"sample\"}"
     val parsed = mapper.readValue(json, EmailCompletionRequiredErrorBodyWithEmailCompletionToken::class.java)
@@ -463,6 +483,16 @@ class GeneratedModelRoundTripTest {
   fun `SmsChallengeQuotaReachedErrorBody round-trips through Jackson`() {
     val json = "{\"code\": \"sms_challenge_quota_reached\", \"message\": \"sample\"}"
     val parsed = mapper.readValue(json, SmsChallengeQuotaReachedErrorBody::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `RoleAssignmentUpdateOverlapErrorBody round-trips through Jackson`() {
+    val json = "{\"code\": \"role_assignment_update_overlap\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, RoleAssignmentUpdateOverlapErrorBody::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -1090,6 +1120,16 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `RadarSmsChallengeErrorBody round-trips through Jackson`() {
+    val json = "{\"code\": \"radar_sms_challenge\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, RadarSmsChallengeErrorBody::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `RadarSmsSignInChallengeErrorBody round-trips through Jackson`() {
     val json = "{\"code\": \"radar_sms_sign_in_challenge\", \"message\": \"sample\"}"
     val parsed = mapper.readValue(json, RadarSmsSignInChallengeErrorBody::class.java)
@@ -1478,6 +1518,18 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `IssuerTrust round-trips through Jackson`() {
+    val json =
+      "{\"object\": \"issuer_trust\", \"id\": \"sample\", \"organization_id\": \"sample\", \"type\": \"claude\", \"issuer\": " +
+        "\"sample\", \"enabled\": false, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    val parsed = mapper.readValue(json, IssuerTrust::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `ActionAuthenticationDeniedData round-trips through Jackson`() {
     val json =
       "{\"action_endpoint_id\": \"sample\", \"action_execution_id\": \"sample\", \"type\": \"authentication\", \"verdict\": \"Deny\", " +
@@ -1675,6 +1727,28 @@ class GeneratedModelRoundTripTest {
   fun `ApiKeyUpdatedDataPreviousAttribute round-trips through Jackson`() {
     val json = "{\"expires_at\": null}"
     val parsed = mapper.readValue(json, ApiKeyUpdatedDataPreviousAttribute::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `ApplicationTokenExchangeFailedDataError round-trips through Jackson`() {
+    val json = "{\"code\": \"sample\", \"message\": \"sample\"}"
+    val parsed = mapper.readValue(json, ApplicationTokenExchangeFailedDataError::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `ApplicationTokenExchangeSucceededData round-trips through Jackson`() {
+    val json =
+      "{\"grant_type\": \"sample\", \"client_id\": \"sample\", \"user_id\": \"sample\", \"email\": \"sample\", \"organization_id\": " +
+        "null, \"issuer\": \"sample\", \"connection_id\": null, \"jti\": \"sample\"}"
+    val parsed = mapper.readValue(json, ApplicationTokenExchangeSucceededData::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -2236,6 +2310,66 @@ class GeneratedModelRoundTripTest {
   }
 
   @Test
+  fun `RadarDetectionIpSignUps round-trips through Jackson`() {
+    val json = "{\"count\": 0, \"window_minutes\": 0}"
+    val parsed = mapper.readValue(json, RadarDetectionIpSignUps::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `RadarDetectionRepeatSignUpDetailsEmail round-trips through Jackson`() {
+    val json = "{\"matched_on\": \"email\", \"prior_sign_ups\": 0, \"window_days\": 0}"
+    val parsed = mapper.readValue(json, RadarDetectionRepeatSignUpDetailsEmail::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `NormalizedEmail round-trips through Jackson`() {
+    val json = "{\"matched_on\": \"normalized_email\", \"matched_user_id\": \"sample\"}"
+    val parsed = mapper.readValue(json, NormalizedEmail::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `RadarDetectionStaleAccountDetails round-trips through Jackson`() {
+    val json = "{\"last_activity_at\": null}"
+    val parsed = mapper.readValue(json, RadarDetectionStaleAccountDetails::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `BlockedTld round-trips through Jackson`() {
+    val json = "{\"type\": \"blocked_tld\"}"
+    val parsed = mapper.readValue(json, BlockedTld::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `SignUp round-trips through Jackson`() {
+    val json = "{\"type\": \"sign_up\"}"
+    val parsed = mapper.readValue(json, SignUp::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
   fun `RadarListEntryAlreadyPresentResponse round-trips through Jackson`() {
     val json = "{\"message\": \"sample\"}"
     val parsed = mapper.readValue(json, RadarListEntryAlreadyPresentResponse::class.java)
@@ -2462,6 +2596,26 @@ class GeneratedModelRoundTripTest {
   fun `UserApiKeyOwner round-trips through Jackson`() {
     val json = "{\"type\": \"user\", \"id\": \"sample\", \"organization_id\": \"sample\"}"
     val parsed = mapper.readValue(json, UserApiKeyOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `RadarDetectionLocation round-trips through Jackson`() {
+    val json = "{\"city\": null, \"country\": null}"
+    val parsed = mapper.readValue(json, RadarDetectionLocation::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `RadarDetectionPreviousAttemptLocation round-trips through Jackson`() {
+    val json = "{\"city\": null, \"country\": null}"
+    val parsed = mapper.readValue(json, RadarDetectionPreviousAttemptLocation::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)
@@ -2718,6 +2872,16 @@ class GeneratedModelRoundTripTest {
   fun `FeatureFlagOwner round-trips through Jackson`() {
     val json = "{\"email\": \"sample\", \"first_name\": null, \"last_name\": null}"
     val parsed = mapper.readValue(json, FeatureFlagOwner::class.java)
+    val reserialized = mapper.writeValueAsString(parsed)
+    val tree1 = mapper.readTree(json)
+    val tree2 = mapper.readTree(reserialized)
+    assertEquals(tree1, tree2)
+  }
+
+  @Test
+  fun `IssuerTrustsCreateRequest round-trips through Jackson`() {
+    val json = "{\"type\": \"claude\", \"issuer\": \"sample\"}"
+    val parsed = mapper.readValue(json, IssuerTrustsCreateRequest::class.java)
     val reserialized = mapper.writeValueAsString(parsed)
     val tree1 = mapper.readTree(json)
     val tree2 = mapper.readTree(reserialized)

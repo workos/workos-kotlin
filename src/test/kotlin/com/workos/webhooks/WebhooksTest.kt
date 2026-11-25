@@ -48,6 +48,23 @@ class WebhooksTest : TestBase() {
   }
 
   @Test
+  fun `getEndpoint returns a typed response`() {
+    stubResponse(
+      "GET",
+      "/webhook_endpoints/sample-arg",
+      200,
+      "{\"object\": \"webhook_endpoint\", \"id\": \"sample\", \"endpoint_url\": \"sample\", \"secret\": \"sample\", \"status\": " +
+        "\"enabled\", \"events\": [], \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}"
+    )
+    val result = api().getEndpoint("sample-arg")
+    assertNotNull(result)
+    assertEquals("webhook_endpoint", result.objectType)
+    assertEquals("sample", result.id)
+    assertEquals("sample", result.endpointUrl)
+    assertEquals("sample", result.secret)
+  }
+
+  @Test
   fun `updateEndpoint returns a typed response`() {
     stubResponse(
       "PATCH",

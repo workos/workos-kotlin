@@ -103,7 +103,7 @@ class Agents(
    *
    * @param name Human-readable name of the agent blueprint.
    * @param description Human-readable description of the agent blueprint.
-   * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+   * @param permissions Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
    * @param invocableBy Who may mint sessions from this blueprint.
    * @param invocableAs How sessions may be minted from this blueprint.
    * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint.
@@ -115,7 +115,7 @@ class Agents(
   fun createBlueprint(
     name: String,
     description: String? = null,
-    permissions: List<String>? = null,
+    permissions: List<Any>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null,
@@ -152,7 +152,7 @@ class Agents(
   suspend fun createBlueprintSuspend(
     name: String,
     description: String? = null,
-    permissions: List<String>? = null,
+    permissions: List<Any>? = null,
     invocableBy: AgentBlueprintsCreateRequestInvocableBy? = null,
     sessionSettings: AgentBlueprintsCreateRequestSessionSetting? = null,
     requestOptions: RequestOptions? = null,
@@ -211,7 +211,7 @@ class Agents(
    * @param agentBlueprintId The unique ID of the agent blueprint.
    * @param name Human-readable name of the agent blueprint.
    * @param description Human-readable description of the agent blueprint. Pass `null` to clear it.
-   * @param permissions Permission slugs forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment.
+   * @param permissions Permissions forming the ceiling on what sessions minted from this blueprint may do. Each slug must exist in the environment and may appear once.
    * @param invocableBy Who may mint sessions from this blueprint. Omitted lists are left unchanged.
    * @param invocableAs How sessions may be minted from this blueprint. Omitted lists are left unchanged.
    * @param sessionSettings Token and session lifetimes for sessions minted from this blueprint. Omitted fields are left unchanged.
@@ -224,7 +224,7 @@ class Agents(
     agentBlueprintId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
-    permissions: PatchField<List<String>> = PatchField.Absent,
+    permissions: PatchField<List<Any>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
     requestOptions: RequestOptions? = null,
@@ -262,7 +262,7 @@ class Agents(
     agentBlueprintId: String,
     name: PatchField<String> = PatchField.Absent,
     description: PatchField<String?> = PatchField.Absent,
-    permissions: PatchField<List<String>> = PatchField.Absent,
+    permissions: PatchField<List<Any>> = PatchField.Absent,
     invocableBy: PatchField<AgentBlueprintsUpdateRequestInvocableBy> = PatchField.Absent,
     sessionSettings: PatchField<AgentBlueprintsUpdateRequestSessionSetting> = PatchField.Absent,
     requestOptions: RequestOptions? = null,
